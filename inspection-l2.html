@@ -12,6 +12,7 @@
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; }
+        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
         .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
@@ -46,10 +47,16 @@
 </head>
 <body>
 
+    <script>
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
+    </script>
+
     <div class="app-header">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Hub</div>
-            <div style="color:var(--accent); font-weight:bold; font-size:11px; text-transform:uppercase;">Level 2 Tab</div>
+            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
         </div>
     </div>
 
@@ -171,7 +178,6 @@
         
         window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('l2_tech').value = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
-            // Auto-hydrate patient criteria fields from local cache registers if active
             document.getElementById('l2_cust').value = localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('l2_addr').value = localStorage.getItem('cached_wo_addr') || "";
         });
@@ -181,7 +187,7 @@
             var segments = select.value.split('|'); var inputId = segments[0]; var text = segments[1];
             
             document.getElementById(inputId).value = text;
-            document.getElementById(inputId.replace('n', 'c')).checked = false; // Flag fail check box state
+            document.getElementById(inputId.replace('n', 'c')).checked = false;
             
             var badge = document.getElementById('badge_' + inputId);
             if(badge) {
@@ -205,6 +211,10 @@
             ];
             await fetch(GOOGLE_API_GATEWAY_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ route: "recordFieldData", sheetName: "Level2_Inspections", payload: payload })});
             alert("Level 2 Compliance Records Saved!");
+        }
+
+        function executeFieldCrewLogout() {
+            localStorage.clear(); window.location.replace("index.html");
         }
     </script>
 </body>
