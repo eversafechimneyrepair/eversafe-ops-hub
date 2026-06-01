@@ -7,6 +7,12 @@
     
     <script src="https://web.squarecdn.com/v1/square.js"></script>
 
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="EverSafe Hub">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/fireplace.png">
+
     <style>
         :root {
             --primary: #0f172a;
@@ -348,7 +354,7 @@
                             <option value="l2_n2|[CRITICAL] Level 3 Stage 3 highly flammable glazed creosote deposits mapped along flue walls. Structural fire hazard.">Creosote: Stage 3 Glazed Creosote Layer (CRITICAL)</option>
                         </optgroup>
                         <optgroup label="Layer III: Exterior Stack Termination">
-                            <option value="l2_n1|[MAJOR] Mortar crown shrinkage cracks and concrete delamination surface tracks noted. Water penetration risk active.">Crown: Concrete Concrete Crown Weather-Seal Crack (MAJOR)</option>
+                            <option value="l2_n1|[MAJOR] Mortar crown shrinkage cracks and concrete delamination surface tracks noted. Water penetration risk active.">Crown: Concrete Crown Weather-Seal Crack (MAJOR)</option>
                             <option value="l2_n1|[CRITICAL] Chimney stack chimney height terminates below the 3-foot stack or 2-foot roof ridge code safety envelope.">Termination: 3-2-10 Rule Failure Boundary (CRITICAL)</option>
                         </optgroup>
                     </select>
@@ -460,12 +466,18 @@
         var PUNCH_STATE = false; 
         var SQUARE_CARD_OBJECT_INSTANCE = null; 
 
+        // UPGRADED AUTO-RESTORE LOGIC: Hydrates memory instantly from local storage cache definitions
         window.addEventListener('DOMContentLoaded', function() {
             var today = new Date().toISOString().split('T')[0];
             if(document.getElementById('wo_date')) document.getElementById('wo_date').value = today;
             if(document.getElementById('inv_date')) document.getElementById('inv_date').value = today;
             if(document.getElementById('l2_date')) document.getElementById('l2_date').value = today;
             if(document.getElementById('l1_date')) document.getElementById('l1_date').value = today;
+
+            // Register background cache worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('service-worker.js').catch(err => console.log(err));
+            }
 
             var sessionActive = localStorage.getItem('eversafe_session_active');
             var cachedUser = localStorage.getItem('eversafe_authenticated_user');
@@ -481,6 +493,7 @@
             }
         });
 
+        // Mode "no-cors" forces browser pipeline to bypass CORS and redirect preflight traps entirely
         async function runRemoteApiCall(payloadObject) {
             try {
                 await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -506,6 +519,7 @@
                 if(result.success) {
                     CURRENT_LOGGED_IN_USER = result.authorizedUser;
                     
+                    // Secure data tokens inside persistent device hardware memory
                     localStorage.setItem('eversafe_authenticated_user', CURRENT_LOGGED_IN_USER);
                     localStorage.setItem('eversafe_session_active', 'true');
                     
@@ -808,7 +822,7 @@
             }; reader.readAsDataURL(file);
         }
 
-        // POLISHED HARDWARE HANDOFF INTERFACE ROUTINE
+        // ASYNCHRONOUS DEEP-LINK EVENT DRIVER BLOCK
         document.addEventListener('DOMContentLoaded', function() {
             var tapBtn = document.getElementById('fieldCrewTapToPayTriggerBtn');
             if (tapBtn) {
@@ -828,6 +842,7 @@
                     var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
                     var userAgentString = navigator.userAgent || navigator.vendor || window.opera;
                     
+                    // Direct desktop parameter safety check block
                     var isMobile = /Android|iPhone|iPad|iPod/i.test(userAgentString);
                     if (!isMobile) {
                         alert("💻 Terminal Route Notice:\nTap to Pay utilizes the phone's native hardware NFC antenna. To use this feature, open this webpage on your mobile device terminal. For desktop payments, use the 'Secure Credit Card Terminal' manual box fields above.");
@@ -837,23 +852,23 @@
                     var isAndroid = /Android/i.test(userAgentString);
                     var targetHardwareUrl = "";
 
-                    // 📱 MOBILE ANDROID ROUTING PARAMS
+                    // MOBILE ANDROID HARDWARE RESOLUTION INTENTS
                     if (isAndroid) {
                         targetHardwareUrl = "intent:#Intent;" +
                             "action=com.squareup.pos.action.CHARGE;" +
                             "package=com.squareup;" +
                             "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
-                            "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
-                            "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
-                            "S.com.squareup.pos.API_VERSION=v2.0;" +
-                            "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
-                            "S.com.squareup.pos.CURRENCY_CODE=USD;" +
-                            "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
-                            "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
-                            "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
-                            "end";
+                    "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
+                    "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
+                    "S.com.squareup.pos.API_VERSION=v2.0;" +
+                    "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
+                    "S.com.squareup.pos.CURRENCY_CODE=USD;" +
+                    "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
+                    "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
+                    "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
+                    "end";
                     } 
-                    // 🍏 MOBILE iOS HARDWARE ROUTING PARAMS (Upgraded payload alignment to fix white-screen drops)
+                    // MOBILE APPLE iOS HARDWARE DEEP-LINKS (Optimized schema mapping arrays)
                     else {
                         var jsonPayloadObject = {
                             "amount_money": { "amount": amountInCents, "currency_code": "USD" },
@@ -869,9 +884,7 @@
 
                     try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_FIRED", invoiceTotal] }); } catch(err){}
 
-                    // 🚀 DIRECT TOP-LEVEL WINDOW HANDOFF:
-                    // Fortified via local cache. Bypasses frame limits so the parameter string delivers unclipped, 
-                    // populating your totals inside Square instantly while protecting your layout tabs!
+                    // Top-level direct window location assignment loop
                     window.location.assign(targetHardwareUrl);
                 });
             }
