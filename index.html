@@ -120,7 +120,6 @@
         }
         .safety-staging-box { background-color: #fff7ed; border: 2px dashed var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; display: none; text-align: center; }
 
-        /* PSEUDO ELEMENT INTERCEPTOR (Track C Fix: Provides UX Feedback While Square Frame Mounts) */
         #sq-card-element {
             margin: 15px auto; max-width: 440px; min-height: 80px; padding: 14px; 
             border: 1px dashed var(--accent); background: #ffffff; border-radius: 6px;
@@ -449,12 +448,8 @@
     </div>
 
     <script>
-        /*****************************************************************
-         * CONFIGURATION HARNESS: Target Routing Endpoint Strings
-         *****************************************************************/
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         
-        // Square Environment Mapping Rules
         var SQUARE_APPLICATION_ID = "sandbox-sq0idb-RT3u-HhCpNdbMiGg5aXuVg";
         var SQUARE_LOCATION_ID = "TC4Z3ZEBKRXRH";
 
@@ -464,7 +459,6 @@
         var SQUARE_CARD_OBJECT_INSTANCE = null; 
 
         window.addEventListener('DOMContentLoaded', function() {
-            // Self-Correcting Date Initialization For Speed Accuracy
             var today = new Date().toISOString().split('T')[0];
             if(document.getElementById('wo_date')) document.getElementById('wo_date').value = today;
             if(document.getElementById('inv_date')) document.getElementById('inv_date').value = today;
@@ -477,9 +471,6 @@
             }, 350); 
         });
 
-        /**
-         * Global API client transport broker replacing google.script.run
-         */
         async function runRemoteApiCall(payloadObject) {
             let response = await fetch(GOOGLE_API_GATEWAY_URL, {
                 method: "POST",
@@ -524,7 +515,6 @@
         async function initializeSquareNativeFormElement() {
             if(SQUARE_CARD_OBJECT_INSTANCE) return;
             try {
-                // Initializing Isolated DOM Sandbox Injection Hook Instantiation
                 const payments = Square.payments(SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID);
                 const card = await payments.card();
                 await card.attach('#sq-card-element');
@@ -684,7 +674,6 @@
             var parts = selector.value.split('|'); var targetInputId = parts[0]; var defectText = parts[1];
             document.getElementById(targetInputId).value = defectText;
             
-            // Handle Badge Toggling Visually Based on Threat Severity
             if(defectText.includes("CRITICAL")) {
                 document.getElementById('badge_' + targetInputId).className = "defect-badge badge-critical";
                 document.getElementById('badge_' + targetInputId).innerText = "Critical";
