@@ -206,7 +206,7 @@
     <div class="app-header" id="mainHeaderBar">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Suite</div>
-            <div class="user-tag" id="userBadgeDisplay">Connecting...</div>
+            <div class="user-tag" id="userBadgeDisplay" style="cursor:pointer;" onclick="executeFieldCrewLogout()" title="Click to Logout Session">Connecting...</div>
         </div>
         <div class="nav-tabs-scroll">
             <button type="button" class="nav-tab-btn active-tab" id="tabWO" onclick="routeAppModule('WO', 'tabWO')">🛠️ Contract WO</button>
@@ -319,7 +319,7 @@
                 <div><p style="font-size:13px; font-weight:bold;">Payer Acknowledgement Sign:</p><input type="text" id="inv_client" placeholder="Sign for receipt..."></div>
             </div>
             <div class="button-group-row">
-                <button type="button" class="btn-action" style="background-color: #2563eb;" onclick="executeNativeMobileTapToPay()">📲 Tap to Pay via Square App</button>
+                <button type="button" class="btn-action" style="background-color: #2563eb;" id="fieldCrewTapToPayTriggerBtn">📲 Tap to Pay via Square App</button>
                 <button type="button" class="btn-action" id="invSubmissionActionBtn" style="background-color: var(--success);" onclick="processSecureNativeSquarePayment()">Finalize Ledger &amp; Charge Card</button>
                 <button type="button" class="btn-export" style="background-color: #475569;" onclick="window.print()">Print Receipt View</button>
             </div>
@@ -460,6 +460,7 @@
         var PUNCH_STATE = false; 
         var SQUARE_CARD_OBJECT_INSTANCE = null; 
 
+        // UPGRADED AUTO-RESTORE ENGINE: Hydrates the layout from persistent hardware memory targets instantly
         window.addEventListener('DOMContentLoaded', function() {
             var today = new Date().toISOString().split('T')[0];
             if(document.getElementById('wo_date')) document.getElementById('wo_date').value = today;
@@ -467,13 +468,20 @@
             if(document.getElementById('l2_date')) document.getElementById('l2_date').value = today;
             if(document.getElementById('l1_date')) document.getElementById('l1_date').value = today;
 
-            setTimeout(function() {
-                var passkeyNode = document.getElementById('passkeyField');
-                if(passkeyNode) { passkeyNode.focus(); }
-            }, 350); 
+            var sessionActive = localStorage.getItem('eversafe_session_active');
+            var cachedUser = localStorage.getItem('eversafe_authenticated_user');
+            
+            if (sessionActive === 'true' && cachedUser) {
+                CURRENT_LOGGED_IN_USER = cachedUser;
+                initializeUnlockedDashboardInterface();
+            } else {
+                setTimeout(function() {
+                    var passkeyNode = document.getElementById('passkeyField');
+                    if(passkeyNode) { passkeyNode.focus(); }
+                }, 350);
+            }
         });
 
-        // Mode "no-cors" forces browser pipeline to bypass CORS and redirect preflight traps entirely
         async function runRemoteApiCall(payloadObject) {
             try {
                 await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -498,25 +506,42 @@
                 let result = await runRemoteApiCall({ route: "verifyUserPasscode", passkey: inputKey });
                 if(result.success) {
                     CURRENT_LOGGED_IN_USER = result.authorizedUser;
-                    document.getElementById('loginGate').style.display = "none";
-                    document.getElementById('mainHeaderBar').style.display = "block";
-                    document.getElementById('mainAppContainer').style.display = "block";
-                    document.getElementById('fixedBottomNavBar').style.display = "block";
                     
-                    document.getElementById('userBadgeDisplay').innerText = CURRENT_LOGGED_IN_USER;
-                    document.getElementById('wo_tech').value = CURRENT_LOGGED_IN_USER;
-                    document.getElementById('inv_tech').value = CURRENT_LOGGED_IN_USER;
-                    document.getElementById('l2_tech').value = CURRENT_LOGGED_IN_USER;
-                    document.getElementById('l1_tech').value = CURRENT_LOGGED_IN_USER;
-                    document.getElementById('disp_crew').value = CURRENT_LOGGED_IN_USER;
-
-                    evaluateContextualSafetyGate();
-                    initializeSquareNativeFormElement(); 
+                    // Anchor session data strings to physical device cache layer
+                    localStorage.setItem('eversafe_authenticated_user', CURRENT_LOGGED_IN_USER);
+                    localStorage.setItem('eversafe_session_active', 'true');
+                    
+                    initializeUnlockedDashboardInterface();
                 } else {
                     errorMsg.innerText = result.error; errorMsg.style.display = "block";
                 }
             } catch (err) {
                 errorMsg.innerText = "Connection Error: API Gateway Endpoint Offline."; errorMsg.style.display = "block";
+            }
+        }
+
+        function initializeUnlockedDashboardInterface() {
+            document.getElementById('loginGate').style.display = "none";
+            document.getElementById('mainHeaderBar').style.display = "block";
+            document.getElementById('mainAppContainer').style.display = "block";
+            document.getElementById('fixedBottomNavBar').style.display = "block";
+            
+            document.getElementById('userBadgeDisplay').innerText = CURRENT_LOGGED_IN_USER;
+            document.getElementById('wo_tech').value = CURRENT_LOGGED_IN_USER;
+            document.getElementById('inv_tech').value = CURRENT_LOGGED_IN_USER;
+            document.getElementById('l2_tech').value = CURRENT_LOGGED_IN_USER;
+            document.getElementById('l1_tech').value = CURRENT_LOGGED_IN_USER;
+            document.getElementById('disp_crew').value = CURRENT_LOGGED_IN_USER;
+
+            evaluateContextualSafetyGate();
+            initializeSquareNativeFormElement(); 
+        }
+
+        function executeFieldCrewLogout() {
+            if(confirm("Log out of the current field crew session?")) {
+                localStorage.removeItem('eversafe_session_active');
+                localStorage.removeItem('eversafe_authenticated_user');
+                window.location.reload();
             }
         }
 
@@ -578,67 +603,6 @@
                      actionBtn.disabled = false; actionBtn.innerText = "Finalize Ledger & Charge Card";
                 }
             }
-        }
-
-        // METHOD 1 TAP TO PAY: Fortified Isolation Engine with Local PC Diagnostic Fallbacks
-        function executeNativeMobileTapToPay() {
-            var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
-            var customerName = document.getElementById('inv_cust').value || "Field Client";
-            var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
-            
-            if (amountInCents <= 0) {
-                alert("Transaction Aborted: Balanced total must be greater than zero.");
-                return;
-            }
-
-            var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
-            var userAgentString = navigator.userAgent || navigator.vendor || window.opera;
-            
-            // 🖥️ PC PREVENTATIVE BLOCK: Ensures desktops intercept cleanly and describe the mobile route
-            var isMobile = /Android|iPhone|iPad|iPod/i.test(userAgentString);
-            if (!isMobile) {
-                alert("💻 Terminal Route Notice:\nTap to Pay utilizes the phone's native hardware NFC antenna. To test or utilize this feature, open this webpage on your mobile device terminal. For desktop payments, use the 'Secure Credit Card Terminal' manual box fields above.");
-                return;
-            }
-
-            var isAndroid = /Android/i.test(userAgentString);
-            var targetHardwareUrl = "";
-
-            // 📱 PATH A: MOBILE ANDROID SCHEME INTENTS
-            if (isAndroid) {
-                targetHardwareUrl = "intent:#Intent;" +
-                    "action=com.squareup.pos.action.CHARGE;" +
-                    "package=com.squareup;" +
-                    "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
-                    "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
-                    "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
-                    "S.com.squareup.pos.API_VERSION=v2.0;" +
-                    "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
-                    "S.com.squareup.pos.CURRENCY_CODE=USD;" +
-                    "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
-                    "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
-                    "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
-                    "end";
-            } 
-            // 🍏 PATH B: MOBILE APPLE iOS SCHEMES
-            else {
-                var jsonPayloadObject = {
-                    "amount_money": { "amount": amountInCents, "currency_code": "USD" },
-                    "options": { "supported_tender_types": ["CREDIT_CARD"], "auto_return": true },
-                    "client_id": SQUARE_APPLICATION_ID,
-                    "location_id": SQUARE_LOCATION_ID,
-                    "notes": "EverSafe Invoice: " + customerName,
-                    "callback_url": callbackUrl,
-                    "version": "1.3"
-                };
-                targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
-            }
-
-            // Sync structural trace tracking log rows to backend ledger
-            try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_LAUNCHED", invoiceTotal] }); } catch(e){}
-
-            // 🚀 EXECUTE REPLACE RUNTIME: Shifts screens natively without forcing a browser cache refresh
-            window.location.replace(targetHardwareUrl);
         }
 
         function evaluateContextualSafetyGate() {
@@ -845,6 +809,86 @@
                 } catch(err) { statusDiv.innerHTML = "Network Endpoint Disconnect."; }
             }; reader.readAsDataURL(file);
         }
+
+        // DECOUPLED ASYNCHRONOUS DEEP-LINKING BACKGROUND HANDLER
+        document.addEventListener('DOMContentLoaded', function() {
+            var tapBtn = document.getElementById('fieldCrewTapToPayTriggerBtn');
+            if (tapBtn) {
+                tapBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
+                    var customerName = document.getElementById('inv_cust').value || "Field Client";
+                    var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
+                    
+                    if (amountInCents <= 0) {
+                        alert("Transaction Aborted: Balanced total must be greater than zero.");
+                        return;
+                    }
+
+                    var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
+                    var userAgentString = navigator.userAgent || navigator.vendor || window.opera;
+                    
+                    var isMobile = /Android|iPhone|iPad|iPod/i.test(userAgentString);
+                    if (!isMobile) {
+                        alert("💻 Terminal Route Notice:\nTap to Pay utilizes the phone's native hardware NFC antenna. To use this feature, open this webpage on your mobile device terminal. For desktop payments, use the 'Secure Credit Card Terminal' manual box fields above.");
+                        return;
+                    }
+
+                    var isAndroid = /Android/i.test(userAgentString);
+                    var targetHardwareUrl = "";
+
+                    // MOBILE ANDROID INTENTS
+                    if (isAndroid) {
+                        targetHardwareUrl = "intent:#Intent;" +
+                            "action=com.squareup.pos.action.CHARGE;" +
+                            "package=com.squareup;" +
+                            "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
+                            "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
+                            "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
+                            "S.com.squareup.pos.API_VERSION=v2.0;" +
+                            "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
+                            "S.com.squareup.pos.CURRENCY_CODE=USD;" +
+                            "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
+                            "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
+                            "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
+                            "end";
+                    } 
+                    // MOBILE APPLE iOS DEEP LINKS
+                    else {
+                        var jsonPayloadObject = {
+                            "amount_money": { "amount": amountInCents, "currency_code": "USD" },
+                            "options": { "supported_tender_types": ["CREDIT_CARD"], "auto_return": true },
+                            "client_id": SQUARE_APPLICATION_ID,
+                            "location_id": SQUARE_LOCATION_ID,
+                            "notes": "EverSafe Invoice: " + customerName,
+                            "callback_url": callbackUrl,
+                            "version": "1.3"
+                        };
+                        targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
+                    }
+
+                    try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_BG_ATTEMPT", invoiceTotal] }); } catch(err){}
+
+                    // Sandbox frame delivery system traps crashes and maintains background layout runtime stability
+                    var hiddenIframeTracker = document.createElement("iframe");
+                    hiddenIframeTracker.style.border = "none";
+                    hiddenIframeTracker.style.width = "1px";
+                    hiddenIframeTracker.style.height = "1px";
+                    hiddenIframeTracker.style.display = "none";
+                    hiddenIframeTracker.src = targetHardwareUrl;
+                    
+                    document.body.appendChild(hiddenIframeTracker);
+                    
+                    setTimeout(function() {
+                        if(hiddenIframeTracker && hiddenIframeTracker.parentNode) {
+                            hiddenIframeTracker.parentNode.removeChild(hiddenIframeTracker);
+                        }
+                    }, 2000);
+                });
+            }
+        });
     </script>
 </body>
 </html>
