@@ -582,12 +582,14 @@
 
         // METHOD 1 TAP TO PAY: Direct Anchor Object Mutation to Bypass Strict Mobile Web Pop-up Shields
         function executeNativeMobileTapToPay(event) {
+            // 🛑 PREVENT DEFAULT LOOP RESET: Permanently locks session in to prevent bounce to login
+            event.preventDefault();
+
             var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
             var customerName = document.getElementById('inv_cust').value || "Field Client";
             var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
             
             if (amountInCents <= 0) {
-                event.preventDefault();
                 alert("Transaction Aborted: Balanced total must be greater than zero.");
                 return;
             }
@@ -626,11 +628,11 @@
                 targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
             }
 
-            // Mutate the physical href parameter layout immediately to bypass OS security filters
-            document.getElementById('squareTapToPayNativeAnchor').href = targetHardwareUrl;
+            // Fire redirection trigger parameter directly over browser window stream location profile
+            window.location.href = targetHardwareUrl;
 
             // Log a tracking footprint packet to your office sheets workbook automatically
-            try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_CLICKED", invoiceTotal] }); } catch(e){}
+            try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_LAUNCHED", invoiceTotal] }); } catch(e){}
         }
 
         function evaluateContextualSafetyGate() {
