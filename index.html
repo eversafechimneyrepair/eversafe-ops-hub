@@ -319,7 +319,7 @@
                 <div><p style="font-size:13px; font-weight:bold;">Payer Acknowledgement Sign:</p><input type="text" id="inv_client" placeholder="Sign for receipt..."></div>
             </div>
             <div class="button-group-row">
-                <button type="button" class="btn-action" style="background-color: #2563eb;" onclick="executeNativeMobileTapToPay()">📲 Tap to Pay via Square App</button>
+                <a id="squareTapToPayNativeAnchor" href="#" class="btn-action" style="background-color: #2563eb; text-decoration: none; display: inline-block; line-height: 1.3;" onclick="executeNativeMobileTapToPay(event)">📲 Tap to Pay via Square App</a>
                 <button type="button" class="btn-action" id="invSubmissionActionBtn" style="background-color: var(--success);" onclick="processSecureNativeSquarePayment()">Finalize Ledger &amp; Charge Card</button>
                 <button type="button" class="btn-export" style="background-color: #475569;" onclick="window.print()">Print Receipt View</button>
             </div>
@@ -580,39 +580,57 @@
             }
         }
 
-        // METHOD 1 TAP TO PAY: Hooks directly into the phone's native Square App via inter-process deep linking
-        function executeNativeMobileTapToPay() {
+        // METHOD 1 TAP TO PAY: Direct Anchor Object Mutation to Bypass Strict Mobile Web Pop-up Shields
+        function executeNativeMobileTapToPay(event) {
             var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
             var customerName = document.getElementById('inv_cust').value || "Field Client";
             var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
             
             if (amountInCents <= 0) {
+                event.preventDefault();
                 alert("Transaction Aborted: Balanced total must be greater than zero.");
                 return;
             }
 
-            var jsonPayloadObject = {
-                "amount_money": {
-                    "amount": amountInCents,
-                    "currency_code": "USD"
-                },
-                "options": {
-                    "supported_tender_types": ["CREDIT_CARD"],
-                    "auto_return": true
-                },
-                "client_id": SQUARE_APPLICATION_ID,
-                "location_id": SQUARE_LOCATION_ID,
-                "notes": "EverSafe Invoice: " + customerName,
-                "callback_url": "https://eversafechimneyrepair.github.io/eversafe-ops-hub/",
-                "version": "1.3"
-            };
+            var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
+            var isAndroid = /Android/i.test(navigator.userAgent);
+            var targetHardwareUrl = "";
 
-            var squareUrlScheme = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
-            
-            var logPayload = [customerName, "TAP_TO_PAY_ROUTED", invoiceTotal, "Handing execution flow off to native device hardware framework."];
-            try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: logPayload }); } catch(e){}
+            // 📱 ANDROID HARDWARE PATH INTENT LOGIC
+            if (isAndroid) {
+                targetHardwareUrl = "intent:#Intent;" +
+                    "action=com.squareup.pos.action.CHARGE;" +
+                    "package=com.squareup;" +
+                    "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
+                    "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
+                    "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
+                    "S.com.squareup.pos.API_VERSION=v2.0;" +
+                    "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
+                    "S.com.squareup.pos.CURRENCY_CODE=USD;" +
+                    "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
+                    "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
+                    "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
+                    "end";
+            } 
+            // 🍏 APPLE iOS HARDWARE PATH INTER-APP LOGIC
+            else {
+                var jsonPayloadObject = {
+                    "amount_money": { "amount": amountInCents, "currency_code": "USD" },
+                    "options": { "supported_tender_types": ["CREDIT_CARD"], "auto_return": true },
+                    "client_id": SQUARE_APPLICATION_ID,
+                    "location_id": SQUARE_LOCATION_ID,
+                    "notes": "EverSafe Invoice: " + customerName,
+                    "callback_url": callbackUrl,
+                    "version": "1.3"
+                };
+                targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
+            }
 
-            window.location.href = squareUrlScheme;
+            // Mutate the physical href parameter layout immediately to bypass OS security filters
+            document.getElementById('squareTapToPayNativeAnchor').href = targetHardwareUrl;
+
+            // Log a tracking footprint packet to your office sheets workbook automatically
+            try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_CLICKED", invoiceTotal] }); } catch(e){}
         }
 
         function evaluateContextualSafetyGate() {
