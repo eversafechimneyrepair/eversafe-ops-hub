@@ -58,7 +58,6 @@
             text-align: center;
         }
 
-        /* FIXED UNIFIED HEADER BAR PACKAGE */
         .app-header {
             background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none;
@@ -85,7 +84,6 @@
         }
         .header-tab-btn.active-tab { color: white; border-bottom-color: var(--accent); background-color: rgba(255,255,255,0.05); }
 
-        /* FIXED APP FOOTER NAVIGATION BAR */
         .fixed-bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary);
             box-shadow: 0 -4px 12px rgba(0,0,0,0.15); display: none; z-index: 100; height: 68px;
@@ -131,9 +129,6 @@
         .input-notes { width: 100%; padding: 4px 0; border: none; border-bottom: 1px solid transparent; background: transparent; font-family: inherit; font-size: 13px; color: #0000ff; text-align: center; }
         .input-notes:focus { outline: none; border-bottom-color: var(--accent); background: #fffdf9; }
 
-        .app-module { display: none; text-align: center; }
-        .app-module.active-module { display: block; }
-
         .defect-badge { padding: 1px 4px; border-radius: 3px; font-size: 10px; font-weight: bold; color: white; display: inline-block; text-transform: uppercase; margin-bottom: 2px; }
         .badge-critical { background-color: var(--danger); animation: pulse 1.5s infinite; }
         .badge-major { background-color: var(--accent-dark); }
@@ -152,7 +147,13 @@
         .lookup-input { flex: 3; text-transform: uppercase; font-weight: bold; color: var(--primary); letter-spacing: 0.5px; }
         .btn-lookup { flex: 1; background-color: var(--info); color: white; font-weight: bold; padding: 11px; border: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
 
+        /* UPGRADED TOUCH CANVAS SIGNATURE BOX ARCHITECTURE */
+        .signature-wrapper-container { text-align: center; margin-top: 10px; width: 100%; max-width: 380px; }
+        .sig-canvas-element { border: 2px dashed var(--border); background-color: #fafbfc; border-radius: 6px; cursor: crosshair; display: block; margin: 4px auto; touch-action: none; width: 100%; height: 110px; }
+        .btn-clear-sig { background: #94a3b8; color: white; border: none; padding: 4px 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; margin-top: 2px; }
+
         .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px; justify-items: center; }
+        @media (max-width: 600px) { .signature-grid { grid-template-columns: 1fr; gap: 15px; } }
         
         .legal-box {
             font-size: 11px; color: #475569; border: 1px solid var(--border); background: #f8fafc;
@@ -233,7 +234,7 @@
             </div>
         </div>
         <div class="header-tabs-scroll">
-            <button type="button" class="header-tab-btn active-tab" id="tabWO" onclick="routeAppModule('WO', 'tabWO')">🛠7; WO</button>
+            <button type="button" class="header-tab-btn active-tab" id="tabWO" onclick="routeAppModule('WO', 'tabWO')">🛠️ WO</button>
             <button type="button" class="header-tab-btn" id="tabInvoice" onclick="navToInvoiceAndSyncJobDetails('tabInvoice')">🧾 Invoice</button>
             <button type="button" class="header-tab-btn" id="tabLvl2" onclick="routeAppModule('Lvl2', 'tabLvl2')">📋 L2</button>
             <button type="button" class="header-tab-btn" id="tabLvl1" onclick="routeAppModule('Lvl1', 'tabLvl1')">🔍 L1</button>
@@ -253,10 +254,12 @@
                 </div>
             </div>
             <div class="app-card" id="woCardContainer">
+                
                 <div class="lookup-bar-wrapper">
                     <input type="text" id="officeJobSearchQueryInputField" class="lookup-input" placeholder="Enter Job or Dispatch # (e.g., JOB-1052)">
                     <button type="button" class="btn-lookup" id="officeQueryActionSearchBtn" onclick="executeOfficeDatabaseRecordLookupPipeline()">🔍 Fetch File</button>
                 </div>
+
                 <h3>Authorized Work Contract</h3>
                 <div class="grid-2">
                     <div><label>Customer Name:</label><input type="text" id="wo_cust" placeholder="Client profile name..."></div>
@@ -297,8 +300,16 @@
                     <strong>EverSafe Chimney Terms &amp; Conditions (NFPA 211 Proviso):</strong> By signing below, the customer authorizes EverSafe Chimney Repair LLC to execute the repairs detailed above.
                 </div>
                 <div class="signature-grid">
-                    <div><p>Lead Field Tech:</p><input type="text" id="wo_tech" readonly style="background:#f1f5f9; color:#475569; font-weight:bold;"></div>
-                    <div><p>Customer Sign-off:</p><input type="text" id="wo_client" placeholder="Type customer name to authorize..."></div>
+                    <div class="signature-wrapper-container">
+                        <p style="font-size:12px; font-weight:bold;">Lead Field Tech:</p>
+                        <canvas id="wo_tech_sig_pad" class="sig-canvas-element"></canvas>
+                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('wo_tech_sig_pad')">Clear</button>
+                    </div>
+                    <div class="signature-wrapper-container">
+                        <p style="font-size:12px; font-weight:bold;">Customer Sign-off:</p>
+                        <canvas id="wo_client_sig_pad" class="sig-canvas-element"></canvas>
+                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('wo_client_sig_pad')">Clear</button>
+                    </div>
                 </div>
                 <div class="button-group-row">
                     <button type="button" class="btn-action" onclick="uploadWorkOrderToOfficeSheet()">Log Contract &amp; Email Copy</button>
@@ -341,8 +352,16 @@
             </div>
             <div class="legal-box"><strong>EverSafe Settlement Agreement:</strong> Homeowner confirms performance of operations.</div>
             <div class="signature-grid">
-                <div><p style="font-size:13px; font-weight:bold;">Billing Agent Sign:</p><input type="text" id="inv_tech" readonly style="background:#f1f5f9; color:#475569; font-weight:bold; text-align: center;"></div>
-                <div><p style="font-size:13px; font-weight:bold;">Payer Acknowledgement Sign:</p><input type="text" id="inv_client" placeholder="Sign for receipt..."></div>
+                <div class="signature-wrapper-container">
+                    <p style="font-size:12px; font-weight:bold;">Billing Agent Sign:</p>
+                    <canvas id="inv_tech_sig_pad" class="sig-canvas-element"></canvas>
+                    <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('inv_tech_sig_pad')">Clear</button>
+                </div>
+                <div class="signature-wrapper-container">
+                    <p style="font-size:12px; font-weight:bold;">Payer Acknowledgement Sign:</p>
+                    <canvas id="inv_client_sig_pad" class="sig-canvas-element"></canvas>
+                    <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('inv_client_sig_pad')">Clear</button>
+                </div>
             </div>
             <div class="button-group-row">
                 <button type="button" class="btn-action" style="background-color: #2563eb;" id="fieldCrewTapToPayTriggerBtn">📲 Tap to Pay via Square App</button>
@@ -443,8 +462,16 @@
 
                 <div style="margin-top: 20px;"><label style="font-size:12px; font-weight:bold; color:#475569;">Final Compliance Evaluation Summary:</label><textarea id="l2_summary" rows="3"></textarea></div>
                 <div class="signature-grid">
-                    <div><p style="font-size:13px; font-weight:bold;">Lead Tech:</p><input type="text" id="l2_tech" readonly style="background:#f1f5f9; color:#475569; text-align: center;"></div>
-                    <div><p style="font-size:13px; font-weight:bold;">Signature:</p><input type="text" id="l2_client"></div>
+                    <div class="signature-wrapper-container">
+                        <p style="font-size:12px; font-weight:bold;">Lead Tech Sign:</p>
+                        <canvas id="l2_tech_sig_pad" class="sig-canvas-element"></canvas>
+                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l2_tech_sig_pad')">Clear</button>
+                    </div>
+                    <div class="signature-wrapper-container">
+                        <p style="font-size:12px; font-weight:bold;">Witness Acknowledgement:</p>
+                        <canvas id="l2_client_sig_pad" class="sig-canvas-element"></canvas>
+                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l2_client_sig_pad')">Clear</button>
+                    </div>
                 </div>
                 <div class="button-group-row">
                     <button type="button" class="btn-action" id="l2SubmitBtn" onclick="uploadLevel2ToOfficeSheet()">Submit Level 2 Report to Office</button>
@@ -488,8 +515,16 @@
                 </table>
                 <div style="margin-top: 20px;"><label>Final Evaluation Summary:</label><textarea id="l1_summary" rows="3"></textarea></div>
                 <div class="signature-grid">
-                    <div><p style="font-size:13px; font-weight:bold;">Lead Tech:</p><input type="text" id="l1_tech" readonly style="background:#f1f5f9; color:#475569; text-align: center;"></div>
-                    <div><p style="font-size:13px; font-weight:bold;">Signature:</p><input type="text" id="l1_client"></div>
+                    <div class="signature-wrapper-container">
+                        <p style="font-size:12px; font-weight:bold;">Lead Tech Sign:</p>
+                        <canvas id="l1_tech_sig_pad" class="sig-canvas-element"></canvas>
+                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l1_tech_sig_pad')">Clear</button>
+                    </div>
+                    <div class="signature-wrapper-container">
+                        <p style="font-size:12px; font-weight:bold;">Customer Sign-off:</p>
+                        <canvas id="l1_client_sig_pad" class="sig-canvas-element"></canvas>
+                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l1_client_sig_pad')">Clear</button>
+                    </div>
                 </div>
                 <div class="button-group-row"><button type="button" class="btn-action" onclick="uploadLevel1ToOfficeSheet()">Submit Level 1 Report</button></div>
             </div>
@@ -545,6 +580,7 @@
         var SQUARE_CARD_OBJECT_INSTANCE = null; 
         var TIME_CLOCK_TIMER_OBJECT = null; 
         var TIME_CLOCK_START_UNIX_MS = null;
+        var MASTER_CANVAS_SIGNATURE_PAD_MAP = {}; 
 
         window.addEventListener('DOMContentLoaded', function() {
             var today = new Date().toISOString().split('T')[0];
@@ -653,7 +689,62 @@
             document.getElementById('l1_tech').value = CURRENT_LOGGED_IN_USER;
             document.getElementById('disp_crew').value = CURRENT_LOGGED_IN_USER;
 
-            evaluateContextualSafetyGate(); initializeSquareNativeFormElement(); 
+            evaluateContextualSafetyGate(); 
+            initializeSquareNativeFormElement(); 
+            initializeAllHardwareSignatureCanvasElements(); 
+        }
+
+        // DYNAMIC TOUCH CANVAS DRAW ENGINE INITIALIZER
+        function initializeAllHardwareSignatureCanvasElements() {
+            var canvasTargetIdArray = ['wo_tech_sig_pad', 'wo_client_sig_pad', 'inv_tech_sig_pad', 'inv_client_sig_pad', 'l2_tech_sig_pad', 'l2_client_sig_pad', 'l1_tech_sig_pad', 'l1_client_sig_pad'];
+            
+            canvasTargetIdArray.forEach(function(canvasId) {
+                var canvas = document.getElementById(canvasId);
+                if(!canvas) return;
+                
+                var ctx = canvas.getContext("2d");
+                ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3; ctx.lineCap = "round";
+                
+                var isDrawing = false;
+                var lastX = 0; var lastY = 0;
+                
+                function getCoordinates(e) {
+                    var rect = canvas.getBoundingClientRect();
+                    var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    return { x: clientX - rect.left, y: clientY - rect.top };
+                }
+
+                function startDraw(e) { isDrawing = true; var coords = getCoordinates(e); lastX = coords.x; lastY = coords.y; }
+                function draw(e) {
+                    if (!isDrawing) return; e.preventDefault();
+                    var coords = getCoordinates(e); ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(coords.x, coords.y); ctx.stroke();
+                    lastX = coords.x; lastY = coords.y;
+                }
+                function stopDraw() { isDrawing = false; }
+
+                canvas.addEventListener("mousedown", startDraw); canvas.addEventListener("mousemove", draw); window.addEventListener("mouseup", stopDraw);
+                canvas.addEventListener("touchstart", startDraw); canvas.addEventListener("touchmove", draw, { passive: false }); canvas.addEventListener("touchend", stopDraw);
+                
+                MASTER_CANVAS_SIGNATURE_PAD_MAP[canvasId] = { canvas: canvas, context: ctx };
+            });
+        }
+
+        function clearSignatureCanvasWindow(canvasId) {
+            var target = MASTER_CANVAS_SIGNATURE_PAD_MAP[canvasId];
+            if(target) { target.context.clearRect(0, 0, target.canvas.width, target.canvas.height); }
+        }
+
+        function extractCanvasBase64DataStringUrl(canvasId) {
+            var canvas = document.getElementById(canvasId);
+            if(!canvas) return "N/A";
+            
+            // Check if the canvas window is completely blank before parsing lines
+            var blankCheckBuffer = document.createElement('canvas');
+            blankCheckBuffer.width = canvas.width; blankCheckBuffer.height = canvas.height;
+            if(canvas.toDataURL() === blankCheckBuffer.toDataURL()) return "EMPTY_SIG";
+            
+            return canvas.toDataURL("image/png");
         }
 
         function executeFieldCrewLogout() {
@@ -673,7 +764,6 @@
             if(el) { el.classList.add('input-error-shake'); setTimeout(function() { el.classList.remove('input-error-shake'); }, 600); }
         }
 
-        // RESTORED IN ALL updates: Standard PCI terminal integration loops
         async function initializeSquareNativeFormElement() {
             if(SQUARE_CARD_OBJECT_INSTANCE) return;
             try {
@@ -828,36 +918,9 @@
             }
         }
 
-        function convertPriceNumericToTextWords(amount) {
-            var words = new Array();
-            words[0] = ''; words[1] = 'One'; words[2] = 'Two'; words[3] = 'Three'; words[4] = 'Four'; words[5] = 'Five'; words[6] = 'Six'; words[7] = 'Seven'; words[8] = 'Eight'; words[9] = 'Nine'; words[10] = 'Ten'; words[11] = 'Eleven'; words[12] = 'Twelve'; words[13] = 'Thirteen'; words[14] = 'Fourteen'; words[15] = 'Fifteen'; words[16] = 'Sixteen'; words[17] = 'Seventeen'; words[18] = 'Eighteen'; words[19] = 'Nineteen'; words[20] = 'Twenty'; words[30] = 'Thirty'; words[40] = 'Forty'; words[50] = 'Fifty'; words[60] = 'Sixty'; words[70] = 'Seventy'; words[80] = 'Eighty'; words[90] = 'Ninety';
-            amount = amount.toString(); var atsplit = amount.split('.'); var num = atsplit[0]; var cents = atsplit[1] || "00";
-            if (cents.length == 1) cents += "0"; var n_length = num.length; var words_string = "";
-            if (n_length <= 9) {
-                var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0); var received_n_array = new Array();
-                for (var i = 0; i < n_length; i++) { received_n_array[i] = num.substr(i, 1); }
-                for (var i = 9 - n_length, j = 0; i < 9; i++, j++) { n_array[i] = received_n_array[j]; }
-                for (var i = 0, j = 1; i < 9; i++, j++) { if (i == 0 || i == 2 || i == 4 || i == 7) { if (n_array[i] == 1) { n_array[j] = 10 + parseInt(n_array[j]); n_array[i] = 0; } } }
-                var value = "";
-                for (var i = 0; i < 9; i++) {
-                    if (i == 0 || i == 2 || i == 4 || i == 7) { value = n_array[i] * 10; } else { value = n_array[i]; }
-                    if (value != 0) { words_string += words[value] + " "; }
-                    if ((i == 1 && value != 0) || (i == 0 && value != 0 && n_array[i + 1] == 0)) { words_string += "Million "; }
-                    if ((i == 3 && value != 0) || (i == 2 && value != 0 && n_array[i + 1] == 0)) { words_string += "Thousand "; }
-                    if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) { words_string += "Hundred "; }
-                }
-            }
-            return (words_string.trim() || "Zero") + " Dollars and " + cents + "/100";
-        }
-
-        function updateContractPriceTextStringWords() {
-            var val = parseFloat(document.getElementById('wo_price').value) || 0;
-            document.getElementById('wo_price_words_readout').innerText = "Balance: " + convertPriceNumericToTextWords(val.toFixed(2));
-        }
-
         function generateInvoiceFromWorkOrder() {
             var targetClient = document.getElementById('wo_cust').value; var targetAddr = document.getElementById('wo_addr').value;
-            if(!targetClient || !targetAddr) { alert("Profile target name or site coordinates missing."); return; }
+            if(!targetClient || !targetAddr) { alert("Omission profile fields missing entry."); return; }
             var compiledScopeString = "Authorized Chimney Service Directives:\n" + document.getElementById('wo_scope').value + "\n\nContract Value Word-Token: " + convertPriceNumericToTextWords(parseFloat(document.getElementById('wo_price').value || 0).toFixed(2)).toUpperCase();
             executeModuleTabSwitch('Invoice', 'tabInvoice');
             document.getElementById('inv_cust').value = targetClient; document.getElementById('inv_email').value = document.getElementById('wo_email').value;
@@ -884,20 +947,30 @@
         async function uploadWorkOrderToOfficeSheet() {
             var clientVal = document.getElementById('wo_cust').value;
             if(!clientVal.trim()) { alert("Omission Error: Provide Customer Profile Name entry."); flashValidationAlertState('wo_cust'); return; }
-            var payload = [clientVal, document.getElementById('wo_date').value, document.getElementById('wo_addr').value, document.getElementById('wo_scope').value, document.getElementById('wo_price').value, document.getElementById('wo_status').value, document.getElementById('wo_tech').value, document.getElementById('wo_client').value, document.getElementById('wo_clock_in').value, document.getElementById('wo_clock_out').value, document.getElementById('wo_email').value];
+            
+            var techSig = extractCanvasBase64DataStringUrl('wo_tech_sig_pad');
+            var clientSig = extractCanvasBase64DataStringUrl('wo_client_sig_pad');
+            
+            var payload = [clientVal, document.getElementById('wo_date').value, document.getElementById('wo_addr').value, document.getElementById('wo_scope').value, document.getElementById('wo_price').value, document.getElementById('wo_status').value, CURRENT_LOGGED_IN_USER, document.getElementById('wo_clock_in').value, document.getElementById('wo_clock_out').value, document.getElementById('wo_email').value, techSig, clientSig];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Work_Orders", payload: payload });
-            alert("Work Order Transmission Registered.");
+            alert("Work Order & Touch Signature Array Saved.");
         }
 
         async function uploadInvoiceToOfficeSheet(squareTraceLineString) {
             var actionBtn = document.getElementById('invSubmissionActionBtn');
-            var payload = [document.getElementById('inv_cust').value, document.getElementById('inv_date').value, document.getElementById('inv_addr').value, document.getElementById('inv_scope').value, document.getElementById('inv_subtotal').value, document.getElementById('inv_final_total').value, document.getElementById('inv_payment').value, document.getElementById('inv_status').value, document.getElementById('inv_tech').value, document.getElementById('inv_client').value, document.getElementById('inv_email').value, squareTraceLineString];
+            var techSig = extractCanvasBase64DataStringUrl('inv_tech_sig_pad');
+            var clientSig = extractCanvasBase64DataStringUrl('inv_client_sig_pad');
+
+            var payload = [document.getElementById('inv_cust').value, document.getElementById('inv_date').value, document.getElementById('inv_addr').value, document.getElementById('inv_scope').value, document.getElementById('inv_subtotal').value, document.getElementById('inv_final_total').value, document.getElementById('inv_payment').value, document.getElementById('inv_status').value, CURRENT_LOGGED_IN_USER, document.getElementById('inv_client').value, document.getElementById('inv_email').value, squareTraceLineString, techSig, clientSig];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Invoices", payload: payload });
-            alert("Invoice Record Dispatched Successfully.");
+            alert("Invoice Receipt Ledger Transmission Complete.");
             actionBtn.disabled = false; actionBtn.style.backgroundColor = "var(--success)"; actionBtn.innerText = "Finalize Ledger & Charge Card";
         }
 
         async function uploadLevel2ToOfficeSheet() {
+            var techSig = extractCanvasBase64DataStringUrl('l2_tech_sig_pad');
+            var clientSig = extractCanvasBase64DataStringUrl('l2_client_sig_pad');
+
             var payload = [
                 document.getElementById('l2_cust').value, document.getElementById('l2_date').value, document.getElementById('l2_addr').value,
                 document.getElementById('l2_c1').checked ? "Pass" : "Fail", document.getElementById('l2_n1').value,
@@ -908,23 +981,26 @@
                 document.getElementById('l2_c6').checked ? "Pass" : "Fail", document.getElementById('l2_n6').value,
                 document.getElementById('l2_c7').checked ? "Pass" : "Fail", document.getElementById('l2_n7').value,
                 document.getElementById('l2_c8').checked ? "Pass" : "Fail", document.getElementById('l2_n8').value,
-                document.getElementById('l2_summary').value, document.getElementById('l2_tech').value, document.getElementById('l2_client').value
+                document.getElementById('l2_summary').value, CURRENT_LOGGED_IN_USER, techSig, clientSig
             ];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Level2_Inspections", payload: payload });
-            alert("Level 2 Mappings Uploaded.");
+            alert("Level 2 NFPA Mappings Dispatched.");
         }
 
         async function uploadLevel1ToOfficeSheet() {
+            var techSig = extractCanvasBase64DataStringUrl('l1_tech_sig_pad');
+            var clientSig = extractCanvasBase64DataStringUrl('l1_client_sig_pad');
+
             var payload = [
                 document.getElementById('l1_cust').value, document.getElementById('l1_date').value, document.getElementById('l1_addr').value,
                 document.getElementById('l1_c1').checked ? "Pass" : "Fail", document.getElementById('l1_n1').value,
                 document.getElementById('l1_c2').checked ? "Pass" : "Fail", document.getElementById('l1_n2').value,
                 document.getElementById('l1_c3').checked ? "Pass" : "Fail", document.getElementById('l1_n3').value,
                 document.getElementById('l1_c4').checked ? "Pass" : "Fail", document.getElementById('l1_n4').value,
-                document.getElementById('l1_summary').value, document.getElementById('l1_tech').value, document.getElementById('l1_client').value
+                document.getElementById('l1_summary').value, CURRENT_LOGGED_IN_USER, techSig, clientSig
             ];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Level1_Inspections", payload: payload });
-            alert("Level 1 Inspection Filed.");
+            alert("Level 1 Checklist Filed.");
         }
 
         function processMobileUpload() {
@@ -958,18 +1034,12 @@
             let modules = document.querySelectorAll('.app-module'); 
             modules.forEach(m => m.classList.remove('active-module'));
             
-            let topTabs = document.querySelectorAll('.header-tab-btn'); 
-            topTabs.forEach(t => t.classList.remove('active-tab'));
-
-            let footTabs = document.querySelectorAll('.nav-tab-btn'); 
-            footTabs.forEach(f => f.classList.remove('active-tab'));
+            let topTabs = document.querySelectorAll('.header-tab-btn'); topTabs.forEach(t => t.classList.remove('active-tab'));
+            let footTabs = document.querySelectorAll('.nav-tab-btn'); footTabs.forEach(f => f.classList.remove('active-tab'));
             
-            var targetModId = 'mod' + moduleName;
-            var modEl = document.getElementById(targetModId); 
-            if(modEl) modEl.classList.add('active-module');
+            var modEl = document.getElementById('mod' + moduleName); if(modEl) modEl.classList.add('active-module');
             
             var normalizedBaseKey = (moduleName === 'Upload' ? 'Up' : moduleName === 'Lvl2' ? 'L2' : moduleName === 'Lvl1' ? 'L1' : moduleName);
-            
             var topBtn = document.getElementById('tab' + normalizedBaseKey); if(topBtn) topBtn.classList.add('active-tab');
             var footBtn = document.getElementById('b' + normalizedBaseKey); if(footBtn) footBtn.classList.add('active-tab');
             window.scrollTo(0,0);
@@ -983,7 +1053,7 @@
                     var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
                     if (amountInCents <= 0) { alert("Value must be greater than zero."); return; }
                     var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
-                    var targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify({ "amount_money": { "amount": amountInCents, "currency_code": "USD" }, "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE"], "auto_return": true }, "client_id": SQUARE_APPLICATION_ID, "location_id": SQUARE_LOCATION_ID, "notes": "EverSafe Hub Tap", "callback_url": callbackUrl, "version": "1.3" }));
+                    var targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify({ "amount_money": { "amount": amountInCents, "currency_code": "USD" }, "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE"], "auto_return": true }, "client_id": SQUARE_APPLICATION_ID, "location_id": SQUARE_LOCATION_ID, "notes": "EverSafe Hub", "callback_url": callbackUrl, "version": "1.3" }));
                     window.location.assign(targetHardwareUrl);
                 });
             }
