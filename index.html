@@ -471,11 +471,12 @@
             }, 350); 
         });
 
+        // Track A FIX: Configured as a cross-origin Simple Request to completely bypass OPTIONS preflight bottlenecks
         async function runRemoteApiCall(payloadObject) {
             let response = await fetch(GOOGLE_API_GATEWAY_URL, {
                 method: "POST",
-                mode: "cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                redirect: "follow",
+                headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify(payloadObject)
             });
             return await response.json();
