@@ -319,7 +319,7 @@
                 <div><p style="font-size:13px; font-weight:bold;">Payer Acknowledgement Sign:</p><input type="text" id="inv_client" placeholder="Sign for receipt..."></div>
             </div>
             <div class="button-group-row">
-                <button type="button" class="btn-action" style="background-color: #2563eb;" id="fieldCrewTapToPayTriggerBtn">📲 Tap to Pay via Square App</button>
+                <button type="button" class="btn-action" style="background-color: #2563eb;" onclick="executeNativeMobileTapToPay()">📲 Tap to Pay via Square App</button>
                 <button type="button" class="btn-action" id="invSubmissionActionBtn" style="background-color: var(--success);" onclick="processSecureNativeSquarePayment()">Finalize Ledger &amp; Charge Card</button>
                 <button type="button" class="btn-export" style="background-color: #475569;" onclick="window.print()">Print Receipt View</button>
             </div>
@@ -372,7 +372,7 @@
                                     <option value="">-- Code Presets --</option>
                                     <option value="[CRITICAL] Thermal stress fractures observed inside firebrick lining. Fire Hazard.">Thermal Fractures (CRITICAL)</option>
                                     <option value="[CRITICAL] Longitudinal crack detected inside masonry clay flue liner segment path.">Clay Liner Crack (CRITICAL)</option>
-                                    <option value="[MAJOR] Mortar joint disintegration noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
+                                    <option value="[MAJOR] Mortar joint degradation noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
                                 </select>
                             </td>
                         </tr>
@@ -580,6 +580,67 @@
             }
         }
 
+        // METHOD 1 TAP TO PAY: Fortified Isolation Engine with Local PC Diagnostic Fallbacks
+        function executeNativeMobileTapToPay() {
+            var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
+            var customerName = document.getElementById('inv_cust').value || "Field Client";
+            var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
+            
+            if (amountInCents <= 0) {
+                alert("Transaction Aborted: Balanced total must be greater than zero.");
+                return;
+            }
+
+            var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
+            var userAgentString = navigator.userAgent || navigator.vendor || window.opera;
+            
+            // 🖥️ PC PREVENTATIVE BLOCK: Ensures desktops intercept cleanly and describe the mobile route
+            var isMobile = /Android|iPhone|iPad|iPod/i.test(userAgentString);
+            if (!isMobile) {
+                alert("💻 Terminal Route Notice:\nTap to Pay utilizes the phone's native hardware NFC antenna. To test or utilize this feature, open this webpage on your mobile device terminal. For desktop payments, use the 'Secure Credit Card Terminal' manual box fields above.");
+                return;
+            }
+
+            var isAndroid = /Android/i.test(userAgentString);
+            var targetHardwareUrl = "";
+
+            // 📱 PATH A: MOBILE ANDROID SCHEME INTENTS
+            if (isAndroid) {
+                targetHardwareUrl = "intent:#Intent;" +
+                    "action=com.squareup.pos.action.CHARGE;" +
+                    "package=com.squareup;" +
+                    "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
+                    "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
+                    "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
+                    "S.com.squareup.pos.API_VERSION=v2.0;" +
+                    "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
+                    "S.com.squareup.pos.CURRENCY_CODE=USD;" +
+                    "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
+                    "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
+                    "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
+                    "end";
+            } 
+            // 🍏 PATH B: MOBILE APPLE iOS SCHEMES
+            else {
+                var jsonPayloadObject = {
+                    "amount_money": { "amount": amountInCents, "currency_code": "USD" },
+                    "options": { "supported_tender_types": ["CREDIT_CARD"], "auto_return": true },
+                    "client_id": SQUARE_APPLICATION_ID,
+                    "location_id": SQUARE_LOCATION_ID,
+                    "notes": "EverSafe Invoice: " + customerName,
+                    "callback_url": callbackUrl,
+                    "version": "1.3"
+                };
+                targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
+            }
+
+            // Sync structural trace tracking log rows to backend ledger
+            try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_LAUNCHED", invoiceTotal] }); } catch(e){}
+
+            // 🚀 EXECUTE REPLACE RUNTIME: Shifts screens natively without forcing a browser cache refresh
+            window.location.replace(targetHardwareUrl);
+        }
+
         function evaluateContextualSafetyGate() {
             var stagingTrigger = document.getElementById('l2_staging_trigger').value;
             var auxiliaryDroneTrigger = document.getElementById('l2_drone_extra').value;
@@ -784,76 +845,6 @@
                 } catch(err) { statusDiv.innerHTML = "Network Endpoint Disconnect."; }
             }; reader.readAsDataURL(file);
         }
-
-        // FORTIFIED ASYNCHRONOUS EVENT LISTENER ENGINE: Completely isolates hardware routines from form-tracking reloads
-        document.addEventListener('DOMContentLoaded', function() {
-            var tapBtn = document.getElementById('fieldCrewTapToPayTriggerBtn');
-            if (tapBtn) {
-                tapBtn.addEventListener('click', function(e) {
-                    // Forcefully terminate any browser form submission chains instantly
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
-                    var customerName = document.getElementById('inv_cust').value || "Field Client";
-                    var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
-                    
-                    if (amountInCents <= 0) {
-                        alert("Transaction Aborted: Balanced total must be greater than zero.");
-                        return;
-                    }
-
-                    var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
-                    var userAgentString = navigator.userAgent || navigator.vendor || window.opera;
-                    
-                    // Hardware platform-detection tracking intercept
-                    var isMobile = /Android|iPhone|iPad|iPod/i.test(userAgentString);
-                    if (!isMobile) {
-                        alert("💻 Terminal Route Notice:\nTap to Pay utilizes the phone's native hardware NFC antenna. To use this feature, open this webpage on your mobile device terminal. For desktop payments, use the 'Secure Credit Card Terminal' manual box fields above.");
-                        return;
-                    }
-
-                    var isAndroid = /Android/i.test(userAgentString);
-                    var targetHardwareUrl = "";
-
-                    // 📱 MOBILE PATH A: ANDROID HARDWARE INTENT MAPS
-                    if (isAndroid) {
-                        targetHardwareUrl = "intent:#Intent;" +
-                            "action=com.squareup.pos.action.CHARGE;" +
-                            "package=com.squareup;" +
-                            "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
-                            "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
-                            "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
-                            "S.com.squareup.pos.API_VERSION=v2.0;" +
-                            "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
-                            "S.com.squareup.pos.CURRENCY_CODE=USD;" +
-                            "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
-                            "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
-                            "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
-                            "end";
-                    } 
-                    // 🍏 MOBILE PATH B: APPLE iOS HARDWARE DEEP LINKS
-                    else {
-                        var jsonPayloadObject = {
-                            "amount_money": { "amount": amountInCents, "currency_code": "USD" },
-                            "options": { "supported_tender_types": ["CREDIT_CARD"], "auto_return": true },
-                            "client_id": SQUARE_APPLICATION_ID,
-                            "location_id": SQUARE_LOCATION_ID,
-                            "notes": "EverSafe Invoice: " + customerName,
-                            "callback_url": callbackUrl,
-                            "version": "1.3"
-                        };
-                        targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
-                    }
-
-                    // Send concurrent tracking backup matrix to central ledger
-                    try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_LAUNCHED", invoiceTotal] }); } catch(err){}
-
-                    // 🚀 ISOLATED OVERLAY LAUNCH: Switches app drawers smoothly without disrupting page history memory layout states
-                    window.location.replace(targetHardwareUrl);
-                });
-            }
-        });
     </script>
 </body>
 </html>
