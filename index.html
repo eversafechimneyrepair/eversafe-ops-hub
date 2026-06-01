@@ -58,6 +58,7 @@
             text-align: center;
         }
 
+        /* FIXED UNIFIED HEADER BAR PACKAGE */
         .app-header {
             background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none;
@@ -84,6 +85,7 @@
         }
         .header-tab-btn.active-tab { color: white; border-bottom-color: var(--accent); background-color: rgba(255,255,255,0.05); }
 
+        /* FIXED APP FOOTER NAVIGATION BAR */
         .fixed-bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary);
             box-shadow: 0 -4px 12px rgba(0,0,0,0.15); display: none; z-index: 100; height: 68px;
@@ -128,7 +130,6 @@
         .row-defect-selector { font-size: 12px; padding: 4px; border: 1px dashed var(--border); border-radius: 4px; background: #fafafa; max-width: 100%; margin: 4px auto 0 auto; display: block; text-align: center; }
         .input-notes { width: 100%; padding: 4px 0; border: none; border-bottom: 1px solid transparent; background: transparent; font-family: inherit; font-size: 13px; color: #0000ff; text-align: center; }
         .input-notes:focus { outline: none; border-bottom-color: var(--accent); background: #fffdf9; }
-        .drone-row { background-color: #f8fafc; }
 
         .app-module { display: none; text-align: center; }
         .app-module.active-module { display: block; }
@@ -168,22 +169,6 @@
             content: "🔒 Connecting to Secure Merchant Vault Engine...";
             font-size: 12px; font-weight: bold; color: var(--text-muted);
             animation: pulse 1.5s infinite;
-        }
-
-        @media print {
-            .app-header, .btn-action, .btn-export, .login-overlay, .modal-overlay, .fixed-bottom-nav-bar, .button-group-row, select, .row-defect-selector, .segmented-control, .legal-box, .safety-staging-box, .hide-on-print, #sq-card-element, .lookup-bar-wrapper { display: none !important; }
-            body { background-color: white; padding: 0; color: #000000; text-align: center; }
-            .app-container { display: block !important; max-width: 100%; margin: 0; padding: 0; }
-            .app-module { display: none !important; }
-            .app-module.active-module { display: block !important; }
-            .app-card { border: none; box-shadow: none; padding: 0; margin: 0; }
-            input[type="text"], input[type="number"], input[type="date"], input[type="time"], textarea { 
-                border: none !important; border-bottom: 1px dotted #333 !important; background: transparent !important; padding: 2px !important; color: #000000 !important; font-weight: bold !important; text-align: center;
-            }
-            textarea { border: 1px solid #cbd5e1 !important; border-radius: 4px !important; }
-            .print-only-header { display: flex !important; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #0f172a; padding-bottom: 14px; margin-bottom: 25px; }
-            .section-title { background-color: #cbd5e1 !important; color: #000000 !important; border: 1px solid #94a3b8; border-bottom: none; -webkit-print-color-adjust: exact; padding: 6px 12px; text-align: center; }
-            .mapping-table th { background-color: #f1f5f9 !important; color: #000000 !important; -webkit-print-color-adjust: exact; text-align: center; }
         }
     </style>
 </head>
@@ -248,7 +233,7 @@
             </div>
         </div>
         <div class="header-tabs-scroll">
-            <button type="button" class="header-tab-btn active-tab" id="tabWO" onclick="routeAppModule('WO', 'tabWO')">🛠️ WO</button>
+            <button type="button" class="header-tab-btn active-tab" id="tabWO" onclick="routeAppModule('WO', 'tabWO')">🛠7; WO</button>
             <button type="button" class="header-tab-btn" id="tabInvoice" onclick="navToInvoiceAndSyncJobDetails('tabInvoice')">🧾 Invoice</button>
             <button type="button" class="header-tab-btn" id="tabLvl2" onclick="routeAppModule('Lvl2', 'tabLvl2')">📋 L2</button>
             <button type="button" class="header-tab-btn" id="tabLvl1" onclick="routeAppModule('Lvl1', 'tabLvl1')">🔍 L1</button>
@@ -268,12 +253,10 @@
                 </div>
             </div>
             <div class="app-card" id="woCardContainer">
-                
                 <div class="lookup-bar-wrapper">
                     <input type="text" id="officeJobSearchQueryInputField" class="lookup-input" placeholder="Enter Job or Dispatch # (e.g., JOB-1052)">
                     <button type="button" class="btn-lookup" id="officeQueryActionSearchBtn" onclick="executeOfficeDatabaseRecordLookupPipeline()">🔍 Fetch File</button>
                 </div>
-
                 <h3>Authorized Work Contract</h3>
                 <div class="grid-2">
                     <div><label>Customer Name:</label><input type="text" id="wo_cust" placeholder="Client profile name..."></div>
@@ -350,7 +333,6 @@
 
                 <div id="squareFormWrapper" class="hide-on-print" style="display:block; margin:20px auto; max-width:500px; padding:20px; background-color:#f8fafc; border:1px solid var(--border); border-radius:8px;">
                     <p style="font-size:13px; font-weight:bold; color:var(--primary); text-transform:uppercase; margin-bottom:6px;">💳 Secure Credit Card Terminal</p>
-                    <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:15px; line-height:1.45;">Enter native payment parameters directly into the secured terminal below.</p>
                     <div id="sq-card-element"></div>
                     <div style="background:#ffffff; border:1px dashed var(--accent); border-radius:6px; padding:12px; margin-bottom:15px;">
                         <input type="text" id="squareManualFallbackInput" placeholder="Optional: Type Manual Verification Trace Reference Key Here" style="width:100%; max-width:400px; padding:10px; font-size:13px; border:1px solid var(--border); border-radius:4px; text-align:center;">
@@ -378,58 +360,94 @@
                 <div style="margin-bottom: 15px;"><label>Site Address:</label><input type="text" id="l2_addr"></div>
                 
                 <div style="padding:12px; background:#f8fafc; border:2px solid var(--accent); border-radius:6px; margin-bottom:15px;" class="row-defect-selector">
-                    <label style="font-size:12px; font-weight:bold; color:var(--primary); display:block; margin-bottom:4px; text-align: center;">🚨 Quick-Stamp Code Deficiencies (NFPA 211 Library):</label>
+                    <label style="font-size:12px; font-weight:bold; color:var(--primary); display:block; margin-bottom:4px; text-align: center;">🚨 NFPA 211 Master Library Auto-Stamps:</label>
                     <select id="l2DefectLibrary" onchange="injectNfpaDefect('l2')">
-                        <option value="">-- Select Defect to Auto-Stamp --</option>
-                        <optgroup label="Layer I: Hearth &amp; Structural Clearance">
-                            <option value="l2_n1|[MAJOR] Hearth extension dimensions do not meet minimum NFPA 211 clearance boundaries relative to the fireplace opening.">Hearth: Insufficient Extensions (MAJOR)</option>
-                            <option value="l2_n2|[CRITICAL] Thermal stress fractures observed inside firebrick lining. Structural breach compromises containment safety.">Firebox: Firebrick Fractures (CRITICAL)</option>
-                            <option value="l2_n1|[MAJOR] Combustible trim/mantel clearances violate the 12-inch baseline threshold required by code expansion rules.">Clearance: Combustible Trim Overhang (MAJOR)</option>
+                        <option value="">-- Select Code Infraction to Stamp --</option>
+                        <optgroup label="Section I: Hearth Base &amp; Firebox Frame">
+                            <option value="l2_n1|[MAJOR] Hearth extension dimensions do not meet minimum clearance thresholds required by NFPA 211 code rule boundaries.">Hearth Base clearance failure (MAJOR)</option>
+                            <option value="l2_n2|[CRITICAL] Severe thermal expansion cracking and deterioration mapped throughout firebox firebrick backwall.">Firebox: Defective firebrick structure (CRITICAL)</option>
+                            <option value="l2_n3|[MAJOR] Combustible trim/mantel overhang clearances violate the 12-inch baseline safety threshold profile.">Clearance: Overhang trim hazard (MAJOR)</option>
                         </optgroup>
-                        <optgroup label="Layer II: Internal Flue &amp; Venting Path">
-                            <option value="l2_n2|[CRITICAL] Severe longitudinal crack detected inside masonry clay flue liner via internal video scanner tracking. Unsafe to vent.">Flue: Longitudinal Clay Tile Fracture (CRITICAL)</option>
-                            <option value="l2_n2|[MAJOR] Mortar joint disintegration noted between flue liner segments, creating risk of toxic combustion gas escape.">Flue: Disintegrated Mortar Segments (MAJOR)</option>
-                            <option value="l2_n2|[CRITICAL] Level 3 Stage 3 highly flammable glazed creosote deposits mapped along flue walls. Structural fire hazard.">Creosote: Stage 3 Glazed Creosote Layer (CRITICAL)</option>
+                        <optgroup label="Section II: Internal Flue Scanner Paths">
+                            <option value="l2_n4|[CRITICAL] Internal video tracking scan confirmed longitudinal fracture line running through masonry clay tile segment.">Flue Path: Cracked clay flue tile (CRITICAL)</option>
+                            <option value="l2_n5|[MAJOR] Mortar joint disintegration and deterioration observed between chimney liner segments. Water entry active.">Flue Path: Open liner mortar joints (MAJOR)</option>
+                            <option value="l2_n6|[CRITICAL] Dangerous Layer III Stage 3 glazed creosote tar accumulation mapped throughout venting path structure.">Creosote: Stage 3 Glazed tar layer (CRITICAL)</option>
                         </optgroup>
-                        <optgroup label="Layer III: Exterior Stack Termination">
-                            <option value="l2_n1|[MAJOR] Mortar crown shrinkage cracks and concrete delamination surface tracks noted. Water penetration risk active.">Crown: Concrete Crown Weather-Seal Crack (MAJOR)</option>
-                            <option value="l2_n1|[CRITICAL] Chimney stack chimney height terminates below the 3-foot stack or 2-foot roof ridge code safety envelope.">Termination: 3-2-10 Rule Failure Boundary (CRITICAL)</option>
+                        <optgroup label="Section III: External Stack Termination">
+                            <option value="l2_n7|[MAJOR] Concrete crown weather-seal face has multiple stress fractures, allowing water to penetrate structural stack core.">Crown Face: Concrete crown splitting (MAJOR)</option>
+                            <option value="l2_n8|[CRITICAL] Stack termination boundary fails the NFPA 3-2-10 height envelope rule relative to the local roof ridge line.">Termination: 3-2-10 Rule Failure (CRITICAL)</option>
                         </optgroup>
                     </select>
                 </div>
 
-                <div class="section-title">Layer I: Hearth Base &amp; Combustion Chamber</div>
+                <div class="section-title">Section I: Hearth Base &amp; Solid Fuel Firebox Area</div>
                 <table class="mapping-table">
-                    <thead><tr><th style="width:10%; text-align:center;">Pass</th><th style="width:35%;">Component</th><th style="width:55%;">Realtime Code Damage Log Notes</th></tr></thead>
+                    <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">NFPA 211 Component Checklist</th><th style="width:55%;">Real-Time Code Compliance Field Notes</th></tr></thead>
                     <tbody>
                         <tr>
-                            <td style="text-align:center;"><input type="checkbox" id="l2_c1" checked></td>
-                            <td><strong>Hearth Extension Deck</strong><br><span class="defect-badge badge-major" id="badge_major_l2_n1" style="display:none;">Major Failure</span></td>
+                            <td><input type="checkbox" id="l2_c1" checked></td>
+                            <td><strong>Hearth Extension Deck</strong><div class="defect-badge badge-major" id="badge_l2_n1" style="display:none;">Major Fault</div></td>
                             <td><input type="text" id="l2_n1" class="input-notes"></td>
                         </tr>
                         <tr>
-                            <td style="text-align:center;"><input type="checkbox" id="l2_c2" checked></td>
-                            <td><strong>Firebrick Inner Walls</strong><br><span class="defect-badge badge-critical" id="badge_l2_n2" style="display:none;">Critical</span></td>
-                            <td>
-                                <input type="text" id="l2_n2" class="input-notes">
-                                <select class="row-defect-selector" onchange="applyRowDefect('l2_n2', 'l2_c2', this)">
-                                    <option value="">-- Code Presets --</option>
-                                    <option value="[CRITICAL] Thermal stress fractures observed inside firebrick lining. Fire Hazard.">Thermal Fractures (CRITICAL)</option>
-                                    <option value="[CRITICAL] Longitudinal crack detected inside masonry clay flue liner segment path.">Clay Liner Crack (CRITICAL)</option>
-                                    <option value="[MAJOR] Mortar joint degradation noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
-                                </select>
-                            </td>
+                            <td><input type="checkbox" id="l2_c2" checked></td>
+                            <td><strong>Firebrick Inner Chamber</strong><div class="defect-badge badge-critical" id="badge_l2_n2" style="display:none;">Critical</div></td>
+                            <td><input type="text" id="l2_n2" class="input-notes"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="l2_c3" checked></td>
+                            <td><strong>Combustible Clearance Vectors</strong><div class="defect-badge badge-major" id="badge_l2_n3" style="display:none;">Major Fault</div></td>
+                            <td><input type="text" id="l2_n3" class="input-notes"></td>
                         </tr>
                     </tbody>
                 </table>
-                <div style="margin-top: 20px;"><label style="font-size:12px; font-weight:bold; color:#475569;">Final Evaluation Summary:</label><textarea id="l2_summary" rows="3"></textarea></div>
+
+                <div class="section-title">Section II: Internal Flue &amp; Venting Path (Video Tracking View)</div>
+                <table class="mapping-table">
+                    <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">NFPA 211 Component Checklist</th><th style="width:55%;">Real-Time Code Compliance Field Notes</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" id="l2_c4" checked></td>
+                            <td><strong>Internal Clay Flue Liners</strong><div class="defect-badge badge-critical" id="badge_l2_n4" style="display:none;">Critical</div></td>
+                            <td><input type="text" id="l2_n4" class="input-notes"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="l2_c5" checked></td>
+                            <td><strong>Liner Joints &amp; Mortar Seals</strong><div class="defect-badge badge-major" id="badge_l2_n5" style="display:none;">Major Fault</div></td>
+                            <td><input type="text" id="l2_n5" class="input-notes"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="l2_c6" checked></td>
+                            <td><strong>Creosote / Particulate Load</strong><div class="defect-badge badge-critical" id="badge_l2_n6" style="display:none;">Critical</div></td>
+                            <td><input type="text" id="l2_n6" class="input-notes"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-title">Section III: Structural Stack &amp; Roof Line Termination</div>
+                <table class="mapping-table">
+                    <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">NFPA 211 Component Checklist</th><th style="width:55%;">Real-Time Code Compliance Field Notes</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" id="l2_c7" checked></td>
+                            <td><strong>Concrete Crown Weather-Seal</strong><div class="defect-badge badge-major" id="badge_l2_n7" style="display:none;">Major Fault</div></td>
+                            <td><input type="text" id="l2_n7" class="input-notes"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="l2_c8" checked></td>
+                            <td><strong>3-2-10 Height Envelope</strong><div class="defect-badge badge-critical" id="badge_l2_n8" style="display:none;">Critical</div></td>
+                            <td><input type="text" id="l2_n8" class="input-notes"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 20px;"><label style="font-size:12px; font-weight:bold; color:#475569;">Final Compliance Evaluation Summary:</label><textarea id="l2_summary" rows="3"></textarea></div>
                 <div class="signature-grid">
                     <div><p style="font-size:13px; font-weight:bold;">Lead Tech:</p><input type="text" id="l2_tech" readonly style="background:#f1f5f9; color:#475569; text-align: center;"></div>
                     <div><p style="font-size:13px; font-weight:bold;">Signature:</p><input type="text" id="l2_client"></div>
                 </div>
                 <div class="button-group-row">
                     <button type="button" class="btn-action" id="l2SubmitBtn" onclick="uploadLevel2ToOfficeSheet()">Submit Level 2 Report to Office</button>
-                    <button type="button" class="btn-export" onclick="window.print()">Print PDF View</button>
                 </div>
             </div>
         </div>
@@ -441,10 +459,32 @@
                     <div><label>Date:</label><input type="date" id="l1_date"></div>
                 </div>
                 <div style="margin-bottom: 15px;"><label>Site Address:</label><input type="text" id="l1_addr"></div>
-                <div class="section-title">Layer I: Hearth Base (L1 Accessible)</div>
+                
+                <div class="section-title">Section I: Level 1 Accessible Interior Scan Components</div>
                 <table class="mapping-table">
-                    <thead><tr><th style="width:10%; text-align:center;">Pass</th><th style="width:35%;">Component</th><th style="width:55%;">Realtime Code Damage Log Notes</th></tr></thead>
-                    <tbody><tr><td style="text-align: center;"><input type="checkbox" id="l1_c1" checked></td><td><strong>Hearth Extension Face</strong></td><td><input type="text" id="l1_n1" class="input-notes"></td></tr></tbody>
+                    <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">Component Checklist</th><th style="width:55%;">Real-Time Field Notes</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="checkbox" id="l1_c1" checked></td>
+                            <td><strong>Hearth Extension Face</strong></td>
+                            <td><input type="text" id="l1_n1" class="input-notes"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="l1_c2" checked></td>
+                            <td><strong>Appliance Connector Pipe</strong></td>
+                            <td><input type="text" id="l1_n2" class="input-notes"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="l1_c3" checked></td>
+                            <td><strong>Damper Assembly Blade/Frame</strong></td>
+                            <td><input type="text" id="l1_n3" class="input-notes"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="l1_c4" checked></td>
+                            <td><strong>Accessible Flue Vent Base</strong></td>
+                            <td><input type="text" id="l1_n4" class="input-notes"></td>
+                        </tr>
+                    </tbody>
                 </table>
                 <div style="margin-top: 20px;"><label>Final Evaluation Summary:</label><textarea id="l1_summary" rows="3"></textarea></div>
                 <div class="signature-grid">
@@ -613,8 +653,7 @@
             document.getElementById('l1_tech').value = CURRENT_LOGGED_IN_USER;
             document.getElementById('disp_crew').value = CURRENT_LOGGED_IN_USER;
 
-            evaluateContextualSafetyGate(); 
-            initializeSquareNativeFormElement(); 
+            evaluateContextualSafetyGate(); initializeSquareNativeFormElement(); 
         }
 
         function executeFieldCrewLogout() {
@@ -634,7 +673,7 @@
             if(el) { el.classList.add('input-error-shake'); setTimeout(function() { el.classList.remove('input-error-shake'); }, 600); }
         }
 
-        // RESTORED: Secure credit card web form setup loop engine
+        // RESTORED IN ALL updates: Standard PCI terminal integration loops
         async function initializeSquareNativeFormElement() {
             if(SQUARE_CARD_OBJECT_INSTANCE) return;
             try {
@@ -643,11 +682,10 @@
                 await card.attach('#sq-card-element');
                 SQUARE_CARD_OBJECT_INSTANCE = card;
             } catch (e) {
-                document.getElementById('sq-card-element').innerHTML = "<p style='color:red; font-size:12px;'>Square Web SDK Initialization Interrupt.</p>";
+                document.getElementById('sq-card-element').innerHTML = "<p style='color:red; font-size:12px;'>Square Merchant API Frame Connection Hold.</p>";
             }
         }
 
-        // RESTORED: Process tokenized entry execution logic pipeline
         async function processSecureNativeSquarePayment() {
             var method = document.getElementById('inv_payment').value;
             var actionBtn = document.getElementById('invSubmissionActionBtn');
@@ -658,7 +696,6 @@
                 alert("Missing Profile Entry: Provide Customer Recipient Profile Name.");
                 flashValidationAlertState('inv_cust'); return;
             }
-
             if (method !== "CARD_ON_SITE") {
                 uploadInvoiceToOfficeSheet("MANUAL_RECORD_CASH_OR_CHECK"); return;
             }
@@ -668,7 +705,7 @@
             if (!SQUARE_CARD_OBJECT_INSTANCE) {
                 var manualValue = fallbackField ? fallbackField.value.trim() : "";
                 if (!manualValue) {
-                    alert("Omission Error: Provide manual transaction tracking reference token.");
+                    alert("Omission Error: Provide manual verification tracking token.");
                     flashValidationAlertState('squareManualFallbackInput');
                     actionBtn.disabled = false; actionBtn.innerText = "Finalize Ledger & Charge Card"; return;
                 }
@@ -679,21 +716,14 @@
                 const tokenResult = await SQUARE_CARD_OBJECT_INSTANCE.tokenize();
                 if (tokenResult.status === 'OK') {
                     uploadInvoiceToOfficeSheet("SQUARE_TOKEN: " + tokenResult.token);
-                } else {
-                    throw new Error(tokenResult.errors[0].message);
-                }
+                } else { throw new Error(tokenResult.errors[0].message); }
             } catch (error) {
                 var manualValue = fallbackField ? fallbackField.value.trim() : "";
-                if(manualValue) {
-                     uploadInvoiceToOfficeSheet("MANUAL_TRACE_FALLBACK: " + manualValue);
-                } else {
-                     alert("Square Interface Intercept: Settle transaction manually and write receipt reference key above.");
-                     actionBtn.disabled = false; actionBtn.innerText = "Finalize Ledger & Charge Card";
-                }
+                if(manualValue) { uploadInvoiceToOfficeSheet("MANUAL_TRACE_FALLBACK: " + manualValue); } 
+                else { alert("Square Intercept: Provide reference string key above."); actionBtn.disabled = false; actionBtn.innerText = "Finalize Ledger & Charge Card"; }
             }
         }
 
-        // RESTORED: Level 2 Roof/Drone pre-flight boundary panel loop logic
         function evaluateContextualSafetyGate() {
             var stagingTrigger = document.getElementById('l2_staging_trigger').value;
             var auxiliaryDroneTrigger = document.getElementById('l2_drone_extra').value;
@@ -706,14 +736,13 @@
 
             if (stagingTrigger === "YES" || auxiliaryDroneTrigger === "YES") {
                 unlockBtn.style.backgroundColor = "var(--border)"; unlockBtn.innerText = "🔒 Complete Required Safety Parameters";
-
                 if (auxiliaryDroneTrigger === "YES") {
                     alertText.innerHTML = "⚠️ SUB-249G PRE-FLIGHT LOG: Auxiliary air rules configuration active.";
                     windWrapper.style.display = "block";
                     checksContainer.innerHTML = `
-                        <label style="display:flex; align-items:center; margin-bottom:8px;"><input type="checkbox" id="m_saf1" style="margin-right:8px;"> Airframe components verified clear. Total flight weight sub-249g.</label>
-                        <label style="display:flex; align-items:center; margin-bottom:8px;"><input type="checkbox" id="m_saf2" style="margin-right:8px;"> RCs bound, battery packs safely balanced (>80%).</label>
-                        <label style="display:flex; align-items:center;"><input type="checkbox" id="m_saf3" style="margin-right:8px;"> Airspace validation check confirmed clear via B4UFLY log.</label>
+                        <label style="display:flex; align-items:center; margin-bottom:8px;"><input type="checkbox" id="m_saf1" style="margin-right:8px;"> Airframe structural elements clear. Weight sub-249g.</label>
+                        <label style="display:flex; align-items:center; margin-bottom:8px;"><input type="checkbox" id="m_saf2" style="margin-right:8px;"> RCs bound, backup power balance verified (>80%).</label>
+                        <label style="display:flex; align-items:center;"><input type="checkbox" id="m_saf3" style="margin-right:8px;"> Airspace check authorized clear via B4UFLY log.</label>
                     `;
                 } else {
                     alertText.innerHTML = "⚠️ OPERATIONAL STAGING BOUNDARY ACTIVATED.";
@@ -746,15 +775,12 @@
 
         async function confirmModalSafetyClearance() {
             var stagingTrigger = document.getElementById('l2_staging_trigger').value; var auxiliaryDroneTrigger = document.getElementById('l2_drone_extra').value; var currentWind = document.getElementById('saf_wind').value;
-
             if (stagingTrigger === "YES" || auxiliaryDroneTrigger === "YES") {
                 if (currentWind.includes('High')) { alert("Operation Blocked: High winds."); return; }
-                if (!document.getElementById('m_saf1').checked || !document.getElementById('m_saf2').checked || !document.getElementById('m_saf3').checked) { alert("Verification Required: Click all check loops to acknowledge terms."); return; }
-                
+                if (!document.getElementById('m_saf1').checked || !document.getElementById('m_saf2').checked || !document.getElementById('m_saf3').checked) { alert("Verification Required: Click all checkboxes to accept parameters."); return; }
                 var payload = [CURRENT_LOGGED_IN_USER, currentWind, "MODAL_PASSED (Staging: " + stagingTrigger + " / Drone: " + auxiliaryDroneTrigger + ")", "N/A"];
                 try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: payload }); } catch(e){}
             }
-
             MODAL_SAFETY_APPROVED = true; document.getElementById('safetyGatekeeperModal').style.display = "none"; executeModuleTabSwitch('Lvl2', 'tabLvl2');
         }
 
@@ -831,8 +857,8 @@
 
         function generateInvoiceFromWorkOrder() {
             var targetClient = document.getElementById('wo_cust').value; var targetAddr = document.getElementById('wo_addr').value;
-            if(!targetClient || !targetAddr) { alert("Omission profile fields missing entry."); return; }
-            var compiledScopeString = "Directives:\n" + document.getElementById('wo_scope').value + "\n\nValue: " + convertPriceNumericToTextWords(parseFloat(document.getElementById('wo_price').value || 0).toFixed(2)).toUpperCase();
+            if(!targetClient || !targetAddr) { alert("Profile target name or site coordinates missing."); return; }
+            var compiledScopeString = "Authorized Chimney Service Directives:\n" + document.getElementById('wo_scope').value + "\n\nContract Value Word-Token: " + convertPriceNumericToTextWords(parseFloat(document.getElementById('wo_price').value || 0).toFixed(2)).toUpperCase();
             executeModuleTabSwitch('Invoice', 'tabInvoice');
             document.getElementById('inv_cust').value = targetClient; document.getElementById('inv_email').value = document.getElementById('wo_email').value;
             document.getElementById('inv_addr').value = targetAddr; document.getElementById('inv_scope').value = compiledScopeString;
@@ -840,12 +866,21 @@
         }
 
         function calculateInvoiceTotals() { document.getElementById('inv_final_total').value = (parseFloat(document.getElementById('inv_subtotal').value) || 0).toFixed(2); }
+        
         function injectNfpaDefect(level) {
             var selector = document.getElementById(level + 'DefectLibrary'); if(!selector.value) return;
-            var parts = selector.value.split('|'); document.getElementById(parts[0]).value = parts[1];
-            document.getElementById('badge_' + parts[0]).style.display = "inline-block";
+            var parts = selector.value.split('|'); var targetInputId = parts[0]; var defectText = parts[1];
+            document.getElementById(targetInputId).value = defectText;
+            var badge = document.getElementById('badge_' + targetInputId);
+            if(badge) {
+                if(defectText.includes("CRITICAL")) { badge.className = "defect-badge badge-critical"; badge.innerText = "Critical"; } 
+                else { badge.className = "defect-badge badge-major"; badge.innerText = "Major"; }
+                badge.style.display = "inline-block";
+            }
         }
+
         function applyRowDefect(noteInputId, checkInputId, selectEl) { if(!selectEl.value) return; document.getElementById(noteInputId).value = selectEl.value; document.getElementById('badge_' + noteInputId).style.display = "inline-block"; document.getElementById(checkInputId).checked = false; }
+        
         async function uploadWorkOrderToOfficeSheet() {
             var clientVal = document.getElementById('wo_cust').value;
             if(!clientVal.trim()) { alert("Omission Error: Provide Customer Profile Name entry."); flashValidationAlertState('wo_cust'); return; }
@@ -863,13 +898,31 @@
         }
 
         async function uploadLevel2ToOfficeSheet() {
-            var payload = [document.getElementById('l2_cust').value, document.getElementById('l2_date').value, document.getElementById('l2_addr').value, document.getElementById('l2_c1').checked ? "Pass" : "Fail", document.getElementById('l2_n1').value, document.getElementById('l2_c2').checked ? "Pass" : "Fail", document.getElementById('l2_n2').value, document.getElementById('l2_summary').value, document.getElementById('l2_tech').value, document.getElementById('l2_client').value];
+            var payload = [
+                document.getElementById('l2_cust').value, document.getElementById('l2_date').value, document.getElementById('l2_addr').value,
+                document.getElementById('l2_c1').checked ? "Pass" : "Fail", document.getElementById('l2_n1').value,
+                document.getElementById('l2_c2').checked ? "Pass" : "Fail", document.getElementById('l2_n2').value,
+                document.getElementById('l2_c3').checked ? "Pass" : "Fail", document.getElementById('l2_n3').value,
+                document.getElementById('l2_c4').checked ? "Pass" : "Fail", document.getElementById('l2_n4').value,
+                document.getElementById('l2_c5').checked ? "Pass" : "Fail", document.getElementById('l2_n5').value,
+                document.getElementById('l2_c6').checked ? "Pass" : "Fail", document.getElementById('l2_n6').value,
+                document.getElementById('l2_c7').checked ? "Pass" : "Fail", document.getElementById('l2_n7').value,
+                document.getElementById('l2_c8').checked ? "Pass" : "Fail", document.getElementById('l2_n8').value,
+                document.getElementById('l2_summary').value, document.getElementById('l2_tech').value, document.getElementById('l2_client').value
+            ];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Level2_Inspections", payload: payload });
             alert("Level 2 Mappings Uploaded.");
         }
 
         async function uploadLevel1ToOfficeSheet() {
-            var payload = [document.getElementById('l1_cust').value, document.getElementById('l1_date').value, document.getElementById('l1_addr').value, document.getElementById('l1_c1').checked ? "Pass" : "Fail", document.getElementById('l1_n1').value, document.getElementById('l1_summary').value, document.getElementById('l1_tech').value, document.getElementById('l1_client').value];
+            var payload = [
+                document.getElementById('l1_cust').value, document.getElementById('l1_date').value, document.getElementById('l1_addr').value,
+                document.getElementById('l1_c1').checked ? "Pass" : "Fail", document.getElementById('l1_n1').value,
+                document.getElementById('l1_c2').checked ? "Pass" : "Fail", document.getElementById('l1_n2').value,
+                document.getElementById('l1_c3').checked ? "Pass" : "Fail", document.getElementById('l1_n3').value,
+                document.getElementById('l1_c4').checked ? "Pass" : "Fail", document.getElementById('l1_n4').value,
+                document.getElementById('l1_summary').value, document.getElementById('l1_tech').value, document.getElementById('l1_client').value
+            ];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Level1_Inspections", payload: payload });
             alert("Level 1 Inspection Filed.");
         }
@@ -930,7 +983,7 @@
                     var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
                     if (amountInCents <= 0) { alert("Value must be greater than zero."); return; }
                     var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
-                    var targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify({ "amount_money": { "amount": amountInCents, "currency_code": "USD" }, "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE"], "auto_return": true }, "client_id": SQUARE_APPLICATION_ID, "location_id": SQUARE_LOCATION_ID, "notes": "EverSafe Hub", "callback_url": callbackUrl, "version": "1.3" }));
+                    var targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify({ "amount_money": { "amount": amountInCents, "currency_code": "USD" }, "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE"], "auto_return": true }, "client_id": SQUARE_APPLICATION_ID, "location_id": SQUARE_LOCATION_ID, "notes": "EverSafe Hub Tap", "callback_url": callbackUrl, "version": "1.3" }));
                     window.location.assign(targetHardwareUrl);
                 });
             }
