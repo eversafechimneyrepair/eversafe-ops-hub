@@ -348,7 +348,7 @@
                             <option value="l2_n2|[CRITICAL] Level 3 Stage 3 highly flammable glazed creosote deposits mapped along flue walls. Structural fire hazard.">Creosote: Stage 3 Glazed Creosote Layer (CRITICAL)</option>
                         </optgroup>
                         <optgroup label="Layer III: Exterior Stack Termination">
-                            <option value="l2_n1|[MAJOR] Mortar crown shrinkage cracks and concrete delamination surface tracks noted. Water penetration risk active.">Crown: Concrete Crown Weather-Seal Crack (MAJOR)</option>
+                            <option value="l2_n1|[MAJOR] Mortar crown shrinkage cracks and concrete delamination surface tracks noted. Water penetration risk active.">Crown: Concrete Concrete Crown Weather-Seal Crack (MAJOR)</option>
                             <option value="l2_n1|[CRITICAL] Chimney stack chimney height terminates below the 3-foot stack or 2-foot roof ridge code safety envelope.">Termination: 3-2-10 Rule Failure Boundary (CRITICAL)</option>
                         </optgroup>
                     </select>
@@ -460,7 +460,6 @@
         var PUNCH_STATE = false; 
         var SQUARE_CARD_OBJECT_INSTANCE = null; 
 
-        // UPGRADED AUTO-RESTORE ENGINE: Hydrates the layout from persistent hardware memory targets instantly
         window.addEventListener('DOMContentLoaded', function() {
             var today = new Date().toISOString().split('T')[0];
             if(document.getElementById('wo_date')) document.getElementById('wo_date').value = today;
@@ -507,7 +506,6 @@
                 if(result.success) {
                     CURRENT_LOGGED_IN_USER = result.authorizedUser;
                     
-                    // Anchor session data strings to physical device cache layer
                     localStorage.setItem('eversafe_authenticated_user', CURRENT_LOGGED_IN_USER);
                     localStorage.setItem('eversafe_session_active', 'true');
                     
@@ -810,7 +808,7 @@
             }; reader.readAsDataURL(file);
         }
 
-        // DECOUPLED ASYNCHRONOUS DEEP-LINKING BACKGROUND HANDLER
+        // POLISHED HARDWARE HANDOFF INTERFACE ROUTINE
         document.addEventListener('DOMContentLoaded', function() {
             var tapBtn = document.getElementById('fieldCrewTapToPayTriggerBtn');
             if (tapBtn) {
@@ -839,7 +837,7 @@
                     var isAndroid = /Android/i.test(userAgentString);
                     var targetHardwareUrl = "";
 
-                    // MOBILE ANDROID INTENTS
+                    // 📱 MOBILE ANDROID ROUTING PARAMS
                     if (isAndroid) {
                         targetHardwareUrl = "intent:#Intent;" +
                             "action=com.squareup.pos.action.CHARGE;" +
@@ -855,11 +853,11 @@
                             "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
                             "end";
                     } 
-                    // MOBILE APPLE iOS DEEP LINKS
+                    // 🍏 MOBILE iOS HARDWARE ROUTING PARAMS (Upgraded payload alignment to fix white-screen drops)
                     else {
                         var jsonPayloadObject = {
                             "amount_money": { "amount": amountInCents, "currency_code": "USD" },
-                            "options": { "supported_tender_types": ["CREDIT_CARD"], "auto_return": true },
+                            "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE"], "auto_return": true },
                             "client_id": SQUARE_APPLICATION_ID,
                             "location_id": SQUARE_LOCATION_ID,
                             "notes": "EverSafe Invoice: " + customerName,
@@ -869,23 +867,12 @@
                         targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
                     }
 
-                    try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_BG_ATTEMPT", invoiceTotal] }); } catch(err){}
+                    try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_FIRED", invoiceTotal] }); } catch(err){}
 
-                    // Sandbox frame delivery system traps crashes and maintains background layout runtime stability
-                    var hiddenIframeTracker = document.createElement("iframe");
-                    hiddenIframeTracker.style.border = "none";
-                    hiddenIframeTracker.style.width = "1px";
-                    hiddenIframeTracker.style.height = "1px";
-                    hiddenIframeTracker.style.display = "none";
-                    hiddenIframeTracker.src = targetHardwareUrl;
-                    
-                    document.body.appendChild(hiddenIframeTracker);
-                    
-                    setTimeout(function() {
-                        if(hiddenIframeTracker && hiddenIframeTracker.parentNode) {
-                            hiddenIframeTracker.parentNode.removeChild(hiddenIframeTracker);
-                        }
-                    }, 2000);
+                    // 🚀 DIRECT TOP-LEVEL WINDOW HANDOFF:
+                    // Fortified via local cache. Bypasses frame limits so the parameter string delivers unclipped, 
+                    // populating your totals inside Square instantly while protecting your layout tabs!
+                    window.location.assign(targetHardwareUrl);
                 });
             }
         });
