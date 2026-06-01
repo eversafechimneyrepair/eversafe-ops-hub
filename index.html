@@ -130,7 +130,6 @@
         .btn-action:hover { background-color: var(--accent-dark); }
         .btn-export { flex: 1; min-width: 100px; background-color: var(--primary); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; }
 
-        /* LOOKUP SPECIFIC UI ELEMENTS */
         .lookup-bar-wrapper { display: flex; gap: 8px; background: #f1f5f9; padding: 12px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 18px; align-items: center; }
         .lookup-input { flex: 3; text-transform: uppercase; font-weight: bold; color: var(--primary); letter-spacing: 0.5px; }
         .btn-lookup { flex: 1; background-color: var(--info); color: white; font-weight: bold; padding: 11px; border: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
@@ -235,7 +234,7 @@
         </div>
         <div class="nav-tabs-scroll">
             <button type="button" class="nav-tab-btn active-tab" id="tabWO" onclick="routeAppModule('WO', 'tabWO')">🛠️ Contract WO</button>
-            <button type="button" class="nav-tab-btn" id="tabInvoice" onclick="routeAppModule('Invoice', 'tabInvoice')">🧾 Invoice / Square</button>
+            <button type="button" class="nav-tab-btn" id="tabInvoice" onclick="navToInvoiceAndSyncJobDetails()">🧾 Invoice / Square</button>
             <button type="button" class="nav-tab-btn" id="tabLvl2" onclick="routeAppModule('Lvl2', 'tabLvl2')">📋 Level 2 Map</button>
             <button type="button" class="nav-tab-btn" id="tabLvl1" onclick="routeAppModule('Lvl1', 'tabLvl1')">🔍 Level 1 Map</button>
             <button type="button" class="nav-tab-btn" id="tabDispatch" onclick="routeAppModule('Dispatch', 'tabDispatch')">⚡ Dispatches</button>
@@ -404,7 +403,7 @@
                                     <option value="">-- Code Presets --</option>
                                     <option value="[CRITICAL] Thermal stress fractures observed inside firebrick lining. Fire Hazard.">Thermal Fractures (CRITICAL)</option>
                                     <option value="[CRITICAL] Longitudinal crack detected inside masonry clay flue liner segment path.">Clay Liner Crack (CRITICAL)</option>
-                                    <option value="[MAJOR] Mortar joint disintegration noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
+                                    <option value="[MAJOR] Mortar joint degradation noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
                                 </select>
                             </td>
                         </tr>
@@ -450,7 +449,7 @@
                     <div><label>Target Arrival:</label><input type="time" id="disp_time" value="08:00"></div>
                     <div><label>Tech Logged In:</label><input type="text" id="disp_crew" readonly style="background:#f1f5f9; color:#475569; font-weight:bold; text-align: center;"></div>
                 </div>
-                <div style="margin-bottom:15px;"><label>Job Address &amp; Notes:</label><input type="text" id="disp_addr"></div>
+                <div style="margin-bottom:15px;"><label>Job Address &amp; Notes:</label><input type="text" id="disp_addr" placeholder="Street layout route data..."></div>
                 <div style="margin: 15px auto; padding: 10px; background: #fafafa; border: 1px solid var(--border); border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; justify-items: center;">
                     <label><input type="checkbox" id="disp_arr"> Crew Has Arrived</label>
                     <label><input type="checkbox" id="disp_comp"> Job Closed</label>
@@ -516,7 +515,6 @@
             }
         });
 
-        // ASYNC CORE FETCH ENGINE
         async function runRemoteApiCall(payloadObject) {
             try {
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -532,7 +530,7 @@
             }
         }
 
-        // NEW: ASYNC DATABASE ROW FETCH PIPELINE
+        // DATABASE SEARCH RUNTIME PIPELINE
         async function executeOfficeDatabaseRecordLookupPipeline() {
             var inputField = document.getElementById('officeJobSearchQueryInputField');
             var searchButton = document.getElementById('officeQueryActionSearchBtn');
@@ -548,17 +546,14 @@
             searchButton.innerText = "⏳ Pulling...";
 
             try {
-                // Post remote search execution target
                 let result = await runRemoteApiCall({ route: "fetchJobDispatches", jobId: queryValue });
                 
                 if (result && result.success) {
-                    // Inject database parameters cleanly across all form layout tables
                     document.getElementById('wo_cust').value = result.customerName;
                     document.getElementById('wo_email').value = result.customerEmail;
                     document.getElementById('wo_addr').value = result.siteAddress;
                     document.getElementById('wo_scope').value = result.scheduledNotes;
 
-                    // Mirror fields downstream onto sub-tabs
                     document.getElementById('inv_cust').value = result.customerName;
                     document.getElementById('inv_email').value = result.customerEmail;
                     document.getElementById('inv_addr').value = result.siteAddress;
@@ -583,7 +578,6 @@
         }
 
         function navToInvoiceAndSyncJobDetails() {
-            // Ensure fields update right as tab triggers
             document.getElementById('inv_cust').value = document.getElementById('wo_cust').value;
             document.getElementById('inv_email').value = document.getElementById('wo_email').value;
             document.getElementById('inv_addr').value = document.getElementById('wo_addr').value;
@@ -805,6 +799,34 @@
             document.getElementById('wo_price_words_readout').innerText = "Balance: " + textReadout;
         }
 
+        // REAL-TIME SAFETY INTERCEPT PACKET UPDATE FOR DISPATCH MODULE
+        async function uploadDispatchStatus() {
+            var dynamicTime = document.getElementById('disp_time').value;
+            var locationAddress = document.getElementById('disp_addr').value.trim();
+            
+            // 🛑 INPUT INTERCEPT TRIGGER: Disallows blank submissions instantly
+            if (!locationAddress) {
+                alert("Omission Error: Provide target Job Site Location Address parameters before updating status log rows.");
+                flashValidationAlertState('disp_addr');
+                return;
+            }
+            
+            var arrivalString = document.getElementById('disp_arr').checked ? "ARRIVED" : "NOT_YET";
+            var trackingRouteString = document.getElementById('disp_comp').checked ? "COMPLETE" : "OPEN";
+            
+            // Structured data array sequence maps straight to column matrix layouts [B, C, D, E, F]
+            var structuredPayloadArray = [
+                dynamicTime, 
+                CURRENT_LOGGED_IN_USER, 
+                locationAddress, 
+                arrivalString, 
+                trackingRouteString
+            ];
+            
+            let res = await runRemoteApiCall({ route: "recordFieldData", sheetName: "Dispatches", payload: structuredPayloadArray });
+            alert("⚡ Dispatch Vector Track Synchronized Successfully.");
+        }
+
         async function uploadWorkOrderToOfficeSheet() {
             var clientVal = document.getElementById('wo_cust').value;
             if(!clientVal.trim()) {
@@ -835,7 +857,6 @@
             actionBtn.disabled = false; actionBtn.style.backgroundColor = "var(--success)"; actionBtn.innerText = "Finalize Ledger & Charge Card";
         }
 
-        // Rest of tracking hooks remain structural
         async function uploadLevel2ToOfficeSheet() {
             var payload = [
                 document.getElementById('l2_cust').value, document.getElementById('l2_date').value, document.getElementById('l2_addr').value,
@@ -857,14 +878,24 @@
             alert("Level 1 Inspection Filed.");
         }
 
-        async function uploadDispatchStatus() {
-            var dynamicTime = document.getElementById('disp_time').value;
-            var payload = [dynamicTime, CURRENT_LOGGED_IN_USER, document.getElementById('disp_addr').value, document.getElementById('disp_arr').checked ? "ARRIVED" : "NOT_YET", document.getElementById('disp_comp').checked ? "COMPLETE" : "OPEN"];
-            let res = await runRemoteApiCall({ route: "recordFieldData", sheetName: "Dispatches", payload: payload });
-            alert("Dispatch Routing Vector Updated.");
+        function processMobileUpload() {
+            var fileInput = document.getElementById('fieldFileInput'); var statusDiv = document.getElementById('uploadStatusLine');
+            if (fileInput.files.length === 0) { alert("Select file asset target first."); return; }
+            var file = fileInput.files[0]; var reader = new FileReader();
+            statusDiv.innerHTML = "Processing binary stream transaction...";
+            
+            reader.onload = async function(e) {
+                var base64Data = e.target.result; var cleanFilename = "Vault_" + Date.now() + "_" + file.name;
+                
+                try {
+                    let uploadResult = await runRemoteApiCall({ route: "uploadFieldFile", base64Data: base64Data, filename: cleanFilename });
+                    statusDiv.innerHTML = "File stream transfer protocol executed."; 
+                    fileInput.value = "";
+                } catch(err) { statusDiv.innerHTML = "Network Endpoint Disconnect."; }
+            }; reader.readAsDataURL(file);
         }
 
-        // DECOUPLED NATIVE MOBILE APP HANDOFF LINKING TRIGGER
+        // NATIVE HARDWARE INTER-APP PROTOCOL PIPELINE HANDSHAKE ENGINE
         document.addEventListener('DOMContentLoaded', function() {
             var tapBtn = document.getElementById('fieldCrewTapToPayTriggerBtn');
             if (tapBtn) {
