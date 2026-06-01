@@ -580,9 +580,9 @@
             }
         }
 
-        // METHOD 1 TAP TO PAY: Direct Anchor Object Mutation to Bypass Strict Mobile Web Pop-up Shields
+        // METHOD 1 TAP TO PAY: Adaptive Deep-linking Engine fortified against document reset rules
         function executeNativeMobileTapToPay(event) {
-            // 🛑 PREVENT DEFAULT LOOP RESET: Permanently locks session in to prevent bounce to login
+            // 🛑 PREVENT DEFAULT LOOP RESET: Stops the anchor from refreshing the window back to login
             event.preventDefault();
 
             var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
@@ -598,7 +598,7 @@
             var isAndroid = /Android/i.test(navigator.userAgent);
             var targetHardwareUrl = "";
 
-            // 📱 ANDROID HARDWARE PATH INTENT LOGIC
+            // 📱 PATH A: ANDROID INTENT SCHEME STRINGS
             if (isAndroid) {
                 targetHardwareUrl = "intent:#Intent;" +
                     "action=com.squareup.pos.action.CHARGE;" +
@@ -614,7 +614,7 @@
                     "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
                     "end";
             } 
-            // 🍏 APPLE iOS HARDWARE PATH INTER-APP LOGIC
+            // 🍏 PATH B: APPLE iOS SCHEME PAYLOADS
             else {
                 var jsonPayloadObject = {
                     "amount_money": { "amount": amountInCents, "currency_code": "USD" },
@@ -628,10 +628,10 @@
                 targetHardwareUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
             }
 
-            // Fire redirection trigger parameter directly over browser window stream location profile
+            // Route window location trajectory parameters straight to the native hardware drawer
             window.location.href = targetHardwareUrl;
 
-            // Log a tracking footprint packet to your office sheets workbook automatically
+            // Log tracking footprint packet to your office sheets background log workbook
             try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_LAUNCHED", invoiceTotal] }); } catch(e){}
         }
 
