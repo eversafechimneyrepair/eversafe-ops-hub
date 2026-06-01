@@ -100,6 +100,7 @@
 
         .defect-badge { padding: 1px 4px; border-radius: 3px; font-size: 10px; font-weight: bold; color: white; display: inline-block; text-transform: uppercase; margin-bottom: 2px; }
         .badge-critical { background-color: var(--danger); animation: pulse 1.5s infinite; }
+        .badge-major { background-color: var(--accent-dark); }
 
         .segmented-control { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 6px auto 0 auto; max-width: 100%; }
         .segment-btn { flex: 1; padding: 10px; background: white; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; border: none; border-right: 1px solid var(--border); color: var(--text-muted); }
@@ -119,10 +120,16 @@
         }
         .safety-staging-box { background-color: #fff7ed; border: 2px dashed var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; display: none; text-align: center; }
 
+        /* PSEUDO ELEMENT INTERCEPTOR (Track C Fix: Provides UX Feedback While Square Frame Mounts) */
         #sq-card-element {
             margin: 15px auto; max-width: 440px; min-height: 80px; padding: 14px; 
             border: 1px dashed var(--accent); background: #ffffff; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex; align-items: center; justify-content: center; position: relative;
+        }
+        #sq-card-element:empty::before {
+            content: "🔒 Connecting to Secure Merchant Vault Engine...";
+            font-size: 12px; font-weight: bold; color: var(--text-muted);
+            animation: pulse 1.5s infinite;
         }
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
@@ -324,25 +331,48 @@
                     <div><label>Date:</label><input type="date" id="l2_date"></div>
                 </div>
                 <div style="margin-bottom: 15px;"><label>Site Address:</label><input type="text" id="l2_addr"></div>
+                
                 <div style="padding:12px; background:#f8fafc; border:2px solid var(--accent); border-radius:6px; margin-bottom:15px;" class="row-defect-selector">
                     <label style="font-size:12px; font-weight:bold; color:var(--primary); display:block; margin-bottom:4px; text-align: center;">🚨 Quick-Stamp Code Deficiencies (NFPA 211 Library):</label>
                     <select id="l2DefectLibrary" onchange="injectNfpaDefect('l2')">
                         <option value="">-- Select Defect to Auto-Stamp --</option>
-                        <option value="l2_n1|[MAJOR] Hearth extension dimensions do not meet minimum NFPA 211 clearance boundaries relative to the fireplace opening.">Layer I: Insufficient Hearth Clearance (MAJOR)</option>
-                        <option value="l2_n2|[CRITICAL] Thermal stress fractures observed inside firebrick lining. Structural breach compromises fire containment safety. Immediate hazard.">Layer I: Firebrick Fractures (CRITICAL)</option>
+                        <optgroup label="Layer I: Hearth &amp; Structural Clearance">
+                            <option value="l2_n1|[MAJOR] Hearth extension dimensions do not meet minimum NFPA 211 clearance boundaries relative to the fireplace opening.">Hearth: Insufficient Extensions (MAJOR)</option>
+                            <option value="l2_n2|[CRITICAL] Thermal stress fractures observed inside firebrick lining. Structural breach compromises containment safety.">Firebox: Firebrick Fractures (CRITICAL)</option>
+                            <option value="l2_n1|[MAJOR] Combustible trim/mantel clearances violate the 12-inch baseline threshold required by code expansion rules.">Clearance: Combustible Trim Overhang (MAJOR)</option>
+                        </optgroup>
+                        <optgroup label="Layer II: Internal Flue &amp; Venting Path">
+                            <option value="l2_n2|[CRITICAL] Severe longitudinal crack detected inside masonry clay flue liner via internal video scanner tracking. Unsafe to vent.">Flue: Longitudinal Clay Tile Fracture (CRITICAL)</option>
+                            <option value="l2_n2|[MAJOR] Mortar joint disintegration noted between flue liner segments, creating risk of toxic combustion gas escape.">Flue: Disintegrated Mortar Segments (MAJOR)</option>
+                            <option value="l2_n2|[CRITICAL] Level 3 Stage 3 highly flammable glazed creosote deposits mapped along flue walls. Structural fire hazard.">Creosote: Stage 3 Glazed Creosote Layer (CRITICAL)</option>
+                        </optgroup>
+                        <optgroup label="Layer III: Exterior Stack Termination">
+                            <option value="l2_n1|[MAJOR] Mortar crown shrinkage cracks and concrete delamination surface tracks noted. Water penetration risk active.">Crown: Concrete Crown Weather-Seal Crack (MAJOR)</option>
+                            <option value="l2_n1|[CRITICAL] Chimney stack chimney height terminates below the 3-foot stack or 2-foot roof ridge code safety envelope.">Termination: 3-2-10 Rule Failure Boundary (CRITICAL)</option>
+                        </optgroup>
                     </select>
                 </div>
+                
                 <div class="section-title">Layer I: Hearth Base &amp; Combustion Chamber</div>
                 <table class="mapping-table">
                     <thead><tr><th style="width:10%; text-align:center;">Pass</th><th style="width:35%;">Component</th><th style="width:55%;">Realtime Code Damage Log Notes</th></tr></thead>
                     <tbody>
-                        <tr><td style="text-align:center;"><input type="checkbox" id="l2_c1" checked></td><td><strong>Hearth Extension Deck</strong></td><td><input type="text" id="l2_n1" class="input-notes"></td></tr>
+                        <tr>
+                            <td style="text-align:center;"><input type="checkbox" id="l2_c1" checked></td>
+                            <td><strong>Hearth Extension Deck</strong><br><span class="defect-badge badge-major" id="badge_major_l2_n1" style="display:none;">Major Failure</span></td>
+                            <td><input type="text" id="l2_n1" class="input-notes"></td>
+                        </tr>
                         <tr>
                             <td style="text-align:center;"><input type="checkbox" id="l2_c2" checked></td>
                             <td><strong>Firebrick Inner Walls</strong><br><span class="defect-badge badge-critical" id="badge_l2_n2" style="display:none;">Critical</span></td>
                             <td>
                                 <input type="text" id="l2_n2" class="input-notes">
-                                <select class="row-defect-selector" onchange="applyRowDefect('l2_n2', 'l2_c2', this)"><option value="">-- Code Presets --</option><option value="[CRITICAL] Thermal stress fractures observed inside firebrick lining. Fire Hazard.">Thermal Fractures (CRITICAL)</option></select>
+                                <select class="row-defect-selector" onchange="applyRowDefect('l2_n2', 'l2_c2', this)">
+                                    <option value="">-- Code Presets --</option>
+                                    <option value="[CRITICAL] Thermal stress fractures observed inside firebrick lining. Fire Hazard.">Thermal Fractures (CRITICAL)</option>
+                                    <option value="[CRITICAL] Longitudinal crack detected inside masonry clay flue liner segment path.">Clay Liner Crack (CRITICAL)</option>
+                                    <option value="[MAJOR] Mortar joint degradation noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
+                                </select>
                             </td>
                         </tr>
                     </tbody>
@@ -411,8 +441,8 @@
         <div class="nav-tabs-scroll" style="justify-content: space-around;">
             <button type="button" class="nav-tab-btn active-tab" id="bWO" onclick="routeAppModule('WO', 'bWO')">🛠️ WO</button>
             <button type="button" class="nav-tab-btn" id="bInvoice" onclick="routeAppModule('Invoice', 'bInvoice')">🧾 Invoice</button>
-            <button type="button" class="nav-tab-btn" id="bL2" onclick="routeAppModule('Lvl2', 'bL2')">📋 L2</button>
-            <button type="button" class="nav-tab-btn" id="bL1" onclick="routeAppModule('Lvl1', 'bL1')">🔍 L1</button>
+            <button type="button" class="nav-tab-btn" id="bL2" onclick="routeAppModule('L2', 'bL2')">📋 L2</button>
+            <button type="button" class="nav-tab-btn" id="bL1" onclick="routeAppModule('L1', 'bL1')">🔍 L1</button>
             <button type="button" class="nav-tab-btn" id="bDispatch" onclick="routeAppModule('Dispatch', 'bDispatch')">⚡ Disp</button>
             <button type="button" class="nav-tab-btn" id="bUp" onclick="routeAppModule('Upload', 'bUp')">📁 Vault</button>
         </div>
@@ -420,9 +450,13 @@
 
     <script>
         /*****************************************************************
-         * CONFIGURATION HARNESS: Paste your exact backend Google Macro Web App API deployment URL below.
+         * CONFIGURATION HARNESS: Target Routing Endpoint Strings
          *****************************************************************/
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+        
+        // Square Environment Mapping Rules
+        var SQUARE_APPLICATION_ID = "sandbox-sq0idb-RT3u-HhCpNdbMiGg5aXuVg";
+        var SQUARE_LOCATION_ID = "TC4Z3ZEBKRXRH";
 
         var CURRENT_LOGGED_IN_USER = "";
         var MODAL_SAFETY_APPROVED = false; 
@@ -430,6 +464,13 @@
         var SQUARE_CARD_OBJECT_INSTANCE = null; 
 
         window.addEventListener('DOMContentLoaded', function() {
+            // Self-Correcting Date Initialization For Speed Accuracy
+            var today = new Date().toISOString().split('T')[0];
+            if(document.getElementById('wo_date')) document.getElementById('wo_date').value = today;
+            if(document.getElementById('inv_date')) document.getElementById('inv_date').value = today;
+            if(document.getElementById('l2_date')) document.getElementById('l2_date').value = today;
+            if(document.getElementById('l1_date')) document.getElementById('l1_date').value = today;
+
             setTimeout(function() {
                 var passkeyNode = document.getElementById('passkeyField');
                 if(passkeyNode) { passkeyNode.focus(); }
@@ -483,8 +524,8 @@
         async function initializeSquareNativeFormElement() {
             if(SQUARE_CARD_OBJECT_INSTANCE) return;
             try {
-                // Initialize clean, top-level transaction form layout fields without sandbox blocks
-                const payments = Square.payments("sandbox-sq0idb-RT3u-HhCpNdbMiGg5aXuVg", "TC4Z3ZEBKRXRH");
+                // Initializing Isolated DOM Sandbox Injection Hook Instantiation
+                const payments = Square.payments(SQUARE_APPLICATION_ID, SQUARE_LOCATION_ID);
                 const card = await payments.card();
                 await card.attach('#sq-card-element');
                 SQUARE_CARD_OBJECT_INSTANCE = card;
@@ -641,7 +682,17 @@
         function injectNfpaDefect(level) {
             var selector = document.getElementById(level + 'DefectLibrary'); if(!selector.value) return;
             var parts = selector.value.split('|'); var targetInputId = parts[0]; var defectText = parts[1];
-            document.getElementById(targetInputId).value = defectText; document.getElementById('badge_' + targetInputId).style.display = "inline-block";
+            document.getElementById(targetInputId).value = defectText;
+            
+            // Handle Badge Toggling Visually Based on Threat Severity
+            if(defectText.includes("CRITICAL")) {
+                document.getElementById('badge_' + targetInputId).className = "defect-badge badge-critical";
+                document.getElementById('badge_' + targetInputId).innerText = "Critical";
+            } else {
+                document.getElementById('badge_' + targetInputId).className = "defect-badge badge-major";
+                document.getElementById('badge_' + targetInputId).innerText = "Major";
+            }
+            document.getElementById('badge_' + targetInputId).style.display = "inline-block";
         }
 
         function applyRowDefect(noteInputId, checkInputId, selectEl) {
