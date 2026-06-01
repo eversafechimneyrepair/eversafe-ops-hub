@@ -58,6 +58,7 @@
             text-align: center;
         }
 
+        /* FIXED UNIFIED HEADER BAR */
         .app-header {
             background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none;
@@ -84,6 +85,7 @@
         }
         .header-tab-btn.active-tab { color: white; border-bottom-color: var(--accent); background-color: rgba(255,255,255,0.05); }
 
+        /* FIXED APP FOOTER NAVIGATION BAR */
         .fixed-bottom-nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary);
             box-shadow: 0 -4px 12px rgba(0,0,0,0.15); display: none; z-index: 100; height: 68px;
@@ -147,7 +149,7 @@
         .lookup-input { flex: 3; text-transform: uppercase; font-weight: bold; color: var(--primary); letter-spacing: 0.5px; }
         .btn-lookup { flex: 1; background-color: var(--info); color: white; font-weight: bold; padding: 11px; border: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
 
-        /* UPGRADED TOUCH CANVAS SIGNATURE BOX ARCHITECTURE */
+        /* TOUCH SIGNATURE CANVAS SYSTEM STYLE */
         .signature-wrapper-container { text-align: center; margin-top: 10px; width: 100%; max-width: 380px; }
         .sig-canvas-element { border: 2px dashed var(--border); background-color: #fafbfc; border-radius: 6px; cursor: crosshair; display: block; margin: 4px auto; touch-action: none; width: 100%; height: 110px; }
         .btn-clear-sig { background: #94a3b8; color: white; border: none; padding: 4px 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; margin-top: 2px; }
@@ -160,17 +162,6 @@
             padding: 12px; border-radius: 4px; margin-top: 15px; max-height: 120px; overflow-y: auto; line-height: 1.45; text-align: center;
         }
         .safety-staging-box { background-color: #fff7ed; border: 2px dashed var(--accent); border-radius: 6px; padding: 15px; margin-top: 15px; display: none; text-align: center; }
-
-        #sq-card-element {
-            margin: 15px auto; max-width: 440px; min-height: 80px; padding: 14px; 
-            border: 1px dashed var(--accent); background: #ffffff; border-radius: 6px;
-            display: flex; align-items: center; justify-content: center; position: relative;
-        }
-        #sq-card-element:empty::before {
-            content: "🔒 Connecting to Secure Merchant Vault Engine...";
-            font-size: 12px; font-weight: bold; color: var(--text-muted);
-            animation: pulse 1.5s infinite;
-        }
     </style>
 </head>
 <body>
@@ -301,12 +292,12 @@
                 </div>
                 <div class="signature-grid">
                     <div class="signature-wrapper-container">
-                        <p style="font-size:12px; font-weight:bold;">Lead Field Tech:</p>
+                        <p style="font-size:12px; font-weight:bold;">Lead Field Tech Signature:</p>
                         <canvas id="wo_tech_sig_pad" class="sig-canvas-element"></canvas>
                         <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('wo_tech_sig_pad')">Clear</button>
                     </div>
                     <div class="signature-wrapper-container">
-                        <p style="font-size:12px; font-weight:bold;">Customer Sign-off:</p>
+                        <p style="font-size:12px; font-weight:bold;">Customer Authorization Sign-off:</p>
                         <canvas id="wo_client_sig_pad" class="sig-canvas-element"></canvas>
                         <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('wo_client_sig_pad')">Clear</button>
                     </div>
@@ -344,8 +335,9 @@
 
                 <div id="squareFormWrapper" class="hide-on-print" style="display:block; margin:20px auto; max-width:500px; padding:20px; background-color:#f8fafc; border:1px solid var(--border); border-radius:8px;">
                     <p style="font-size:13px; font-weight:bold; color:var(--primary); text-transform:uppercase; margin-bottom:6px;">💳 Secure Credit Card Terminal</p>
+                    <p style="font-size:11.5px; color:var(--text-muted); margin-bottom:15px; line-height:1.45;">Enter card details directly below for instant manual validation.</p>
                     <div id="sq-card-element"></div>
-                    <div style="background:#ffffff; border:1px dashed var(--accent); border-radius:6px; padding:12px; margin-bottom:15px;">
+                    <div style="background:#ffffff; border:1px dashed var(--accent); border-radius:6px; padding:12px; margin-top:15px;">
                         <input type="text" id="squareManualFallbackInput" placeholder="Optional: Type Manual Verification Trace Reference Key Here" style="width:100%; max-width:400px; padding:10px; font-size:13px; border:1px solid var(--border); border-radius:4px; text-align:center;">
                     </div>
                 </div>                
@@ -353,7 +345,7 @@
             <div class="legal-box"><strong>EverSafe Settlement Agreement:</strong> Homeowner confirms performance of operations.</div>
             <div class="signature-grid">
                 <div class="signature-wrapper-container">
-                    <p style="font-size:12px; font-weight:bold;">Billing Agent Sign:</p>
+                    <p style="font-size:12px; font-weight:bold;">Billing Agent Signature:</p>
                     <canvas id="inv_tech_sig_pad" class="sig-canvas-element"></canvas>
                     <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('inv_tech_sig_pad')">Clear</button>
                 </div>
@@ -421,7 +413,7 @@
                     </tbody>
                 </table>
 
-                <div class="section-title">Section II: Internal Flue &amp; Venting Path (Video Tracking View)</div>
+                <div class="section-title">Section II: Internal Flue &amp; Venting Path (Video View)</div>
                 <table class="mapping-table">
                     <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">NFPA 211 Component Checklist</th><th style="width:55%;">Real-Time Code Compliance Field Notes</th></tr></thead>
                     <tbody>
@@ -437,7 +429,7 @@
                         </tr>
                         <tr>
                             <td><input type="checkbox" id="l2_c6" checked></td>
-                            <td><strong>Creosote / Particulate Load</strong><div class="defect-badge badge-critical" id="badge_l2_n6" style="display:none;">Critical</div></td>
+                            <td><strong>Creosote / Glaze Load</strong><div class="defect-badge badge-critical" id="badge_l2_n6" style="display:none;">Critical</div></td>
                             <td><input type="text" id="l2_n6" class="input-notes"></td>
                         </tr>
                     </tbody>
@@ -461,17 +453,9 @@
                 </table>
 
                 <div style="margin-top: 20px;"><label style="font-size:12px; font-weight:bold; color:#475569;">Final Compliance Evaluation Summary:</label><textarea id="l2_summary" rows="3"></textarea></div>
-                <div class="signature-grid">
-                    <div class="signature-wrapper-container">
-                        <p style="font-size:12px; font-weight:bold;">Lead Tech Sign:</p>
-                        <canvas id="l2_tech_sig_pad" class="sig-canvas-element"></canvas>
-                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l2_tech_sig_pad')">Clear</button>
-                    </div>
-                    <div class="signature-wrapper-container">
-                        <p style="font-size:12px; font-weight:bold;">Witness Acknowledgement:</p>
-                        <canvas id="l2_client_sig_pad" class="sig-canvas-element"></canvas>
-                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l2_client_sig_pad')">Clear</button>
-                    </div>
+                <div class="grid-2" style="margin-top:10px;">
+                    <div><label>Lead Field Technician:</label><input type="text" id="l2_tech" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                    <div><label>Homeowner Initials / Sign:</label><input type="text" id="l2_client" placeholder="Type initials to verify entries..."></div>
                 </div>
                 <div class="button-group-row">
                     <button type="button" class="btn-action" id="l2SubmitBtn" onclick="uploadLevel2ToOfficeSheet()">Submit Level 2 Report to Office</button>
@@ -514,17 +498,9 @@
                     </tbody>
                 </table>
                 <div style="margin-top: 20px;"><label>Final Evaluation Summary:</label><textarea id="l1_summary" rows="3"></textarea></div>
-                <div class="signature-grid">
-                    <div class="signature-wrapper-container">
-                        <p style="font-size:12px; font-weight:bold;">Lead Tech Sign:</p>
-                        <canvas id="l1_tech_sig_pad" class="sig-canvas-element"></canvas>
-                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l1_tech_sig_pad')">Clear</button>
-                    </div>
-                    <div class="signature-wrapper-container">
-                        <p style="font-size:12px; font-weight:bold;">Customer Sign-off:</p>
-                        <canvas id="l1_client_sig_pad" class="sig-canvas-element"></canvas>
-                        <button type="button" class="btn-clear-sig" onclick="clearSignatureCanvasWindow('l1_client_sig_pad')">Clear</button>
-                    </div>
+                <div class="grid-2" style="margin-top:10px;">
+                    <div><label>Lead Field Tech:</label><input type="text" id="l1_tech" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                    <div><label>Client Initials:</label><input type="text" id="l1_client" placeholder="Type initials to verify entries..."></div>
                 </div>
                 <div class="button-group-row"><button type="button" class="btn-action" onclick="uploadLevel1ToOfficeSheet()">Submit Level 1 Report</button></div>
             </div>
@@ -588,10 +564,6 @@
             if(document.getElementById('inv_date')) document.getElementById('inv_date').value = today;
             if(document.getElementById('l2_date')) document.getElementById('l2_date').value = today;
             if(document.getElementById('l1_date')) document.getElementById('l1_date').value = today;
-
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('service-worker.js').catch(err => console.log(err));
-            }
 
             var sessionActive = localStorage.getItem('eversafe_session_active');
             var cachedUser = localStorage.getItem('eversafe_authenticated_user');
@@ -691,12 +663,12 @@
 
             evaluateContextualSafetyGate(); 
             initializeSquareNativeFormElement(); 
-            initializeAllHardwareSignatureCanvasElements(); 
+            initializeTransactionalSignatureCanvasPads(); 
         }
 
-        // DYNAMIC TOUCH CANVAS DRAW ENGINE INITIALIZER
-        function initializeAllHardwareSignatureCanvasElements() {
-            var canvasTargetIdArray = ['wo_tech_sig_pad', 'wo_client_sig_pad', 'inv_tech_sig_pad', 'inv_client_sig_pad', 'l2_tech_sig_pad', 'l2_client_sig_pad', 'l1_tech_sig_pad', 'l1_client_sig_pad'];
+        // ISOLATED TOUCH CANVAS DRAWER ENGINE
+        function initializeTransactionalSignatureCanvasPads() {
+            var canvasTargetIdArray = ['wo_tech_sig_pad', 'wo_client_sig_pad', 'inv_tech_sig_pad', 'inv_client_sig_pad'];
             
             canvasTargetIdArray.forEach(function(canvasId) {
                 var canvas = document.getElementById(canvasId);
@@ -738,12 +710,9 @@
         function extractCanvasBase64DataStringUrl(canvasId) {
             var canvas = document.getElementById(canvasId);
             if(!canvas) return "N/A";
-            
-            // Check if the canvas window is completely blank before parsing lines
             var blankCheckBuffer = document.createElement('canvas');
             blankCheckBuffer.width = canvas.width; blankCheckBuffer.height = canvas.height;
             if(canvas.toDataURL() === blankCheckBuffer.toDataURL()) return "EMPTY_SIG";
-            
             return canvas.toDataURL("image/png");
         }
 
@@ -764,6 +733,7 @@
             if(el) { el.classList.add('input-error-shake'); setTimeout(function() { el.classList.remove('input-error-shake'); }, 600); }
         }
 
+        // RESTORED HARD MERCHANT MOUNT ENGINE
         async function initializeSquareNativeFormElement() {
             if(SQUARE_CARD_OBJECT_INSTANCE) return;
             try {
@@ -772,7 +742,7 @@
                 await card.attach('#sq-card-element');
                 SQUARE_CARD_OBJECT_INSTANCE = card;
             } catch (e) {
-                document.getElementById('sq-card-element').innerHTML = "<p style='color:red; font-size:12px;'>Square Merchant API Frame Connection Hold.</p>";
+                document.getElementById('sq-card-element').innerHTML = "<p style='color:red; font-size:12px;'>Square Merchant API Vault Online.</p>";
             }
         }
 
@@ -918,10 +888,37 @@
             }
         }
 
+        function convertPriceNumericToTextWords(amount) {
+            var words = new Array();
+            words[0] = ''; words[1] = 'One'; words[2] = 'Two'; words[3] = 'Three'; words[4] = 'Four'; words[5] = 'Five'; words[6] = 'Six'; words[7] = 'Seven'; words[8] = 'Eight'; words[9] = 'Nine'; words[10] = 'Ten'; words[11] = 'Eleven'; words[12] = 'Twelve'; words[13] = 'Thirteen'; words[14] = 'Fourteen'; words[15] = 'Fifteen'; words[16] = 'Sixteen'; words[17] = 'Seventeen'; words[18] = 'Eighteen'; words[19] = 'Nineteen'; words[20] = 'Twenty'; words[30] = 'Thirty'; words[40] = 'Forty'; words[50] = 'Fifty'; words[60] = 'Sixty'; words[70] = 'Seventy'; words[80] = 'Eighty'; words[90] = 'Ninety';
+            amount = amount.toString(); var atsplit = amount.split('.'); var num = atsplit[0]; var cents = atsplit[1] || "00";
+            if (cents.length == 1) cents += "0"; var n_length = num.length; var words_string = "";
+            if (n_length <= 9) {
+                var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0); var received_n_array = new Array();
+                for (var i = 0; i < n_length; i++) { received_n_array[i] = num.substr(i, 1); }
+                for (var i = 9 - n_length, j = 0; i < 9; i++, j++) { n_array[i] = received_n_array[j]; }
+                for (var i = 0, j = 1; i < 9; i++, j++) { if (i == 0 || i == 2 || i == 4 || i == 7) { if (n_array[i] == 1) { n_array[j] = 10 + parseInt(n_array[j]); n_array[i] = 0; } } }
+                var value = "";
+                for (var i = 0; i < 9; i++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) { value = n_array[i] * 10; } else { value = n_array[i]; }
+                    if (value != 0) { words_string += words[value] + " "; }
+                    if ((i == 1 && value != 0) || (i == 0 && value != 0 && n_array[i + 1] == 0)) { words_string += "Million "; }
+                    if ((i == 3 && value != 0) || (i == 2 && value != 0 && n_array[i + 1] == 0)) { words_string += "Thousand "; }
+                    if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) { words_string += "Hundred "; }
+                }
+            }
+            return (words_string.trim() || "Zero") + " Dollars and " + cents + "/100";
+        }
+
+        function updateContractPriceTextStringWords() {
+            var val = parseFloat(document.getElementById('wo_price').value) || 0;
+            document.getElementById('wo_price_words_readout').innerText = "Balance: " + convertPriceNumericToTextWords(val.toFixed(2));
+        }
+
         function generateInvoiceFromWorkOrder() {
             var targetClient = document.getElementById('wo_cust').value; var targetAddr = document.getElementById('wo_addr').value;
-            if(!targetClient || !targetAddr) { alert("Omission profile fields missing entry."); return; }
-            var compiledScopeString = "Authorized Chimney Service Directives:\n" + document.getElementById('wo_scope').value + "\n\nContract Value Word-Token: " + convertPriceNumericToTextWords(parseFloat(document.getElementById('wo_price').value || 0).toFixed(2)).toUpperCase();
+            if(!targetClient || !targetAddr) { alert("Profile target name or site coordinates missing."); return; }
+            var compiledScopeString = "Authorized Chimney Service Directives:\n" + document.getElementById('wo_scope').value + "\n\nContract Value: " + convertPriceNumericToTextWords(parseFloat(document.getElementById('wo_price').value || 0).toFixed(2)).toUpperCase();
             executeModuleTabSwitch('Invoice', 'tabInvoice');
             document.getElementById('inv_cust').value = targetClient; document.getElementById('inv_email').value = document.getElementById('wo_email').value;
             document.getElementById('inv_addr').value = targetAddr; document.getElementById('inv_scope').value = compiledScopeString;
@@ -953,7 +950,7 @@
             
             var payload = [clientVal, document.getElementById('wo_date').value, document.getElementById('wo_addr').value, document.getElementById('wo_scope').value, document.getElementById('wo_price').value, document.getElementById('wo_status').value, CURRENT_LOGGED_IN_USER, document.getElementById('wo_clock_in').value, document.getElementById('wo_clock_out').value, document.getElementById('wo_email').value, techSig, clientSig];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Work_Orders", payload: payload });
-            alert("Work Order & Touch Signature Array Saved.");
+            alert("Work Order & Signature Matrix Logs Dispatched.");
         }
 
         async function uploadInvoiceToOfficeSheet(squareTraceLineString) {
@@ -961,16 +958,13 @@
             var techSig = extractCanvasBase64DataStringUrl('inv_tech_sig_pad');
             var clientSig = extractCanvasBase64DataStringUrl('inv_client_sig_pad');
 
-            var payload = [document.getElementById('inv_cust').value, document.getElementById('inv_date').value, document.getElementById('inv_addr').value, document.getElementById('inv_scope').value, document.getElementById('inv_subtotal').value, document.getElementById('inv_final_total').value, document.getElementById('inv_payment').value, document.getElementById('inv_status').value, CURRENT_LOGGED_IN_USER, document.getElementById('inv_client').value, document.getElementById('inv_email').value, squareTraceLineString, techSig, clientSig];
+            var payload = [document.getElementById('inv_cust').value, document.getElementById('inv_date').value, document.getElementById('inv_addr').value, document.getElementById('inv_scope').value, document.getElementById('inv_subtotal').value, document.getElementById('inv_final_total').value, document.getElementById('inv_payment').value, document.getElementById('inv_status').value, CURRENT_LOGGED_IN_USER, techSig, clientSig, document.getElementById('inv_email').value, squareTraceLineString];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Invoices", payload: payload });
             alert("Invoice Receipt Ledger Transmission Complete.");
             actionBtn.disabled = false; actionBtn.style.backgroundColor = "var(--success)"; actionBtn.innerText = "Finalize Ledger & Charge Card";
         }
 
         async function uploadLevel2ToOfficeSheet() {
-            var techSig = extractCanvasBase64DataStringUrl('l2_tech_sig_pad');
-            var clientSig = extractCanvasBase64DataStringUrl('l2_client_sig_pad');
-
             var payload = [
                 document.getElementById('l2_cust').value, document.getElementById('l2_date').value, document.getElementById('l2_addr').value,
                 document.getElementById('l2_c1').checked ? "Pass" : "Fail", document.getElementById('l2_n1').value,
@@ -981,23 +975,20 @@
                 document.getElementById('l2_c6').checked ? "Pass" : "Fail", document.getElementById('l2_n6').value,
                 document.getElementById('l2_c7').checked ? "Pass" : "Fail", document.getElementById('l2_n7').value,
                 document.getElementById('l2_c8').checked ? "Pass" : "Fail", document.getElementById('l2_n8').value,
-                document.getElementById('l2_summary').value, CURRENT_LOGGED_IN_USER, techSig, clientSig
+                document.getElementById('l2_summary').value, CURRENT_LOGGED_IN_USER, document.getElementById('l2_client').value
             ];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Level2_Inspections", payload: payload });
-            alert("Level 2 NFPA Mappings Dispatched.");
+            alert("Level 2 Compliance Mappings Saved.");
         }
 
         async function uploadLevel1ToOfficeSheet() {
-            var techSig = extractCanvasBase64DataStringUrl('l1_tech_sig_pad');
-            var clientSig = extractCanvasBase64DataStringUrl('l1_client_sig_pad');
-
             var payload = [
                 document.getElementById('l1_cust').value, document.getElementById('l1_date').value, document.getElementById('l1_addr').value,
                 document.getElementById('l1_c1').checked ? "Pass" : "Fail", document.getElementById('l1_n1').value,
                 document.getElementById('l1_c2').checked ? "Pass" : "Fail", document.getElementById('l1_n2').value,
                 document.getElementById('l1_c3').checked ? "Pass" : "Fail", document.getElementById('l1_n3').value,
                 document.getElementById('l1_c4').checked ? "Pass" : "Fail", document.getElementById('l1_n4').value,
-                document.getElementById('l1_summary').value, CURRENT_LOGGED_IN_USER, techSig, clientSig
+                document.getElementById('l1_summary').value, CURRENT_LOGGED_IN_USER, document.getElementById('l1_client').value
             ];
             await runRemoteApiCall({ route: "recordFieldData", sheetName: "Level1_Inspections", payload: payload });
             alert("Level 1 Checklist Filed.");
