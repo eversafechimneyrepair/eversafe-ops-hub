@@ -67,7 +67,10 @@
             padding: 12px 20px 6px 20px; border-bottom: 1px solid var(--primary-light);
         }
         .brand-text { color: white; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        .user-tag { color: var(--accent); font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        
+        .user-pill-container { display: flex; align-items: center; gap: 8px; }
+        .user-tag { color: var(--accent); font-size: 11px; font-weight: bold; text-transform: uppercase; background: rgba(255,255,255,0.08); padding: 4px 8px; border-radius: 4px; }
+        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
         .nav-tabs-scroll { display: flex; overflow-x: auto; white-space: nowrap; padding: 0 5px; justify-content: center; -webkit-overflow-scrolling: touch; }
         .nav-tabs-scroll::-webkit-scrollbar { display: none; }
@@ -81,12 +84,20 @@
         .nav-tab-btn.active-tab { color: white; border-bottom-color: var(--accent); background-color: rgba(255,255,255,0.05); }
 
         .app-container { max-width: 850px; margin: 20px auto; padding: 0 15px; display: none; text-align: center; }
-        .app-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 20px; text-align: center; }
+        .app-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 20px; text-align: center; position: relative; transition: all 0.3s ease; }
 
         input[type="text"], input[type="number"], input[type="password"], input[type="date"], input[type="time"], select, textarea {
-            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; margin-top: 4px; font-family: inherit; box-sizing: border-box; text-align: center;
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; margin-top: 4px; font-family: inherit; box-sizing: border-box; text-align: center; transition: border 0.2s, background-color 0.2s;
         }
         input[type="text"]:focus, select:focus, textarea:focus, input[type="password"]:focus { outline: none; border-color: var(--accent); background-color: #fdfcfa; }
+
+        .input-error-shake { border-color: var(--danger) !important; background-color: #fef2f2 !important; animation: alertShake 0.4s ease; }
+
+        @keyframes alertShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
 
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; justify-items: center; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
@@ -212,7 +223,10 @@
     <div class="app-header" id="mainHeaderBar">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Suite</div>
-            <div class="user-tag" id="userBadgeDisplay" style="cursor:pointer;" onclick="executeFieldCrewLogout()" title="Click to Logout Session">Connecting...</div>
+            <div class="user-pill-container">
+                <div class="user-tag" id="userBadgeDisplay">Connecting...</div>
+                <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()" title="Switch Crew Profile">Switch User</button>
+            </div>
         </div>
         <div class="nav-tabs-scroll">
             <button type="button" class="nav-tab-btn active-tab" id="tabWO" onclick="routeAppModule('WO', 'tabWO')">🛠️ Contract WO</button>
@@ -234,7 +248,7 @@
                     <p>📞 (419) 517-1888 | support@eversafechimneyrepair.com</p>
                 </div>
             </div>
-            <div class="app-card">
+            <div class="app-card" id="woCardContainer">
                 <h3>Authorized Work Contract</h3>
                 <div class="grid-2">
                     <div><label>Customer Name:</label><input type="text" id="wo_cust" placeholder="Client profile name..."></div>
@@ -266,7 +280,8 @@
                 <textarea id="wo_scope" rows="3" placeholder="Detail specific repair strategies..."></textarea>
                 <div style="margin-top:12px;">
                     <label style="font-size:13px; font-weight:bold; color:var(--accent-dark);">ESTIMATED CONTRACT VALUE ($):</label>
-                    <input type="number" id="wo_price" placeholder="0.00" style="background:#fff7ed; color:var(--accent-dark); font-weight:bold; font-size:16px;">
+                    <input type="number" id="wo_price" placeholder="0.00" style="background:#fff7ed; color:var(--accent-dark); font-weight:bold; font-size:16px;" oninput="updateContractPriceTextStringWords()">
+                    <div id="wo_price_words_readout" style="font-size:11px; font-weight:bold; color:var(--text-muted); margin-top:4px; text-transform:uppercase;">Balance: Zero Dollars and 00/100</div>
                 </div>
                 <div class="section-title">Operational Strategy Rules</div>
                 <div style="margin-top:4px;"><label>Venting Status Profile:</label><select id="wo_status"><option>Fully Functional / Secured</option><option>Conditional Hold</option><option>Unsafe (Condemned)</option></select></div>
@@ -287,7 +302,7 @@
 
         <div id="modInvoice" class="app-module">
             <div class="print-only-header"><div style="text-align: center; width: 100%;"><h1>EverSafe Chimney Repair LLC</h1><p>Official Field Invoice Receipt</p></div></div>
-            <div class="app-card">
+            <div class="app-card" id="invoiceCardContainer">
                 <h3>Financial Billing &amp; Secure Card Terminal</h3>
                 <div class="grid-2">
                     <div><label>Invoice Recipient:</label><input type="text" id="inv_cust"></div>
@@ -378,7 +393,7 @@
                                     <option value="">-- Code Presets --</option>
                                     <option value="[CRITICAL] Thermal stress fractures observed inside firebrick lining. Fire Hazard.">Thermal Fractures (CRITICAL)</option>
                                     <option value="[CRITICAL] Longitudinal crack detected inside masonry clay flue liner segment path.">Clay Liner Crack (CRITICAL)</option>
-                                    <option value="[MAJOR] Mortar joint degradation noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
+                                    <option value="[MAJOR] Mortar joint disintegration noted between structural flue liner joints.">Joint Degradation (MAJOR)</option>
                                 </select>
                             </td>
                         </tr>
@@ -465,8 +480,9 @@
         var MODAL_SAFETY_APPROVED = false; 
         var PUNCH_STATE = false; 
         var SQUARE_CARD_OBJECT_INSTANCE = null; 
+        var TIME_CLOCK_TIMER_OBJECT = null; 
+        var TIME_CLOCK_START_UNIX_MS = null;
 
-        // UPGRADED AUTO-RESTORE LOGIC: Hydrates memory instantly from local storage cache definitions
         window.addEventListener('DOMContentLoaded', function() {
             var today = new Date().toISOString().split('T')[0];
             if(document.getElementById('wo_date')) document.getElementById('wo_date').value = today;
@@ -474,17 +490,13 @@
             if(document.getElementById('l2_date')) document.getElementById('l2_date').value = today;
             if(document.getElementById('l1_date')) document.getElementById('l1_date').value = today;
 
-            // Register background cache worker
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('service-worker.js').catch(err => console.log(err));
-            }
-
             var sessionActive = localStorage.getItem('eversafe_session_active');
             var cachedUser = localStorage.getItem('eversafe_authenticated_user');
             
             if (sessionActive === 'true' && cachedUser) {
                 CURRENT_LOGGED_IN_USER = cachedUser;
                 initializeUnlockedDashboardInterface();
+                recoverActiveClockInTimerState(); 
             } else {
                 setTimeout(function() {
                     var passkeyNode = document.getElementById('passkeyField');
@@ -493,7 +505,6 @@
             }
         });
 
-        // Mode "no-cors" forces browser pipeline to bypass CORS and redirect preflight traps entirely
         async function runRemoteApiCall(payloadObject) {
             try {
                 await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -519,7 +530,6 @@
                 if(result.success) {
                     CURRENT_LOGGED_IN_USER = result.authorizedUser;
                     
-                    // Secure data tokens inside persistent device hardware memory
                     localStorage.setItem('eversafe_authenticated_user', CURRENT_LOGGED_IN_USER);
                     localStorage.setItem('eversafe_session_active', 'true');
                     
@@ -550,9 +560,11 @@
         }
 
         function executeFieldCrewLogout() {
-            if(confirm("Log out of the current field crew session?")) {
+            if(confirm("Are you sure you want to log out or switch users? This clears the active device session memory cache safely.")) {
                 localStorage.removeItem('eversafe_session_active');
                 localStorage.removeItem('eversafe_authenticated_user');
+                localStorage.removeItem('eversafe_clock_in_time');
+                if(TIME_CLOCK_TIMER_OBJECT) clearInterval(TIME_CLOCK_TIMER_OBJECT);
                 window.location.reload();
             }
         }
@@ -575,10 +587,26 @@
             elementBox.style.display = (selectedType === "CARD_ON_SITE") ? "block" : "none";
         }
 
+        // NICETY 1: Haptic form input highlighter
+        function flashValidationAlertState(elementId) {
+            var el = document.getElementById(elementId);
+            if(el) {
+                el.classList.add('input-error-shake');
+                setTimeout(function() { el.classList.remove('input-error-shake'); }, 600);
+            }
+        }
+
         async function processSecureNativeSquarePayment() {
             var method = document.getElementById('inv_payment').value;
             var actionBtn = document.getElementById('invSubmissionActionBtn');
             var fallbackField = document.getElementById('squareManualFallbackInput');
+            var clientField = document.getElementById('inv_cust');
+
+            if(!clientField.value.trim()) {
+                alert("Missing Profile Entry: Provide Customer Recipient Profile Name.");
+                flashValidationAlertState('inv_cust');
+                return;
+            }
 
             if (method !== "CARD_ON_SITE") {
                 uploadInvoiceToOfficeSheet("MANUAL_RECORD_CASH_OR_CHECK");
@@ -592,6 +620,7 @@
                 var manualValue = fallbackField ? fallbackField.value.trim() : "";
                 if (!manualValue) {
                     alert("Omission Error: Provide manual transaction tracking reference token.");
+                    flashValidationAlertState('squareManualFallbackInput');
                     actionBtn.disabled = false; actionBtn.innerText = "Finalize Ledger & Charge Card";
                     return;
                 }
@@ -681,26 +710,115 @@
             MODAL_SAFETY_APPROVED = true; document.getElementById('safetyGatekeeperModal').style.display = "none"; executeModuleTabSwitch('Lvl2', 'tabLvl2');
         }
 
+        // NICETY 2: Live Digital Time Card Tracking Clock Engine
         function toggleTimeCardPunch() {
-            var btn = document.getElementById('timeCardBtn'); var feedback = document.getElementById('laborHoursCalculated');
+            var btn = document.getElementById('timeCardBtn'); 
             var timeString = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
             if(!PUNCH_STATE) {
-                document.getElementById('wo_clock_in').value = timeString; btn.innerText = "🚨 Punch Out: Close Job Site"; btn.style.backgroundColor = "var(--danger)";
-                feedback.innerText = "Time Tracker Status: On-Clock since " + timeString; PUNCH_STATE = true;
+                document.getElementById('wo_clock_in').value = timeString; 
+                btn.innerText = "🚨 Punch Out: Close Job Site"; btn.style.backgroundColor = "var(--danger)";
+                
+                TIME_CLOCK_START_UNIX_MS = Date.now();
+                localStorage.setItem('eversafe_clock_in_time', TIME_CLOCK_START_UNIX_MS.toString());
+                startLiveDigitalClockInterfaceLoop();
+                PUNCH_STATE = true;
             } else {
-                document.getElementById('wo_clock_out').value = timeString; btn.innerText = "⚡ Punch Closed"; btn.disabled = true; btn.style.backgroundColor = "var(--border)";
-                var start = document.getElementById('wo_clock_in').value; feedback.innerText = "Time Tracker Status: Completed (" + start + " to " + timeString + ")"; PUNCH_STATE = false;
+                document.getElementById('wo_clock_out').value = timeString; 
+                btn.innerText = "⚡ Punch Closed"; btn.disabled = true; btn.style.backgroundColor = "var(--border)";
+                
+                if(TIME_CLOCK_TIMER_OBJECT) clearInterval(TIME_CLOCK_TIMER_OBJECT);
+                localStorage.removeItem('eversafe_clock_in_time');
+                
+                var start = document.getElementById('wo_clock_in').value; 
+                document.getElementById('laborHoursCalculated').innerText = "Time Tracker Status: Completed (" + start + " to " + timeString + ")"; 
+                PUNCH_STATE = false;
             }
+        }
+
+        function startLiveDigitalClockInterfaceLoop() {
+            if(TIME_CLOCK_TIMER_OBJECT) clearInterval(TIME_CLOCK_TIMER_OBJECT);
+            var feedback = document.getElementById('laborHoursCalculated');
+            
+            TIME_CLOCK_TIMER_OBJECT = setInterval(function() {
+                var diffMs = Date.now() - TIME_CLOCK_START_UNIX_MS;
+                var totalSecs = Math.floor(diffMs / 1000);
+                var mins = Math.floor(totalSecs / 60);
+                var secs = totalSecs % 60;
+                var hrs = Math.floor(mins / 60);
+                mins = mins % 60;
+                
+                var elapsedFormattedStr = (hrs > 0 ? hrs + "h " : "") + mins + "m " + secs + "s";
+                feedback.innerHTML = "⏱️ <strong>ON-CLOCK LIVE:</strong> " + elapsedFormattedStr + " elapsed on site.";
+            }, 1000);
+        }
+
+        function recoverActiveClockInTimerState() {
+            var savedTime = localStorage.getItem('eversafe_clock_in_time');
+            if(savedTime) {
+                TIME_CLOCK_START_UNIX_MS = parseInt(savedTime);
+                PUNCH_STATE = true;
+                var btn = document.getElementById('timeCardBtn');
+                if(btn) {
+                    btn.innerText = "🚨 Punch Out: Close Job Site";
+                    btn.style.backgroundColor = "var(--danger)";
+                }
+                var historicalStartTime = new Date(TIME_CLOCK_START_UNIX_MS).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                document.getElementById('wo_clock_in').value = historicalStartTime;
+                startLiveDigitalClockInterfaceLoop();
+            }
+        }
+
+        // NICETY 3: Automated Legal Grand Total Word Builder
+        function convertPriceNumericToTextWords(amount) {
+            var words = new Array();
+            words[0] = ''; words[1] = 'One'; words[2] = 'Two'; words[3] = 'Three'; words[4] = 'Four'; words[5] = 'Five'; words[6] = 'Six'; words[7] = 'Seven'; words[8] = 'Eight'; words[9] = 'Nine'; words[10] = 'Ten'; words[11] = 'Eleven'; words[12] = 'Twelve'; words[13] = 'Thirteen'; words[14] = 'Fourteen'; words[15] = 'Fifteen'; words[16] = 'Sixteen'; words[17] = 'Seventeen'; words[18] = 'Eighteen'; words[19] = 'Nineteen'; words[20] = 'Twenty'; words[30] = 'Thirty'; words[40] = 'Forty'; words[50] = 'Fifty'; words[60] = 'Sixty'; words[70] = 'Seventy'; words[80] = 'Eighty'; words[90] = 'Ninety';
+            amount = amount.toString(); var atsplit = amount.split('.'); var num = atsplit[0]; var cents = atsplit[1] || "00";
+            if (cents.length == 1) cents += "0";
+            var n_length = num.length; var words_string = "";
+            if (n_length <= 9) {
+                var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0); var received_n_array = new Array();
+                for (var i = 0; i < n_length; i++) { received_n_array[i] = num.substr(i, 1); }
+                for (var i = 9 - n_length, j = 0; i < 9; i++, j++) { n_array[i] = received_n_array[j]; }
+                for (var i = 0, j = 1; i < 9; i++, j++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) { if (n_array[i] == 1) { n_array[j] = 10 + parseInt(n_array[j]); n_array[i] = 0; } }
+                }
+                var value = "";
+                for (var i = 0; i < 9; i++) {
+                    if (i == 0 || i == 2 || i == 4 || i == 7) { value = n_array[i] * 10; } else { value = n_array[i]; }
+                    if (value != 0) { words_string += words[value] + " "; }
+                    if ((i == 1 && value != 0) || (i == 0 && value != 0 && n_array[i + 1] == 0)) { words_string += "Million "; }
+                    if ((i == 3 && value != 0) || (i == 2 && value != 0 && n_array[i + 1] == 0)) { words_string += "Thousand "; }
+                    if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) { words_string += "Hundred "; }
+                }
+                words_string = words_string.split('  ').join(' ');
+            }
+            return (words_string.trim() || "Zero") + " Dollars and " + cents + "/100";
+        }
+
+        function updateContractPriceTextStringWords() {
+            var val = parseFloat(document.getElementById('wo_price').value) || 0;
+            var textReadout = convertPriceNumericToTextWords(val.toFixed(2));
+            document.getElementById('wo_price_words_readout').innerText = "Balance: " + textReadout;
         }
 
         function generateInvoiceFromWorkOrder() {
             var targetClient = document.getElementById('wo_cust').value; var targetEmail = document.getElementById('wo_email').value;
             var targetAddr = document.getElementById('wo_addr').value; var targetPrice = document.getElementById('wo_price').value; var targetScope = document.getElementById('wo_scope').value;
-            if(!targetClient || !targetAddr) { alert("Pipeline Aborted: Profile fields missing entries."); return; }
+            
+            if(!targetClient || !targetAddr) { 
+                alert("Pipeline Intercepted: Profile field values missing targets."); 
+                if(!targetClient) flashValidationAlertState('wo_cust');
+                if(!targetAddr) flashValidationAlertState('wo_addr');
+                return; 
+            }
+            
             let itemsArray = [];
             if(document.getElementById('prc_srv1').checked) itemsArray.push("Level 1 Inspection");
             if(document.getElementById('prc_srv2').checked) itemsArray.push("Level 2 Drone/Camera Scan");
-            var compiledScopeString = "Services Requested:\n" + itemsArray.join(', ') + "\n\nDirectives:\n" + targetScope;
+            
+            var legalPriceWordsText = convertPriceNumericToTextWords(parseFloat(targetPrice || 0).toFixed(2));
+            var compiledScopeString = "Services Rendered:\n" + itemsArray.join(', ') + "\n\nDirectives:\n" + targetScope + "\n\nValue: " + legalPriceWordsText.toUpperCase();
 
             executeModuleTabSwitch('Invoice', 'tabInvoice');
             document.getElementById('inv_cust').value = targetClient; document.getElementById('inv_email').value = targetEmail;
@@ -754,8 +872,14 @@
         }
 
         async function uploadWorkOrderToOfficeSheet() {
+            var clientVal = document.getElementById('wo_cust').value;
+            if(!clientVal.trim()) {
+                alert("Omission Error: Provide Customer Profile Name entry before uploading.");
+                flashValidationAlertState('wo_cust');
+                return;
+            }
             var payload = [
-                document.getElementById('wo_cust').value, document.getElementById('wo_date').value, document.getElementById('wo_addr').value,
+                clientVal, document.getElementById('wo_date').value, document.getElementById('wo_addr').value,
                 document.getElementById('wo_scope').value, document.getElementById('wo_price').value, document.getElementById('wo_status').value, 
                 document.getElementById('wo_tech').value, document.getElementById('wo_client').value, document.getElementById('wo_clock_in').value, 
                 document.getElementById('wo_clock_out').value, document.getElementById('wo_email').value
@@ -822,7 +946,7 @@
             }; reader.readAsDataURL(file);
         }
 
-        // ASYNCHRONOUS DEEP-LINK EVENT DRIVER BLOCK
+        // HARDWARE INTER-APP PROTOCOL PIPELINE HANDSHAKE ENGINE
         document.addEventListener('DOMContentLoaded', function() {
             var tapBtn = document.getElementById('fieldCrewTapToPayTriggerBtn');
             if (tapBtn) {
@@ -836,13 +960,13 @@
                     
                     if (amountInCents <= 0) {
                         alert("Transaction Aborted: Balanced total must be greater than zero.");
+                        flashValidationAlertState('inv_subtotal');
                         return;
                     }
 
                     var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/";
                     var userAgentString = navigator.userAgent || navigator.vendor || window.opera;
                     
-                    // Direct desktop parameter safety check block
                     var isMobile = /Android|iPhone|iPad|iPod/i.test(userAgentString);
                     if (!isMobile) {
                         alert("💻 Terminal Route Notice:\nTap to Pay utilizes the phone's native hardware NFC antenna. To use this feature, open this webpage on your mobile device terminal. For desktop payments, use the 'Secure Credit Card Terminal' manual box fields above.");
@@ -852,23 +976,23 @@
                     var isAndroid = /Android/i.test(userAgentString);
                     var targetHardwareUrl = "";
 
-                    // MOBILE ANDROID HARDWARE RESOLUTION INTENTS
+                    // MOBILE ANDROID INTENTS
                     if (isAndroid) {
                         targetHardwareUrl = "intent:#Intent;" +
                             "action=com.squareup.pos.action.CHARGE;" +
                             "package=com.squareup;" +
                             "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
-                    "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
-                    "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
-                    "S.com.squareup.pos.API_VERSION=v2.0;" +
-                    "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
-                    "S.com.squareup.pos.CURRENCY_CODE=USD;" +
-                    "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
-                    "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
-                    "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
-                    "end";
+                            "S.com.squareup.pos.CLIENT_ID=" + encodeURIComponent(SQUARE_APPLICATION_ID) + ";" +
+                            "S.com.squareup.pos.LOCATION_ID=" + encodeURIComponent(SQUARE_LOCATION_ID) + ";" +
+                            "S.com.squareup.pos.API_VERSION=v2.0;" +
+                            "i.com.squareup.pos.TOTAL_AMOUNT=" + amountInCents + ";" +
+                            "S.com.squareup.pos.CURRENCY_CODE=USD;" +
+                            "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD;" +
+                            "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe: " + customerName) + ";" +
+                            "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
+                            "end";
                     } 
-                    // MOBILE APPLE iOS HARDWARE DEEP-LINKS (Optimized schema mapping arrays)
+                    // MOBILE APPLE iOS DEEP-LINKS
                     else {
                         var jsonPayloadObject = {
                             "amount_money": { "amount": amountInCents, "currency_code": "USD" },
@@ -884,7 +1008,7 @@
 
                     try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: [customerName, "TAP_FIRED", invoiceTotal] }); } catch(err){}
 
-                    // Top-level direct window location assignment loop
+                    // Direct window assignment handoff loop
                     window.location.assign(targetHardwareUrl);
                 });
             }
