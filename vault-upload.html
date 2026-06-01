@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EverSafe Hub - Secure Media Vault</title>
+    <style>
+        :root { --primary: #0f172a; --primary-light: #1e293b; --accent: #F28C28; --bg: #f8fafc; --border: #cbd5e1; --accent-dark: #d97706; --danger: #ef4444; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
+        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+
+        .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
+        p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.45; }
+
+        input[type="file"] { display: block; margin: 25px auto; font-size: 15px; width: 100%; max-width: 300px; text-align: center; }
+        
+        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 14px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s; margin: 0 auto; display: block; }
+        .btn-action:hover { background-color: var(--accent-dark); }
+        .btn-action:disabled { background: #cbd5e1; color: #94a3b8; cursor: not-allowed; }
+
+        .status-msg { margin-top: 15px; font-weight: bold; font-size: 14px; color: var(--accent-dark); min-height: 20px; }
+
+        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
+        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
+        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
+        .nav-tab-btn span { font-size: 16px; }
+        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
+    </style>
+</head>
+<body>
+
+    <script>
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
+    </script>
+
+    <div class="app-header">
+        <div class="brand-row">
+            <div class="brand-text">EverSafe Operations Hub</div>
+            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <div class="app-card">
+            <h3>Secure Field Upload Vault</h3>
+            <p>Tap below to instantly launch your phone camera lens array. Snap structural before/after damage proof to store it directly in the central office Drive files.</p>
+            
+            <input type="file" accept="image/*" capture="environment" id="fieldFileInput">
+            
+            <button type="button" class="btn-action" id="uploadSubmitBtn" onclick="processMobileUploadStream()">Upload Photo Asset</button>
+            <div id="uploadStatusLine" class="status-msg">Ready for capture</div>
+        </div>
+    </div>
+
+    <div class="fixed-bottom-nav-bar">
+        <div class="nav-tabs-scroll">
+            <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
+            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
+            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
+            <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
+            <a href="dispatches.html" class="nav-tab-btn"><span>⚡</span>Routes</a>
+            <a href="vault-upload.html" class="nav-tab-btn active-tab"><span>📁</span>Camera</a>
+        </div>
+    </div>
+
+    <script>
+        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+
+        function processMobileUploadStream() {
+            var fileInput = document.getElementById('fieldFileInput'); 
+            var statusDiv = document.getElementById('uploadStatusLine');
+            var actionBtn = document.getElementById('uploadSubmitBtn');
+
+            if (fileInput.files.length === 0) { 
+                alert("Omission Notice: Please capture or select an image asset target first."); 
+                return; 
+            }
+            
+            actionBtn.disabled = true;
+            statusDiv.innerHTML = "⏳ Encoding binary stream payload...";
+            
+            var file = fileInput.files[0]; 
+            var reader = new FileReader();
+            
+            reader.onload = async function(e) {
+                var base64Data = e.target.result; 
+                var cleanFilename = "Vault_" + Date.now() + "_" + file.name;
+                statusDiv.innerHTML = "📡 Transmitting stream to central office ledger...";
+                
+                try {
+                    let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                        method: "POST",
+                        redirect: "follow",
+                        headers: { "Content-Type": "text/plain" },
+                        body: JSON.stringify({ route: "uploadFieldFile", base64Data: base64Data, filename: cleanFilename })
+                    });
+                    let result = await response.json();
+                    
+                    if (result.success) {
+                        statusDiv.innerHTML = "✅ Asset written successfully to Secure Drive folder!";
+                        fileInput.value = "";
+                    } else {
+                        statusDiv.innerHTML = "❌ Upload rejection rule thrown by office gateway server.";
+                    }
+                } catch(err) { 
+                    statusDiv.innerHTML = "❌ Network Endpoint Error: Stream connection lost."; 
+                } finally {
+                    actionBtn.disabled = false;
+                }
+            }; 
+            reader.readAsDataURL(file);
+        }
+
+        function executeFieldCrewLogout() {
+            localStorage.clear(); window.location.replace("index.html");
+        }
+    </script>
+</body>
+</html>
