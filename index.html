@@ -20,6 +20,7 @@
             --text-muted: #64748b;
             --danger: #ef4444;
             --success: #22c55e;
+            --info: #2563eb;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -107,10 +108,10 @@
         .segment-btn:last-child { border-right: none; }
         .segment-btn.active-segment { background: var(--primary); color: white; }
 
-        .button-group-row { display: flex; gap: 10px; margin-top: 20px; justify-content: center; }
-        .btn-action { flex: 2; background-color: var(--accent); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s; }
+        .button-group-row { display: flex; gap: 10px; margin-top: 20px; justify-content: center; flex-wrap: wrap; }
+        .btn-action { flex: 2; min-width: 150px; background-color: var(--accent); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s; }
         .btn-action:hover { background-color: var(--accent-dark); }
-        .btn-export { flex: 1; background-color: var(--primary); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; }
+        .btn-export { flex: 1; min-width: 100px; background-color: var(--primary); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; }
 
         .signature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px; justify-items: center; }
         
@@ -318,6 +319,7 @@
                 <div><p style="font-size:13px; font-weight:bold;">Payer Acknowledgement Sign:</p><input type="text" id="inv_client" placeholder="Sign for receipt..."></div>
             </div>
             <div class="button-group-row">
+                <button type="button" class="btn-action" style="background-color: #2563eb;" onclick="executeNativeMobileTapToPay()">📲 Tap to Pay via Square App</button>
                 <button type="button" class="btn-action" id="invSubmissionActionBtn" style="background-color: var(--success);" onclick="processSecureNativeSquarePayment()">Finalize Ledger &amp; Charge Card</button>
                 <button type="button" class="btn-export" style="background-color: #475569;" onclick="window.print()">Print Receipt View</button>
             </div>
@@ -471,7 +473,7 @@
             }, 350); 
         });
 
-        // TRACK A FINAL OPERATION: Mode "no-cors" forces browser pipeline to bypass CORS and redirect preflight traps entirely
+        // Mode "no-cors" forces browser pipeline to bypass CORS and redirect preflight traps entirely
         async function runRemoteApiCall(payloadObject) {
             try {
                 await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -576,6 +578,41 @@
                      actionBtn.disabled = false; actionBtn.innerText = "Finalize Ledger & Charge Card";
                 }
             }
+        }
+
+        // METHOD 1 TAP TO PAY: Hooks directly into the phone's native Square App via inter-process deep linking
+        function executeNativeMobileTapToPay() {
+            var invoiceTotal = document.getElementById('inv_final_total').value || "0.00";
+            var customerName = document.getElementById('inv_cust').value || "Field Client";
+            var amountInCents = Math.round(parseFloat(invoiceTotal) * 100);
+            
+            if (amountInCents <= 0) {
+                alert("Transaction Aborted: Balanced total must be greater than zero.");
+                return;
+            }
+
+            var jsonPayloadObject = {
+                "amount_money": {
+                    "amount": amountInCents,
+                    "currency_code": "USD"
+                },
+                "options": {
+                    "supported_tender_types": ["CREDIT_CARD"],
+                    "auto_return": true
+                },
+                "client_id": SQUARE_APPLICATION_ID,
+                "location_id": SQUARE_LOCATION_ID,
+                "notes": "EverSafe Invoice: " + customerName,
+                "callback_url": "https://eversafechimneyrepair.github.io/eversafe-ops-hub/",
+                "version": "1.3"
+            };
+
+            var squareUrlScheme = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(jsonPayloadObject));
+            
+            var logPayload = [customerName, "TAP_TO_PAY_ROUTED", invoiceTotal, "Handing execution flow off to native device hardware framework."];
+            try { runRemoteApiCall({ route: "recordFieldData", sheetName: "Safety_Logs", payload: logPayload }); } catch(e){}
+
+            window.location.href = squareUrlScheme;
         }
 
         function evaluateContextualSafetyGate() {
