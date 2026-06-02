@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Contract & Dispatch</title>
+    <title>EverSafe Hub - Work Order Dispatch</title>
     <style>
         :root { 
             --primary: #0f172a; 
@@ -29,11 +29,11 @@
         h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
         p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.45; text-align: center; }
         
-        /* Form Field Styles */
-        .form-group { margin-bottom: 20px; }
+        .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 6px; letter-spacing: 0.5px; }
         .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; background: #fff; color: #0f172a; }
         .form-control:focus { outline: none; border-color: var(--accent); }
+        select.form-control { height: 45px; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23475569'><path d='M0 0h10L5 6z'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px; }
 
         .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 25px auto 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
         .btn-action:hover { background-color: var(--accent-dark); }
@@ -66,34 +66,49 @@
 
     <div class="app-container">
         <div class="app-card">
-            <h3>Contract Log & Dispatch</h3>
-            <p>Enter job data below to update the core office workbook ledger and instantly copy the pre-formatted homeowner notification email to your clipboard.</p>
+            <h3>Authorize Work Order Contract</h3>
+            <p>Publish field structural parameters directly into the central master dispatch log and copy customer correspondence copy.</p>
             
             <div class="form-group">
-                <label for="jobIdInput">Job ID Number</label>
-                <input type="text" id="jobIdInput" class="form-control" placeholder="e.g. JOB-1052" autocomplete="off">
-            </div>
-
-            <div class="form-group">
                 <label for="customerNameInput">Customer Name</label>
-                <input type="text" id="customerNameInput" class="form-control" placeholder="Client legal name">
+                <input type="text" id="customerNameInput" class="form-control" placeholder="Client legal name" autocomplete="off">
             </div>
 
             <div class="form-group">
-                <label for="workScopeInput">Scope of Work Summary</label>
-                <input type="text" id="workScopeInput" class="form-control" placeholder="e.g. Chimney Tuckpointing, Crown Seal">
+                <label for="serviceAddressInput">Service Address</label>
+                <input type="text" id="serviceAddressInput" class="form-control" placeholder="Jobsite physical address" autocomplete="off">
+            </div>
+
+            <div class="form-group">
+                <label for="workScopeInput">Detailed Scope of Work</label>
+                <input type="text" id="workScopeInput" class="form-control" placeholder="e.g. Tuckpointing north wall, seal crown">
+            </div>
+
+            <div class="form-group">
+                <label for="estimatedCostInput">Estimated Cost ($)</label>
+                <input type="number" id="estimatedCostInput" class="form-control" placeholder="0.00" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label for="ventingStatusSelect">Venting System Status</label>
+                <select id="ventingStatusSelect" class="form-control">
+                    <option value="PASS">PASS - Operational Integrity Secure</option>
+                    <option value="FAIL">FAIL - Structural Defect / Blockage</option>
+                    <option value="NOT_TESTED">UNTESTED - Accessibility Restriction</option>
+                </select>
             </div>
 
             <textarea id="emailCopyTarget" style="position: absolute; left: -9999px; top: 0;" readonly></textarea>
             
             <button type="button" class="btn-action" id="logContractBtn" onclick="executeLogContractAndEmailCopy()">Log Contract & Copy Email</button>
-            <div id="contractStatusLine" class="status-msg">Ready to record transaction</div>
+            <div id="contractStatusLine" class="status-msg">Ready to synchronize log</div>
         </div>
     </div>
 
     <div class="fixed-bottom-nav-bar">
         <div class="nav-tabs-scroll">
             <a href="contract-wo.html" class="nav-tab-btn active-tab"><span>🛠️</span>Contract</a>
+            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
             <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
             <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
             <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
@@ -103,18 +118,21 @@
     </div>
 
     <script>
+        // Insert your specific App Script deployment web app URL here
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
 
         async function executeLogContractAndEmailCopy() {
             var logBtn = document.getElementById('logContractBtn');
             var statusDiv = document.getElementById('contractStatusLine');
             
-            var jobId = document.getElementById('jobIdInput').value.trim();
             var customerName = document.getElementById('customerNameInput').value.trim();
+            var serviceAddress = document.getElementById('serviceAddressInput').value.trim();
             var workScope = document.getElementById('workScopeInput').value.trim();
+            var estCost = document.getElementById('estimatedCostInput').value.trim();
+            var ventingStatus = document.getElementById('ventingStatusSelect').value;
 
-            if (!jobId || !customerName || !workScope) {
-                alert("Validation Omission: Please fill in all fields before recording data.");
+            if (!customerName || !serviceAddress || !workScope || !estCost) {
+                alert("Validation Omission: All input fields are required.");
                 return;
             }
 
@@ -122,16 +140,11 @@
             statusDiv.innerHTML = "⏳ Synchronizing records with office ledger...";
             statusDiv.style.color = "#475569";
 
-            // Prepare custom customer email notification into the background buffer
             var emailTextarea = document.getElementById('emailCopyTarget');
-            emailTextarea.value = `Dear ${customerName},\n\nThank you for choosing EverSafe Chimney Repair. Your structural service agreement details have been finalized by our field crew for project referencing tracker: ${jobId}.\n\nScope Confirmed: ${workScope}.\n\nYour digital portal invoice and field data entries have been pushed live to central ledger systems.\n\nBest regards,\nEverSafe Operations Hub Team`;
+            emailTextarea.value = `Dear ${customerName},\n\nThis message confirms that authorization terms for chimney servicing at ${serviceAddress} have been uploaded.\n\nScope of Authorization:\n${workScope}\n\nProject Valuation: $${parseFloat(estCost).toFixed(2)}\nVenting Infrastructure Status: ${ventingStatus}\n\nThank you for choosing EverSafe Chimney Repair.\n\nBest regards,\nEverSafe Operations Hub Team`;
 
-            // Execute the system clipboard inject copy sequence BEFORE asynchronous fetches
             var copySuccessful = enforceSystemClipboardCopy(emailTextarea);
-
-            // Package data array for Channel 3 "recordFieldData" router
-            var activeTechnician = localStorage.getItem('eversafe_authenticated_user') || "Field Crew Alpha";
-            var dataPayloadArray = [activeTechnician, jobId, customerName, workScope];
+            var activeUser = localStorage.getItem('eversafe_authenticated_user') || "Field Crew Lead";
 
             try {
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -139,56 +152,51 @@
                     redirect: "follow",
                     headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify({
-                        route: "recordFieldData",
-                        sheetName: "Contract_Submissions",
-                        payload: dataPayloadArray
+                        route: "appendWorkOrderContract",
+                        customerName: customerName,
+                        serviceAddress: serviceAddress,
+                        detailedScope: workScope,
+                        estimatedCost: estCost,
+                        ventingStatus: ventingStatus,
+                        leadTechnician: activeUser
                     })
                 });
                 let result = await response.json();
 
                 if (result.success) {
                     if (copySuccessful) {
-                        statusDiv.innerHTML = "✅ Saved to Sheet & Email Copied to Clipboard!";
+                        statusDiv.innerHTML = "✅ Work Order Written & Email Copied!";
                         statusDiv.style.color = "var(--success-dark)";
                     } else {
-                        statusDiv.innerHTML = "⚠️ Ledger Saved, but Clipboard write failed.";
+                        statusDiv.innerHTML = "⚠️ Work Order Logged, Clipboard Blocked.";
                         statusDiv.style.color = "var(--accent-dark)";
                     }
-                    // Reset inputs
-                    document.getElementById('jobIdInput').value = "";
                     document.getElementById('customerNameInput').value = "";
+                    document.getElementById('serviceAddressInput').value = "";
                     document.getElementById('workScopeInput').value = "";
+                    document.getElementById('estimatedCostInput').value = "";
                 } else {
-                    statusDiv.innerHTML = "❌ Upload rejection rule thrown by office gateway server.";
+                    statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
                     statusDiv.style.color = "var(--danger)";
                 }
             } catch (err) {
-                statusDiv.innerHTML = "❌ Network Endpoint Error: Stream connection lost.";
+                statusDiv.innerHTML = "❌ Network Endpoint Error: Connection lost.";
                 statusDiv.style.color = "var(--danger)";
             } finally {
                 logBtn.disabled = false;
             }
         }
 
-        /**
-         * Hardened execution worker ensuring broad cross-compatibility 
-         * across mobile iOS Safari web layers and security restrictions.
-         */
         function enforceSystemClipboardCopy(textareaElement) {
-            // Priority Mechanism: Modern Async Clipboard API
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textareaElement.value).catch(function(err) {
-                    console.warn("Async Clipboard failed, reverting to input select fallback engine.");
-                });
+                navigator.clipboard.writeText(textareaElement.value).catch(function() {});
                 return true;
             }
-
-            // Fallback Mechanism: Classical element focus selection rule (Highly stable on old iOS)
             try {
                 textareaElement.select();
-                textareaElement.setSelectionRange(0, 99999); /* For mobile screen boundaries */
+                textareaElement.setSelectionRange(0, 99999);
                 var success = document.execCommand('copy');
-                window.getSelection().removeAllRanges(); // Deselect elements visually
+                window.getSelection().removeAllRanges();
                 return success;
             } catch (err) {
                 return false;
