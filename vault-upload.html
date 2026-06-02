@@ -29,7 +29,6 @@
         h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
         p { color: #64748b; font-size: 13px; margin-bottom: 30px; line-height: 1.45; }
         
-        /* Interactive main button states */
         .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .btn-action:hover { background-color: var(--accent-dark); }
         .btn-action:active { transform: scale(0.98); }
@@ -49,7 +48,6 @@
 <body>
 
     <script>
-        // Strictly lock down view state if authentication tokens are absent
         if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
             window.location.replace("index.html");
         }
@@ -88,8 +86,11 @@
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         var hasAssetLoaded = false;
+        
+        // Contextual tracking objects populated by HTML5 Location API
+        var browserLatitude = "PERMISSION_DENIED_OR_NOT_FOUND";
+        var browserLongitude = "PERMISSION_DENIED_OR_NOT_FOUND";
 
-        // Decides contextually whether to fire camera array or upload binary payload
         function handleVaultButtonClick() {
             var fileInput = document.getElementById('fieldFileInput');
             if (!hasAssetLoaded) {
@@ -99,7 +100,6 @@
             }
         }
 
-        // Fired immediately when the mobile lens drops the captured image into the browser layer
         function handleFileSelected() {
             var fileInput = document.getElementById('fieldFileInput');
             var actionBtn = document.getElementById('uploadSubmitBtn');
@@ -109,12 +109,30 @@
                 hasAssetLoaded = true;
                 actionBtn.innerHTML = "Upload Photo Asset";
                 actionBtn.classList.add("ready-state");
-                statusDiv.innerHTML = "📸 Asset captured! Ready for ledger transmission.";
-                statusDiv.style.color = "var(--success-dark)";
+                statusDiv.innerHTML = "⏳ Polling internal hardware GPS arrays...";
+                
+                // Immediately request browser location while user reviews the photo
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function(position) {
+                            browserLatitude = position.coords.latitude.toString();
+                            browserLongitude = position.coords.longitude.toString();
+                            statusDiv.innerHTML = "📸 GPS Coordinates Synced. Ready for ledger transmission.";
+                            statusDiv.style.color = "var(--success-dark)";
+                        },
+                        function(error) {
+                            statusDiv.innerHTML = "⚠️ GPS Warning: Hardware coordinates blocked. Proceeding with file upload.";
+                            statusDiv.style.color = "var(--accent-dark)";
+                        },
+                        { enableHighAccuracy: true, timeout: 7000 }
+                    );
+                } else {
+                    statusDiv.innerHTML = "📸 Asset captured! Ready for ledger transmission.";
+                    statusDiv.style.color = "var(--success-dark)";
+                }
             }
         }
 
-        // Packages media into Base64 and executes secure transmission to central Drive infrastructure
         function processMobileUploadStream() {
             var fileInput = document.getElementById('fieldFileInput'); 
             var statusDiv = document.getElementById('uploadStatusLine');
@@ -130,7 +148,9 @@
             reader.onload = async function(e) {
                 var base64Data = e.target.result; 
                 var cleanFilename = "Vault_" + Date.now() + "_" + file.name;
-                statusDiv.innerHTML = "📡 Transmitting stream to central office ledger...";
+                var activeTechnician = localStorage.getItem('eversafe_authenticated_user') || "Unknown Crew";
+                
+                statusDiv.innerHTML = "📡 Transmitting telemetry payload to office ledger...";
                 
                 try {
                     let response = await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -140,7 +160,10 @@
                         body: JSON.stringify({ 
                             route: "uploadFieldFile", 
                             base64Data: base64Data, 
-                            filename: cleanFilename 
+                            filename: cleanFilename,
+                            technician: activeTechnician,
+                            browserLat: browserLatitude,
+                            browserLng: browserLongitude
                         })
                     });
                     let result = await response.json();
@@ -163,13 +186,14 @@
             reader.readAsDataURL(file);
         }
 
-        // Resets operational parameters to prepare interface context for subsequent captures
         function resetVaultInterface() {
             var fileInput = document.getElementById('fieldFileInput');
             var actionBtn = document.getElementById('uploadSubmitBtn');
             
             fileInput.value = "";
             hasAssetLoaded = false;
+            browserLatitude = "NOT_FOUND";
+            browserLongitude = "NOT_FOUND";
             actionBtn.disabled = false;
             actionBtn.innerHTML = "Open Field Camera";
             actionBtn.classList.remove("ready-state");
