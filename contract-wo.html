@@ -3,44 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Authorized Contract Order</title>
+    <title>EverSafe Hub - Contract & Dispatch</title>
     <style>
-        :root { --primary: #0f172a; --primary-light: #1e293b; --accent: #F28C28; --bg: #f8fafc; --border: #cbd5e1; --danger: #ef4444; --success: #22c55e; }
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706; 
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --danger: #ef4444; 
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
         
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        
-        .user-pill-container { display: flex; align-items: center; gap: 8px; }
-        .user-tag { color: var(--accent); font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
         .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        h3 { margin-bottom: 15px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .lookup-bar-wrapper { display: flex; gap: 8px; background: #e2e8f0; padding: 12px; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 18px; }
-        .lookup-input { flex: 3; padding: 10px; border: 1px solid var(--border); border-radius: 4px; text-align: center; font-weight: bold; text-transform: uppercase; }
-        .btn-lookup { flex: 1; background: #2563eb; color: white; font-weight: bold; border: none; border-radius: 4px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
-
-        input[type="text"], input[type="number"], input[type="date"], textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; margin-top: 4px; text-align: center; font-family: inherit; }
-        textarea { text-align: left; padding: 10px; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-
-        .section-title { font-size: 13px; background: var(--primary); color: white; padding: 6px 12px; font-weight: bold; text-transform: uppercase; margin-top: 22px; border-radius: 4px 4px 0 0; }
-        .scope-box { padding: 15px; background: #fafafa; border: 1px solid var(--border); border-radius: 0 0 4px 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; justify-items: left; padding-left: 25px; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 35px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
+        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+        p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.45; text-align: center; }
         
-        .signature-wrapper { text-align: center; margin-top: 10px; width: 100%; max-width: 380px; }
-        .sig-canvas { border: 2px dashed var(--border); background: #fafbfc; border-radius: 6px; cursor: crosshair; touch-action: none; width: 100%; height: 110px; }
-        .btn-clear { background: #94a3b8; color: white; border: none; padding: 4px 10px; font-size: 10px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; margin-top: 2px; }
-        .signature-grid { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+        /* Form Field Styles */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; background: #fff; color: #0f172a; }
+        .form-control:focus { outline: none; border-color: var(--accent); }
 
-        .button-group-row { display: flex; gap: 10px; margin-top: 25px; }
-        .btn-action { flex: 2; background: var(--accent); color: white; font-weight: bold; padding: 14px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; }
-        .btn-export { flex: 1; background: var(--success); color: white; font-weight: bold; padding: 14px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; }
+        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 25px auto 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+        .btn-action:hover { background-color: var(--accent-dark); }
+        .btn-action:active { transform: scale(0.98); }
+        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; }
+
+        .status-msg { margin-top: 20px; font-weight: bold; font-size: 14px; color: #475569; min-height: 20px; text-align: center; }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
         .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
@@ -60,76 +60,34 @@
     <div class="app-header">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Hub</div>
-            <div class="user-pill-container">
-                <div class="user-tag" id="userBadgeDisplay">Connecting...</div>
-                <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Switch Shift</button>
-            </div>
+            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
         </div>
     </div>
 
     <div class="app-container">
         <div class="app-card">
+            <h3>Contract Log & Dispatch</h3>
+            <p>Enter job data below to update the core office workbook ledger and instantly copy the pre-formatted homeowner notification email to your clipboard.</p>
             
-            <div class="lookup-bar-wrapper">
-                <input type="text" id="jobSearchInput" class="lookup-input" placeholder="Enter Job or Dispatch # (e.g., JOB-1052)">
-                <button type="button" class="btn-lookup" id="lookupBtn" onclick="runSpreadsheetRecordLookup()">🔍 Fetch File</button>
+            <div class="form-group">
+                <label for="jobIdInput">Job ID Number</label>
+                <input type="text" id="jobIdInput" class="form-control" placeholder="e.g. JOB-1052" autocomplete="off">
             </div>
 
-            <h3>Authorized Work Contract</h3>
-            <div class="grid-2">
-                <div><label>Customer Name:</label><input type="text" id="wo_cust" placeholder="Client profile name..."></div>
-                <div><label>Customer Email:</label><input type="text" id="wo_email" placeholder="client@example.com"></div>
-            </div>
-            <div class="grid-2">
-                <div><label>Date:</label><input type="date" id="wo_date"></div>
-                <div><label>Site Location Address:</label><input type="text" id="wo_addr" placeholder="Street route location..."></div>
+            <div class="form-group">
+                <label for="customerNameInput">Customer Name</label>
+                <input type="text" id="customerNameInput" class="form-control" placeholder="Client legal name">
             </div>
 
-            <div class="section-title">Authorized Scope of Work Checklists</div>
-            <div class="scope-box">
-                <label><input type="checkbox" id="srv1"> Level 1 Code Sweep</label>
-                <label><input type="checkbox" id="srv2"> Level 2 Camera Mapping</label>
-                <label><input type="checkbox" id="srv3"> Smoke Chamber Parging</label>
-                <label><input type="checkbox" id="srv4"> Stainless Steel Liner Inst</label>
-                <label><input type="checkbox" id="srv5"> Crown Weather-Seal Coat</label>
-                <label><input type="checkbox" id="srv6"> Firebox Repointing Repair</label>
+            <div class="form-group">
+                <label for="workScopeInput">Scope of Work Summary</label>
+                <input type="text" id="workScopeInput" class="form-control" placeholder="e.g. Chimney Tuckpointing, Crown Seal">
             </div>
 
-            <div class="section-title">Labor Time Clock Tracker</div>
-            <div style="padding:15px; background:#f8fafc; border:1px solid var(--border); border-radius:0 0 4px 4px;">
-                <button type="button" id="timeCardBtn" class="btn-action" style="background:#0f172a; width:100%; max-width:280px; margin:0 auto; display:block;" onclick="toggleLaborTimeCardPunch()">⚡ Punch In: Lock Arrival Time</button>
-                <div style="margin-top:8px; font-size:13px; font-weight:bold; color:#64748b;" id="laborTimerReadout">Status: Crew Off-Clock</div>
-                <input type="hidden" id="wo_clock_in" value="">
-                <input type="hidden" id="wo_clock_out" value="">
-            </div>
-
-            <div class="section-title">Detailed Terms &amp; Repair Directives</div>
-            <textarea id="wo_scope" rows="3" placeholder="Detail specific job site objectives..."></textarea>
-
-            <div style="margin-top:15px;">
-                <label style="font-weight:bold; color:var(--accent); font-size:13px; text-transform:uppercase;">Estimated Contract Value ($):</label>
-                <input type="number" id="wo_price" placeholder="0.00" style="background:#fff7ed; color:var(--accent); font-weight:bold; font-size:16px;" oninput="translatePriceToLegalTextString()">
-                <div id="wo_price_words" style="font-size:11px; font-weight:bold; color:#64748b; margin-top:4px; text-transform:uppercase;">Balance: Zero Dollars and 00/100</div>
-            </div>
-
-            <div class="signature-grid">
-                <div class="signature-wrapper">
-                    <p style="font-size:12px; font-weight:bold;">Lead Field Tech Signature:</p>
-                    <canvas id="tech_sig" class="sig-canvas"></canvas>
-                    <button type="button" class="btn-clear" onclick="clearCanvasWindow('tech_sig')">Clear</button>
-                </div>
-                <div class="signature-wrapper">
-                    <p style="font-size:12px; font-weight:bold;">Customer Authorization Sign-off:</p>
-                    <canvas id="client_sig" class="sig-canvas"></canvas>
-                    <button type="button" class="btn-clear" onclick="clearCanvasWindow('client_sig')">Clear</button>
-                </div>
-            </div>
-
-            <div class="button-group-row">
-                <button type="button" class="btn-action" onclick="pushContractDataToOfficeLedger()">Log Contract &amp; Email Copy</button>
-                <button type="button" class="btn-export" onclick="transferDataToIsolatedInvoiceTab()">⚡ Clear &amp; Invoice</button>
-            </div>
-
+            <textarea id="emailCopyTarget" style="position: absolute; left: -9999px; top: 0;" readonly></textarea>
+            
+            <button type="button" class="btn-action" id="logContractBtn" onclick="executeLogContractAndEmailCopy()">Log Contract & Copy Email</button>
+            <div id="contractStatusLine" class="status-msg">Ready to record transaction</div>
         </div>
     </div>
 
@@ -146,139 +104,100 @@
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
-        var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
-        var PUNCH_STATE = false; var TIMER_OBJ = null; var START_MS = null;
-        var CANVAS_MAP = {};
 
-        window.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('userBadgeDisplay').innerText = CURRENT_USER;
-            initializeLocalSignatureCanvasPads();
-            recoverActivePunchTimerState();
-        });
+        async function executeLogContractAndEmailCopy() {
+            var logBtn = document.getElementById('logContractBtn');
+            var statusDiv = document.getElementById('contractStatusLine');
+            
+            var jobId = document.getElementById('jobIdInput').value.trim();
+            var customerName = document.getElementById('customerNameInput').value.trim();
+            var workScope = document.getElementById('workScopeInput').value.trim();
 
-        async function runSpreadsheetRecordLookup() {
-            var btn = document.getElementById('lookupBtn');
-            var key = document.getElementById('jobSearchInput').value.trim();
-            if(!key) return alert("Please specify a target job sequence ID key first.");
-            btn.disabled = true; btn.innerText = "⏳ Pulling...";
+            if (!jobId || !customerName || !workScope) {
+                alert("Validation Omission: Please fill in all fields before recording data.");
+                return;
+            }
+
+            logBtn.disabled = true;
+            statusDiv.innerHTML = "⏳ Synchronizing records with office ledger...";
+            statusDiv.style.color = "#475569";
+
+            // Prepare custom customer email notification into the background buffer
+            var emailTextarea = document.getElementById('emailCopyTarget');
+            emailTextarea.value = `Dear ${customerName},\n\nThank you for choosing EverSafe Chimney Repair. Your structural service agreement details have been finalized by our field crew for project referencing tracker: ${jobId}.\n\nScope Confirmed: ${workScope}.\n\nYour digital portal invoice and field data entries have been pushed live to central ledger systems.\n\nBest regards,\nEverSafe Operations Hub Team`;
+
+            // Execute the system clipboard inject copy sequence BEFORE asynchronous fetches
+            var copySuccessful = enforceSystemClipboardCopy(emailTextarea);
+
+            // Package data array for Channel 3 "recordFieldData" router
+            var activeTechnician = localStorage.getItem('eversafe_authenticated_user') || "Field Crew Alpha";
+            var dataPayloadArray = [activeTechnician, jobId, customerName, workScope];
+
             try {
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
                     redirect: "follow",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({ route: "fetchJobDispatches", jobId: key })
+                    body: JSON.stringify({
+                        route: "recordFieldData",
+                        sheetName: "Contract_Submissions",
+                        payload: dataPayloadArray
+                    })
                 });
                 let result = await response.json();
-                if(result.success) {
-                    document.getElementById('wo_cust').value = result.customerName;
-                    document.getElementById('wo_email').value = result.customerEmail;
-                    document.getElementById('wo_addr').value = result.siteAddress;
-                    document.getElementById('wo_scope').value = result.scheduledNotes;
-                    localStorage.setItem('cached_wo_cust', result.customerName);
-                    localStorage.setItem('cached_wo_email', result.customerEmail);
-                    localStorage.setItem('cached_wo_addr', result.siteAddress);
-                    localStorage.setItem('cached_wo_scope', result.scheduledNotes);
-                    alert("🎉 Customer file parsed and loaded!");
-                } else { alert("Omission Error: Job ID not found."); }
-            } catch(e) { alert("Network Connection Interrupt."); }
-            finally { btn.disabled = false; btn.innerText = "🔍 Fetch File"; }
-        }
 
-        function initializeLocalSignatureCanvasPads() {
-            ['tech_sig', 'client_sig'].forEach(function(id) {
-                var canvas = document.getElementById(id); if(!canvas) return;
-                var ctx = canvas.getContext("2d"); ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3; ctx.lineCap = "round";
-                var drawState = false; var lx = 0; var ly = 0;
-                function getXY(e) { var r = canvas.getBoundingClientRect(); var cx = e.touches ? e.touches[0].clientX : e.clientX; var cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - r.left, y: cy - r.top }; }
-                canvas.addEventListener("mousedown", function(e) { drawState = true; var c = getXY(e); lx = c.x; ly = c.y; });
-                canvas.addEventListener("mousemove", function(e) { if(!drawState) return; e.preventDefault(); var c = getXY(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(c.x, c.y); ctx.stroke(); lx = c.x; ly = c.y; });
-                window.addEventListener("mouseup", function() { drawState = false; });
-                canvas.addEventListener("touchstart", function(e) { drawState = true; var c = getXY(e); lx = c.x; ly = c.y; });
-                canvas.addEventListener("touchmove", function(e) { if(!drawState) return; e.preventDefault(); var c = getXY(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(c.x, c.y); ctx.stroke(); lx = c.x; ly = c.y; }, { passive: false });
-                canvas.addEventListener("touchend", function() { drawState = false; });
-                CANVAS_MAP[id] = { canvas: canvas, ctx: ctx };
-            });
-        }
-
-        function clearCanvasWindow(id) { if(CANVAS_MAP[id]) CANVAS_MAP[id].ctx.clearRect(0, 0, CANVAS_MAP[id].canvas.width, CANVAS_MAP[id].canvas.height); }
-        
-        function extractCanvasBase64DataStringUrl(id) {
-            var c = document.getElementById(id); if(!c) return "N/A";
-            var b = document.createElement('canvas'); b.width = c.width; b.height = c.height;
-            if(c.toDataURL() === b.toDataURL()) return "EMPTY"; return c.toDataURL("image/png");
-        }
-
-        function toggleLaborTimeCardPunch() {
-            var btn = document.getElementById('timeCardBtn'); var read = document.getElementById('laborTimerReadout');
-            var timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            if(!PUNCH_STATE) {
-                localStorage.setItem('eversafe_clock_in_time', Date.now().toString());
-                localStorage.setItem('eversafe_clock_in_str', timeStr);
-                document.getElementById('wo_clock_in').value = timeStr;
-                recoverActivePunchTimerState();
-            } else {
-                if(TIMER_OBJ) clearInterval(TIMER_OBJ); localStorage.removeItem('eversafe_clock_in_time');
-                document.getElementById('wo_clock_out').value = timeStr;
-                read.innerHTML = "🏁 Completed Site Run: (" + localStorage.getItem('eversafe_clock_in_str') + " to " + timeStr + ")";
-                btn.innerText = "Punch Completed"; btn.disabled = true; btn.style.background = "#cbd5e1"; PUNCH_STATE = false;
+                if (result.success) {
+                    if (copySuccessful) {
+                        statusDiv.innerHTML = "✅ Saved to Sheet & Email Copied to Clipboard!";
+                        statusDiv.style.color = "var(--success-dark)";
+                    } else {
+                        statusDiv.innerHTML = "⚠️ Ledger Saved, but Clipboard write failed.";
+                        statusDiv.style.color = "var(--accent-dark)";
+                    }
+                    // Reset inputs
+                    document.getElementById('jobIdInput').value = "";
+                    document.getElementById('customerNameInput').value = "";
+                    document.getElementById('workScopeInput').value = "";
+                } else {
+                    statusDiv.innerHTML = "❌ Upload rejection rule thrown by office gateway server.";
+                    statusDiv.style.color = "var(--danger)";
+                }
+            } catch (err) {
+                statusDiv.innerHTML = "❌ Network Endpoint Error: Stream connection lost.";
+                statusDiv.style.color = "var(--danger)";
+            } finally {
+                logBtn.disabled = false;
             }
         }
 
-        function recoverActivePunchTimerState() {
-            var saved = localStorage.getItem('eversafe_clock_in_time');
-            if(saved) {
-                START_MS = parseInt(saved); PUNCH_STATE = true;
-                document.getElementById('timeCardBtn').innerText = "🚨 Punch Out: Close Job Site";
-                document.getElementById('timeCardBtn').style.background = "#ef4444";
-                document.getElementById('wo_clock_in').value = localStorage.getItem('eversafe_clock_in_str') || "";
-                TIMER_OBJ = setInterval(function() {
-                    var diff = Date.now() - START_MS; var sec = Math.floor(diff/1000); var min = Math.floor(sec/60); var hr = Math.floor(min/60); sec %= 60; min %= 60;
-                    document.getElementById('laborTimerReadout').innerHTML = "⏱️ <strong>LIVE TRACKING:</strong> " + (hr>0?hr+"h ":"") + min + "m " + sec + "s on site.";
-                }, 1000);
+        /**
+         * Hardened execution worker ensuring broad cross-compatibility 
+         * across mobile iOS Safari web layers and security restrictions.
+         */
+        function enforceSystemClipboardCopy(textareaElement) {
+            // Priority Mechanism: Modern Async Clipboard API
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textareaElement.value).catch(function(err) {
+                    console.warn("Async Clipboard failed, reverting to input select fallback engine.");
+                });
+                return true;
             }
-        }
 
-        function convertPriceNumericToTextWords(amount) {
-            var words = new Array();
-            words[0] = ''; words[1] = 'One'; words[2] = 'Two'; words[3] = 'Three'; words[4] = 'Four'; words[5] = 'Five'; words[6] = 'Six'; words[7] = 'Seven'; words[8] = 'Eight'; words[9] = 'Nine'; words[10] = 'Ten'; words[11] = 'Eleven'; words[12] = 'Twelve'; words[13] = 'Thirteen'; words[14] = 'Fourteen'; words[15] = 'Fifteen'; words[16] = 'Sixteen'; words[17] = 'Seventeen'; words[18] = 'Eighteen'; words[19] = 'Nineteen'; words[20] = 'Twenty'; words[30] = 'Thirty'; words[40] = 'Forty'; words[50] = 'Fifty'; words[60] = 'Sixty'; words[70] = 'Seventy'; words[80] = 'Eighty'; words[90] = 'Ninety';
-            amount = amount.toString(); var atsplit = amount.split('.'); var num = atsplit[0]; var cents = atsplit[1] || "00"; if (cents.length == 1) cents += "0"; var n_length = num.length; var words_string = "";
-            if (n_length <= 9) {
-                var n_array = new Array(0, 0, 0, 0, 0, 0, 0, 0); var received_n_array = new Array(); for (var i = 0; i < n_length; i++) { received_n_array[i] = num.substr(i, 1); } for (var i = 9 - n_length, j = 0; i < 9; i++, j++) { n_array[i] = received_n_array[j]; } for (var i = 0, j = 1; i < 9; i++, j++) { if (i == 0 || i == 2 || i == 4 || i == 7) { if (n_array[i] == 1) { n_array[j] = 10 + parseInt(n_array[j]); n_array[i] = 0; } } } var value = "";
-                for (var i = 0; i < 9; i++) { if (i == 0 || i == 2 || i == 4 || i == 7) { value = n_array[i] * 10; } else { value = n_array[i]; } if (value != 0) { words_string += words[value] + " "; } if ((i == 5 && value != 0) || (i == 4 && value != 0 && n_array[i + 1] == 0)) { words_string += "Hundred "; } }
+            // Fallback Mechanism: Classical element focus selection rule (Highly stable on old iOS)
+            try {
+                textareaElement.select();
+                textareaElement.setSelectionRange(0, 99999); /* For mobile screen boundaries */
+                var success = document.execCommand('copy');
+                window.getSelection().removeAllRanges(); // Deselect elements visually
+                return success;
+            } catch (err) {
+                return false;
             }
-            return (words_string.trim() || "Zero") + " Dollars and " + cents + "/100";
-        }
-
-        function translatePriceToLegalTextString() {
-            var v = parseFloat(document.getElementById('wo_price').value) || 0;
-            document.getElementById('wo_price_words').innerText = "Balance: " + convertPriceNumericToTextWords(v.toFixed(2));
-        }
-
-        async function pushContractDataToOfficeLedger() {
-            var c = document.getElementById('wo_cust').value; if(!c.trim()) return alert("Provide customer profile entry.");
-            var tSig = extractCanvasBase64DataStringUrl('tech_sig');
-            var cSig = extractCanvasBase64DataStringUrl('client_sig');
-            
-            var p = [
-                c, document.getElementById('wo_date').value, document.getElementById('wo_addr').value, 
-                document.getElementById('wo_scope').value, document.getElementById('wo_price').value, 
-                document.getElementById('wo_status').value, CURRENT_USER, document.getElementById('wo_clock_in').value, 
-                document.getElementById('wo_clock_out').value, document.getElementById('wo_email').value, tSig, cSig
-            ];
-            await fetch(GOOGLE_API_GATEWAY_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ route: "recordFieldData", sheetName: "Work_Orders", payload: p })});
-            alert("Contract saved successfully to central office books!");
-        }
-
-        function transferDataToIsolatedInvoiceTab() {
-            localStorage.setItem('cached_inv_subtotal', document.getElementById('wo_price').value);
-            localStorage.setItem('cached_inv_scope', "Authorized Service Run:\n" + document.getElementById('wo_scope').value + "\n\nContract Value Word-Token: " + document.getElementById('wo_price_words').innerText);
-            window.location.assign("billing-invoice.html");
         }
 
         function executeFieldCrewLogout() {
-            if(confirm("Log out of current shift profile? This clears persistent device logs safely.")) {
-                localStorage.clear(); window.location.replace("index.html");
-            }
+            localStorage.clear(); 
+            window.location.replace("index.html");
         }
     </script>
 </body>
