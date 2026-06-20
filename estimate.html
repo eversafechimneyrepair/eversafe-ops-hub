@@ -59,6 +59,12 @@
 </head>
 <body>
 
+    <script>
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
+    </script>
+
     <div class="app-header">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Hub</div>
