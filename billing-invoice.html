@@ -3,296 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Secure Merchant Billing</title>
-    <script src="https://web.squarecdn.com/v1/square.js"></script>
+    <title>EverSafe Hub - Project Invoice Ledger</title>
+    <link rel="icon" type="image/jpeg" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
     <style>
         :root { 
             --primary: #0f172a; 
             --primary-light: #1e293b; 
             --accent: #F28C28; 
-            --accent-dark: #d97706;
-            --bg: #f8fafc; 
-            --border: #cbd5e1; 
+            --accent-dark: #d97706; 
             --success: #22c55e; 
             --success-dark: #16a34a;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
             --danger: #ef4444; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
-        
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
-
-        .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
-        h3 { margin-bottom: 15px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
-
-        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; margin-top: 4px; text-align: center; font-family: inherit; background: #fff; color: #0f172a; }
-        input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
-        textarea { text-align: left; padding: 12px; resize: vertical; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-
-        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 22px; border-radius: 6px 6px 0 0; letter-spacing: 0.5px; }
-        
-        #sq-card-element { margin: 15px auto; max-width: 440px; min-height: 80px; padding: 14px; border: 1px dashed var(--accent); background: #ffffff; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-        
-        .signature-wrapper { text-align: center; margin-top: 10px; width: 100%; max-width: 380px; }
-        .sig-canvas { border: 2px dashed var(--border); background: #fafbfc; border-radius: 6px; touch-action: none; width: 100%; height: 120px; }
-        .btn-clear { background: #94a3b8; color: white; border: none; padding: 4px 10px; font-size: 10px; text-transform: uppercase; border-radius: 4px; cursor: pointer; margin-top: 4px; font-weight: bold; }
-        .signature-grid { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
-
-        .btn-action { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
-        .btn-action:hover { background-color: var(--accent-dark); }
-        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; }
-
-        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
-        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
-        .nav-tab-btn span { font-size: 16px; }
-        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
+        .app-container { max-width: 650px; margin: 0 auto; padding: 0 15px; text-align: left; }
+        .invoice-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        h3 { font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-bottom: 20px; text-align: center; }
+        .meta-line { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed #e2e8f0; font-size: 14px; }
+        .label { font-weight: bold; color: #64748b; text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        .value { font-weight: bold; color: var(--primary); text-align: right; }
+        .total-box { margin-top: 25px; background: #f0fdf4; border: 2px solid var(--success); border-radius: 6px; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .total-amount { font-size: 28px; font-weight: 800; color: #14532d; }
+        .btn-payment { width: 100%; background: var(--success); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 25px; display: block; box-shadow: 0 4px 6px rgba(34,197,94,0.15); text-align: center; }
+        .btn-payment:hover { background-color: var(--success-dark); }
+        .status-msg { margin-top: 15px; text-align: center; font-weight: bold; font-size: 13px; color: #64748b; }
+        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
 </head>
 <body>
-
     <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
-            window.location.replace("index.html");
-        }
+        if (localStorage.getItem('eversafe_session_active') !== 'true') window.location.replace("index.html");
     </script>
-
     <div class="app-header">
-        <div class="brand-row">
-            <div class="brand-text">Secure Settlement Node</div>
-            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
-        </div>
+        <div class="brand-row"><div class="brand-text">EverSafe Operations Hub</div><button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button></div>
     </div>
-
     <div class="app-container">
-        <div class="app-card">
-            <h3>Financial Billing Summary</h3>
-            
-            <div class="grid-2">
-                <div><label style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase;">Invoice Recipient:</label><input type="text" id="inv_cust"></div>
-                <div><label style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase;">Billing Email Address:</label><input type="text" id="inv_email"></div>
+        <div class="invoice-card">
+            <h3>Receipt &amp; Payment Summary</h3>
+            <div class="meta-line"><span class="label">Customer Account</span><span class="value" id="inv_cust">No Active Job</span></div>
+            <div class="meta-line"><span class="label">Site Service Location</span><span class="value" id="inv_addr">No Active Job</span></div>
+            <div class="meta-line"><span class="label">Lead Operations Tech</span><span class="value" id="inv_tech">Field Technician</span></div>
+            <div class="meta-line" style="border:none;"><span class="label">Contract Ledger State</span><span class="value" style="color:var(--success-dark);" id="inv_status">AUTHORIZED &amp; SIGNED</span></div>
+            <div class="total-box">
+                <div><div style="font-size:11px; font-weight:bold; color:var(--success-dark); text-transform:uppercase; letter-spacing:0.5px;">Amount Collected via Field Terminals</div><div style="font-size:12px; color:#3f6212; font-weight:500; margin-top:1px;">Binding valuation statement balance</div></div>
+                <div class="total-amount" id="inv_total">$0.00</div>
             </div>
-            <div style="margin-bottom:12px;"><label style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase;">Billing Address:</label><input type="text" id="inv_addr"></div>
-
-            <div class="section-title">Settled Scope &amp; Line Items</div>
-            <textarea id="inv_scope" rows="3" placeholder="Itemized breakdown parameters..."></textarea>
-
-            <div class="grid-2" style="margin-top:15px;">
-                <div><label style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase;">Payment Channel:</label>
-                    <select id="inv_payment" onchange="toggleSquareDisplayFields()">
-                        <option value="CARD_ON_SITE">Swipe/Key Card via Secure Form</option>
-                        <option value="CASH">Direct Cash / Check Collected</option>
-                    </select>
-                </div>
-                <div><label style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase;">Realtime Status:</label><input type="text" id="inv_status" value="Paid / Settled Ledger" readonly style="color:var(--success-dark); font-weight:bold;"></div>
-            </div>
-
-            <div class="grid-2" style="background:#f1f5f9; padding:15px; border-radius:6px; margin-top:15px;">
-                <div><label style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase;">Subtotal Balance Due ($):</label><input type="number" id="inv_subtotal" value="0.00" oninput="runTotalsCalc()" step="0.01"></div>
-                <div><label style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase;">Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success-dark); font-weight:bold;"></div>
-            </div>
-
-            <div id="squareFormWrapper" style="display:block; margin-top:20px; padding:15px; background:#f8fafc; border:1px solid var(--border); border-radius:6px;">
-                <p style="font-size:11px; font-weight:bold; text-transform:uppercase; margin-bottom:8px; color:#475569;">🔒 Secure Credit Card Terminal</p>
-                <div id="sq-card-element"></div>
-                <input type="text" id="manualRefInput" placeholder="Optional: Type Manual Verification Hash Key" style="margin-top:10px;">
-            </div>
-
-            <div class="signature-grid">
-                <div class="signature-wrapper">
-                    <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#475569; margin-bottom:4px;">Billing Agent Signature:</p>
-                    <canvas id="inv_tech_sig" class="sig-canvas"></canvas>
-                    <button type="button" class="btn-clear" onclick="clearCanvas('inv_tech_sig')">Clear</button>
-                </div>
-                <div class="signature-wrapper">
-                    <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#475569; margin-bottom:4px;">Payer Acknowledgement Sign:</p>
-                    <canvas id="inv_client_sig" class="sig-canvas"></canvas>
-                    <button type="button" class="btn-clear" onclick="clearCanvas('inv_client_sig')">Clear</button>
-                </div>
-            </div>
-
-            <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn">📲 Tap to Pay via Square App</button>
-            <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">Finalize Ledger &amp; Charge Card</button>
-
+            <button type="button" class="btn-payment" id="closeInvoiceBtn" onclick="processInvoiceCloseoutAndClearCache()">Close &amp; Reset Hub Session</button>
+            <div id="invoiceStatusLine" class="status-msg">Awaiting workflow termination command...</div>
         </div>
     </div>
-
-    <div class="fixed-bottom-nav-bar">
-        <div class="nav-tabs-scroll">
-            <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
-            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
-            <a href="billing-invoice.html" class="nav-tab-btn active-tab"><span>🧾</span>Billing</a>
-            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
-            <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
-            <a href="vault-upload.html" class="nav-tab-btn"><span>📁</span>Camera</a>
-        </div>
-    </div>
-
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
     <script>
-        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
-        var SQUARE_APP_ID = "sq0idp-fqkdBa3JdRp-jbMeD9CYEw";
-        var SQUARE_LOC_ID = "LS2898MVN1702";
-        var SQ_CARD_INSTANCE = null; var CANVAS_MAP = {};
-        var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
-
-        // FIXED COHERENT LOCALSTORAGE MAPPINGS: Reading keys written by other pages correctly now
         window.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || "";
-            document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || "";
-            document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || "";
-            document.getElementById('inv_scope').value = localStorage.getItem('current_wo_work_scope') || "";
-            document.getElementById('inv_subtotal').value = localStorage.getItem('current_wo_est_cost') || "0.00";
-            
-            runTotalsCalc();
-            initializeBillingCanvasPads();
-            mountSecureSquareSDKForm();
+            document.getElementById('inv_tech').value = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
+            document.getElementById('inv_cust').innerText = localStorage.getItem('current_wo_customer_name') || "N/A";
+            document.getElementById('inv_addr').innerText = localStorage.getItem('current_wo_service_address') || "N/A";
+            var cost = parseFloat(localStorage.getItem('current_wo_est_cost')) || 0;
+            document.getElementById('inv_total').innerText = "$" + cost.toFixed(2);
         });
 
-        function runTotalsCalc() {
-            var v = parseFloat(document.getElementById('inv_subtotal').value) || 0;
-            document.getElementById('inv_final_total').value = v.toFixed(2);
-        }
+        function processInvoiceCloseoutAndClearCache() {
+            var btn = document.getElementById('closeInvoiceBtn');
+            var statusDiv = document.getElementById('invoiceStatusLine');
+            btn.disabled = true;
+            statusDiv.innerHTML = "⏳ Terminating context and clearing device cash registers...";
 
-        function toggleSquareDisplayFields() {
-            var m = document.getElementById('inv_payment').value;
-            document.getElementById('squareFormWrapper').style.display = (m === "CARD_ON_SITE") ? "block" : "none";
-        }
-
-        async function mountSecureSquareSDKForm() {
-            try {
-                const payments = Square.payments(SQUARE_APP_ID, SQUARE_LOC_ID);
-                const card = await payments.card();
-                await card.attach('#sq-card-element');
-                SQ_CARD_INSTANCE = card;
-            } catch(e) { 
-                document.getElementById('sq-card-element').innerHTML = "<p style='color:var(--accent-dark);font-size:12px;font-weight:bold;'>Vault Connection Standard Active.</p>"; 
-            }
-        }
-
-        function initializeBillingCanvasPads() {
-            ['inv_tech_sig', 'inv_client_sig'].forEach(function(id) {
-                var canvas = document.getElementById(id); if(!canvas) return;
-                
-                // Explicit internal canvas scale adjustments to protect metric input sizing on mobile viewport profiles
-                var rect = canvas.getBoundingClientRect();
-                canvas.width = rect.width;
-                canvas.height = rect.height;
-
-                var ctx = canvas.getContext("2d"); ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3; ctx.lineCap = "round";
-                var draw = false; var lx = 0; var ly = 0;
-                function getXY(e) { var r = canvas.getBoundingClientRect(); var cx = e.touches ? e.touches[0].clientX : e.clientX; var cy = e.touches ? e.touches[0].clientY : e.clientY; return { x: cx - r.left, y: cy - r.top }; }
-                
-                canvas.addEventListener("mousedown", function(e) { draw = true; var c = getXY(e); lx = c.x; ly = c.y; });
-                canvas.addEventListener("mousemove", function(e) { if(!draw) return; e.preventDefault(); var c = getXY(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(c.x, c.y); ctx.stroke(); lx = c.x; ly = c.y; });
-                window.addEventListener("mouseup", function() { draw = false; });
-                
-                canvas.addEventListener("touchstart", function(e) { draw = true; var c = getXY(e); lx = c.x; ly = c.y; });
-                canvas.addEventListener("touchmove", function(e) { if(!draw) return; e.preventDefault(); var c = getXY(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(c.x, c.y); ctx.stroke(); lx = c.x; ly = c.y; }, { passive: false });
-                canvas.addEventListener("touchend", function() { draw = false; });
-                CANVAS_MAP[id] = { canvas: canvas, ctx: ctx };
-            });
-        }
-
-        function clearCanvas(id) { if(CANVAS_MAP[id]) CANVAS_MAP[id].ctx.clearRect(0, 0, CANVAS_MAP[id].canvas.width, CANVAS_MAP[id].canvas.height); }
-        
-        function extractCanvasBase64DataStringUrl(id) {
-            var c = document.getElementById(id); if(!c) return "N/A";
-            var b = document.createElement('canvas'); b.width = c.width; b.height = c.height;
-            if(c.toDataURL() === b.toDataURL()) return "EMPTY"; return c.toDataURL("image/png");
-        }
-
-        async function processSecureNativePayment() {
-            var btn = document.getElementById('chargeCardBtn');
-            btn.disabled = true; btn.innerText = "🔒 Processing...";
-            
-            if(!SQ_CARD_INSTANCE) {
-                var ref = document.getElementById('manualRefInput').value.trim();
-                if(!ref) { alert("Settle charge manually or link row tracking hash above."); btn.disabled = false; btn.innerText = "Finalize Ledger & Charge Card"; return; }
-                // FIXED REFERENCE LINK BUG: Correctly routing call to uploadInvoiceToOfficeSheet method
-                uploadInvoiceToOfficeSheet("MANUAL_TRACE: " + ref); return;
-            }
-            try {
-                const result = await SQ_CARD_INSTANCE.tokenize();
-                if(result.status === 'OK') { 
-                    uploadInvoiceToOfficeSheet("SQUARE_NONCE: " + result.token); 
-                } else { 
-                    throw new Error("Token failure"); 
-                }
-            } catch(err) { 
-                var ref = document.getElementById('manualRefInput').value.trim();
-                if(ref) {
-                    uploadInvoiceToOfficeSheet("FALLBACK_TRACE: " + ref);
-                } else { 
-                    alert("Square Frame Intercept. Key verification token above."); 
-                    btn.disabled = false; 
-                    btn.innerText = "Finalize Ledger & Charge Card"; 
-                }
-            }
-        }
-
-        async function uploadInvoiceToOfficeSheet(tokenStr) {
-            var tSig = extractCanvasBase64DataStringUrl('inv_tech_sig');
-            var cSig = extractCanvasBase64DataStringUrl('inv_client_sig');
-
-            var payload = [
-                document.getElementById('inv_cust').value, 
-                new Date().toLocaleDateString(), 
-                document.getElementById('inv_addr').value, 
-                document.getElementById('inv_scope').value, 
-                document.getElementById('inv_subtotal').value, 
-                document.getElementById('inv_final_total').value, 
-                document.getElementById('inv_payment').value, 
-                document.getElementById('inv_status').value, 
-                CURRENT_USER, 
-                document.getElementById('inv_email').value, 
-                tokenStr, 
-                tSig, 
-                cSig
+            // Flush temporary session workspace blocks
+            var cacheKeys = [
+                'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
+                'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier',
+                'current_wo_price_book_items', 'current_wo_slideshow_data'
             ];
-            
-            try {
-                await fetch(GOOGLE_API_GATEWAY_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ route: "recordFieldData", sheetName: "Invoices", payload: payload })});
-                alert("Ledger finalized and sent to office workbook!");
-                
-                // Post-settlement storage clearing: clean parameters so old data doesn't linger on next load
-                localStorage.removeItem('current_wo_customer_name');
-                localStorage.removeItem('current_wo_customer_email');
-                localStorage.removeItem('current_wo_service_address');
-                localStorage.removeItem('current_wo_work_scope');
-                localStorage.removeItem('current_wo_est_cost');
-                
-                window.location.reload();
-            } catch (err) {
-                alert(" Ledger local submission error. Verify connectivity.");
-                document.getElementById('chargeCardBtn').disabled = false;
-                document.getElementById('chargeCardBtn').innerText = "Finalize Ledger & Charge Card";
-            }
-        }
+            cacheKeys.forEach(function(k) { localStorage.removeItem(k); });
 
-        document.getElementById('tapToPayBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            var total = document.getElementById('inv_final_total').value || "0.00";
-            var cents = Math.round(parseFloat(total) * 100); if(cents <= 0) return alert("Value missing.");
-            
-            var callback = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/billing-invoice.html";
-            var linkUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify({
-                "amount_money": { "amount": cents, "currency_code": "USD" },
-                "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE"], "auto_return": true },
-                "client_id": SQUARE_APP_ID, "location_id": SQUARE_LOC_ID, "notes": "EverSafe Field Run", "callback_url": callback, "version": "1.3"
-            }));
-            window.location.assign(linkUrl);
-        });
+            statusDiv.innerHTML = "✅ Session Cleared. Routing to active dispatch ledger queue...";
+            statusDiv.style.color = "var(--success-dark)";
 
-        function executeFieldCrewLogout() {
-            localStorage.clear(); window.location.replace("index.html");
+            setTimeout(function() { window.location.replace("dispatches.html"); }, 1200);
         }
+        function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
 </html>
