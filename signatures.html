@@ -106,6 +106,7 @@
     <div class="app-container">
         <div class="app-card">
             
+            <!-- ACTIVE SIGNATURE FORM AREA -->
             <div id="signatureFormArea">
                 <h3>Customer Sign-Off</h3>
                 <p>Please present this layout array to the property owner to collect their digital structural authorization acknowledgment.</p>
@@ -125,6 +126,7 @@
                         <canvas id="signatureCanvas"></canvas>
                     </div>
                     <div class="canvas-controls">
+                        <!-- SAFE BACK LINK: Routes back without wiping active input values -->
                         <button type="button" class="btn-back-link" onclick="window.location.href='contract-wo.html'">&larr; Modify Contract Elements</button>
                         <button type="button" class="btn-clear" onclick="clearSignatureCanvas()">Clear Canvas</button>
                     </div>
@@ -134,8 +136,10 @@
                 <div id="signatureStatusLine" class="status-msg">Awaiting digital authorization...</div>
             </div>
 
+            <!-- HIDDEN OFFICIAL CONTRACT RECEIPT AREA (Shows on Success) -->
             <div id="contractReceiptArea" class="receipt-container">
                 
+                <!-- Professional Branding Header -->
                 <div class="receipt-brand-header">
                     <div class="brand-info">
                         <h2>EverSafe Chimney Repair</h2>
@@ -144,6 +148,7 @@
                         <p>Northwest Ohio & Southeast Michigan</p>
                     </div>
                     <div class="brand-seals">
+                        <!-- FIXED LOGO: Removed absolute slash root indicator so subdirectory rendering functions cleanly -->
                         <img src="favicon.png" alt="EverSafe Logo" onerror="this.style.display='none'">
                         <img src="https://eversafechimneyrepair.com/images/eversafe-chimney-bbb-accreditation-seal-blue.png" alt="BBB Accredited Business">
                     </div>
@@ -171,15 +176,17 @@
                         <strong>Payment Terms:</strong> Payment in full is due upon completion of the specified work unless prior arrangements are documented. We respect your property and will maintain a clean, professional workspace throughout the project duration.
                     </div>
 
+                    <!-- 5-YEAR MASONRY RESTORATION CRAFTSMANSHIP WARRANTY -->
                     <div style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase; margin-bottom: 8px;">5-Year Limited Craftsmanship Warranty:</div>
                     <div style="font-size: 11px; color: #000; line-height: 1.5; margin-bottom: 20px; text-align: justify;">
-                        EverSafe Chimney Repair LLC guarantees that all premium masonry restoration, crown reconstructions, and tuckpointing work completed under this contract will remain free from defects in installation craftsmanship for a duration of **five (5) years** from the completion date. This warranty explicitly covers cracking or structural separation of newly laid mortar compounds resulting directly from workmanship. This warranty excludes damage induced by subsequent structural foundation settling, lightning strikes, chimney grease fires, tree impacts, third-party structural alterations, or chemical applications executed by outside entities.
+                        EverSafe Chimney Repair LLC guarantees that all premium masonry restoration, crown reconstructions, and tuckpointing work completed under this contract will remain free from defects in installation craftsmanship for a duration of five (5) years from the completion date. This warranty explicitly covers cracking or structural separation of newly laid mortar compounds resulting directly from workmanship defects. This warranty excludes structural performance anomalies induced by subsequent foundation settling, seismic movements, lightning strikes, chimney grease fires, environmental factors, or acid washing performed by outside entities.
                     </div>
 
                     <div class="receipt-row" style="font-weight: bold; margin-bottom: 5px;">Digital Signature Lock:</div>
                     <img id="recSignatureImage" class="receipt-signature-img" src="" alt="Customer Signature">
                 </div>
                 
+                <!-- Action Buttons -->
                 <button type="button" class="btn-action btn-secondary" onclick="window.print()">🖨️ Print / Save as PDF</button>
                 <button type="button" class="btn-action" onclick="window.location.href='billing-invoice.html'">Proceed to Billing &rarr;</button>
             </div>
@@ -346,6 +353,14 @@
 
                     document.getElementById('signatureFormArea').style.display = "none";
                     document.getElementById('contractReceiptArea').style.display = "block";
+
+                    // WIPE DISPATCH CACHE MEMORY: Clears session tracking so the NEXT job opens clean
+                    localStorage.removeItem('current_wo_customer_name');
+                    localStorage.removeItem('current_wo_customer_email');
+                    localStorage.removeItem('current_wo_service_address');
+                    localStorage.removeItem('current_wo_work_scope');
+                    localStorage.removeItem('current_wo_est_cost');
+                    localStorage.removeItem('current_wo_venting_status');
 
                 } else {
                     statusDiv.innerHTML = "❌ Server Error: " + result.error;
