@@ -185,9 +185,20 @@
                         statusDiv.style.color = "var(--accent-dark)";
                     }
                     
-                    // Automatically route the technician to the signature page after 1 second
+                    // Failsafe: Wrap element values resetting so missing elements won't crash the script execution flow
+                    try {
+                        if(document.getElementById('customerNameInput')) document.getElementById('customerNameInput').value = "";
+                        if(document.getElementById('customerEmailInput')) document.getElementById('customerEmailInput').value = "";
+                        if(document.getElementById('serviceAddressInput')) document.getElementById('serviceAddressInput').value = "";
+                        if(document.getElementById('workScopeInput')) document.getElementById('workScopeInput').value = "";
+                        if(document.getElementById('estimatedCostInput')) document.getElementById('estimatedCostInput').value = "";
+                    } catch(formClearError) {
+                        console.warn("Failsafe Notice: Element resetting intercept skipped.", formClearError);
+                    }
+                    
+                    // Hardened location replacement directive to instantly clear cache loop restrictions
                     setTimeout(function() {
-                        window.location.href = "signatures.html";
+                        window.location.replace("signatures.html");
                     }, 1000);
                     
                 } else {
