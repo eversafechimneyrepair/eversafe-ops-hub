@@ -1,54 +1,79 @@
 /**
- * EverSafe Hub Standalone Production Asset Cache - v3
- * Hardened Cache-Buster Engine & Dynamic Lifecycle Activator
+ * EverSafe Operations Hub - Enterprise PWA Service Worker Engine
+ * Version: 8.5 Production Complete
+ * Engineering Focus: Full 10-Node Offline Cache Coverage & Real-Time Garbage Collection
  */
-const CACHE_NAME = 'eversafe-cache-v3'; // Bumped to v3 to forcefully shatter the old cache lock
+
+const CACHE_NAME = 'eversafe-enterprise-v8'; // Forcefully dumps old local storage caches immediately
+
+// Exhaustive offline hardware storage core registry array matrix
 const ASSETS_TO_CACHE = [
-  'index.html',
-  'contract-wo.html',
-  'billing-invoice.html',
-  'inspection-l2.html',
-  'inspection-l1.html',
-  'dispatches.html',
-  'vault-upload.html',
-  'manifest.json',
-  'app-icon.jpg' // Added your brand new icon asset directly to the offline hardware storage matrix
+  './',
+  './index.html',
+  './jobs.html',
+  './inspection-l1.html',
+  './inspection-l2.html',
+  './proposals.html',
+  './estimate.html',
+  './contract-wo.html',
+  './signatures.html',
+  './billing-invoice.html',
+  './dispatches.html',
+  './vault-upload.html',
+  './navbar.js',
+  './manifest.json',
+  './app-icon.jpg',
+  './app-icon-192.png',
+  './app-icon-512.png'
 ];
 
-// Initialize and install background hardware cache parameters
+// 1. INITIALIZE & INSTALL OFFLINE DATA PARAMS
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
+      console.log('Synchronizing enterprise assets to hardware storage layer...');
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
-  // Force this new service worker to instantly drop into active duty
+  // Force this updated service worker worker process to drop straight into active duty
   self.skipWaiting();
 });
 
-// GARBAGE COLLECTION: Automatically purges the old v2 cache so Leo gets the new icon instantly
+// 2. GARBAGE COLLECTION LAYER: Cleanly purges obsolete legacy cache blocks instantly
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            console.log('Sweeping obsolete cache registry:', cache);
+            console.log('Sweeping obsolete or corrupted legacy cache registry:', cache);
             return caches.delete(cache);
           }
         })
       );
     })
   );
-  // Take control of all open browser tabs immediately
+  // Take atomic control of all active terminal browser instances and windows immediately
   self.clients.claim();
 });
 
-// Intercept fetch requests and serve assets gracefully from hardware memory
+// 3. SECURE INTERCEPT ENGINE: Serves local cached assets instantly for lightning-fast offline field velocity
 self.addEventListener('fetch', (event) => {
+  // Avoid intercepting remote third-party operational APIs (like Google Sheets or Square SDK networks)
+  if (!event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse; // Return clean cached file baseline instantly
+      }
+
+      // If asset isn't inside local cache, fetch from active antenna networks gracefully
+      return fetch(event.request).catch((err) => {
+        console.warn('Network offline intercept event captured. Resource connection unavailable:', err);
+      });
     })
   );
 });
