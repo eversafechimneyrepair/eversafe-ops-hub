@@ -21,47 +21,65 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+        
         .app-container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
         .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
         h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
         p { color: #64748b; font-size: 13px; margin-bottom: 20px; line-height: 1.45; text-align: center; }
-        .signature-canvas-frame { background: #f8fafc; border: 2px dashed var(--border); border-radius: 6px; position: relative; cursor: crosshair; touch-action: none; margin-bottom: 12px; }
+        
+        .signature-canvas-frame { background: #ffffff; border: 2px dashed var(--border); border-radius: 6px; position: relative; cursor: crosshair; touch-action: none; margin-bottom: 12px; }
         #signatureCanvasTarget { width: 100%; height: 220px; display: block; }
+        
         .control-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
         .btn-clear { background: #e2e8f0; color: #475569; font-weight: bold; padding: 15px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 12px; cursor: pointer; }
-        .btn-submit { background: var(--accent); color: white; font-weight: bold; padding: 15px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 12px; cursor: pointer; box-shadow: 0 4px 6px rgba(242,140,40,0.15); }
+        .btn-submit { background: var(--accent); color: white; font-weight: bold; padding: 15px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 12px; cursor: pointer; box-shadow: 0 4px 6px rgba(242,140,40,0.15); text-align: center; }
         .btn-submit:disabled { background: #cbd5e1!important; color: #94a3b8!important; cursor: not-allowed; box-shadow: none; }
+        
         .status-msg { margin-top: 20px; text-align: center; font-weight: bold; font-size: 13px; color: #475569; min-height: 20px; }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
 </head>
 <body>
+
     <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true') window.location.replace("index.html");
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
     </script>
+
     <div class="app-header">
-        <div class="brand-row"><div class="brand-text">EverSafe Operations Hub</div><button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button></div>
+        <div class="brand-row">
+            <div class="brand-text">EverSafe Operations Hub</div>
+            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
+        </div>
     </div>
+
     <div class="app-container">
         <div class="app-card">
             <h3>Secure Client Authorization</h3>
             <p>Homeowner signature commits structural parameters, pricing layers, and inspection notes to the office ledger and triggers automated compliance documents.</p>
+            
             <div class="signature-canvas-frame">
                 <canvas id="signatureCanvasTarget"></canvas>
             </div>
+            
             <div class="control-grid">
                 <button type="button" class="btn-clear" onclick="flushCanvasStrokeEngine()">Clear Pad</button>
-                <button type="button" class="btn-submit" id="submitSigBtn" onclick="transmitSignatureAndCompilePDF()">Finalize & Compile Contract</button>
+                <button type="button" class="btn-submit" id="submitSigBtn" onclick="transmitSignatureAndCompilePDF()">Finalize &amp; Compile Contract</button>
             </div>
+            
             <div id="sigStatusLine" class="status-msg">Awaiting verification trace input...</div>
         </div>
     </div>
+
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
+
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         var canvas = document.getElementById('signatureCanvasTarget');
@@ -71,36 +89,72 @@
         window.addEventListener('DOMContentLoaded', function() {
             adjustCanvasResolutionScale();
             window.addEventListener('resize', adjustCanvasResolutionScale);
-            setupCanvasInteractionListeners();
+            setupCanvasPointerListeners();
         });
 
         function adjustCanvasResolutionScale() {
             var rect = canvas.parentNode.getBoundingClientRect();
-            canvas.width = rect.width; canvas.height = 220;
-            ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#0f172a';
+            canvas.width = rect.width; 
+            canvas.height = 220;
+            ctx.lineWidth = 3; 
+            ctx.lineCap = 'round'; 
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#0f172a';
         }
 
-        function setupCanvasInteractionListeners() {
+        // UNIFIED NATIVE POINTER SYSTEM: Hardened layout with absolute screen bounding metrics
+        function setupCanvasPointerListeners() {
             function getCoordinates(e) {
                 var rect = canvas.getBoundingClientRect();
-                var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                var clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                return { x: clientX - rect.left, y: clientY - rect.top };
+                return { x: e.clientX - rect.left, y: e.clientY - r.top };
+                var r = canvas.getBoundingClientRect();
+                return { x: e.clientX - r.left, y: e.clientY - r.top };
             }
-            function start(e) { isDrawingActive = true; ctx.beginPath(); var p = getCoordinates(e); ctx.moveTo(p.x, p.y); e.preventDefault(); }
-            function move(e) { if (!isDrawingActive) return; var p = getCoordinates(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
-            function stop() { isDrawingActive = false; }
 
-            canvas.addEventListener('mousedown', start); canvas.addEventListener('mousemove', move); window.addEventListener('mouseup', stop);
-            canvas.addEventListener('touchstart', start); canvas.addEventListener('touchmove', move); window.addEventListener('touchend', stop);
+            canvas.addEventListener('pointerdown', function(e) {
+                isDrawingActive = true;
+                ctx.beginPath();
+                var coords = getCoordinates(e);
+                ctx.moveTo(coords.x, coords.y);
+                canvas.setPointerCapture(e.pointerId);
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('pointermove', function(e) {
+                if (!isDrawingActive) return;
+                e.preventDefault();
+                var coords = getCoordinates(e);
+                ctx.lineTo(coords.x, coords.y);
+                ctx.stroke();
+            });
+
+            function stopDrawing(e) {
+                if (isDrawingActive) {
+                    isDrawingActive = false;
+                    canvas.releasePointerCapture(e.pointerId);
+                }
+            }
+            canvas.addEventListener('pointerup', stopDrawing);
+            canvas.addEventListener('pointercancel', stopDrawing);
         }
 
-        function flushCanvasStrokeEngine() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function flushCanvasStrokeEngine() { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        }
 
         async function transmitSignatureAndCompilePDF() {
             var btn = document.getElementById('submitSigBtn');
             var statusDiv = document.getElementById('sigStatusLine');
             var custName = localStorage.getItem('current_wo_customer_name');
+
+            // Form validation check blocks submission if canvas buffer matches an empty screen layer
+            var blankCheckBuffer = document.createElement('canvas');
+            blankCheckBuffer.width = canvas.width; 
+            blankCheckBuffer.height = canvas.height;
+            if (canvas.toDataURL() === blankCheckBuffer.toDataURL()) {
+                alert("Validation Exception: Signature pad is empty. Homeowner authorization trace required before locking contract layers.");
+                return;
+            }
 
             if (!custName) { alert("Execution Error: No active customer selection detected in local memory arrays."); return; }
 
@@ -145,6 +199,7 @@
                 setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
             }
         }
+        
         function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
