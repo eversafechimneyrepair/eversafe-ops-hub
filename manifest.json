@@ -1,22 +1,27 @@
 {
+  "id": "eversafe-ops-hub",
   "name": "EverSafe Enterprise Operations Hub",
   "short_name": "EverSafe Hub",
   "description": "Enterprise Field Operations Suite for EverSafe Chimney",
-  "start_url": "index.html",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
-  "orientation": "portrait",
+  "orientation": "any",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "https://img.icons8.com/color/192/fireplace.png",
+      "src": "app-icon-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
-      "src": "https://img.icons8.com/color/512/fireplace.png",
+      "src": "app-icon-512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ]
 }
