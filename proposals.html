@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Multi-Tier Proposals</title>
-    
-    <!-- Mobile App Icon & Manifest Configuration -->
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
     <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
-
     <style>
         :root { 
             --primary: #0f172a; 
@@ -24,252 +21,123 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; text-align: center; }
-        
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
-
         .app-container { max-width: 1050px; margin: 0 auto; padding: 0 15px; text-align: left; }
         .meta-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        
         h3 { margin-bottom: 5px; font-size: 20px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
         .subtitle { color: #64748b; font-size: 13px; margin-bottom: 20px; text-align: center; line-height: 1.45; }
-
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 15px; }
         @media (max-width: 850px) { .grid-3 { grid-template-columns: 1fr; gap: 25px; } }
-
-        /* Proposal Tier Card Styles */
-        .proposal-card { background: white; border: 2px solid var(--border); border-radius: 12px; padding: 25px 20px; position: relative; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .proposal-card { background: white; border: 2px solid var(--border); border-radius: 12px; padding: 25px 20px; position: relative; display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s, border-color 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
         .proposal-card.selected-tier { border-color: var(--accent); box-shadow: 0 10px 25px rgba(242, 140, 40, 0.15); transform: translateY(-4px); }
-        
         .tier-badge { background: #64748b; color: white; font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; display: inline-block; margin-bottom: 15px; letter-spacing: 0.5px; }
         .proposal-card.better .tier-badge { background: var(--primary); }
         .proposal-card.best .tier-badge { background: var(--accent); }
-        
         .tier-title { font-size: 22px; font-weight: bold; margin-bottom: 5px; color: var(--primary); }
         .tier-price-box { font-size: 32px; font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; justify-content: flex-start; }
-        .tier-price-box span { font-size: 16px; font-weight: 500; color: #64748b; margin-left: 4px; }
-        
-        /* Interactive Inputs for Tech adjustments */
         .price-modifier { font-size: 18px; font-weight: bold; max-width: 130px; padding: 6px; text-align: center; border: 1px solid var(--border); border-radius: 6px; background: #f8fafc; color: var(--primary); }
-        .price-modifier:focus { background: #fff; border-color: var(--accent); outline: none; }
-
-        .feature-list { list-style: none; margin-bottom: 25px; text-align: left; }
-        .feature-list li { font-size: 13.5px; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; color: #334155; }
-        .feature-list li:last-child { border-bottom: none; }
+        .feature-list { list-style: none; margin-bottom: 25px; }
+        .feature-list li { font-size: 13px; padding: 8px 0; border-bottom: 1px dashed #e2e8f0; display: flex; gap: 8px; line-height: 1.4; color: #334155; }
         .feature-list li::before { content: "✓"; color: var(--success); font-weight: bold; }
         .proposal-card.best .feature-list li::before { color: var(--accent); }
-
         .scope-textarea { width: 100%; border: 1px solid var(--border); border-radius: 6px; padding: 10px; font-size: 12.5px; font-family: inherit; resize: vertical; background: #f8fafc; color: #334155; margin-top: 10px; }
-        .scope-textarea:focus { background: #fff; border-color: var(--accent); outline: none; }
-
-        .btn-select-tier { width: 100%; padding: 14px; border: 2px solid var(--primary); border-radius: 6px; font-weight: bold; font-size: 13px; text-transform: uppercase; cursor: pointer; background: transparent; color: var(--primary); transition: all 0.2s; margin-top: auto; }
-        .btn-select-tier:hover { background: var(--primary); color: white; }
+        .btn-select-tier { width: 100%; padding: 14px; border: 2px solid var(--primary); border-radius: 6px; font-weight: bold; font-size: 13px; text-transform: uppercase; cursor: pointer; background: transparent; color: var(--primary); transition: all 0.2s; }
         .selected-tier .btn-select-tier { background: var(--accent); border-color: var(--accent); color: white; }
-        .selected-tier .btn-select-tier:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
-
-        .form-label-mini { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; display: block; margin-top: 12px; letter-spacing: 0.5px; }
-
+        .form-label-mini { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; display: block; margin-top: 12px; }
         .nav-forward-bar { margin-top: 25px; text-align: center; display: flex; justify-content: center; }
-        .btn-proceed { background: var(--success); color: white; font-weight: bold; padding: 16px 40px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.2); }
-        .btn-proceed:hover { background-color: var(--success-dark); }
-
-        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
-        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
-        .nav-tab-btn span { font-size: 16px; }
-        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
+        .btn-proceed { background: var(--success); color: white; font-weight: bold; padding: 16px 40px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
 </head>
 <body>
-
     <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
-            window.location.replace("index.html");
-        }
+        if (localStorage.getItem('eversafe_session_active') !== 'true') window.location.replace("index.html");
     </script>
-
     <div class="app-header">
-        <div class="brand-row">
-            <div class="brand-text">EverSafe Operations Hub</div>
-            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
-        </div>
+        <div class="brand-row"><div class="brand-text">EverSafe Operations Hub</div><button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button></div>
     </div>
-
     <div class="app-container">
         <h3>Multi-Option Tiered Proposal Builder</h3>
         <p class="subtitle">Adjust parameters if necessary, select the client's chosen path, and pass to the Contract node.</p>
-
-        <!-- Read-Only Tracking Block -->
         <div class="meta-card">
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
-                <div>
-                    <span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase;">Active Account:</span>
-                    <div id="proposal_cust_name" style="font-size:16px; font-weight:bold; color:var(--primary); margin-top:2px;">Loading Account Matrix...</div>
-                </div>
-                <div>
-                    <span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase;">Current Tier Selected:</span>
-                    <div id="active_tier_indicator" style="font-size:14px; font-weight:bold; color:var(--accent); margin-top:4px; text-transform:uppercase;">None Chosen</div>
-                </div>
+                <div><span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase;">Active Account:</span><div id="proposal_cust_name" style="font-size:16px; font-weight:bold; color:var(--primary); margin-top:2px;">Loading...</div></div>
+                <div><span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase;">Current Tier:</span><div id="active_tier_indicator" style="font-size:14px; font-weight:bold; color:var(--accent); margin-top:4px; text-transform:uppercase;">None Chosen</div></div>
             </div>
         </div>
-
-        <!-- The Good / Better / Best Grid Layout Matrix -->
         <div class="grid-3">
-            
-            <!-- TIER 1: GOOD -->
             <div class="proposal-card standard" id="card_good">
                 <div>
-                    <span class="tier-badge">Good Tier</span>
-                    <div class="tier-title">Basic Stabilization</div>
-                    <div class="tier-price-box">
-                        $<input type="number" id="price_good" class="price-modifier" value="350.00" oninput="recalculateActiveChoice('good')">
-                    </div>
-                    
-                    <ul class="feature-list">
-                        <li>Standard system clean &amp; structural sweeping runs</li>
-                        <li>Targeted exterior masonry spot-tuckpointing</li>
-                        <li>NFPA Level 1 compliance verification diagnostics</li>
-                    </ul>
+                    <span class="tier-badge">Good Tier</span><div class="tier-title">Basic Stabilization</div>
+                    <div class="tier-price-box">$<input type="number" id="price_good" class="price-modifier" value="350.00" oninput="recalculateActiveChoice('good')"></div>
+                    <ul class="feature-list"><li>Standard system clean & sweeping runs</li><li>Targeted exterior masonry spot-tuckpointing</li><li>NFPA Level 1 compliance verification diagnostics</li></ul>
                 </div>
                 <div>
                     <label class="form-label-mini">Custom Scope Injection:</label>
-                    <textarea id="scope_good" class="scope-textarea" rows="4" oninput="recalculateActiveChoice('good')">Standard stabilization sweep & chimney wash package. Spot masonry tuckpointing performed on localized joints as itemized on diagnostic map.</textarea>
+                    <textarea id="scope_good" class="scope-textarea" rows="4" oninput="recalculateActiveChoice('good')">Standard stabilization sweep & chimney wash package. Spot masonry tuckpointing performed on localized joints.</textarea>
                     <button type="button" class="btn-select-tier" style="margin-top:15px;" onclick="lockInChosenProposalTier('good')">Select Good Option</button>
                 </div>
             </div>
-
-            <!-- TIER 2: BETTER -->
             <div class="proposal-card better" id="card_better">
                 <div>
-                    <span class="tier-badge">Better Tier</span>
-                    <div class="tier-title">Advanced Sealing</div>
-                    <div class="tier-price-box">
-                        $<input type="number" id="price_better" class="price-modifier" value="1250.00" oninput="recalculateActiveChoice('better')">
-                    </div>
-                    
-                    <ul class="feature-list">
-                        <li>All features included inside the Stabilization Package</li>
-                        <li>Full elastomeric CrownCoat weather-seal application</li>
-                        <li>Comprehensive flashing sealant dynamic application</li>
-                        <li>5-Year structural moisture penetration warantee</li>
-                    </ul>
+                    <span class="tier-badge">Better Tier</span><div class="tier-title">Advanced Sealing</div>
+                    <div class="tier-price-box">$<input type="number" id="price_better" class="price-modifier" value="1250.00" oninput="recalculateActiveChoice('better')"></div>
+                    <ul class="feature-list"><li>All features included inside Stabilization Package</li><li>Full elastomeric CrownCoat weather-seal application</li><li>Comprehensive flashing sealant application</li><li>5-Year moisture penetration warrantee</li></ul>
                 </div>
                 <div>
                     <label class="form-label-mini">Custom Scope Injection:</label>
-                    <textarea id="scope_better" class="scope-textarea" rows="4" oninput="recalculateActiveChoice('better')">Advanced protection run. Includes complete multi-point chimney wash, localized masonry stabilization, and full application of elastomeric structural weatherproofing compound over concrete crown footprint.</textarea>
+                    <textarea id="scope_better" class="scope-textarea" rows="4" oninput="recalculateActiveChoice('better')">Advanced protection run. Includes multi-point chimney wash, localized masonry stabilization, and full application of elastomeric structural weatherproofing compound over concrete crown footprint.</textarea>
                     <button type="button" class="btn-select-tier" style="margin-top:15px;" onclick="lockInChosenProposalTier('better')">Select Better Option</button>
                 </div>
             </div>
-
-            <!-- TIER 3: BEST -->
             <div class="proposal-card best" id="card_best">
                 <div>
-                    <span class="tier-badge">Best Tier</span>
-                    <div class="tier-title">Premium Renewal</div>
-                    <div class="tier-price-box">
-                        $<input type="number" id="price_best" class="price-modifier" value="3850.00" oninput="recalculateActiveChoice('best')">
-                    </div>
-                    
-                    <ul class="feature-list">
-                        <li>All features included in stabilization and sealing runs</li>
-                        <li>Premium UL-Listed stainless steel smooth-wall flue liner</li>
-                        <li>Custom poured reinforced concrete crown weatherproofing pad</li>
-                        <li>Lifetime premium structural core system warrantee</li>
-                    </ul>
+                    <span class="tier-badge">Best Tier</span><div class="tier-title">Premium Renewal</div>
+                    <div class="tier-price-box">$<input type="number" id="price_best" class="price-modifier" value="3850.00" oninput="recalculateActiveChoice('best')"></div>
+                    <ul class="feature-list"><li>All features included in stabilization and sealing runs</li><li>Premium UL-Listed stainless steel smooth-wall flue liner</li><li>Custom poured reinforced concrete crown weather pad</li><li>Lifetime core system warrantee</li></ul>
                 </div>
                 <div>
                     <label class="form-label-mini">Custom Scope Injection:</label>
-                    <textarea id="scope_best" class="scope-textarea" rows="4" oninput="recalculateActiveChoice('best')">Premium structural renewal profile. Complete removal of obsolete venting structures, deployment of precision smooth-wall stainless steel inner insulation relining system, and premium reinforced concrete crown replacement pour.</textarea>
+                    <textarea id="scope_best" class="scope-textarea" rows="4" oninput="recalculateActiveChoice('best')">Premium structural renewal profile. Complete removal of obsolete structures, deployment of precision smooth-wall stainless steel inner insulation relining system, and premium reinforced concrete crown replacement pour.</textarea>
                     <button type="button" class="btn-select-tier" style="margin-top:15px;" onclick="lockInChosenProposalTier('best')">Select Best Option</button>
                 </div>
             </div>
-
         </div>
-
-        <!-- Master Progression Forward Action Anchor -->
         <div class="nav-forward-bar">
-            <button type="button" class="btn-proceed" id="proceedToContractBtn" onclick="navigateToContractNode()" disabled style="background:#cbd5e1; color:#94a3b8; cursor:not-allowed; box-shadow:none;">
-                Proceed to Work Order Contract ➔
-            </button>
+            <button type="button" class="btn-proceed" id="proceedToContractBtn" onclick="window.location.replace('contract-wo.html')" disabled style="background:#cbd5e1; color:#94a3b8; cursor:not-allowed;">Proceed to Contract ➔</button>
         </div>
     </div>
-
-    <!-- PERSISTENT HUB COMPONENT NAV MATRIX -->
-    <div class="fixed-bottom-nav-bar">
-        <div class="nav-tabs-scroll">
-            <a href="proposals.html" class="nav-tab-btn active-tab"><span>📊</span>Proposals</a>
-            <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
-            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
-            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
-            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
-        </div>
-    </div>
-
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', function() {
-            // Pull down core cache hooks
-            var currentCust = localStorage.getItem('current_wo_customer_name') || "No Active Job Selected (Check Vault)";
+            var currentCust = localStorage.getItem('current_wo_customer_name') || "No Active Job (Check Vault)";
             document.getElementById('proposal_cust_name').innerText = currentCust;
-
-            // Check if a tier selection state already exists in device hardware memory
             var activeTier = localStorage.getItem('current_wo_selected_tier');
-            if (activeTier) {
-                applyTierUIStateChanges(activeTier);
-            }
+            if (activeTier) applyTierUIStateChanges(activeTier);
         });
-
         function lockInChosenProposalTier(tierKey) {
             var selectedPrice = parseFloat(document.getElementById('price_' + tierKey).value) || 0;
             var selectedScope = document.getElementById('scope_' + tierKey).value.trim();
-
-            // Store choice globally into core storage matrices
             localStorage.setItem('current_wo_selected_tier', tierKey);
             localStorage.setItem('current_wo_est_cost', selectedPrice.toFixed(2));
             localStorage.setItem('current_wo_work_scope', selectedScope);
-
             applyTierUIStateChanges(tierKey);
         }
-
         function recalculateActiveChoice(tierKey) {
-            // If tech modifies pricing/text while it is currently selected, refresh live localstorage keys
-            var activeTier = localStorage.getItem('current_wo_selected_tier');
-            if (activeTier === tierKey) {
-                lockInChosenProposalTier(tierKey);
-            }
+            if (localStorage.getItem('current_wo_selected_tier') === tierKey) lockInChosenProposalTier(tierKey);
         }
-
         function applyTierUIStateChanges(tierKey) {
-            // Nuke selected CSS state classes across cards
-            ['good', 'better', 'best'].forEach(function(k) {
-                document.getElementById('card_' + k).classList.remove('selected-tier');
-            });
-
-            // Apply selected state indicators
+            ['good', 'better', 'best'].forEach(function(k) { document.getElementById('card_' + k).classList.remove('selected-tier'); });
             document.getElementById('card_' + tierKey).classList.add('selected-tier');
-            
-            var indicator = document.getElementById('active_tier_indicator');
-            indicator.innerText = tierKey + " tier locked";
-            
-            // Enable forward action button controls
+            document.getElementById('active_tier_indicator').innerText = tierKey + " locked";
             var forwardBtn = document.getElementById('proceedToContractBtn');
-            forwardBtn.disabled = false;
-            forwardBtn.style.background = "var(--success)";
-            forwardBtn.style.color = "white";
-            forwardBtn.style.cursor = "pointer";
-            forwardBtn.style.boxShadow = "0 4px 10px rgba(34, 197, 94, 0.2)";
+            forwardBtn.disabled = false; forwardBtn.style.background = "var(--success)"; forwardBtn.style.color = "white"; forwardBtn.style.cursor = "pointer";
         }
-
-        function navigateToContractNode() {
-            window.location.replace("contract-wo.html");
-        }
-
-        function executeFieldCrewLogout() {
-            localStorage.clear(); 
-            window.location.replace("index.html");
-        }
+        function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
 </html>
