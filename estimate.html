@@ -100,23 +100,22 @@
                 <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
             </div>
 
-            <!-- 🔍 HIGH-SPEED FILTER PANEL -->
             <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px;">
                 <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:var(--primary); margin-bottom:8px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
                 
                 <div class="form-group" style="margin-bottom: 12px;">
-                    <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Instant Search Price Book (Starts Typing Here)</span>
+                    <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Option A: Instant Search Filter Engine</span>
                     <div class="search-container">
                         <span class="search-icon">🔍</span>
-                        <input type="text" id="itemSearchFilter" class="search-input-box" placeholder="Type here to instantly find items (e.g. 'cap', 'liner', 'tuck')..." oninput="filterCatalogItems()">
+                        <input type="text" id="itemSearchFilter" class="search-input-box" placeholder="Start typing keywords here to narrow down the dropdown list instantly..." oninput="filterCatalogItems()">
                     </div>
                 </div>
 
                 <div class="grid-2">
                     <div>
-                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Filter By Category</span>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Option B: Filter By Category Group</span>
                         <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
-                            <option value="ALL">-- Show All Categories --</option>
+                            <option value="ALL" selected>-- Show All Categories (Master Dropdown View) --</option>
                             <option value="MAINTENANCE">Maintenance &amp; Diagnostics</option>
                             <option value="MASONRY">Masonry Structural Repairs</option>
                             <option value="RELINING">Venting &amp; Reline Frameworks</option>
@@ -128,9 +127,9 @@
                         </select>
                     </div>
                     <div>
-                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Item Selection Match</span>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Option C: Traditional Dropdown Menu Selector</span>
                         <select id="catalogItemSelector">
-                            <!-- Populated dynamically via script logic -->
+                            <!-- Populated completely on system initialize load -->
                         </select>
                     </div>
                 </div>
@@ -189,7 +188,6 @@
     <script src="navbar.js"></script>
 
     <script>
-        // MASTER JURISDICTIONAL PRICE BOOK
         var COMPLETE_PRICE_BOOK = {
             // MAINTENANCE & DIAGNOSTICS
             "SWEEP_STANDARD":       { cat: "MAINTENANCE", label: "Standard Woodburning Cleaning Sweep & L1 Inspection", NWO_CORE: 249.00, SMI_RURAL: 269.00, SMI_PREMIUM: 299.00, dynamic: false },
@@ -283,7 +281,7 @@
             recalculateMasterLedger();
         });
 
-        // CATEGORY FALLBACK POPULATION Engine
+        // RE-POPULATES MASTER DROPDOWN SELECTOR MATRIX
         function populateItemsFromCategoryDropdown() {
             var selectedCategory = document.getElementById('catalogCategorySelector').value;
             var itemSelector = document.getElementById('catalogItemSelector');
@@ -292,18 +290,21 @@
             Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
                 var mapping = COMPLETE_PRICE_BOOK[key];
                 if (selectedCategory === "ALL" || mapping.cat === selectedCategory) {
-                    itemSelector.innerHTML += `<option value="${key}">${mapping.label}</option>`;
+                    itemSelector.innerHTML += `<option value="${key}">[${mapping.cat}] ${mapping.label}</option>`;
                 }
             });
+            // Clear the text search box when manually resetting via group box category clicks
+            if (selectedCategory !== "ALL") {
+                document.getElementById('itemSearchFilter').value = "";
+            }
         }
 
-        // 🔍 HIGH-SPEED FUZZY SEARCH FILTRATION ENGAGE
+        // HIGH-SPEED DROPDOWN AUTO-FILTER LISTENER
         function filterCatalogItems() {
             var inputStr = document.getElementById('itemSearchFilter').value.toLowerCase().trim();
             var categorySelector = document.getElementById('catalogCategorySelector');
             var itemSelector = document.getElementById('catalogItemSelector');
             
-            // If Leo starts typing characters, ignore category box restraints and execute global scanning loop
             if (inputStr.length > 0) {
                 categorySelector.value = "ALL";
             }
@@ -315,11 +316,10 @@
                 var entry = COMPLETE_PRICE_BOOK[key];
                 var currentCategoryValue = categorySelector.value;
                 
-                var labelMatches = entry.label.toLowerCase().includes(inputStr);
+                var labelMatches = entry.label.toLowerCase().includes(inputStr) || entry.cat.toLowerCase().includes(inputStr);
                 var categoryMatches = (currentCategoryValue === "ALL" || entry.cat === currentCategoryValue);
 
                 if (labelMatches && categoryMatches) {
-                    // Prepend category marker context flag so search outputs look highly organized
                     itemSelector.innerHTML += `<option value="${key}">[${entry.cat}] ${entry.label}</option>`;
                     optionsFoundCount++;
                 }
@@ -362,8 +362,8 @@
 
             ACTIVE_RUNNING_ESTIMATE.push({ key: itemKey, qty: blueprint.dynamic ? blueprint.defQty : 1, rateOverride: null });
             
-            // Clean interface fields upon a successful element deployment punch
             document.getElementById('itemSearchFilter').value = "";
+            categorySelector = document.getElementById('catalogCategorySelector').value = "ALL";
             populateItemsFromCategoryDropdown();
             recalculateMasterLedger();
         }
