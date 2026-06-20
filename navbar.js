@@ -1,7 +1,7 @@
 /**
- * EverSafe Operations Hub - Universal Slider Navigation Core
+ * EverSafe Operations Hub - Universal Slider Navigation Router
  * Architecture: Self-Styling Smooth Overflow Scroll Component
- * Restored: Level 1 Inspection Map Node
+ * Layout Specification: 10-Node Linear Pipeline (Hardlocked Width)
  */
 window.addEventListener('DOMContentLoaded', function() {
     
@@ -29,12 +29,13 @@ window.addEventListener('DOMContentLoaded', function() {
                 justify-content: flex-start !important; 
                 align-items: center !important; 
                 margin: 0 !important;
-                padding: 0 12px !important; 
-                overflow-x: auto !important; /* Activates physical sliding bar */
+                padding: 0 16px !important; 
+                overflow-x: auto !important; 
                 white-space: nowrap !important;
                 -webkit-overflow-scrolling: touch !important; /* Buttery smooth iOS momentum physics */
-                scrollbar-width: none !important; 
+                scrollbar-width: none !important; /* Hides native scroll track on Firefox */
             }
+            /* Hides native scrollbar rails on Chrome, Safari, and newer Edge viewports */
             .nav-tabs-scroll::-webkit-scrollbar { 
                 display: none !important; 
                 width: 0 !important;
@@ -45,7 +46,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 flex-direction: column !important; 
                 align-items: center !important; 
                 justify-content: center !important; 
-                flex: 0 0 76px !important; /* HARDLOCK WIDTH: Prevents buttons squishing */
+                flex: 0 0 76px !important; /* HARDLOCK WIDTH: Icons cannot squeeze or break layouts */
                 height: 100% !important; 
                 background: transparent !important; 
                 border: none !important; 
@@ -84,24 +85,25 @@ window.addEventListener('DOMContentLoaded', function() {
         document.head.appendChild(styleElement);
     }
 
-    // 2. DOM TARGET CONTAINER HOOK
+    // 2. TARGET CONTAINER HOOK
     var navContainer = document.querySelector('.fixed-bottom-nav-bar');
     if (!navContainer) return;
 
-    // 3. RUNTIME ROUTE DETECTION
+    // 3. RUNTIME ROUTE DETECTION (Strips paths up to the file extension handle)
     var currentPath = window.location.pathname;
     var currentFile = currentPath.substring(currentPath.lastIndexOf('/') + 1) || "index.html";
 
-    // 4. UNIFIED COMPREHENSIVE PIPELINE LAYER MATRIX
+    // 4. UNIFIED 10-NODE PIPELINE MATRIX MAP
     var tabs = [
         { link: "jobs.html", icon: "💼", label: "Jobs" },
         { link: "inspection-l1.html", icon: "📑", label: "L1 Map" },
         { link: "inspection-l2.html", icon: "📋", label: "L2 Map" },
         { link: "proposals.html", icon: "📊", label: "Options" },
-        { link: "contract-wo.html", icon: "🛠️", label: "Review" },
+        { link: "estimate.html", icon: "🧮", label: "Estimate" },   // Private Cost & Profit Matrix
+        { link: "contract-wo.html", icon: "📜", label: "Contract" },  // Client-Facing Presentation Review
         { link: "signatures.html", icon: "✍️", label: "Sign" },
         { link: "billing-invoice.html", icon: "🧾", label: "Billing" },
-        { link: "dispatches.html", icon: "📁", label: "Vault" },
+        { link: "dispatches.html", icon: "📁", label: "Vault" },     // Historical Search Panel
         { link: "vault-upload.html", icon: "📷", label: "Camera" }
     ];
 
@@ -117,7 +119,7 @@ window.addEventListener('DOMContentLoaded', function() {
     // 6. EXECUTE GRAPHICAL INJECTION
     navContainer.innerHTML = navHtml;
     
-    // 7. AUTO-CENTER SMART FOCUS
+    // 7. AUTO-CENTER SMART FOCUS: Positions the track automatically based on where Leo is working
     setTimeout(function() {
         var activeElement = navContainer.querySelector('.active-tab');
         if (activeElement) {
