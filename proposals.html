@@ -20,7 +20,7 @@
             --danger: #ef4444; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; text-align: center; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -53,21 +53,31 @@
     </style>
 </head>
 <body>
+
     <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true') window.location.replace("index.html");
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
     </script>
+
     <div class="app-header">
-        <div class="brand-row"><div class="brand-text">EverSafe Operations Hub</div><button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button></div>
+        <div class="brand-row">
+            <div class="brand-text">EverSafe Operations Hub</div>
+            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
+        </div>
     </div>
+
     <div class="app-container">
         <h3>Multi-Option Tiered Proposal Builder</h3>
-        <p class="subtitle">Adjust parameters if necessary, select the client's chosen path, and pass to the Contract node.</p>
+        <p class="subtitle">Adjust parameters if necessary, select the client's chosen path, and pass to the internal estimate calculator.</p>
+        
         <div class="meta-card">
             <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
                 <div><span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase;">Active Account:</span><div id="proposal_cust_name" style="font-size:16px; font-weight:bold; color:var(--primary); margin-top:2px;">Loading...</div></div>
                 <div><span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase;">Current Tier:</span><div id="active_tier_indicator" style="font-size:14px; font-weight:bold; color:var(--accent); margin-top:4px; text-transform:uppercase;">None Chosen</div></div>
             </div>
         </div>
+
         <div class="grid-3">
             <div class="proposal-card standard" id="card_good">
                 <div>
@@ -81,6 +91,7 @@
                     <button type="button" class="btn-select-tier" style="margin-top:15px;" onclick="lockInChosenProposalTier('good')">Select Good Option</button>
                 </div>
             </div>
+
             <div class="proposal-card better" id="card_better">
                 <div>
                     <span class="tier-badge">Better Tier</span><div class="tier-title">Advanced Sealing</div>
@@ -93,6 +104,7 @@
                     <button type="button" class="btn-select-tier" style="margin-top:15px;" onclick="lockInChosenProposalTier('better')">Select Better Option</button>
                 </div>
             </div>
+
             <div class="proposal-card best" id="card_best">
                 <div>
                     <span class="tier-badge">Best Tier</span><div class="tier-title">Premium Renewal</div>
@@ -106,12 +118,15 @@
                 </div>
             </div>
         </div>
+
         <div class="nav-forward-bar">
-            <button type="button" class="btn-proceed" id="proceedToContractBtn" onclick="window.location.replace('contract-wo.html')" disabled style="background:#cbd5e1; color:#94a3b8; cursor:not-allowed;">Proceed to Contract ➔</button>
+            <button type="button" class="btn-proceed" id="proceedToContractBtn" onclick="window.location.replace('estimate.html')" disabled style="background:#cbd5e1; color:#94a3b8; cursor:not-allowed;">Proceed to Estimate ➔</button>
         </div>
     </div>
+
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
+
     <script>
         window.addEventListener('DOMContentLoaded', function() {
             var currentCust = localStorage.getItem('current_wo_customer_name') || "No Active Job (Check Vault)";
@@ -119,6 +134,7 @@
             var activeTier = localStorage.getItem('current_wo_selected_tier');
             if (activeTier) applyTierUIStateChanges(activeTier);
         });
+
         function lockInChosenProposalTier(tierKey) {
             var selectedPrice = parseFloat(document.getElementById('price_' + tierKey).value) || 0;
             var selectedScope = document.getElementById('scope_' + tierKey).value.trim();
@@ -127,9 +143,11 @@
             localStorage.setItem('current_wo_work_scope', selectedScope);
             applyTierUIStateChanges(tierKey);
         }
+
         function recalculateActiveChoice(tierKey) {
             if (localStorage.getItem('current_wo_selected_tier') === tierKey) lockInChosenProposalTier(tierKey);
         }
+
         function applyTierUIStateChanges(tierKey) {
             ['good', 'better', 'best'].forEach(function(k) { document.getElementById('card_' + k).classList.remove('selected-tier'); });
             document.getElementById('card_' + tierKey).classList.add('selected-tier');
@@ -137,6 +155,7 @@
             var forwardBtn = document.getElementById('proceedToContractBtn');
             forwardBtn.disabled = false; forwardBtn.style.background = "var(--success)"; forwardBtn.style.color = "white"; forwardBtn.style.cursor = "pointer";
         }
+
         function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
