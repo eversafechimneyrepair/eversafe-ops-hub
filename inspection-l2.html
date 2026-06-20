@@ -26,7 +26,7 @@
 
         .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 35px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
-        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
         p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.45; text-align: center; }
         
         input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 4px; text-align: center; font-family: inherit; background: #fff; color: #0f172a; }
@@ -37,7 +37,7 @@
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 25px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
+        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
         
         .mapping-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; text-align: center; }
         .mapping-table th { background-color: #f1f5f9; text-align: center; font-size: 11px; padding: 10px; border: 1px solid var(--border); color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -52,18 +52,13 @@
         .badge-critical { background-color: var(--danger); }
         .badge-major { background-color: #d97706; }
 
-        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 25px auto 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 25px auto 0 auto; display: block; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         .btn-action:hover { background-color: var(--accent-dark); }
         .btn-action:active { transform: scale(0.98); }
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; }
 
         .status-msg { margin-top: 20px; font-weight: bold; font-size: 14px; color: #475569; min-height: 20px; text-align: center; }
-
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
-        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
-        .nav-tab-btn span { font-size: 16px; }
-        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
     </style>
 </head>
 <body>
@@ -189,26 +184,15 @@
         </div>
     </div>
 
-    <div class="fixed-bottom-nav-bar">
-        <div class="nav-tabs-scroll">
-            <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
-            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
-            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
-            <a href="inspection-l2.html" class="nav-tab-btn active-tab"><span>📋</span>L2 Map</a>
-            <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
-            <a href="vault-upload.html" class="nav-tab-btn"><span>📁</span>Camera</a>
-        </div>
-    </div>
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         
-        // REACTIVE RUNTIME TRACKING ENGINE
         window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('l2_tech').value = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
             
-            // Set up or load active inspection timestamp
             var dateBox = document.getElementById('l2_date');
             var savedDate = localStorage.getItem('current_l2_date');
             if (savedDate) {
@@ -231,7 +215,6 @@
 
             var checkBindings = ['l2_c1', 'l2_c2', 'l2_c3', 'l2_c4', 'l2_c5', 'l2_c6', 'l2_c7', 'l2_c8'];
 
-            // Initialize and bind input monitoring loops
             Object.keys(textBindings).forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) {
@@ -241,11 +224,11 @@
                     el.addEventListener('input', function() {
                         localStorage.setItem(textBindings[id], el.value);
                         evaluateActiveBadgeVisibility(id);
+                        syncL2FailuresToPriceBook();
                     });
                 }
             });
 
-            // Initialize and bind click checkbox monitoring loops
             checkBindings.forEach(function(id) {
                 var el = document.getElementById(id);
                 if (el) {
@@ -254,12 +237,15 @@
                     
                     el.addEventListener('change', function() {
                         localStorage.setItem('current_cache_' + id, el.checked);
+                        syncL2FailuresToPriceBook();
                     });
                 }
             });
 
-            // Re-render badges on page reload if cached text contains library issues
             ['l2_n1', 'l2_n2', 'l2_n3', 'l2_n4', 'l2_n5', 'l2_n6', 'l2_n7', 'l2_n8'].forEach(evaluateActiveBadgeVisibility);
+            
+            // Execute background calibration match on load
+            syncL2FailuresToPriceBook();
         });
 
         function evaluateActiveBadgeVisibility(id) {
@@ -279,17 +265,43 @@
             var select = document.getElementById('l2DefectLibrary'); if(!select.value) return;
             var segments = select.value.split('|'); var inputId = segments[0]; var text = segments[1];
             
-            // Drop values into target DOM elements
             document.getElementById(inputId).value = text;
             var targetCheckId = inputId.replace('n', 'c');
             document.getElementById(targetCheckId).checked = false;
             
-            // Mirror state updates directly to LocalStorage array bindings
             localStorage.setItem('current_l2_' + inputId.split('_')[1], text);
             localStorage.setItem('current_cache_' + targetCheckId, 'false');
             
             evaluateActiveBadgeVisibility(inputId);
-            select.value = ""; // Reset library select input view
+            syncL2FailuresToPriceBook();
+            select.value = ""; 
+        }
+
+        // 🧮 SYSTEM BACKEND ACCUMULATOR: Syncs layout infractions straight into the private estimator database strings
+        function syncL2FailuresToPriceBook() {
+            var itemsMap = JSON.parse(localStorage.getItem('current_wo_price_book_items')) || {};
+
+            // Evaluate Row 2 (Firebox structural firebrick issues)
+            if (!document.getElementById('l2_c2').checked || document.getElementById('l2_n2').value.includes("[CRITICAL]")) {
+                itemsMap['l2_firebox_brick_defect'] = { label: "Firebox Structural Brick Defect Flagged", price: 0 };
+            } else { delete itemsMap['l2_firebox_brick_defect']; }
+
+            // Evaluate Row 4 (Cracked clay flue tile segments)
+            if (!document.getElementById('l2_c4').checked || document.getElementById('l2_n4').value.includes("[CRITICAL]")) {
+                itemsMap['l2_liner_defect'] = { label: "Internal Clay Flue Liner Fracture Mapped", price: 0 };
+            } else { delete itemsMap['l2_liner_defect']; }
+
+            // Evaluate Row 5 (Mortar joint disintegrations)
+            if (!document.getElementById('l2_c5').checked || document.getElementById('l2_n5').value.includes("[MAJOR]")) {
+                itemsMap['l2_mortar_tuckpoint_defect'] = { label: "Venting Joint Mortar Seal Erosion Mapped", price: 0 };
+            } else { delete itemsMap['l2_mortar_tuckpoint_defect']; }
+
+            // Evaluate Row 7 (Concrete crown weather-seal splitting)
+            if (!document.getElementById('l2_c7').checked || document.getElementById('l2_n7').value.includes("[MAJOR]")) {
+                itemsMap['l2_crown_defect'] = { label: "Concrete Crown Weather-Seal Split Detected", price: 0 };
+            } else { delete itemsMap['l2_crown_defect']; }
+
+            localStorage.setItem('current_wo_price_book_items', JSON.stringify(itemsMap));
         }
 
         async function submitLevel2ReportToOffice() {
@@ -327,36 +339,31 @@
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({
-                        route: "recordFieldData",
-                        sheetName: "Level2_Inspections",
-                        payload: payload
-                    })
+                    body: JSON.stringify({ route: "recordFieldData", sheetName: "Level2_Inspections", payload: payload })
                 });
                 let result = await response.json();
 
                 if (result.success || response.ok) {
-                    statusDiv.innerHTML = "✅ Level 2 Compliance Records Saved!";
+                    statusDiv.innerHTML = "✅ Level 2 Compliance Records Saved! Diverting to Options board.";
                     statusDiv.style.color = "var(--success-dark)";
                     
-                    // Clear out page-specific checklist tracking caches on processing complete
+                    // Clear page-specific checklist metrics out of local memory tracks upon clean upload
                     ['current_l2_n1', 'current_l2_n2', 'current_l2_n3', 'current_l2_n4', 'current_l2_n5', 'current_l2_n6', 'current_l2_n7', 'current_l2_n8', 'current_l2_summary', 'current_l2_client_initials'].forEach(function(k) {
                         localStorage.removeItem(k);
                     });
                     for (var i = 1; i <= 8; i++) { localStorage.removeItem('current_cache_l2_c' + i); }
 
-                    setTimeout(function() {
-                        window.location.replace("billing-invoice.html");
-                    }, 1200);
+                    // Route cleanly forward along the 10-node task tracking pipeline
+                    setTimeout(function() { window.location.replace("proposals.html"); }, 1200);
                 } else {
                     statusDiv.innerHTML = "❌ Gateway Rejection: " + (result.error || "Server validation failure.");
                     statusDiv.style.color = "var(--danger)";
                     submitBtn.disabled = false;
                 }
             } catch (err) {
-                statusDiv.innerHTML = "⚠️ Ledger Synced (Offline No-Cors Callback Triggered).";
+                statusDiv.innerHTML = "⚠️ Ledger Synced Offline. Diverting to Options board...";
                 statusDiv.style.color = "var(--accent-dark)";
-                submitBtn.disabled = false;
+                setTimeout(function() { window.location.replace("proposals.html"); }, 1200);
             }
         }
 
