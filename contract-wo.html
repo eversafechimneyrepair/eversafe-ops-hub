@@ -72,7 +72,6 @@
             <h3>Master Estimator Matrix</h3>
             <p class="subtitle">Select the regional deployment zone, map structural operations from your preset catalogs, or construct custom line items on the fly.</p>
 
-            <!-- REGIONAL MULTIPLIER CONFIGURATION -->
             <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
                 <label class="control-header" style="color: var(--accent-dark);">📍 Active Territory Price Book Multiplier</label>
                 <select id="regionalZoneSelector" onchange="recalculateMasterLedger()">
@@ -88,32 +87,30 @@
                 <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
             </div>
 
-            <!-- UNIVERSAL ITEM INJECTION INTERFACE -->
             <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px;">
                 <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:var(--primary); margin-bottom:8px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
                 <div class="grid-2">
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Category Selector</span>
                         <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
-                            <option value="MAINTENANCE">Maintenance &amp; Sweep Sweeps</option>
-                            <option value="MASONRY">Structural Masonry Restorations</option>
-                            <option value="RELINING">Venting &amp; Relining Systems</option>
-                            <option value="WATERPROOFING">Waterproofing &amp; Preventative Mitigation</option>
-                            <option value="COMPONENTS">Caps, Dampers &amp; Components</option>
-                            <option value="LOGISTICS">Logistics, Access Surcharges &amp; Custom</option>
+                            <option value="MAINTENANCE">Maintenance &amp; Diagnostics</option>
+                            <option value="MASONRY">Masonry Structural Repairs</option>
+                            <option value="RELINING">Venting &amp; Reline Frameworks</option>
+                            <option value="WATERPROOFING">Waterproofing &amp; Flashing Mitigation</option>
+                            <option value="PREFAB_CHASE">Pre-Fab Chase &amp; Factory Systems</option>
+                            <option value="COMPONENTS">Caps, Dampers &amp; Custom Trim</option>
+                            <option value="LOGISTICS">Logistics, Access &amp; Rigging Fees</option>
                         </select>
                     </div>
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Item Selection</span>
                         <select id="catalogItemSelector">
-                            <!-- Populated dynamically via JS arrays -->
-                        </select>
+                            </select>
                     </div>
                 </div>
                 <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white;">Inject Line Item Into Bid</button>
             </div>
 
-            <!-- ACTIVE LEDGER VIEW -->
             <div class="section-title">Compiled Project Cost Matrix</div>
             <table class="estimate-table">
                 <thead>
@@ -125,11 +122,9 @@
                     </tr>
                 </thead>
                 <tbody id="bidTableBody">
-                    <!-- Dynamic entries compile here -->
-                </tbody>
+                    </tbody>
             </table>
 
-            <!-- REVENUE VALUATION STATEMENT PANEL -->
             <div class="summary-box">
                 <div>
                     <span style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">Unified Regional Valuation</span>
@@ -138,7 +133,6 @@
                 <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>
             </div>
 
-            <!-- 📊 INTERNAL EARNINGS PROFIT THERMOMETER CARD -->
             <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Internal Margin Telemetry Tracker (Leo's Eyes Only)</p>
                 <div class="grid-2" style="margin-bottom: 10px;">
@@ -151,7 +145,6 @@
                         <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>
                     </div>
                 </div>
-                <!-- Thermometer Visual Track -->
                 <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">
                     <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>
                     <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>
@@ -166,32 +159,56 @@
     <script src="navbar.js"></script>
 
     <script>
+        // MASTER PRODUCTION COMPREHENSIVE PRICE BOOK REFERENCE DATABASE
         var COMPLETE_PRICE_BOOK = {
-            "SWEEP_STANDARD":   { cat: "MAINTENANCE", label: "Standard Cleaning Sweep & Safety Inspection", NWO_CORE: 249.00, SMI_RURAL: 269.00, SMI_PREMIUM: 299.00, dynamic: false },
-            "SWEEP_PELLET":     { cat: "MAINTENANCE", label: "Pellet/Woodstove Insert Deep Cleaning Run", NWO_CORE: 289.00, SMI_RURAL: 319.00, SMI_PREMIUM: 359.00, dynamic: false },
-            "DIAG_VIDEO":       { cat: "MAINTENANCE", label: "Level 3 Internal Flue Video Scan Diagnostic", NWO_CORE: 180.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
-            
-            "MAS_TUCKPOINT":    { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry (per sq ft)", NWO_CORE: 18.00, SMI_RURAL: 22.00, SMI_PREMIUM: 28.00, dynamic: true, defQty: 10, unit: "sq ft" },
-            "MAS_BRICK_SWAP":   { cat: "MASONRY", label: "Spalling Freeze-Thaw Face Brick Swap (per brick)", NWO_CORE: 25.00, SMI_RURAL: 28.00, SMI_PREMIUM: 34.00, dynamic: true, defQty: 5, unit: "bricks" },
-            "MAS_REBUILD_ROOF": { cat: "MASONRY", label: "Partial Rebuild From Roofline Up (per course)", NWO_CORE: 110.00, SMI_RURAL: 125.00, SMI_PREMIUM: 145.00, dynamic: true, defQty: 5, unit: "courses" },
-            "MAS_FIREBOX_SWAP": { cat: "MASONRY", label: "Firebox Firebrick Refit Restoration (per brick)", NWO_CORE: 35.00, SMI_RURAL: 38.00, SMI_PREMIUM: 45.00, dynamic: true, defQty: 10, unit: "bricks" },
-            
-            "LINE_STAINLESS":   { cat: "RELINING", label: "Titanium Stainless Steel Flue Relining (per linear ft)", NWO_CORE: 125.00, SMI_RURAL: 138.00, SMI_PREMIUM: 155.00, dynamic: true, defQty: 25, unit: "ft" },
-            "LINE_INSUL_BLANKET":{ cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Kit", NWO_CORE: 350.00, SMI_RURAL: 385.00, SMI_PREMIUM: 430.00, dynamic: false },
-            "LINE_SMOKE_CHAMBER":{ cat: "RELINING", label: "Smoke Chamber Pargeting Seal Spray Run (Smoktite)", NWO_CORE: 850.00, SMI_RURAL: 940.00, SMI_PREMIUM: 1050.00, dynamic: false },
+            // CATEGORY 1: Maintenance & Diagnostics
+            "SWEEP_STANDARD":       { cat: "MAINTENANCE", label: "Standard Woodburning Cleaning Sweep & L1 Inspection", NWO_CORE: 249.00, SMI_RURAL: 269.00, SMI_PREMIUM: 299.00, dynamic: false },
+            "SWEEP_PELLET":         { cat: "MAINTENANCE", label: "Pellet/Corn Stove Insert Deep Mechanical Clean Run", NWO_CORE: 289.00, SMI_RURAL: 319.00, SMI_PREMIUM: 359.00, dynamic: false },
+            "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "Level 2 Internal Flue Video Scan Diagnostic (NFPA 211)", NWO_CORE: 180.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
+            "DRYER_VENT_CLEAN":     { cat: "MAINTENANCE", label: "Dryer Vent Line Air-Jet Cleaning (up to 20ft)", NWO_CORE: 149.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
+            "GAS_LOG_SERVICE":      { cat: "MAINTENANCE", label: "Gas Fireplace Maintenance, Pilot Flush & Burner Tune", NWO_CORE: 225.00, SMI_RURAL: 245.00, SMI_PREMIUM: 275.00, dynamic: false },
 
-            "WATER_CROWN_SEAL": { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Coat", NWO_CORE: 275.00, SMI_RURAL: 305.00, SMI_PREMIUM: 345.00, dynamic: false },
-            "WATER_CROWN_POUR": { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild", NWO_CORE: 1200.00, SMI_RURAL: 1320.00, SMI_PREMIUM: 1480.00, dynamic: false },
-            "WATER_SPRAY":      { cat: "WATERPROOFING", label: "Chimney Saver Breathable Exterior Seal Spray", NWO_CORE: 195.00, SMI_RURAL: 215.00, SMI_PREMIUM: 245.00, dynamic: false },
-            
-            "COMP_CAP_SINGLE":  { cat: "COMPONENTS", label: "Stainless Steel Single Flue Exhaust Screen Cap", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
-            "COMP_CAP_MULTI":   { cat: "COMPONENTS", label: "Custom Stainless Steel Multi-Flue Top Mount Cap", NWO_CORE: 550.00, SMI_RURAL: 610.00, SMI_PREMIUM: 690.00, dynamic: false },
-            "COMP_DAMPER_TOP":  { cat: "COMPONENTS", label: "Lyemance Top-Mount Energy Saving Seal Damper", NWO_CORE: 395.00, SMI_RURAL: 435.00, SMI_PREMIUM: 490.00, dynamic: false },
-            "COMP_CLEANOUT_DOOR":{ cat: "COMPONENTS", label: "Cast Iron Base Ash Cleanout Assembly Door", NWO_CORE: 150.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
+            // CATEGORY 2: Masonry Structural Repairs
+            "MAS_TUCKPOINT":        { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry Repair (per sq ft)", NWO_CORE: 18.00, SMI_RURAL: 22.00, SMI_PREMIUM: 28.00, dynamic: true, defQty: 10, unit: "sq ft" },
+            "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement", NWO_CORE: 25.00, SMI_RURAL: 28.00, SMI_PREMIUM: 34.00, dynamic: true, defQty: 5, unit: "bricks" },
+            "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", NWO_CORE: 110.00, SMI_RURAL: 125.00, SMI_PREMIUM: 145.00, dynamic: true, defQty: 5, unit: "courses" },
+            "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", NWO_CORE: 35.00, SMI_RURAL: 38.00, SMI_PREMIUM: 45.00, dynamic: true, defQty: 15, unit: "bricks" },
+            "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (Smoktite)", NWO_CORE: 850.00, SMI_RURAL: 940.00, SMI_PREMIUM: 1050.00, dynamic: false },
+            "MAS_LIME_MATCH":       { cat: "MASONRY", label: "Historic Lime Mortar Tint Analysis & Custom Blending Fee", NWO_CORE: 150.00, SMI_RURAL: 175.00, SMI_PREMIUM: 210.00, dynamic: false },
 
-            "LOG_SCAFFOLDING":  { cat: "LOGISTICS", label: "High Access Scaffolding Assembly Set Rigging Fee", NWO_CORE: 300.00, SMI_RURAL: 330.00, SMI_PREMIUM: 375.00, dynamic: false },
-            "LOG_BOOM_LIFT":    { cat: "LOGISTICS", label: "Heavy Equipment Boom Lift Transport Surcharge", NWO_CORE: 650.00, SMI_RURAL: 650.00, SMI_PREMIUM: 750.00, dynamic: false },
-            "LOG_CUSTOM_LINE":  { cat: "LOGISTICS", label: "[Custom Variable Field Construction Adjustment Line]", NWO_CORE: 1.00, SMI_RURAL: 1.00, SMI_PREMIUM: 1.00, dynamic: true, defQty: 100, unit: "units" }
+            // CATEGORY 3: Venting & Reline Frameworks
+            "LINE_STAINLESS":       { cat: "RELINING", label: "Titanium Stainless Steel Flue Relining (per linear ft)", NWO_CORE: 125.00, SMI_RURAL: 138.00, SMI_PREMIUM: 155.00, dynamic: true, defQty: 25, unit: "ft" },
+            "LINE_INSUL_BLANKET":    { cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Wrap Kit", NWO_CORE: 350.00, SMI_RURAL: 385.00, SMI_PREMIUM: 430.00, dynamic: false },
+            "LINE_ALUMINUM_GAS":    { cat: "RELINING", label: "Flexible Aluminum Gas Ventilation Reline Array (per linear ft)", NWO_CORE: 65.00, SMI_RURAL: 72.00, SMI_PREMIUM: 82.00, dynamic: true, defQty: 25, unit: "ft" },
+            "LINE_B_VENT":          { cat: "RELINING", label: "Double-Wall Galvanized Gas B-Vent Pipe (per linear ft)", NWO_CORE: 85.00, SMI_RURAL: 94.00, SMI_PREMIUM: 108.00, dynamic: true, defQty: 15, unit: "ft" },
+            "LINE_TIE_IN":          { cat: "RELINING", label: "Utility Furnace / Water Heater Flue Breach Tie-In Collar", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 225.00, dynamic: false },
+
+            // CATEGORY 4: Waterproofing & Flashing Mitigation
+            "WATER_CROWN_SEAL":     { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Membrane Coat", NWO_CORE: 275.00, SMI_RURAL: 305.00, SMI_PREMIUM: 345.00, dynamic: false },
+            "WATER_CROWN_POUR":     { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild System", NWO_CORE: 1200.00, SMI_RURAL: 1320.00, SMI_PREMIUM: 1480.00, dynamic: false },
+            "WATER_SAVER_SPRAY":    { cat: "WATERPROOFING", label: "ChimneySaver Silane-Siloxane Breathable Repellent Application", NWO_CORE: 195.00, SMI_RURAL: 215.00, SMI_PREMIUM: 245.00, dynamic: false },
+            "FLASH_LEAD_REPLACE":   { cat: "WATERPROOFING", label: "Custom Lead Counter-Flashing Roof Intercept Replacement", NWO_CORE: 450.00, SMI_RURAL: 495.00, SMI_PREMIUM: 560.00, dynamic: false },
+            "FLASH_CRICKET_POUR":   { cat: "WATERPROOFING", label: "Diversion Roof Cricket Framing Assembly (Prevents Water Pooling)", NWO_CORE: 650.00, SMI_RURAL: 715.00, SMI_PREMIUM: 810.00, dynamic: false },
+
+            // CATEGORY 5: Pre-Fab Chase & Factory Systems
+            "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Anti-Puddling Chase Top Cover Pan", NWO_CORE: 695.00, SMI_RURAL: 765.00, SMI_PREMIUM: 865.00, dynamic: false },
+            "CHASE_ALUM_COLOR":     { cat: "PREFAB_CHASE", label: "Custom Factory Powder-Coated Aluminum Chase Pan Cover", NWO_CORE: 575.00, SMI_RURAL: 635.00, SMI_PREMIUM: 715.00, dynamic: false },
+            "PIPE_CLASS_A":         { cat: "PREFAB_CHASE", label: "Double-Wall Insulated HT Class-A Prefab Vent Pipe (per ft)", NWO_CORE: 95.00, SMI_RURAL: 105.00, SMI_PREMIUM: 120.00, dynamic: true, defQty: 10, unit: "ft" },
+            "PREFAB_REFRACTORY":    { cat: "PREFAB_CHASE", label: "Prefabricated Fireplace Interior Refractory Panel Insert", NWO_CORE: 220.00, SMI_RURAL: 245.00, SMI_PREMIUM: 280.00, dynamic: false },
+
+            // CATEGORY 6: Caps, Dampers & Custom Trim
+            "COMP_CAP_SINGLE":      { cat: "COMPONENTS", label: "Stainless Steel Single-Flue Friction Spark Arrestor Cap", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
+            "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", NWO_CORE: 550.00, SMI_RURAL: 610.00, SMI_PREMIUM: 690.00, dynamic: false },
+            "COMP_DAMPER_LYEMANCE": { cat: "COMPONENTS", label: "Lyemance Top-Mount Low-Profile Energy Saving Seal Damper", NWO_CORE: 395.00, SMI_RURAL: 435.00, SMI_PREMIUM: 490.00, dynamic: false },
+            "COMP_DAMPER_LOCKtop":  { cat: "COMPONENTS", label: "LockTop Energy Saving Cap/Damper Combination Unit", NWO_CORE: 475.00, SMI_RURAL: 525.00, SMI_PREMIUM: 590.00, dynamic: false },
+            "COMP_CLEANOUT_DOOR":   { cat: "COMPONENTS", label: "Cast Iron Chimney Base Ash Pit Door Assembly (Replacement)", NWO_CORE: 150.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
+
+            // CATEGORY 7: Logistics, Access & Rigging Fees
+            "LOG_SCAFFOLDING":      { cat: "LOGISTICS", label: "High-Access Multi-Tier Scaffolding Scaffold Rigging Fee", NWO_CORE: 300.00, SMI_RURAL: 330.00, SMI_PREMIUM: 375.00, dynamic: false },
+            "LOG_BOOM_LIFT":        { cat: "LOGISTICS", label: "Heavy Equipment Towable Boom Lift Transport Surcharge", NWO_CORE: 650.00, SMI_RURAL: 650.00, SMI_PREMIUM: 750.00, dynamic: false },
+            "LOG_PITCH_STEEP":      { cat: "LOGISTICS", label: "Steep Roof Slope Pitch Safety Harness Surcharge (Over 8/12)", NWO_CORE: 180.00, SMI_RURAL: 200.00, SMI_PREMIUM: 230.00, dynamic: false },
+            "LOG_3_STORY_ACCESS":   { cat: "LOGISTICS", label: "Extreme Working Elevation Access Surcharge (3+ Stories / Commercial)", NWO_CORE: 250.00, SMI_RURAL: 275.00, SMI_PREMIUM: 315.00, dynamic: false },
+            "LOG_CUSTOM_LINE":      { cat: "LOGISTICS", label: "[Custom Manual Adjustment / Material / Accessory Line Override]", NWO_CORE: 1.00, SMI_RURAL: 1.00, SMI_PREMIUM: 1.00, dynamic: true, defQty: 100, unit: "units" }
         };
 
         var ACTIVE_RUNNING_ESTIMATE = [];
@@ -236,7 +253,7 @@
             Object.keys(inheritedFlags).forEach(function(flagKey) {
                 var lookupTarget = "";
                 if (flagKey.includes("crown")) lookupTarget = "WATER_CROWN_SEAL";
-                else if (flagKey.includes("flashing")) lookupTarget = "L1_FLASHING";
+                else if (flagKey.includes("flashing")) lookupTarget = "FLASH_LEAD_REPLACE";
                 else if (flagKey.includes("mortar") || flagKey.includes("tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
                 else if (flagKey.includes("brick") || flagKey.includes("spalling")) lookupTarget = "MAS_BRICK_SWAP";
                 else if (flagKey.includes("liner")) lookupTarget = "LINE_STAINLESS";
@@ -304,11 +321,9 @@
             localStorage.setItem('current_wo_est_cost', globalRunningSum.toFixed(2));
             localStorage.setItem('current_wo_work_scope', textCompilationScopeLines.join(" \n"));
             
-            // 📊 Trigger real-time thermometer calculation
             calculateProfitThermometer(globalRunningSum);
         }
 
-        // 📊 DYNAMIC REVENUE ANCHOR THERMOMETER ENGINE
         function calculateProfitThermometer(forcedTotal) {
             var priceCharged = typeof forcedTotal === 'number' ? forcedTotal : parseFloat(document.getElementById('bidLiveTotalDisplay').innerText.replace('$', '')) || 0;
             var expenses = parseFloat(document.getElementById('internalJobCostInput').value) || 0;
@@ -334,21 +349,20 @@
             percentDisplay.innerText = marginPercent.toFixed(2) + "%";
             thermBar.style.width = marginPercent + "%";
             
-            // Tier Matrix Evaluation: Bad (<40%), Good (40-54.9%), Better (55-69.9%), Best (>=70%)
             if (marginPercent < 40) {
-                thermBar.style.backgroundColor = "#ef4444"; // Warning Red
+                thermBar.style.backgroundColor = "#ef4444"; 
                 thermLabel.innerText = "🔴 BAD MARGIN BRACKET - ADJUST VALUE COGS";
                 thermLabel.style.color = "#ffffff";
             } else if (marginPercent >= 40 && marginPercent < 55) {
-                thermBar.style.backgroundColor = "#eab308"; // Amber Yellow
+                thermBar.style.backgroundColor = "#eab308"; 
                 thermLabel.innerText = "🟡 GOOD MARGIN BRACKET - ACCEPTABLE STANDARD RUN";
                 thermLabel.style.color = "#0f172a";
             } else if (marginPercent >= 55 && marginPercent < 70) {
-                thermBar.style.backgroundColor = "#22c55e"; // Success Green
+                thermBar.style.backgroundColor = "#22c55e"; 
                 thermLabel.innerText = "🟢 BETTER MARGIN BRACKET - EXCELLENT REGIONAL YIELD";
                 thermLabel.style.color = "#ffffff";
             } else {
-                thermBar.style.backgroundColor = "#2563eb"; // Premier Corporate Blue
+                thermBar.style.backgroundColor = "#2563eb"; 
                 thermLabel.innerText = "🔵 BEST MARGIN BRACKET - HIGH NET ELITE PROFIT 🔥";
                 thermLabel.style.color = "#ffffff";
             }
