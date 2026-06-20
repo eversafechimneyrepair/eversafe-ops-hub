@@ -46,6 +46,9 @@
         .btn-action:active { transform: scale(0.98); }
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; }
 
+        .btn-secondary { background: var(--primary); margin-top: 15px; }
+        .btn-secondary:hover { background: var(--primary-light); }
+
         .status-msg { margin-top: 20px; font-weight: bold; font-size: 14px; color: #475569; min-height: 20px; text-align: center; }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
@@ -55,12 +58,22 @@
         .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
 
         /* Receipt Styles */
-        .receipt-container { display: none; background: #f8fafc; border: 2px solid var(--success); border-radius: 8px; padding: 25px 20px; text-align: left; }
-        .receipt-header { color: var(--success-dark); text-align: center; font-size: 20px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; }
-        .receipt-row { margin-bottom: 10px; font-size: 13px; color: #334155; }
-        .receipt-row strong { color: #0f172a; }
-        .receipt-divider { margin: 20px 0; border: 0; border-top: 1px dashed var(--border); }
+        .receipt-container { display: none; background: #fff; border: 2px solid var(--success); border-radius: 8px; padding: 25px 20px; text-align: left; }
+        .receipt-header { color: var(--success-dark); text-align: center; font-size: 20px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid var(--border); padding-bottom: 15px;}
+        .receipt-row { margin-bottom: 12px; font-size: 13px; color: #334155; }
+        .receipt-row strong { color: #0f172a; display: inline-block; width: 120px;}
+        .receipt-divider { margin: 25px 0; border: 0; border-top: 1px dashed var(--border); }
         .receipt-signature-img { width: 100%; max-width: 300px; border: 1px solid var(--border); border-radius: 4px; background: white; margin-top: 10px; }
+
+        /* PRINT MEDIA STYLES - Hides the app interface, shows only the contract */
+        @media print {
+            body { padding: 0; background: white; color: black; }
+            .app-header, .fixed-bottom-nav-bar, .btn-action, .btn-secondary, .canvas-controls { display: none !important; }
+            .app-container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
+            .app-card { border: none; box-shadow: none; padding: 0; }
+            .receipt-container { display: block !important; border: none; padding: 0; }
+            .receipt-header { color: black !important; }
+        }
     </style>
 </head>
 <body>
@@ -81,7 +94,6 @@
     <div class="app-container">
         <div class="app-card">
             
-            <!-- ACTIVE SIGNATURE FORM AREA -->
             <div id="signatureFormArea">
                 <h3>Customer Sign-Off</h3>
                 <p>Please present this layout array to the property owner to collect their digital structural authorization acknowledgment.</p>
@@ -109,25 +121,31 @@
                 <div id="signatureStatusLine" class="status-msg">Awaiting digital authorization...</div>
             </div>
 
-            <!-- HIDDEN RECEIPT AREA (Shows on Success) -->
             <div id="contractReceiptArea" class="receipt-container">
-                <div class="receipt-header">✅ Contract Executed</div>
+                <div class="receipt-header">EverSafe Chimney Repair<br><span style="font-size: 14px; color: #64748b;">Official Work Order Contract</span></div>
+                
+                <div class="receipt-row"><strong>Date / Time:</strong> <span id="recDate"></span></div>
                 <div class="receipt-row"><strong>Customer:</strong> <span id="recName"></span></div>
+                <div class="receipt-row"><strong>Email:</strong> <span id="recEmail"></span></div>
                 <div class="receipt-row"><strong>Service Address:</strong> <span id="recAddress"></span></div>
+                
+                <div class="receipt-divider"></div>
+                
                 <div class="receipt-row"><strong>Scope of Work:</strong> <span id="recScope"></span></div>
                 <div class="receipt-row"><strong>Estimated Cost:</strong> $<span id="recCost"></span></div>
                 
                 <div class="receipt-divider"></div>
                 
                 <div style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase; margin-bottom: 8px;">Terms Acknowledged:</div>
-                <div style="font-size: 11px; color: #64748b; line-height: 1.5; margin-bottom: 20px; font-style: italic;">
+                <div style="font-size: 11px; color: #000; line-height: 1.5; margin-bottom: 20px; font-style: italic; text-align: justify;">
                     By signing below, the customer acknowledges that the Level 1/Level 2 venting inspection diagnostic profile has been fully reviewed. Authority is hereby granted to EverSafe Chimney Repair to execute the specified tuckpointing, masonry repairs, or structural updates outlined in the contract documentation. All operations will be performed in conformance with local fire safety codes and industry standards.
                 </div>
 
-                <div class="receipt-row"><strong>Digital Signature Lock:</strong></div>
+                <div class="receipt-row" style="font-weight: bold; margin-bottom: 5px;">Digital Signature Lock:</div>
                 <img id="recSignatureImage" class="receipt-signature-img" src="" alt="Customer Signature">
                 
-                <button type="button" class="btn-action" onclick="window.location.href='billing-invoice.html'" style="margin-top: 30px;">Proceed to Billing</button>
+                <button type="button" class="btn-action btn-secondary" onclick="window.print()">🖨️ Print / Save as PDF</button>
+                <button type="button" class="btn-action" onclick="window.location.href='billing-invoice.html'">Proceed to Billing &rarr;</button>
             </div>
 
         </div>
@@ -153,7 +171,7 @@
         var isDrawing = false;
         var hasSigned = false;
 
-        // Pull saved data from the Contract page to prevent duplicate typing
+        // Pull saved data from the Contract page
         window.addEventListener('DOMContentLoaded', function() {
             var savedCustomerName = localStorage.getItem('current_wo_customer_name');
             if (savedCustomerName) {
@@ -161,7 +179,6 @@
             }
         });
 
-        // Hardened mobile dimensions initialization matrix
         function setupCanvasMatrix() {
             var rect = canvas.getBoundingClientRect();
             canvas.width = rect.width;
@@ -173,10 +190,8 @@
             ctx.lineJoin = "round";
         }
 
-        // Delay setup slightly to ensure container elements have fully layout-rendered
         setTimeout(setupCanvasMatrix, 250);
 
-        // Standard Desktop Pointer Tracker Context
         canvas.addEventListener('mousedown', function(e) {
             var mousePos = getEventCoordinates(e);
             startLineTracking(mousePos.x, mousePos.y);
@@ -187,7 +202,6 @@
         });
         window.addEventListener('mouseup', endLineTracking);
 
-        // Hardened Mobile Touch Layer Processing
         canvas.addEventListener('touchstart', function(e) {
             e.preventDefault();
             if (e.touches.length === 1) {
@@ -249,21 +263,19 @@
         async function transmitSignaturePayloadStream() {
             var submitBtn = document.getElementById('submitSignatureBtn');
             var statusDiv = document.getElementById('signatureStatusLine');
+            
+            // Gather all data for the backend to use for Email/PDF generation
             var printName = document.getElementById('signatoryNameInput').value.trim();
-            // Fetch the email saved from the contract page
-            var savedCustomerEmail = localStorage.getItem('current_wo_customer_email') || "No Email Provided";
+            var savedEmail = localStorage.getItem('current_wo_customer_email') || "No Email Provided";
+            var savedAddress = localStorage.getItem('current_wo_service_address') || "Address on file";
+            var savedScope = localStorage.getItem('current_wo_work_scope') || "Scope parameters on file";
+            var savedCost = localStorage.getItem('current_wo_est_cost') || "0.00";
 
-            if (!printName) {
-                alert("Validation Omission: Signatory printed name is mandatory.");
-                return;
-            }
-            if (!hasSigned) {
-                alert("Validation Omission: Finger sign-off input on canvas is missing.");
-                return;
-            }
+            if (!printName) { alert("Validation Omission: Signatory printed name is mandatory."); return; }
+            if (!hasSigned) { alert("Validation Omission: Finger sign-off input on canvas is missing."); return; }
 
             submitBtn.disabled = true;
-            statusDiv.innerHTML = "⏳ Transmitting authorization matrix to cloud drive...";
+            statusDiv.innerHTML = "⏳ Sending to database and emailing client...";
             statusDiv.style.color = "#475569";
 
             var base64SignatureData = canvas.toDataURL('image/png');
@@ -277,7 +289,10 @@
                     body: JSON.stringify({
                         route: "updateWorkOrderSignature",
                         customerName: printName,
-                        customerEmail: savedCustomerEmail,
+                        customerEmail: savedEmail,
+                        serviceAddress: savedAddress,
+                        workScope: savedScope,
+                        estimatedCost: savedCost,
                         base64Data: base64SignatureData,
                         filename: cleanFilename
                     })
@@ -285,27 +300,27 @@
                 let result = await response.json();
 
                 if (result.success) {
-                    // Populate Receipt Data
+                    // Populate On-Screen Receipt
+                    var now = new Date();
+                    document.getElementById('recDate').textContent = now.toLocaleString();
                     document.getElementById('recName').textContent = printName;
-                    document.getElementById('recAddress').textContent = localStorage.getItem('current_wo_service_address') || "Address on file";
-                    document.getElementById('recScope').textContent = localStorage.getItem('current_wo_work_scope') || "Scope parameters on file";
-                    
-                    let storedCost = parseFloat(localStorage.getItem('current_wo_est_cost') || 0);
-                    document.getElementById('recCost').textContent = storedCost.toFixed(2);
-                    
+                    document.getElementById('recEmail').textContent = savedEmail;
+                    document.getElementById('recAddress').textContent = savedAddress;
+                    document.getElementById('recScope').textContent = savedScope;
+                    document.getElementById('recCost').textContent = parseFloat(savedCost).toFixed(2);
                     document.getElementById('recSignatureImage').src = base64SignatureData;
 
-                    // Switch UI Views
+                    // Swap Views
                     document.getElementById('signatureFormArea').style.display = "none";
                     document.getElementById('contractReceiptArea').style.display = "block";
 
                 } else {
-                    statusDiv.innerHTML = "❌ Gateway Error: " + result.error;
+                    statusDiv.innerHTML = "❌ Server Error: " + result.error;
                     statusDiv.style.color = "var(--danger)";
                     submitBtn.disabled = false;
                 }
             } catch (err) {
-                statusDiv.innerHTML = "❌ Network Endpoint Error: Authorization stream broken.";
+                statusDiv.innerHTML = "❌ Network Error: Authorization stream broken.";
                 statusDiv.style.color = "var(--danger)";
                 submitBtn.disabled = false;
             }
