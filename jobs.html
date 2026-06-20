@@ -54,7 +54,9 @@
 <body>
 
     <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true') window.location.replace("index.html");
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
     </script>
 
     <div class="app-header">
@@ -72,15 +74,15 @@
             <div class="dispatch-card active-run">
                 <div class="job-time">⏰ 09:00 AM - Scheduled Arrival</div>
                 <div class="job-title" id="name_job1">Johnathan Miller</div>
-                <div class="job-meta">📍 <span id="addr_job1">1042 Birchwood Terrace, Clifton Park NY</span></div>
-                <div class="job-meta">📞 <span id="phone_job1">518-555-0142</span></div>
+                <div class="job-meta">📍 <span id="addr_job1">4125 West Bancroft St, Toledo, OH 43606</span></div>
+                <div class="job-meta">📞 <span id="phone_job1">419-555-0142</span></div>
                 <div class="job-meta">✉️ <span id="email_job1">j.miller@gmail.com</span></div>
-                <div style="display:none;" id="scope_job1">Level 2 Safety Inspection Sweep & Core Crown Seal Repair Setup.</div>
+                <div style="display:none;" id="scope_job1">Level 1 Structural Sweeping & Crown Deterioration Check Run.</div>
                 <div style="display:none;" id="cost_job1">249.00</div>
                 
                 <div class="card-actions-grid">
                     <button type="button" class="btn-utility btn-sms-trigger" onclick="triggerClientTransitNotification('job1')">
-                        💬 Notify On My Way
+                        自由 💬 Notify On My Way
                     </button>
                     <button type="button" class="btn-utility" style="background: var(--success);" onclick="loadJobTelemetryIntoCache('job1')">
                         🛠️ Deploy Hub Session
@@ -91,10 +93,10 @@
             <div class="dispatch-card">
                 <div class="job-time">⏰ 01:30 PM - Scheduled Arrival</div>
                 <div class="job-title" id="name_job2">Sarah Jenkins (Corporate Account)</div>
-                <div class="job-meta">📍 <span id="addr_job2">782 Oakridge Plaza, Suite B, Albany NY</span></div>
-                <div class="job-meta">📞 <span id="phone_job2">518-555-0199</span></div>
+                <div class="job-meta">📍 <span id="addr_job2">15500 South Dixie Hwy, Monroe, MI 48161</span></div>
+                <div class="job-meta">📞 <span id="phone_job2">734-555-0199</span></div>
                 <div class="job-meta">✉️ <span id="email_job2">sjenkins@oakmanagement.com</span></div>
-                <div style="display:none;" id="scope_job2">Stainless Steel Relining Allocation Block & Damper Cast Refit.</div>
+                <div style="display:none;" id="scope_job2">Titanium Stainless Steel Relining Structural Modification.</div>
                 <div style="display:none;" id="cost_job2">1850.00</div>
                 
                 <div class="card-actions-grid">
@@ -123,12 +125,18 @@
             var scope = document.getElementById('scope_' + idSuffix).innerText;
             var cost = document.getElementById('cost_' + idSuffix).innerText;
 
+            // Clear legacy stale array tokens to prevent cross-job calculation leaks
+            localStorage.removeItem('current_wo_price_book_items');
+            localStorage.removeItem('current_wo_itemized_json');
+
+            // Hydrate primary production memory registers
             localStorage.setItem('current_wo_customer_name', name);
             localStorage.setItem('current_wo_customer_email', email);
             localStorage.setItem('current_wo_service_address', addr);
             localStorage.setItem('current_wo_work_scope', scope);
             localStorage.setItem('current_wo_est_cost', cost);
             
+            // Hydrate backwards-compatible text fallbacks
             localStorage.setItem('cached_wo_cust', name);
             localStorage.setItem('cached_wo_email', email);
             localStorage.setItem('cached_wo_addr', addr);
