@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Secure Media Vault</title>
+    
+    <link rel="icon" type="image/jpeg" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
+
     <style>
         :root { 
             --primary: #0f172a; 
@@ -24,30 +29,42 @@
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
-        .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 35px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; }
-        p { color: #64748b; font-size: 13px; margin-bottom: 30px; line-height: 1.45; }
+        .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; text-align: left; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; }
+        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
+        p { color: #64748b; font-size: 13px; margin-bottom: 20px; line-height: 1.45; text-align: center; }
         
-        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 6px; letter-spacing: 0.5px; }
+        
+        select { width: 100%; padding: 12px; border: 2px solid var(--border); border-radius: 6px; font-size: 14px; background: #fff; outline: none; font-family: inherit; color: var(--primary); }
+        select:focus { border-color: var(--accent); }
+
+        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 20px auto 0 auto; display: block; box-shadow: 0 4px 6px rgba(242, 140, 40, 0.15); text-align: center; }
         .btn-action:hover { background-color: var(--accent-dark); }
         .btn-action:active { transform: scale(0.98); }
-        .btn-action.ready-state { background-color: var(--success); }
+        .btn-action.ready-state { background-color: var(--success); box-shadow: 0 4px 6px rgba(34, 197, 94, 0.15); }
         .btn-action.ready-state:hover { background-color: var(--success-dark); }
-        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; }
+        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        .status-msg { margin-top: 20px; font-weight: bold; font-size: 14px; color: #475569; min-height: 20px; }
+        .status-msg { margin-top: 20px; font-weight: bold; font-size: 13px; color: #475569; min-height: 20px; text-align: center; }
 
-        /* Preview Component Styles */
-        .preview-box-container { display: none; margin-bottom: 20px; text-align: center; }
+        /* Preview Thumbnail Layouts */
+        .preview-box-container { display: none; margin-bottom: 20px; text-align: center; background: #f8fafc; padding: 15px; border: 1px dashed var(--border); border-radius: 6px; }
         .preview-box-container label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .media-thumbnail { max-width: 100%; max-height: 220px; border: 1px solid var(--border); border-radius: 6px; object-fit: contain; background: #f1f5f9; padding: 4px; }
+        .media-thumbnail { max-width: 100%; max-height: 200px; border: 1px solid var(--border); border-radius: 6px; object-fit: contain; background: #f1f5f9; padding: 4px; }
+
+        /* FEATURE #4: PRESENTATION SLIDESHOW CAPABILITY SCREEN */
+        .presentation-title { font-size: 12px; background: var(--primary); color: white; padding: 12px; font-weight: bold; text-transform: uppercase; margin-top: 10px; border-radius: 8px 8px 0 0; text-align: center; letter-spacing: 0.5px; }
+        .slideshow-stage { background: #0f172a; padding: 25px 20px; border-radius: 0 0 8px 8px; text-align: center; color: white; min-height: 340px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .slide-img-frame { max-width: 100%; max-height: 240px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.1); margin-bottom: 12px; display: none; object-fit: contain; }
+        .slide-caption-title { font-size: 14px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .slide-empty-state { color: #94a3b8; font-size: 13px; font-style: italic; }
+        .slide-controls-row { display: flex; justify-content: space-between; width: 100%; max-width: 260px; margin-top: 15px; gap: 10px; }
+        .btn-slide { flex: 1; background: rgba(255,255,255,0.15); color: white; border: none; padding: 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: background 0.2s; }
+        .btn-slide:hover { background: rgba(255,255,255,0.25); }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
-        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
-        .nav-tab-btn span { font-size: 16px; }
-        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
     </style>
 </head>
 <body>
@@ -68,8 +85,20 @@
     <div class="app-container">
         <div class="app-card">
             <h3>Secure Field Upload Vault</h3>
-            <p>Tap below to instantly launch your phone camera lens array. Snap structural before/after damage proof to store it directly in the central office Drive files.</p>
+            <p>Launch your device camera array, assign a diagnostic component category tag, and sync your photographic proof directly to the office Drive files.</p>
             
+            <div class="form-group">
+                <label for="imageAssetTag">Structural Component Classification:</label>
+                <select id="imageAssetTag">
+                    <option value="Before: Internal Flue Defect Profile">Before: Internal Flue Defect Profile</option>
+                    <option value="After: Stainless Steel Relining Complete">After: Stainless Steel Relining Complete</option>
+                    <option value="Before: Concrete Crown Weather-Seal Splitting">Before: Concrete Crown Weather-Seal Splitting</option>
+                    <option value="After: CrownCoat Elastomeric Application">After: CrownCoat Elastomeric Application</option>
+                    <option value="Before: Firebox Firebrick Thermal Cracking">Before: Firebox Firebrick Thermal Cracking</option>
+                    <option value="After: Refractory Inner Chamber Rebuild">After: Refractory Inner Chamber Rebuild</option>
+                </select>
+            </div>
+
             <div id="imagePreviewContainer" class="preview-box-container">
                 <label>Captured Shot Verification</label>
                 <img id="imagePreviewTarget" class="media-thumbnail" src="" alt="Field Asset Thumbnail Preview">
@@ -78,30 +107,45 @@
             <input type="file" accept="image/*" capture="environment" id="fieldFileInput" style="display: none;" onchange="handleFileSelected()">
             
             <button type="button" class="btn-action" id="uploadSubmitBtn" onclick="handleVaultButtonClick()">Open Field Camera</button>
-            <div id="uploadStatusLine" class="status-msg">Ready for capture</div>
+            <div id="uploadStatusLine" class="status-msg">Ready for capture sequence</div>
+        </div>
+
+        <div class="presentation-title">🎬 Homeowner Safety Presentation Slideshow</div>
+        <div class="slideshow-stage">
+            <img id="presentationImageDisplay" class="slide-img-frame" src="" alt="Defect Slide Preview">
+            <div id="presentationCaptionDisplay" class="slide-caption-title"></div>
+            <div id="presentationEmptyState" class="slide-empty-state">No diagnostic assets uploaded during this operational session yet.</div>
+            
+            <div class="slide-controls-row">
+                <button type="button" class="btn-slide" onclick="pivotActivePresentationSlide(-1)">◀ Prev</button>
+                <button type="button" class="btn-slide" onclick="pivotActivePresentationSlide(1)">Next ▶</button>
+            </div>
         </div>
     </div>
 
-    <div class="fixed-bottom-nav-bar">
-        <div class="nav-tabs-scroll">
-            <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
-            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
-            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
-            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
-            <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
-            <a href="vault-upload.html" class="nav-tab-btn active-tab"><span>📁</span>Camera</a>
-        </div>
-    </div>
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         var hasAssetLoaded = false;
         
-        var browserLatitude = "PERMISSION_DENIED_OR_NOT_FOUND";
-        var browserLongitude = "PERMISSION_DENIED_OR_NOT_FOUND";
+        var browserLatitude = "GEO_BLOCKED_OR_UNAVAILABLE";
+        var browserLongitude = "GEO_BLOCKED_OR_UNAVAILABLE";
+        
+        // Presentation data engine arrays
+        var SLIDESHOW_REGISTRY = [];
+        var ACTIVE_SLIDE_INDEX = 0;
 
-        // Let Leo tap once to open camera, and tap a second time to execute upload sequence
+        window.addEventListener('DOMContentLoaded', function() {
+            // Re-render slideshow items if Leo accidentally refreshes the viewport window mid-run
+            var cachedSlides = localStorage.getItem('current_wo_slideshow_data');
+            if (cachedSlides) {
+                SLIDESHOW_REGISTRY = JSON.parse(cachedSlides);
+                renderActivePresentationSlide();
+            }
+        });
+
         function handleVaultButtonClick() {
             var fileInput = document.getElementById('fieldFileInput');
             if (!hasAssetLoaded) {
@@ -122,7 +166,6 @@
                 var selectedFile = fileInput.files[0];
                 hasAssetLoaded = true;
                 
-                // Mount internal local object URL to render immediate preview frame
                 imgPreview.src = URL.createObjectURL(selectedFile);
                 previewBox.style.display = "block";
 
@@ -139,10 +182,10 @@
                             statusDiv.style.color = "var(--success-dark)";
                         },
                         function(error) {
-                            statusDiv.innerHTML = "⚠️ GPS Warning: Hardware coordinates blocked. Proceeding with file upload.";
+                            statusDiv.innerHTML = "⚠️ GPS Warning: Lat/Lng offline. Continuing transmission.";
                             statusDiv.style.color = "var(--accent-dark)";
                         },
-                        { enableHighAccuracy: true, timeout: 7000 }
+                        { enableHighAccuracy: true, timeout: 6000 }
                     );
                 } else {
                     statusDiv.innerHTML = "📸 Asset captured! Ready for ledger transmission.";
@@ -155,6 +198,7 @@
             var fileInput = document.getElementById('fieldFileInput'); 
             var statusDiv = document.getElementById('uploadStatusLine');
             var actionBtn = document.getElementById('uploadSubmitBtn');
+            var classificationLabel = document.getElementById('imageAssetTag').value;
 
             actionBtn.disabled = true;
             statusDiv.innerHTML = "⏳ Encoding binary stream payload...";
@@ -166,10 +210,8 @@
             reader.onload = async function(e) {
                 var base64Data = e.target.result; 
                 
-                // BRAND CONTEXT ARCHITECTURE: Intelligently pulls active customer identity to pre-label files
                 var currentCustomerName = localStorage.getItem('current_wo_customer_name') || "";
                 var cleanSanitizedPrefix = currentCustomerName ? currentCustomerName.replace(/[^a-z0-9]/gi, '_') + "_" : "Global_";
-                
                 var cleanFilename = "Vault_" + cleanSanitizedPrefix + Date.now() + "_" + file.name;
                 var activeTechnician = localStorage.getItem('eversafe_authenticated_user') || "Unknown Crew";
                 
@@ -191,22 +233,68 @@
                     });
                     let result = await response.json();
                     
-                    if (result.success) {
+                    if (result.success || result.fileUrl) {
                         statusDiv.innerHTML = "✅ Asset written successfully to Secure Drive folder!";
                         statusDiv.style.color = "var(--success-dark)";
-                        resetVaultInterface();
+                        
+                        // Push uploaded photo structure cleanly into safety slideshow presentation timeline
+                        SLIDESHOW_REGISTRY.push({
+                            localData: base64Data, // local buffer ensures instantaneous visual display without remote Drive link load lag
+                            tagText: classificationLabel
+                        });
+                        
+                        localStorage.setItem('current_wo_slideshow_data', JSON.stringify(SLIDESHOW_REGISTRY));
+                        ACTIVE_SLIDE_INDEX = SLIDESHOW_REGISTRY.length - 1;
+                        renderActivePresentationSlide();
+                        
+                        setTimeout(resetVaultInterface, 1000);
                     } else {
                         statusDiv.innerHTML = "❌ Upload rejection rule thrown by office gateway server.";
                         statusDiv.style.color = "var(--danger)";
                         actionBtn.disabled = false;
                     }
                 } catch(err) { 
-                    statusDiv.innerHTML = "❌ Network Endpoint Error: Stream connection lost."; 
-                    statusDiv.style.color = "var(--danger)";
-                    actionBtn.disabled = false;
+                    // Network Failsafe: Mount copy into presentation engine regardless of spotty cell service drops
+                    statusDiv.innerHTML = "⚠️ Ledger Stream Exception (Local Cache Preservation Active)."; 
+                    statusDiv.style.color = "var(--accent-dark)";
+                    
+                    SLIDESHOW_REGISTRY.push({ localData: base64Data, tagText: classificationLabel + " (Offline Local)" });
+                    localStorage.setItem('current_wo_slideshow_data', JSON.stringify(SLIDESHOW_REGISTRY));
+                    ACTIVE_SLIDE_INDEX = SLIDESHOW_REGISTRY.length - 1;
+                    renderActivePresentationSlide();
+                    
+                    setTimeout(resetVaultInterface, 1500);
                 }
             }; 
             reader.readAsDataURL(file);
+        }
+
+        function renderActivePresentationSlide() {
+            var img = document.getElementById('presentationImageDisplay');
+            var cap = document.getElementById('presentationCaptionDisplay');
+            var emp = document.getElementById('presentationEmptyState');
+
+            if (SLIDESHOW_REGISTRY.length === 0) {
+                img.style.display = "none";
+                cap.innerText = "";
+                emp.style.display = "block";
+                return;
+            }
+
+            emp.style.display = "none";
+            img.src = SLIDESHOW_REGISTRY[ACTIVE_SLIDE_INDEX].localData;
+            img.style.display = "inline-block";
+            cap.innerText = `[Image ${ACTIVE_SLIDE_INDEX + 1} of ${SLIDESHOW_REGISTRY.length}] - ${SLIDESHOW_REGISTRY[ACTIVE_SLIDE_INDEX].tagText}`;
+        }
+
+        function pivotActivePresentationSlide(direction) {
+            if (SLIDESHOW_REGISTRY.length === 0) return;
+            ACTIVE_SLIDE_INDEX += direction;
+            
+            if (ACTIVE_SLIDE_INDEX >= SLIDESHOW_REGISTRY.length) ACTIVE_SLIDE_INDEX = 0;
+            if (ACTIVE_SLIDE_INDEX < 0) ACTIVE_SLIDE_INDEX = SLIDESHOW_REGISTRY.length - 1;
+            
+            renderActivePresentationSlide();
         }
 
         function resetVaultInterface() {
