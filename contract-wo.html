@@ -149,6 +149,7 @@
             localStorage.setItem('current_wo_customer_name', customerName);
             localStorage.setItem('current_wo_customer_email', customerEmail);
             localStorage.setItem('current_wo_service_address', serviceAddress);
+            localStorage.setItem('current_wo_work_scope', workScope);
             localStorage.setItem('current_wo_est_cost', estCost);
 
             var emailTextarea = document.getElementById('emailCopyTarget');
@@ -177,25 +178,26 @@
 
                 if (result.success) {
                     if (copySuccessful) {
-                        statusDiv.innerHTML = "✅ Work Order Written & Email Copied!";
+                        statusDiv.innerHTML = "✅ Work Order Written! Redirecting to signatures...";
                         statusDiv.style.color = "var(--success-dark)";
                     } else {
-                        statusDiv.innerHTML = "⚠️ Work Order Logged, Clipboard Blocked.";
+                        statusDiv.innerHTML = "⚠️ Logged, but clipboard blocked. Redirecting...";
                         statusDiv.style.color = "var(--accent-dark)";
                     }
-                    document.getElementById('customerNameInput').value = "";
-                    document.getElementById('customerEmailInput').value = "";
-                    document.getElementById('serviceAddressInput').value = "";
-                    document.getElementById('workScopeInput').value = "";
-                    document.getElementById('estimatedCostInput').value = "";
+                    
+                    // Automatically route the technician to the signature page after 1 second
+                    setTimeout(function() {
+                        window.location.href = "signatures.html";
+                    }, 1000);
+                    
                 } else {
                     statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
                     statusDiv.style.color = "var(--danger)";
+                    logBtn.disabled = false;
                 }
             } catch (err) {
                 statusDiv.innerHTML = "❌ Network Endpoint Error: Connection lost.";
                 statusDiv.style.color = "var(--danger)";
-            } finally {
                 logBtn.disabled = false;
             }
         }
