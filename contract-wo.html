@@ -3,59 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Work Order Dispatch</title>
+    <title>EverSafe Hub - Universal Bidding &amp; Estimator Engine</title>
+    
+    <link rel="icon" type="image/jpeg" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
+
     <style>
         :root { 
             --primary: #0f172a; 
             --primary-light: #1e293b; 
             --accent: #F28C28; 
-            --accent-dark: #d97706; 
-            --success: #22c55e;
-            --success-dark: #16a34a;
+            --accent-dark: #d97706;
             --bg: #f8fafc; 
             --border: #cbd5e1; 
+            --success: #22c55e; 
             --danger: #ef4444; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; text-align: center; }
         
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
-        .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 35px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
-        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
-        p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.45; text-align: center; }
+        .app-container { max-width: 950px; margin: 0 auto; padding: 0 15px; text-align: left; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
+        p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 20px; text-align: center; line-height: 1.45; }
+
+        label.control-header { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-top: 10px; letter-spacing: 0.5px; }
+        select, input[type="text"], input[type="number"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 4px; background: #fff; font-family: inherit; color: #0f172a; }
+        select { font-weight: bold; color: var(--primary); background: #f1f5f9; }
+
+        .grid-3 { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        @media (max-width: 600px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 8px; } }
+
+        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
         
-        .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .form-control { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; background: #fff; color: #0f172a; }
-        .form-control:focus { outline: none; border-color: var(--accent); }
-        select.form-control { height: 45px; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23475569'><path d='M0 0h10L5 6z'/></svg>"); background-repeat: no-repeat; background-position: right 12px center; background-size: 10px; }
+        .estimate-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .estimate-table th { background-color: #f1f5f9; padding: 10px; border: 1px solid var(--border); font-size: 11px; text-transform: uppercase; color: #475569; text-align: left; }
+        .estimate-table td { padding: 12px 10px; border: 1px solid var(--border); font-size: 13.5px; background: white; }
+        
+        .dimension-input { width: 70px; padding: 6px; text-align: center; font-weight: bold; border: 2px solid var(--accent); border-radius: 4px; }
+        .btn-delete { background: var(--danger); color: white; border: none; padding: 6px 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
+        .btn-add-item { background: var(--primary-light); color: white; border: none; padding: 12px; font-weight: bold; text-transform: uppercase; font-size: 11px; border-radius: 6px; cursor: pointer; width: 100%; letter-spacing: 0.5px; margin-top: 4px; }
+        
+        .summary-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .total-banner { font-size: 26px; font-weight: 800; color: #14532d; }
 
-        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 25px auto 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
-        .btn-action:hover { background-color: var(--accent-dark); }
-        .btn-action:active { transform: scale(0.98); }
-        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; }
-
-        .status-msg { margin-top: 20px; font-weight: bold; font-size: 14px; color: #475569; min-height: 20px; text-align: center; }
-
+        .btn-action { width: 100%; max-width: 360px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 25px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
-        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
-        .nav-tab-btn span { font-size: 16px; }
-        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
     </style>
 </head>
 <body>
-
-    <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
-            window.location.replace("index.html");
-        }
-    </script>
 
     <div class="app-header">
         <div class="brand-row">
@@ -66,188 +69,312 @@
 
     <div class="app-container">
         <div class="app-card">
-            <h3>Authorize Work Order Contract</h3>
-            <p>Publish field structural parameters directly into the central master dispatch log and copy customer correspondence copy.</p>
-            
-            <div class="form-group">
-                <label for="customerNameInput">Customer Name</label>
-                <input type="text" id="customerNameInput" class="form-control" placeholder="Client legal name" autocomplete="off">
-            </div>
+            <h3>Master Estimator Matrix</h3>
+            <p class="subtitle">Select the regional deployment zone, map structural operations from your preset catalogs, or construct custom line items on the fly.</p>
 
-            <div class="form-group">
-                <label for="customerEmailInput">Customer Email Address</label>
-                <input type="email" id="customerEmailInput" class="form-control" placeholder="client@example.com" autocomplete="email">
-            </div>
-
-            <div class="form-group">
-                <label for="serviceAddressInput">Service Address</label>
-                <input type="text" id="serviceAddressInput" class="form-control" placeholder="Jobsite physical address" autocomplete="off">
-            </div>
-
-            <div class="form-group">
-                <label for="workScopeInput">Detailed Scope of Work</label>
-                <input type="text" id="workScopeInput" class="form-control" placeholder="e.g. Tuckpointing north wall, seal crown">
-            </div>
-
-            <div class="form-group">
-                <label for="estimatedCostInput">Estimated Cost ($)</label>
-                <input type="number" id="estimatedCostInput" class="form-control" placeholder="0.00" step="0.01">
-            </div>
-
-            <div class="form-group">
-                <label for="ventingStatusSelect">Venting System Status</label>
-                <select id="ventingStatusSelect" class="form-control">
-                    <option value="PASS">PASS - Operational Integrity Secure</option>
-                    <option value="FAIL">FAIL - Structural Defect / Blockage</option>
-                    <option value="NOT_TESTED">UNTESTED - Accessibility Restriction</option>
+            <!-- REGIONAL MULTIPLIER CONFIGURATION -->
+            <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <label class="control-header" style="color: var(--accent-dark);">📍 Active Territory Price Book Multiplier</label>
+                <select id="regionalZoneSelector" onchange="recalculateMasterLedger()">
+                    <option value="NWO_CORE" selected>Northwest Ohio Core (Toledo, Perrysburg, Sandusky, Findlay)</option>
+                    <option value="SMI_RURAL">Southeast Michigan Rural / Border (Monroe, Adrian, Hillsdale)</option>
+                    <option value="SMI_PREMIUM">Southeast Michigan Premium Hub (Ann Arbor, Ypsilanti, Outer Wayne Co.)</option>
                 </select>
             </div>
 
-            <textarea id="emailCopyTarget" style="position: absolute; left: -9999px; top: 0;" readonly></textarea>
-            
-            <button type="button" class="btn-action" id="logContractBtn" onclick="executeLogContractAndEmailCopy()">Log Contract & Copy Email</button>
-            <div id="contractStatusLine" class="status-msg">Ready to synchronize log</div>
+            <div class="grid-3">
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Account Name</span><input type="text" id="wo_cust_view" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Service Location</span><input type="text" id="wo_addr_view" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
+            </div>
+
+            <!-- UNIVERSAL ITEM INJECTION INTERFACE -->
+            <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px;">
+                <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:var(--primary); margin-bottom:8px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
+                <div class="grid-2">
+                    <div>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Category Selector</span>
+                        <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
+                            <option value="MAINTENANCE">Maintenance &amp; Sweep Sweeps</option>
+                            <option value="MASONRY">Structural Masonry Restorations</option>
+                            <option value="RELINING">Venting &amp; Relining Systems</option>
+                            <option value="WATERPROOFING">Waterproofing &amp; Preventative Mitigation</option>
+                            <option value="COMPONENTS">Caps, Dampers &amp; Components</option>
+                            <option value="LOGISTICS">Logistics, Access Surcharges &amp; Custom</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Item Selection</span>
+                        <select id="catalogItemSelector">
+                            <!-- Populated dynamically via JS arrays -->
+                        </select>
+                    </div>
+                </div>
+                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white;">Inject Line Item Into Bid</button>
+            </div>
+
+            <!-- ACTIVE LEDGER VIEW -->
+            <div class="section-title">Compiled Project Cost Matrix</div>
+            <table class="estimate-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Task Description / Scope Parameter</th>
+                        <th style="width: 25%; text-align: center;">Variables / Unit Qty</th>
+                        <th style="width: 15%; text-align: right;">Total Price</th>
+                        <th style="width: 10%; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bidTableBody">
+                    <!-- Dynamic entries compile here -->
+                </tbody>
+            </table>
+
+            <!-- REVENUE VALUATION STATEMENT PANEL -->
+            <div class="summary-box">
+                <div>
+                    <span style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">Unified Regional Valuation</span>
+                    <div style="font-size:12px; color:#3f6212; font-weight:500;">Hardlocked subtotal adjusted for cross-border parameters</div>
+                </div>
+                <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>
+            </div>
+
+            <!-- 📊 INTERNAL EARNINGS PROFIT THERMOMETER CARD -->
+            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Internal Margin Telemetry Tracker (Leo's Eyes Only)</p>
+                <div class="grid-2" style="margin-bottom: 10px;">
+                    <div>
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Expenses ($) (Labor + Mat)</span>
+                        <input type="number" id="internalJobCostInput" value="150.00" oninput="calculateProfitThermometer()" step="0.01" style="border:1px solid #94a3b8; font-weight:bold;">
+                    </div>
+                    <div>
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>
+                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>
+                    </div>
+                </div>
+                <!-- Thermometer Visual Track -->
+                <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">
+                    <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>
+                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-action" onclick="lockBidAndAdvanceToSignatures()">Commit Universal Bid &amp; Sign ➔</button>
         </div>
     </div>
 
-    <div class="fixed-bottom-nav-bar">
-        <div class="nav-tabs-scroll">
-            <a href="contract-wo.html" class="nav-tab-btn active-tab"><span>🛠️</span>Contract</a>
-            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
-            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
-            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
-            <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
-            <a href="vault-upload.html" class="nav-tab-btn"><span>📁</span>Camera</a>
-        </div>
-    </div>
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
 
     <script>
-        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+        var COMPLETE_PRICE_BOOK = {
+            "SWEEP_STANDARD":   { cat: "MAINTENANCE", label: "Standard Cleaning Sweep & Safety Inspection", NWO_CORE: 249.00, SMI_RURAL: 269.00, SMI_PREMIUM: 299.00, dynamic: false },
+            "SWEEP_PELLET":     { cat: "MAINTENANCE", label: "Pellet/Woodstove Insert Deep Cleaning Run", NWO_CORE: 289.00, SMI_RURAL: 319.00, SMI_PREMIUM: 359.00, dynamic: false },
+            "DIAG_VIDEO":       { cat: "MAINTENANCE", label: "Level 3 Internal Flue Video Scan Diagnostic", NWO_CORE: 180.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
+            
+            "MAS_TUCKPOINT":    { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry (per sq ft)", NWO_CORE: 18.00, SMI_RURAL: 22.00, SMI_PREMIUM: 28.00, dynamic: true, defQty: 10, unit: "sq ft" },
+            "MAS_BRICK_SWAP":   { cat: "MASONRY", label: "Spalling Freeze-Thaw Face Brick Swap (per brick)", NWO_CORE: 25.00, SMI_RURAL: 28.00, SMI_PREMIUM: 34.00, dynamic: true, defQty: 5, unit: "bricks" },
+            "MAS_REBUILD_ROOF": { cat: "MASONRY", label: "Partial Rebuild From Roofline Up (per course)", NWO_CORE: 110.00, SMI_RURAL: 125.00, SMI_PREMIUM: 145.00, dynamic: true, defQty: 5, unit: "courses" },
+            "MAS_FIREBOX_SWAP": { cat: "MASONRY", label: "Firebox Firebrick Refit Restoration (per brick)", NWO_CORE: 35.00, SMI_RURAL: 38.00, SMI_PREMIUM: 45.00, dynamic: true, defQty: 10, unit: "bricks" },
+            
+            "LINE_STAINLESS":   { cat: "RELINING", label: "Titanium Stainless Steel Flue Relining (per linear ft)", NWO_CORE: 125.00, SMI_RURAL: 138.00, SMI_PREMIUM: 155.00, dynamic: true, defQty: 25, unit: "ft" },
+            "LINE_INSUL_BLANKET":{ cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Kit", NWO_CORE: 350.00, SMI_RURAL: 385.00, SMI_PREMIUM: 430.00, dynamic: false },
+            "LINE_SMOKE_CHAMBER":{ cat: "RELINING", label: "Smoke Chamber Pargeting Seal Spray Run (Smoktite)", NWO_CORE: 850.00, SMI_RURAL: 940.00, SMI_PREMIUM: 1050.00, dynamic: false },
 
-        // REAL-TIME MEMORY MATRIX: Instantly pre-fills data AND binds active key stroke auto-saving
+            "WATER_CROWN_SEAL": { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Coat", NWO_CORE: 275.00, SMI_RURAL: 305.00, SMI_PREMIUM: 345.00, dynamic: false },
+            "WATER_CROWN_POUR": { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild", NWO_CORE: 1200.00, SMI_RURAL: 1320.00, SMI_PREMIUM: 1480.00, dynamic: false },
+            "WATER_SPRAY":      { cat: "WATERPROOFING", label: "Chimney Saver Breathable Exterior Seal Spray", NWO_CORE: 195.00, SMI_RURAL: 215.00, SMI_PREMIUM: 245.00, dynamic: false },
+            
+            "COMP_CAP_SINGLE":  { cat: "COMPONENTS", label: "Stainless Steel Single Flue Exhaust Screen Cap", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
+            "COMP_CAP_MULTI":   { cat: "COMPONENTS", label: "Custom Stainless Steel Multi-Flue Top Mount Cap", NWO_CORE: 550.00, SMI_RURAL: 610.00, SMI_PREMIUM: 690.00, dynamic: false },
+            "COMP_DAMPER_TOP":  { cat: "COMPONENTS", label: "Lyemance Top-Mount Energy Saving Seal Damper", NWO_CORE: 395.00, SMI_RURAL: 435.00, SMI_PREMIUM: 490.00, dynamic: false },
+            "COMP_CLEANOUT_DOOR":{ cat: "COMPONENTS", label: "Cast Iron Base Ash Cleanout Assembly Door", NWO_CORE: 150.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
+
+            "LOG_SCAFFOLDING":  { cat: "LOGISTICS", label: "High Access Scaffolding Assembly Set Rigging Fee", NWO_CORE: 300.00, SMI_RURAL: 330.00, SMI_PREMIUM: 375.00, dynamic: false },
+            "LOG_BOOM_LIFT":    { cat: "LOGISTICS", label: "Heavy Equipment Boom Lift Transport Surcharge", NWO_CORE: 650.00, SMI_RURAL: 650.00, SMI_PREMIUM: 750.00, dynamic: false },
+            "LOG_CUSTOM_LINE":  { cat: "LOGISTICS", label: "[Custom Variable Field Construction Adjustment Line]", NWO_CORE: 1.00, SMI_RURAL: 1.00, SMI_PREMIUM: 1.00, dynamic: true, defQty: 100, unit: "units" }
+        };
+
+        var ACTIVE_RUNNING_ESTIMATE = [];
+
         window.addEventListener('DOMContentLoaded', function() {
-            var dataBindings = {
-                'customerNameInput': 'current_wo_customer_name',
-                'customerEmailInput': 'current_wo_customer_email',
-                'serviceAddressInput': 'current_wo_service_address',
-                'workScopeInput': 'current_wo_work_scope',
-                'estimatedCostInput': 'current_wo_est_cost',
-                'ventingStatusSelect': 'current_wo_venting_status'
-            };
+            document.getElementById('wo_cust_view').value = localStorage.getItem('current_wo_customer_name') || "Profile Not Deployed";
+            document.getElementById('wo_addr_view').value = localStorage.getItem('current_wo_service_address') || "Address Cache Offline";
+            document.getElementById('wo_date_view').value = new Date().toLocaleDateString();
 
-            Object.keys(dataBindings).forEach(function(elementId) {
-                var element = document.getElementById(elementId);
-                if (element) {
-                    // Populate field immediately if data exists in memory cache
-                    var cachedValue = localStorage.getItem(dataBindings[elementId]);
-                    if (cachedValue !== null) {
-                        element.value = cachedValue;
-                    }
-                    
-                    // Listen and save data on EVERY type stroke or drop-down change
-                    element.addEventListener('input', function() {
-                        localStorage.setItem(dataBindings[elementId], element.value);
-                    });
-                    if (element.tagName === 'SELECT') {
-                        element.addEventListener('change', function() {
-                            localStorage.setItem(dataBindings[elementId], element.value);
-                        });
-                    }
+            var mappingAddress = (localStorage.getItem('current_wo_service_address') || "").toUpperCase();
+            if (mappingAddress.includes(" MI") || mappingAddress.includes("MICHIGAN")) {
+                if (mappingAddress.includes("ANN ARBOR") || mappingAddress.includes("YPSILANTI")) {
+                    document.getElementById('regionalZoneSelector').value = "SMI_PREMIUM";
+                } else {
+                    document.getElementById('regionalZoneSelector').value = "SMI_RURAL";
                 }
-            });
+            }
+
+            populateItemsFromCategoryDropdown();
+            importSilentFlagsFromDiagnosticMaps();
+            recalculateMasterLedger();
         });
 
-        async function executeLogContractAndEmailCopy() {
-            var logBtn = document.getElementById('logContractBtn');
-            var statusDiv = document.getElementById('contractStatusLine');
-            
-            var customerName = document.getElementById('customerNameInput').value.trim();
-            var customerEmail = document.getElementById('customerEmailInput').value.trim();
-            var serviceAddress = document.getElementById('serviceAddressInput').value.trim();
-            var workScope = document.getElementById('workScopeInput').value.trim();
-            var estCost = document.getElementById('estimatedCostInput').value.trim();
-            var ventingStatus = document.getElementById('ventingStatusSelect').value;
+        function populateItemsFromCategoryDropdown() {
+            var selectedCategory = document.getElementById('catalogCategorySelector').value;
+            var itemSelector = document.getElementById('catalogItemSelector');
+            itemSelector.innerHTML = "";
 
-            if (!customerName || !customerEmail || !serviceAddress || !workScope || !estCost) {
-                alert("Validation Omission: All input fields are required.");
+            Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
+                var mapping = COMPLETE_PRICE_BOOK[key];
+                if (mapping.cat === selectedCategory) {
+                    itemSelector.innerHTML += `<option value="${key}">${mapping.label}</option>`;
+                }
+            });
+        }
+
+        function importSilentFlagsFromDiagnosticMaps() {
+            var inheritedFlags = JSON.parse(localStorage.getItem('current_wo_price_book_items')) || {};
+            ACTIVE_RUNNING_ESTIMATE = [];
+            ACTIVE_RUNNING_ESTIMATE.push({ key: "SWEEP_STANDARD", qty: 1 });
+
+            Object.keys(inheritedFlags).forEach(function(flagKey) {
+                var lookupTarget = "";
+                if (flagKey.includes("crown")) lookupTarget = "WATER_CROWN_SEAL";
+                else if (flagKey.includes("flashing")) lookupTarget = "L1_FLASHING";
+                else if (flagKey.includes("mortar") || flagKey.includes("tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
+                else if (flagKey.includes("brick") || flagKey.includes("spalling")) lookupTarget = "MAS_BRICK_SWAP";
+                else if (flagKey.includes("liner")) lookupTarget = "LINE_STAINLESS";
+
+                if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
+                    var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
+                    ACTIVE_RUNNING_ESTIMATE.push({ key: lookupTarget, qty: blueprint.dynamic ? blueprint.defQty : 1 });
+                }
+            });
+        }
+
+        function injectItemFromCatalogSelection() {
+            var itemKey = document.getElementById('catalogItemSelector').value;
+            if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) return;
+            var blueprint = COMPLETE_PRICE_BOOK[itemKey];
+            
+            var redundantCheck = ACTIVE_RUNNING_ESTIMATE.find(function(el) { return el.key === itemKey; });
+            if (redundantCheck && !blueprint.dynamic) { alert("Execution Alert: Line item has already been assigned."); return; }
+
+            ACTIVE_RUNNING_ESTIMATE.push({ key: itemKey, qty: blueprint.dynamic ? blueprint.defQty : 1 });
+            recalculateMasterLedger();
+        }
+
+        function recalculateMasterLedger() {
+            var zone = document.getElementById('regionalZoneSelector').value;
+            var tbody = document.getElementById('bidTableBody');
+            tbody.innerHTML = "";
+            var globalRunningSum = 0;
+            var textCompilationScopeLines = [];
+
+            if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
+                document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
+                calculateProfitThermometer(0);
                 return;
             }
 
-            logBtn.disabled = true;
-            statusDiv.innerHTML = "⏳ Synchronizing records with office ledger...";
-            statusDiv.style.color = "#475569";
+            ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
+                var spec = COMPLETE_PRICE_BOOK[item.key];
+                if (!spec) return;
 
-            var emailTextarea = document.getElementById('emailCopyTarget');
-            emailTextarea.value = `Dear ${customerName},\n\nThis message confirms that authorization terms for chimney servicing at ${serviceAddress} have been uploaded.\n\nScope of Authorization:\n${workScope}\n\nProject Valuation: $${parseFloat(estCost).toFixed(2)}\nVenting Infrastructure Status: ${ventingStatus}\n\nThank you for choosing EverSafe Chimney Repair.\n\nBest regards,\nEverSafe Operations Hub Team`;
+                var regionalRateValue = spec[zone];
+                var rowCalculatedTotal = regionalRateValue * item.qty;
+                globalRunningSum += rowCalculatedTotal;
 
-            var copySuccessful = enforceSystemClipboardCopy(emailTextarea);
-            var activeUser = localStorage.getItem('eversafe_authenticated_user') || "Field Crew Lead";
-
-            try {
-                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
-                    method: "POST",
-                    redirect: "follow",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({
-                        route: "appendWorkOrderContract",
-                        customerName: customerName,
-                        customerEmail: customerEmail,
-                        serviceAddress: serviceAddress,
-                        detailedScope: workScope,
-                        estimatedCost: estCost,
-                        ventingStatus: ventingStatus,
-                        leadTechnician: activeUser
-                    })
-                });
-                let result = await response.json();
-
-                if (result.success) {
-                    if (copySuccessful) {
-                        statusDiv.innerHTML = "✅ Work Order Written! Redirecting to signatures...";
-                        statusDiv.style.color = "var(--success-dark)";
-                    } else {
-                        statusDiv.innerHTML = "⚠️ Logged, but clipboard blocked. Redirecting...";
-                        statusDiv.style.color = "var(--accent-dark)";
-                    }
-                    
-                    // Hardened location replacement directive to instantly clear cache loops
-                    setTimeout(function() {
-                        window.location.replace("signatures.html");
-                    }, 1000);
-                    
+                var variableInputHtml = "";
+                if (spec.dynamic) {
+                    variableInputHtml = `<input type="number" class="dimension-input" value="${item.qty}" min="1" onchange="modifyQuantityIndexTarget(${idx}, this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">${spec.unit}</span>`;
                 } else {
-                    statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
-                    statusDiv.style.color = "var(--danger)";
-                    logBtn.disabled = false;
+                    variableInputHtml = `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed Flat</span>`;
                 }
-            } catch (err) {
-                statusDiv.innerHTML = "❌ Network Endpoint Error: Connection lost.";
-                statusDiv.style.color = "var(--danger)";
-                logBtn.disabled = false;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight: 700; font-size:13px; color: var(--primary);">${spec.label}</td>
+                        <td style="text-align: center;">${variableInputHtml}</td>
+                        <td style="text-align: right; font-weight: 800; color: #1e293b;">$${rowCalculatedTotal.toFixed(2)}</td>
+                        <td style="text-align: center;"><button type="button" class="btn-delete" onclick="dropItemFromActiveLedger(${idx})">Drop</button></td>
+                    </tr>
+                `;
+                textCompilationScopeLines.push(`- ${spec.label} (Qty: ${item.qty}) = $${rowCalculatedTotal.toFixed(2)}`);
+            });
+
+            document.getElementById('bidLiveTotalDisplay').innerText = "$" + globalRunningSum.toFixed(2);
+            localStorage.setItem('current_wo_est_cost', globalRunningSum.toFixed(2));
+            localStorage.setItem('current_wo_work_scope', textCompilationScopeLines.join(" \n"));
+            
+            // 📊 Trigger real-time thermometer calculation
+            calculateProfitThermometer(globalRunningSum);
+        }
+
+        // 📊 DYNAMIC REVENUE ANCHOR THERMOMETER ENGINE
+        function calculateProfitThermometer(forcedTotal) {
+            var priceCharged = typeof forcedTotal === 'number' ? forcedTotal : parseFloat(document.getElementById('bidLiveTotalDisplay').innerText.replace('$', '')) || 0;
+            var expenses = parseFloat(document.getElementById('internalJobCostInput').value) || 0;
+            
+            var thermBar = document.getElementById('thermometerBar');
+            var thermLabel = document.getElementById('thermometerLabel');
+            var percentDisplay = document.getElementById('marginPercentageDisplay');
+            
+            if (priceCharged <= 0) {
+                thermBar.style.width = "0%";
+                thermLabel.innerText = "Awaiting Proposal Data";
+                thermLabel.style.color = "#475569";
+                percentDisplay.innerText = "0.00%";
+                return;
+            }
+            
+            var grossProfit = priceCharged - expenses;
+            var marginPercent = (grossProfit / priceCharged) * 100;
+            
+            if (marginPercent < 0) marginPercent = 0;
+            if (marginPercent > 100) marginPercent = 100;
+            
+            percentDisplay.innerText = marginPercent.toFixed(2) + "%";
+            thermBar.style.width = marginPercent + "%";
+            
+            // Tier Matrix Evaluation: Bad (<40%), Good (40-54.9%), Better (55-69.9%), Best (>=70%)
+            if (marginPercent < 40) {
+                thermBar.style.backgroundColor = "#ef4444"; // Warning Red
+                thermLabel.innerText = "🔴 BAD MARGIN BRACKET - ADJUST VALUE COGS";
+                thermLabel.style.color = "#ffffff";
+            } else if (marginPercent >= 40 && marginPercent < 55) {
+                thermBar.style.backgroundColor = "#eab308"; // Amber Yellow
+                thermLabel.innerText = "🟡 GOOD MARGIN BRACKET - ACCEPTABLE STANDARD RUN";
+                thermLabel.style.color = "#0f172a";
+            } else if (marginPercent >= 55 && marginPercent < 70) {
+                thermBar.style.backgroundColor = "#22c55e"; // Success Green
+                thermLabel.innerText = "🟢 BETTER MARGIN BRACKET - EXCELLENT REGIONAL YIELD";
+                thermLabel.style.color = "#ffffff";
+            } else {
+                thermBar.style.backgroundColor = "#2563eb"; // Premier Corporate Blue
+                thermLabel.innerText = "🔵 BEST MARGIN BRACKET - HIGH NET ELITE PROFIT 🔥";
+                thermLabel.style.color = "#ffffff";
             }
         }
 
-        function enforceSystemClipboardCopy(textareaElement) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(textareaElement.value).catch(function() {});
-                return true;
-            }
-            try {
-                textareaElement.select();
-                textareaElement.setSelectionRange(0, 99999);
-                var success = document.execCommand('copy');
-                window.getSelection().removeAllRanges();
-                return success;
-            } catch (err) {
-                return false;
-            }
+        function modifyQuantityIndexTarget(idxTarget, newQuantityVal) {
+            var parse = parseInt(newQuantityVal) || 1;
+            if(parse < 1) parse = 1;
+            ACTIVE_RUNNING_ESTIMATE[idxTarget].qty = parse;
+            recalculateMasterLedger();
         }
 
-        function executeFieldCrewLogout() {
-            localStorage.clear(); 
-            window.location.replace("index.html");
+        function dropItemFromActiveLedger(idxTarget) {
+            ACTIVE_RUNNING_ESTIMATE.splice(idxTarget, 1);
+            recalculateMasterLedger();
         }
+
+        function lockBidAndAdvanceToSignatures() {
+            if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
+                alert("Matrix Authorization Exception: Ledger requires item allocations.");
+                return;
+            }
+            window.location.replace("signatures.html");
+        }
+
+        function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
 </html>
