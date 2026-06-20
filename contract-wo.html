@@ -75,6 +75,11 @@
             </div>
 
             <div class="form-group">
+                <label for="customerEmailInput">Customer Email Address</label>
+                <input type="email" id="customerEmailInput" class="form-control" placeholder="client@example.com" autocomplete="email">
+            </div>
+
+            <div class="form-group">
                 <label for="serviceAddressInput">Service Address</label>
                 <input type="text" id="serviceAddressInput" class="form-control" placeholder="Jobsite physical address" autocomplete="off">
             </div>
@@ -118,7 +123,6 @@
     </div>
 
     <script>
-        // Insert your specific App Script deployment web app URL here
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
 
         async function executeLogContractAndEmailCopy() {
@@ -126,12 +130,13 @@
             var statusDiv = document.getElementById('contractStatusLine');
             
             var customerName = document.getElementById('customerNameInput').value.trim();
+            var customerEmail = document.getElementById('customerEmailInput').value.trim();
             var serviceAddress = document.getElementById('serviceAddressInput').value.trim();
             var workScope = document.getElementById('workScopeInput').value.trim();
             var estCost = document.getElementById('estimatedCostInput').value.trim();
             var ventingStatus = document.getElementById('ventingStatusSelect').value;
 
-            if (!customerName || !serviceAddress || !workScope || !estCost) {
+            if (!customerName || !customerEmail || !serviceAddress || !workScope || !estCost) {
                 alert("Validation Omission: All input fields are required.");
                 return;
             }
@@ -139,6 +144,12 @@
             logBtn.disabled = true;
             statusDiv.innerHTML = "⏳ Synchronizing records with office ledger...";
             statusDiv.style.color = "#475569";
+
+            // Save details to LocalStorage for seamless data transfer to next pages
+            localStorage.setItem('current_wo_customer_name', customerName);
+            localStorage.setItem('current_wo_customer_email', customerEmail);
+            localStorage.setItem('current_wo_service_address', serviceAddress);
+            localStorage.setItem('current_wo_est_cost', estCost);
 
             var emailTextarea = document.getElementById('emailCopyTarget');
             emailTextarea.value = `Dear ${customerName},\n\nThis message confirms that authorization terms for chimney servicing at ${serviceAddress} have been uploaded.\n\nScope of Authorization:\n${workScope}\n\nProject Valuation: $${parseFloat(estCost).toFixed(2)}\nVenting Infrastructure Status: ${ventingStatus}\n\nThank you for choosing EverSafe Chimney Repair.\n\nBest regards,\nEverSafe Operations Hub Team`;
@@ -154,6 +165,7 @@
                     body: JSON.stringify({
                         route: "appendWorkOrderContract",
                         customerName: customerName,
+                        customerEmail: customerEmail,
                         serviceAddress: serviceAddress,
                         detailedScope: workScope,
                         estimatedCost: estCost,
@@ -172,6 +184,7 @@
                         statusDiv.style.color = "var(--accent-dark)";
                     }
                     document.getElementById('customerNameInput').value = "";
+                    document.getElementById('customerEmailInput').value = "";
                     document.getElementById('serviceAddressInput').value = "";
                     document.getElementById('workScopeInput').value = "";
                     document.getElementById('estimatedCostInput').value = "";
