@@ -1,11 +1,11 @@
 /**
  * EverSafe Operations Hub - Universal Slider Navigation Router
- * Architecture: Self-Styling Smooth Overflow Scroll Component
- * Layout Specification: 10-Node Linear Pipeline (Hardlocked Width)
+ * Version: 8.5 Production Complete
+ * Engineering Focus: Fluid Mobile Elastic Scroll with Even Desktop Distribution Overrides
  */
 window.addEventListener('DOMContentLoaded', function() {
     
-    // 1. INJECT HARDWARE-ACCELERATED SLIDING BAR STYLES
+    // 1. INJECT HARDWARE-ACCELERATED DUAL-PROFILE STYLES
     if (!document.getElementById('eversafe-master-nav-styles')) {
         var styleElement = document.createElement('style');
         styleElement.id = 'eversafe-master-nav-styles';
@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 -webkit-overflow-scrolling: touch !important; /* Buttery smooth iOS momentum physics */
                 scrollbar-width: none !important; /* Hides native scroll track on Firefox */
             }
-            /* Hides native scrollbar rails on Chrome, Safari, and newer Edge viewports */
+            /* Hides native scrollbar rails on Chrome, Safari, and newer desktop Edge viewports */
             .nav-tabs-scroll::-webkit-scrollbar { 
                 display: none !important; 
                 width: 0 !important;
@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 flex-direction: column !important; 
                 align-items: center !important; 
                 justify-content: center !important; 
-                flex: 0 0 76px !important; /* HARDLOCK WIDTH: Icons cannot squeeze or break layouts */
+                flex: 0 0 76px !important; /* Hardlock mobile tracking parameters */
                 height: 100% !important; 
                 background: transparent !important; 
                 border: none !important; 
@@ -81,6 +81,20 @@ window.addEventListener('DOMContentLoaded', function() {
             a.nav-tab-btn.active-tab:hover, a.nav-tab-btn.active-tab:visited {
                 color: #F28C28 !important;
             }
+
+            /* 🖥️ RESPONSIVE DESKTOP OVERRIDE MATRIX (Even Grid Spreading) */
+            @media (min-width: 850px) {
+                .nav-tabs-scroll {
+                    justify-content: space-around !important; /* Uniform horizontal item distribution */
+                    overflow-x: visible !important;
+                    max-width: 1200px !important;
+                    margin: 0 auto !important; /* Center anchor container on ultra-wide monitors */
+                }
+                a.nav-tab-btn, .nav-tab-btn {
+                    flex: 1 1 auto !important; /* Forces items to scale and share leftover row space equally */
+                    max-width: 110px !important; /* Safety constraint stops prose layout stretching */
+                }
+            }
         `;
         document.head.appendChild(styleElement);
     }
@@ -89,7 +103,7 @@ window.addEventListener('DOMContentLoaded', function() {
     var navContainer = document.querySelector('.fixed-bottom-nav-bar');
     if (!navContainer) return;
 
-    // 3. RUNTIME ROUTE DETECTION (Strips paths up to the file extension handle)
+    // 3. RUNTIME ROUTE DETECTION
     var currentPath = window.location.pathname;
     var currentFile = currentPath.substring(currentPath.lastIndexOf('/') + 1) || "index.html";
 
@@ -99,11 +113,11 @@ window.addEventListener('DOMContentLoaded', function() {
         { link: "inspection-l1.html", icon: "📑", label: "L1 Map" },
         { link: "inspection-l2.html", icon: "📋", label: "L2 Map" },
         { link: "proposals.html", icon: "📊", label: "Options" },
-        { link: "estimate.html", icon: "🧮", label: "Estimate" },   // Private Cost & Profit Matrix
-        { link: "contract-wo.html", icon: "📜", label: "Contract" },  // Client-Facing Presentation Review
+        { link: "estimate.html", icon: "🧮", label: "Estimate" },   
+        { link: "contract-wo.html", icon: "📜", label: "Contract" },  
         { link: "signatures.html", icon: "✍️", label: "Sign" },
         { link: "billing-invoice.html", icon: "🧾", label: "Billing" },
-        { link: "dispatches.html", icon: "📁", label: "Vault" },     // Historical Search Panel
+        { link: "dispatches.html", icon: "📁", label: "Vault" },     
         { link: "vault-upload.html", icon: "📷", label: "Camera" }
     ];
 
@@ -119,11 +133,13 @@ window.addEventListener('DOMContentLoaded', function() {
     // 6. EXECUTE GRAPHICAL INJECTION
     navContainer.innerHTML = navHtml;
     
-    // 7. AUTO-CENTER SMART FOCUS: Positions the track automatically based on where Leo is working
-    setTimeout(function() {
-        var activeElement = navContainer.querySelector('.active-tab');
-        if (activeElement) {
-            activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-        }
-    }, 120);
+    // 7. AUTO-CENTER SMART FOCUS (Mobile Viewports Only)
+    if (window.innerWidth < 850) {
+        setTimeout(function() {
+            var activeElement = navContainer.querySelector('.active-tab');
+            if (activeElement) {
+                activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }, 120);
+    }
 });
