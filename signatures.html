@@ -34,8 +34,9 @@
         .signature-wrapper { position: relative; width: 100%; border: 2px dashed #94a3b8; border-radius: 6px; background: #fff; margin-bottom: 12px; touch-action: none; }
         #signatureCanvas { display: block; width: 100%; height: 180px; cursor: crosshair; }
         
-        .canvas-controls { display: flex; justify-content: flex-end; margin-bottom: 25px; }
+        .canvas-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .btn-clear { background: transparent; border: none; color: var(--danger); font-size: 11px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 0.5px; padding: 5px; }
+        .btn-back-link { background: transparent; border: none; color: #64748b; font-size: 11px; font-weight: bold; text-transform: uppercase; cursor: pointer; text-decoration: none; padding: 5px; }
 
         .form-group { margin-bottom: 18px; }
         .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-bottom: 6px; letter-spacing: 0.5px; }
@@ -64,8 +65,8 @@
         .brand-info { flex: 1; }
         .brand-info h2 { font-size: 18px; margin-bottom: 4px; color: var(--primary); text-transform: uppercase; }
         .brand-info p { font-size: 12px; margin-bottom: 2px; color: #475569; text-align: left; line-height: 1.4; }
-        .brand-seals { display: flex; gap: 10px; align-items: center; }
-        .brand-seals img { max-height: 50px; width: auto; object-fit: contain; }
+        .brand-seals { display: flex; gap: 14px; align-items: center; }
+        .brand-seals img { max-height: 52px; width: auto; object-fit: contain; }
 
         .receipt-title { color: #0f172a; font-size: 16px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
         .receipt-row { margin-bottom: 12px; font-size: 13px; color: #334155; }
@@ -105,7 +106,6 @@
     <div class="app-container">
         <div class="app-card">
             
-            <!-- ACTIVE SIGNATURE FORM AREA -->
             <div id="signatureFormArea">
                 <h3>Customer Sign-Off</h3>
                 <p>Please present this layout array to the property owner to collect their digital structural authorization acknowledgment.</p>
@@ -125,6 +125,7 @@
                         <canvas id="signatureCanvas"></canvas>
                     </div>
                     <div class="canvas-controls">
+                        <button type="button" class="btn-back-link" onclick="window.location.href='contract-wo.html'">&larr; Modify Contract Elements</button>
                         <button type="button" class="btn-clear" onclick="clearSignatureCanvas()">Clear Canvas</button>
                     </div>
                 </div>
@@ -133,10 +134,8 @@
                 <div id="signatureStatusLine" class="status-msg">Awaiting digital authorization...</div>
             </div>
 
-            <!-- HIDDEN OFFICIAL CONTRACT RECEIPT AREA (Shows on Success) -->
             <div id="contractReceiptArea" class="receipt-container">
                 
-                <!-- Professional Branding Header -->
                 <div class="receipt-brand-header">
                     <div class="brand-info">
                         <h2>EverSafe Chimney Repair</h2>
@@ -145,9 +144,7 @@
                         <p>Northwest Ohio & Southeast Michigan</p>
                     </div>
                     <div class="brand-seals">
-                        <!-- Pulls your generic logo, if you have a full specific logo image path, replace '/favicon.png' below -->
-                        <img src="/favicon.png" alt="EverSafe Logo" onerror="this.style.display='none'">
-                        <!-- Pulls your explicit BBB seal -->
+                        <img src="favicon.png" alt="EverSafe Logo" onerror="this.style.display='none'">
                         <img src="https://eversafechimneyrepair.com/images/eversafe-chimney-bbb-accreditation-seal-blue.png" alt="BBB Accredited Business">
                     </div>
                 </div>
@@ -168,17 +165,21 @@
                 
                 <div class="terms-block">
                     <div style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase; margin-bottom: 8px;">Terms Acknowledged:</div>
-                    <div style="font-size: 11px; color: #000; line-height: 1.5; margin-bottom: 20px; text-align: justify;">
+                    <div style="font-size: 11px; color: #000; line-height: 1.5; margin-bottom: 15px; text-align: justify;">
                         <strong>Authorization:</strong> By signing below, you authorize EverSafe Chimney Repair LLC to perform the masonry, sweeping, and/or venting services outlined in this agreement. All operations are executed in conformance with local fire safety codes and NFPA 211 standards.<br><br>
                         <strong>Unforeseen Conditions:</strong> Chimney systems frequently conceal internal deterioration. If our technicians discover structural defects or hazards beyond the original visual scope once operations commence, we will immediately pause work and consult with you regarding necessary adjustments before proceeding.<br><br>
-                        <strong>Payment & Warranties:</strong> Payment in full is due upon completion of the specified work unless prior arrangements are documented. We guarantee our craftsmanship; however, pre-existing structural decay or moisture intrusion outside the scope of this work is not covered. We respect your property and will maintain a safe, professional workspace throughout the duration of the project.
+                        <strong>Payment Terms:</strong> Payment in full is due upon completion of the specified work unless prior arrangements are documented. We respect your property and will maintain a clean, professional workspace throughout the project duration.
+                    </div>
+
+                    <div style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase; margin-bottom: 8px;">5-Year Limited Craftsmanship Warranty:</div>
+                    <div style="font-size: 11px; color: #000; line-height: 1.5; margin-bottom: 20px; text-align: justify;">
+                        EverSafe Chimney Repair LLC guarantees that all premium masonry restoration, crown reconstructions, and tuckpointing work completed under this contract will remain free from defects in installation craftsmanship for a duration of **five (5) years** from the completion date. This warranty explicitly covers cracking or structural separation of newly laid mortar compounds resulting directly from workmanship. This warranty excludes damage induced by subsequent structural foundation settling, lightning strikes, chimney grease fires, tree impacts, third-party structural alterations, or chemical applications executed by outside entities.
                     </div>
 
                     <div class="receipt-row" style="font-weight: bold; margin-bottom: 5px;">Digital Signature Lock:</div>
                     <img id="recSignatureImage" class="receipt-signature-img" src="" alt="Customer Signature">
                 </div>
                 
-                <!-- Action Buttons: One for PDF/Print, one to move forward -->
                 <button type="button" class="btn-action btn-secondary" onclick="window.print()">🖨️ Print / Save as PDF</button>
                 <button type="button" class="btn-action" onclick="window.location.href='billing-invoice.html'">Proceed to Billing &rarr;</button>
             </div>
@@ -186,7 +187,6 @@
         </div>
     </div>
 
-    <!-- ... Fixed Bottom Nav Code ... -->
     <div class="fixed-bottom-nav-bar">
         <div class="nav-tabs-scroll">
             <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
@@ -300,7 +300,6 @@
             var submitBtn = document.getElementById('submitSignatureBtn');
             var statusDiv = document.getElementById('signatureStatusLine');
             
-            // Gather all data for the backend to use for Email/PDF generation
             var printName = document.getElementById('signatoryNameInput').value.trim();
             var savedEmail = localStorage.getItem('current_wo_customer_email') || "No Email Provided";
             var savedAddress = localStorage.getItem('current_wo_service_address') || "Address on file";
@@ -336,7 +335,6 @@
                 let result = await response.json();
 
                 if (result.success) {
-                    // Populate On-Screen Receipt
                     var now = new Date();
                     document.getElementById('recDate').textContent = now.toLocaleString();
                     document.getElementById('recName').textContent = printName;
@@ -346,7 +344,6 @@
                     document.getElementById('recCost').textContent = parseFloat(savedCost).toFixed(2);
                     document.getElementById('recSignatureImage').src = base64SignatureData;
 
-                    // Swap Views
                     document.getElementById('signatureFormArea').style.display = "none";
                     document.getElementById('contractReceiptArea').style.display = "block";
 
