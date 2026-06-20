@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EverSafe Hub - Daily Jobs Manifest</title>
+    
+    <link rel="icon" type="image/jpeg" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
+
+    <style>
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --success: #22c55e; 
+            --danger: #ef4444; 
+            --sms-blue: #007aff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
+        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+
+        .app-container { max-width: 650px; margin: 0 auto; padding: 0 15px; text-align: left; }
+        h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; color: var(--primary); }
+        p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 22px; text-align: center; line-height: 1.45; }
+
+        /* Job Card Layout Styles */
+        .dispatch-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); margin-bottom: 15px; position: relative; }
+        .dispatch-card.active-run { border-left: 5px solid var(--accent); }
+        
+        .job-time { font-size: 11px; font-weight: 800; color: var(--accent-dark); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .job-title { font-size: 16px; font-weight: bold; color: var(--primary); margin-bottom: 4px; }
+        .job-meta { font-size: 13px; color: #475569; margin-bottom: 2px; }
+        
+        .card-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        
+        .btn-utility { background: var(--primary-light); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 11px; cursor: pointer; text-align: center; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+        .btn-utility:hover { background: var(--primary); }
+        .btn-sms-trigger { background: #f0f7ff; color: var(--sms-blue); border: 1px solid #bae6fd; }
+        .btn-sms-trigger:hover { background: #e0f2fe; }
+
+        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
+    </style>
+</head>
+<body>
+
+    <script>
+        if (localStorage.getItem('eversafe_session_active') !== 'true') window.location.replace("index.html");
+    </script>
+
+    <div class="app-header">
+        <div class="brand-row">
+            <div class="brand-text">EverSafe Operations Hub</div>
+            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <h3>Daily Field Work Orders</h3>
+        <p class="subtitle">Deploy your active field session workspace cache to populate form subtotals automatically, or broadcast transit status updates to homeowners.</p>
+
+        <div id="manifestContainer">
+            <div class="dispatch-card active-run">
+                <div class="job-time">⏰ 09:00 AM - Scheduled Arrival</div>
+                <div class="job-title" id="name_job1">Johnathan Miller</div>
+                <div class="job-meta">📍 <span id="addr_job1">1042 Birchwood Terrace, Clifton Park NY</span></div>
+                <div class="job-meta">📞 <span id="phone_job1">518-555-0142</span></div>
+                <div class="job-meta">✉️ <span id="email_job1">j.miller@gmail.com</span></div>
+                <div style="display:none;" id="scope_job1">Level 2 Safety Inspection Sweep & Core Crown Seal Repair Setup.</div>
+                <div style="display:none;" id="cost_job1">249.00</div>
+                
+                <div class="card-actions-grid">
+                    <button type="button" class="btn-utility btn-sms-trigger" onclick="triggerClientTransitNotification('job1')">
+                        💬 Notify On My Way
+                    </button>
+                    <button type="button" class="btn-utility" style="background: var(--success);" onclick="loadJobTelemetryIntoCache('job1')">
+                        🛠️ Deploy Hub Session
+                    </button>
+                </div>
+            </div>
+
+            <div class="dispatch-card">
+                <div class="job-time">⏰ 01:30 PM - Scheduled Arrival</div>
+                <div class="job-title" id="name_job2">Sarah Jenkins (Corporate Account)</div>
+                <div class="job-meta">📍 <span id="addr_job2">782 Oakridge Plaza, Suite B, Albany NY</span></div>
+                <div class="job-meta">📞 <span id="phone_job2">518-555-0199</span></div>
+                <div class="job-meta">✉️ <span id="email_job2">sjenkins@oakmanagement.com</span></div>
+                <div style="display:none;" id="scope_job2">Stainless Steel Relining Allocation Block & Damper Cast Refit.</div>
+                <div style="display:none;" id="cost_job2">1850.00</div>
+                
+                <div class="card-actions-grid">
+                    <button type="button" class="btn-utility btn-sms-trigger" onclick="triggerClientTransitNotification('job2')">
+                        💬 Notify On My Way
+                    </button>
+                    <button type="button" class="btn-utility" style="background: var(--success);" onclick="loadJobTelemetryIntoCache('job2')">
+                        🛠️ Deploy Hub Session
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
+
+    <script>
+        var DRIVER_NAME = localStorage.getItem('eversafe_authenticated_user') || "Leo";
+
+        function loadJobTelemetryIntoCache(idSuffix) {
+            var name = document.getElementById('name_' + idSuffix).innerText;
+            var addr = document.getElementById('addr_' + idSuffix).innerText;
+            var phone = document.getElementById('phone_' + idSuffix).innerText;
+            var email = document.getElementById('email_' + idSuffix).innerText;
+            var scope = document.getElementById('scope_' + idSuffix).innerText;
+            var cost = document.getElementById('cost_' + idSuffix).innerText;
+
+            localStorage.setItem('current_wo_customer_name', name);
+            localStorage.setItem('current_wo_customer_email', email);
+            localStorage.setItem('current_wo_service_address', addr);
+            localStorage.setItem('current_wo_work_scope', scope);
+            localStorage.setItem('current_wo_est_cost', cost);
+            
+            localStorage.setItem('cached_wo_cust', name);
+            localStorage.setItem('cached_wo_email', email);
+            localStorage.setItem('cached_wo_addr', addr);
+            localStorage.setItem('cached_inv_scope', scope);
+            localStorage.setItem('cached_inv_subtotal', cost);
+
+            alert("🚀 Hub Session Synchronized!\nLoaded Workspace for: " + name);
+            window.location.replace("inspection-l1.html");
+        }
+
+        function triggerClientTransitNotification(idSuffix) {
+            var clientName = document.getElementById('name_' + idSuffix).innerText.split('(')[0].trim();
+            var rawPhone = document.getElementById('phone_' + idSuffix).innerText.replace(/\D/g, ''); 
+            
+            if(!rawPhone) { alert("Data Error: Client does not have a registered phone parameter mapping."); return; }
+
+            var messageText = "Hi " + clientName + ", this is " + DRIVER_NAME + " from EverSafe Chimney Repair. I've compiled my field gear and I am officially on my way to your service location. See you shortly!";
+            
+            var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            var smsLinkSeparator = isIOS ? "&" : "?";
+            var baseSmsSchemeUrl = "sms:+" + rawPhone + smsLinkSeparator + "body=" + encodeURIComponent(messageText);
+
+            var smsTriggerLink = document.createElement("a");
+            smsTriggerLink.setAttribute("href", baseSmsSchemeUrl);
+            smsTriggerLink.style.display = "none";
+            document.body.appendChild(smsTriggerLink);
+            smsTriggerLink.click();
+            
+            setTimeout(function() {
+                document.body.removeChild(smsTriggerLink);
+            }, 100);
+        }
+
+        function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
+    </script>
+</body>
+</html>
