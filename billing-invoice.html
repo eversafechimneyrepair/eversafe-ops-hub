@@ -144,21 +144,33 @@
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
 
         window.addEventListener('DOMContentLoaded', function() {
+            // Re-inflate values from cache on load
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || localStorage.getItem('cached_wo_email') || "";
             document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || localStorage.getItem('cached_wo_addr') || "";
             document.getElementById('inv_scope').value = localStorage.getItem('current_wo_work_scope') || localStorage.getItem('cached_inv_scope') || "";
             document.getElementById('inv_subtotal').value = localStorage.getItem('current_wo_est_cost') || localStorage.getItem('cached_inv_subtotal') || "0.00";
             
+            // Set up active keystroke tracking loops to prevent data loss on page refreshes
+            document.getElementById('inv_cust').addEventListener('input', function() { localStorage.setItem('current_wo_customer_name', this.value); });
+            document.getElementById('inv_email').addEventListener('input', function() { localStorage.setItem('current_wo_customer_email', this.value); });
+            document.getElementById('inv_addr').addEventListener('input', function() { localStorage.setItem('current_wo_service_address', this.value); });
+            document.getElementById('inv_scope').addEventListener('input', function() { localStorage.setItem('current_wo_work_scope', this.value); });
+
             runTotalsCalc();
             initializeBillingCanvasPads();
             mountSecureSquareSDKForm();
             toggleSquareDisplayFields(); 
+            
+            // SQUARE RESPONSE RADAR: Intercept incoming transaction parameter callbacks
+            checkForActiveSquareReturnPayloads();
         });
 
         function runTotalsCalc() {
             var v = parseFloat(document.getElementById('inv_subtotal').value) || 0;
             document.getElementById('inv_final_total').value = v.toFixed(2);
+            // Lock value instantly to cache so redirect loops cannot clear out the balance total
+            localStorage.setItem('current_wo_est_cost', v.toFixed(2));
         }
 
         function toggleSquareDisplayFields() {
@@ -295,7 +307,6 @@
             }
         }
 
-        // DUAL-OS INTENT ENGINE WITH REALTIME LOGGING SYSTEM
         function processSquareAppMobileIntent() {
             var statusLine = document.getElementById('invoiceStatusLine');
             if (statusLine) {
@@ -330,24 +341,65 @@
 
             var userAgent = navigator.userAgent || navigator.vendor;
             var isAndroid = /android/i.test(userAgent);
-            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            var jsonPayloadString = JSON.stringify(dataPayload);
+            var targetDeepLink = "";
+
+            if (isAndroid) {
+                targetDeepLink = "intent://payment/create?data=" + encodeURIComponent(jsonPayloadString) +
+                    "#Intent;scheme=square-commerce-v1;package=com.squareup;S.browser_fallback_url=" + 
+                    encodeURIComponent(callbackUrl) + ";end";
+            } else {
+                targetDeepLink = "square-commerce-v1://payment/create?data=" + encodeURIComponent(jsonPayloadString);
+            }
 
             if (statusLine) {
                 statusLine.innerHTML = "📡 Handing payload off to native Square POS App architecture...";
                 statusLine.style.color = "#2563eb";
             }
 
-            var jsonPayloadString = JSON.stringify(dataPayload);
+            // PROGRAMMATIC ANCHOR TRIGGER: Bypasses native webview sandboxing rules
+            var virtualAnchor = document.createElement("a");
+            virtualAnchor.setAttribute("href", targetDeepLink);
+            virtualAnchor.style.display = "none";
+            document.body.appendChild(virtualAnchor);
+            virtualAnchor.click();
+            
+            setTimeout(function() {
+                document.body.removeChild(virtualAnchor);
+            }, 100);
+        }
 
-            if (isAndroid) {
-                var androidIntentUrl = 
-                    "intent://payment/create?data=" + encodeURIComponent(jsonPayloadString) +
-                    "#Intent;scheme=square-commerce-v1;package=com.squareup;S.browser_fallback_url=" + 
-                    encodeURIComponent(callbackUrl) + ";end";
-                window.location.href = androidIntentUrl;
-            } else {
-                var iosSchemeUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(jsonPayloadString);
-                window.location.assign(iosSchemeUrl);
+        // PARSE THE URL RETURN PARAMS DELIVERED FROM THE SQUARE HARDWARE HANDOFF
+        function checkForActiveSquareReturnPayloads() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var statusLine = document.getElementById('invoiceStatusLine');
+            
+            if (urlParams.has('data')) {
+                try {
+                    var responseData = JSON.parse(decodeURIComponent(urlParams.get('data')));
+                    
+                    if (responseData.status === 'ok' || responseData.status === 'success') {
+                        var transId = responseData.client_transaction_id || responseData.transaction_id || "SQUARE_POS_CHARGED";
+                        if (statusLine) {
+                            statusLine.innerHTML = "✅ Square Payment Confirmed! Processing file vault upload layers...";
+                            statusLine.style.color = "var(--success)";
+                        }
+                        document.getElementById('inv_status').value = "PAID_SETTLED";
+                        
+                        // Pass confirmation token off to spreadsheet ledger automatically
+                        uploadInvoiceToOfficeSheet(transId);
+                    } 
+                    else if (responseData.status === 'error' || responseData.error_code) {
+                        var errorCode = responseData.error_code || "TRANSACTION_REJECTED";
+                        alert("Square Hardware Processing Error: " + errorCode);
+                        if (statusLine) {
+                            statusLine.innerHTML = "❌ Payment Declined/Canceled: " + errorCode;
+                            statusLine.style.color = "var(--danger)";
+                        }
+                    }
+                } catch (err) {
+                    console.error("Inbound telemetry encryption mismatch", err);
+                }
             }
         }
 
