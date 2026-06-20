@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Secure Merchant Billing</title>
     
-    <!-- Mobile App Icon & Manifest Configuration -->
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
     <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
     
-    <!-- Secure Core Square Production Web SDK Library Loader -->
     <script src="https://web.squarecdn.com/v1/square.js"></script>
     
     <style>
@@ -109,14 +107,12 @@
                 <div class="form-group"><label>Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;"></div>
             </div>
 
-            <!-- ENCAPSULATED SQUARE CORE INTERFACE -->
             <div id="squareFormWrapper" style="display:block; margin-top:20px; padding:15px; background:#f8fafc; border:1px dashed var(--border); border-radius:6px;">
                 <p style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-align:center; color: var(--primary);">🔒 Secure Credit Card Terminal</p>
                 <div id="sq-card-element"></div>
                 <input type="text" id="manualRefInput" placeholder="Optional: Type Manual Verification Hash Key" style="margin-top:10px;">
             </div>
 
-            <!-- SIGNATURE CAPTURE VIEW MATRIX -->
             <div class="signature-grid">
                 <div class="signature-wrapper">
                     <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#475569; margin-bottom:4px;">Billing Agent Signature:</p>
@@ -130,14 +126,13 @@
                 </div>
             </div>
 
-            <!-- AUTOMATED INTERCEPT COMMAND TRIGGERS -->
-            <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent(event)">📲 Tap to Pay via Square App</button>
+            <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent()">📲 Tap to Pay via Square App</button>
             <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">Finalize Ledger &amp; Charge Card</button>
 
+            <div id="invoiceStatusLine" class="status-msg" style="color: var(--primary); margin-top: 15px; font-size: 12px;">System online. Ready for terminal deployment.</div>
         </div>
     </div>
 
-    <!-- GLOBAL APP NAVIGATION GATEWAY -->
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
@@ -300,18 +295,26 @@
             }
         }
 
-        // DUAL-OS INTENT ENGINE: Detects device architecture to handle Square POS payloads correctly
-        function processSquareAppMobileIntent(event) {
-            if(event && event.preventDefault) event.preventDefault();
+        // DUAL-OS INTENT ENGINE WITH REALTIME LOGGING SYSTEM
+        function processSquareAppMobileIntent() {
+            var statusLine = document.getElementById('invoiceStatusLine');
+            if (statusLine) {
+                statusLine.innerHTML = "⏳ Telemetry Radar: Processing click trigger...";
+                statusLine.style.color = "var(--accent)";
+            }
             
             var total = document.getElementById('inv_final_total').value || "0.00";
             var cents = Math.round(parseFloat(total) * 100); 
-            if(cents <= 0) return alert("Value missing.");
+            
+            if(isNaN(cents) || cents <= 0) {
+                alert("Square Runtime Error: Valuation total must be greater than zero. Currently reading: $" + total);
+                if (statusLine) statusLine.innerHTML = "❌ Intent Denied: Amount cannot be empty.";
+                return;
+            }
             
             var customerName = document.getElementById('inv_cust').value || "Customer";
             var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/billing-invoice.html";
             
-            // Build cross-platform parameters
             var dataPayload = {
                 "amount_money": { "amount": cents, "currency_code": "USD" },
                 "options": { 
@@ -325,21 +328,25 @@
                 "version": "1.3"
             };
 
-            // Detect mobile platform variant via user agent string
-            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var userAgent = navigator.userAgent || navigator.vendor;
             var isAndroid = /android/i.test(userAgent);
             var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
 
+            if (statusLine) {
+                statusLine.innerHTML = "📡 Handing payload off to native Square POS App architecture...";
+                statusLine.style.color = "#2563eb";
+            }
+
+            var jsonPayloadString = JSON.stringify(dataPayload);
+
             if (isAndroid) {
-                // Strict Android intent construction structure format required for Chrome
                 var androidIntentUrl = 
-                    "intent://payment/create?data=" + encodeURIComponent(JSON.stringify(dataPayload)) +
+                    "intent://payment/create?data=" + encodeURIComponent(jsonPayloadString) +
                     "#Intent;scheme=square-commerce-v1;package=com.squareup;S.browser_fallback_url=" + 
                     encodeURIComponent(callbackUrl) + ";end";
                 window.location.href = androidIntentUrl;
             } else {
-                // Standard URL scheme formatting execution loop parameter for Apple iOS devices
-                var iosSchemeUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(dataPayload));
+                var iosSchemeUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(jsonPayloadString);
                 window.location.assign(iosSchemeUrl);
             }
         }
