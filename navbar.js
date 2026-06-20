@@ -1,12 +1,11 @@
 /**
- * EverSafe Operations Hub - Master Production Navigation Core
- * Architecture: Self-Styling Dynamic Component Router
- * Synchronizes layout paths and forces uniform CSS rendering across all static nodes
+ * EverSafe Operations Hub - Universal Master Navigation Router
+ * Architecture: Self-Styling Dynamic Component Engine
+ * Configured with optimized mobile spacing using the "Jobs" layout parameter
  */
 window.addEventListener('DOMContentLoaded', function() {
     
-    // 1. SYSTEM EMBEDDED STYLESHEET INJECTION
-    // Forces explicit slate-and-orange coloring and completely kills default browser hyperlink underlines
+    // 1. INJECT MASTER ECOSYSTEM STYLESHEET
     if (!document.getElementById('eversafe-master-nav-styles')) {
         var styleElement = document.createElement('style');
         styleElement.id = 'eversafe-master-nav-styles';
@@ -42,7 +41,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 background: transparent !important; 
                 border: none !important; 
                 color: #94a3b8 !important; 
-                font-size: 9.5px !important; 
+                font-size: 9px !important; 
                 font-weight: bold !important; 
                 text-transform: uppercase !important; 
                 cursor: pointer !important; 
@@ -60,7 +59,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 outline: none !important;
             }
             .nav-tab-btn span { 
-                font-size: 16px !important; 
+                font-size: 15px !important; 
                 display: block !important;
                 margin: 0 !important;
                 padding: 0 !important;
@@ -85,10 +84,11 @@ window.addEventListener('DOMContentLoaded', function() {
     var currentPath = window.location.pathname;
     var currentFile = currentPath.substring(currentPath.lastIndexOf('/') + 1) || "index.html";
 
-    // 4. MASTER COMPONENT MATRIX ARRAY
+    // 4. UNIFIED COMPONENT MATRIX ARRAY (Optimized Spacing Schema)
     var tabs = [
-        { link: "proposals.html", icon: "📊", label: "Proposals" },
-        { link: "contract-wo.html", icon: "🛠️", label: "Contract" },
+        { link: "jobs.html", icon: "💼", label: "Jobs" },
+        { link: "proposals.html", icon: "📊", label: "Options" },
+        { link: "contract-wo.html", icon: "🛠️", label: "Review" },
         { link: "signatures.html", icon: "✍️", label: "Sign" },
         { link: "billing-invoice.html", icon: "🧾", label: "Billing" },
         { link: "inspection-l2.html", icon: "📋", label: "L2 Map" },
