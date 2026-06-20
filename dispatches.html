@@ -63,12 +63,6 @@
 
         .center-status-line { text-align: center; font-size: 13px; color: #64748b; margin-top: 25px; font-weight: bold; line-height: 1.5; }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-
-        /* Shared Navigation Sub-Component Styles */
-        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
-        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
-        .nav-tab-btn span { font-size: 16px; }
-        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
     </style>
 </head>
 <body>
@@ -107,6 +101,9 @@
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+        
+        // Global system array memory cache to insulate index mapping from syntax string crash risks
+        window.vaultRecordsCache = [];
 
         document.getElementById('vaultSearchQueryInput').addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
@@ -125,6 +122,7 @@
             }
 
             resultsDisplay.innerHTML = '<div class="center-status-line">⏳ Querying database and parsing drive assets...</div>';
+            window.vaultRecordsCache = [];
 
             try {
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -140,8 +138,11 @@
                         return;
                     }
 
+                    // Hydrate system global memory array track safely
+                    window.vaultRecordsCache = result.records;
+
                     var compiledHtml = "";
-                    result.records.forEach(function(record) {
+                    result.records.forEach(function(record, idx) {
                         var isSigned = record.status === "SIGNED";
                         var statusClass = isSigned ? "status-badge badge-signed" : "status-badge badge-auth";
                         var displayStatus = isSigned ? "Finalized & Signed" : "Authorized (Unsigned)";
@@ -162,11 +163,11 @@
                                 <div class="card-body-row">
                                     <div><strong>Service Address:</strong> ${record.serviceAddress}</div>
                                     <div><strong>Scope of Work:</strong> ${record.workScope}</div>
-                                    <div><strong>Project Valuation:</strong> $${record.estimatedCost}</div>
+                                    <div><strong>Project Valuation:</strong> $${parseFloat(record.estimatedCost || 0).toFixed(2)}</div>
                                 </div>
                                 <div class="card-actions-row">
                                     ${signatureButtonHtml}
-                                    <a href="proposals.html" class="btn-vault-link highlight-action" onclick="passVaultDataToSystemCache('${record.customerName.replace(/'/g, "\\'")}', '${record.customerEmail.replace(/'/g, "\\'")}', '${record.serviceAddress.replace(/'/g, "\\'")}', '${record.estimatedCost}')">📊 Load to Proposals</a>
+                                    <a href="proposals.html" class="btn-vault-link highlight-action" onclick="passVaultDataToSystemCache(${idx})">📊 Load to Proposals</a>
                                 </div>
                             </div>
                         `;
@@ -182,11 +183,19 @@
             }
         }
 
-        function passVaultDataToSystemCache(name, email, address, cost) {
-            localStorage.setItem('current_wo_customer_name', name);
-            localStorage.setItem('current_wo_customer_email', email);
-            localStorage.setItem('current_wo_service_address', address);
-            localStorage.setItem('current_wo_est_cost', cost);
+        function passVaultDataToSystemCache(idx) {
+            if (!window.vaultRecordsCache || !window.vaultRecordsCache[idx]) return;
+            var targetRecord = window.vaultRecordsCache[idx];
+
+            localStorage.setItem('current_wo_customer_name', targetRecord.customerName || "");
+            localStorage.setItem('current_wo_customer_email', targetRecord.customerEmail || "");
+            localStorage.setItem('current_wo_service_address', targetRecord.serviceAddress || "");
+            localStorage.setItem('current_wo_work_scope', targetRecord.workScope || "");
+            localStorage.setItem('current_wo_est_cost', parseFloat(targetRecord.estimatedCost || 0).toFixed(2));
+            
+            // Wipe clean volatile line keys to avoid price list spillover corruptions
+            localStorage.removeItem('current_wo_price_book_items');
+            localStorage.removeItem('current_wo_itemized_json');
         }
 
         function executeFieldCrewLogout() {
