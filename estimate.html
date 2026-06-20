@@ -28,7 +28,7 @@
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
-        .app-container { max-width: 950px; margin: 0 auto; padding: 0 15px; text-align: left; }
+        .app-container { max-width: 1050px; margin: 0 auto; padding: 0 15px; text-align: left; }
         .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
         h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
         p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 20px; text-align: center; line-height: 1.45; }
@@ -39,15 +39,19 @@
 
         .grid-3 { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 12px; margin-bottom: 15px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        @media (max-width: 600px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 8px; } }
+        @media (max-width: 768px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 8px; } }
 
         .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
         
-        .estimate-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .estimate-table-wrapper { width: 100%; overflow-x: auto; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 0 0 6px 6px; }
+        .estimate-table { width: 100%; border-collapse: collapse; min-width: 700px; }
         .estimate-table th { background-color: #f1f5f9; padding: 10px; border: 1px solid var(--border); font-size: 11px; text-transform: uppercase; color: #475569; text-align: left; }
-        .estimate-table td { padding: 12px 10px; border: 1px solid var(--border); font-size: 13.5px; background: white; }
+        .estimate-table td { padding: 10px; border: 1px solid var(--border); font-size: 13px; background: white; vertical-align: middle; }
         
-        .dimension-input { width: 70px; padding: 6px; text-align: center; font-weight: bold; border: 2px solid var(--accent); border-radius: 4px; }
+        .dimension-input { width: 75px; padding: 6px; text-align: center; font-weight: bold; border: 1px solid var(--border); border-radius: 4px; }
+        .override-price-input { width: 90px; padding: 6px; text-align: center; font-weight: bold; border: 1px solid var(--accent); background: #fffbf7; color: #b45309; border-radius: 4px; }
+        .override-price-input:focus { outline: none; border-color: var(--accent-dark); background: #fff; }
+        
         .btn-delete { background: var(--danger); color: white; border: none; padding: 6px 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
         .btn-add-item { background: var(--primary-light); color: white; border: none; padding: 12px; font-weight: bold; text-transform: uppercase; font-size: 11px; border-radius: 6px; cursor: pointer; width: 100%; letter-spacing: 0.5px; margin-top: 4px; }
         
@@ -59,6 +63,7 @@
 </head>
 <body>
 
+    <!-- SECURE SERVICE DESK SESSION GATEKEEPER CHECK -->
     <script>
         if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
             window.location.replace("index.html");
@@ -75,7 +80,7 @@
     <div class="app-container">
         <div class="app-card">
             <h3>🧮 Project Estimate Builder</h3>
-            <p class="subtitle">Internal calculator matrix. Infractions port silently from inspection maps. Adjust units and track profitability telemetry parameters below.</p>
+            <p class="subtitle">Internal calculation matrix. Infractions port silently from inspection maps. Adjust units, apply manual price overrides, and track profitability parameters below.</p>
 
             <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
                 <label class="control-header" style="color: var(--accent-dark);">📍 Active Territory Price Book Multiplier</label>
@@ -110,25 +115,30 @@
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Item Selection</span>
                         <select id="catalogItemSelector">
-                            </select>
+                            <!-- Populated dynamically via script logic -->
+                        </select>
                     </div>
                 </div>
                 <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white;">Inject Line Item Into Bid</button>
             </div>
 
             <div class="section-title">Compiled Project Cost Matrix</div>
-            <table class="estimate-table">
-                <thead>
-                    <tr>
-                        <th style="width: 50%;">Task Description / Scope Parameter</th>
-                        <th style="width: 25%; text-align: center;">Variables / Unit Qty</th>
-                        <th style="width: 15%; text-align: right;">Total Price</th>
-                        <th style="width: 10%; text-align: center;">Action</th>
-                    </tr>
-                </thead>
-                <tbody id="bidTableBody">
+            <div class="estimate-table-wrapper">
+                <table class="estimate-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Task Description / Scope Parameter</th>
+                            <th style="width: 20%; text-align: center;">Variables / Unit Qty</th>
+                            <th style="width: 20%; text-align: center;">Unit Rate ($) [Override]</th>
+                            <th style="width: 12%; text-align: right;">Total Price</th>
+                            <th style="width: 8%; text-align: center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bidTableBody">
+                        <!-- Dynamic rows assemble here -->
                     </tbody>
-            </table>
+                </table>
+            </div>
 
             <div class="summary-box">
                 <div>
@@ -164,47 +174,64 @@
     <script src="navbar.js"></script>
 
     <script>
+        // GRANULAR PRICE COMPONENT MATRIX BOOK
         var COMPLETE_PRICE_BOOK = {
+            // MAINTENANCE & DIAGNOSTICS
             "SWEEP_STANDARD":       { cat: "MAINTENANCE", label: "Standard Woodburning Cleaning Sweep & L1 Inspection", NWO_CORE: 249.00, SMI_RURAL: 269.00, SMI_PREMIUM: 299.00, dynamic: false },
             "SWEEP_PELLET":         { cat: "MAINTENANCE", label: "Pellet/Corn Stove Insert Deep Mechanical Clean Run", NWO_CORE: 289.00, SMI_RURAL: 319.00, SMI_PREMIUM: 359.00, dynamic: false },
+            "SWEEP_WOOD_INSERT":    { cat: "MAINTENANCE", label: "Wood Insert Mechanical Pull, Extraction, & Heavy Creosote Clean", NWO_CORE: 395.00, SMI_RURAL: 425.00, SMI_PREMIUM: 475.00, dynamic: false },
             "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "Level 2 Internal Flue Video Scan Diagnostic (NFPA 211)", NWO_CORE: 180.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
             "DRYER_VENT_CLEAN":     { cat: "MAINTENANCE", label: "Dryer Vent Line Air-Jet Cleaning (up to 20ft)", NWO_CORE: 149.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
             "GAS_LOG_SERVICE":      { cat: "MAINTENANCE", label: "Gas Fireplace Maintenance, Pilot Flush & Burner Tune", NWO_CORE: 225.00, SMI_RURAL: 245.00, SMI_PREMIUM: 275.00, dynamic: false },
+            "CHEM_CREOSOTE_S1":     { cat: "MAINTENANCE", label: "Anti-FlueSR Creosote Stage 1 Chemical Neutralizer Application", NWO_CORE: 120.00, SMI_RURAL: 135.00, SMI_PREMIUM: 150.00, dynamic: false },
 
+            // MASONRY STRUCTURAL REPAIRS
             "MAS_TUCKPOINT":        { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry Repair (per sq ft)", NWO_CORE: 18.00, SMI_RURAL: 22.00, SMI_PREMIUM: 28.00, dynamic: true, defQty: 10, unit: "sq ft" },
             "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement", NWO_CORE: 25.00, SMI_RURAL: 28.00, SMI_PREMIUM: 34.00, dynamic: true, defQty: 5, unit: "bricks" },
             "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", NWO_CORE: 110.00, SMI_RURAL: 125.00, SMI_PREMIUM: 145.00, dynamic: true, defQty: 5, unit: "courses" },
             "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", NWO_CORE: 35.00, SMI_RURAL: 38.00, SMI_PREMIUM: 45.00, dynamic: true, defQty: 15, unit: "bricks" },
             "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (Smoktite)", NWO_CORE: 850.00, SMI_RURAL: 940.00, SMI_PREMIUM: 1050.00, dynamic: false },
             "MAS_LIME_MATCH":       { cat: "MASONRY", label: "Historic Lime Mortar Tint Analysis & Custom Blending Fee", NWO_CORE: 150.00, SMI_RURAL: 175.00, SMI_PREMIUM: 210.00, dynamic: false },
+            "MAS_IRON_LINTEL":      { cat: "MASONRY", label: "Structural Expansion Iron Lintel Steel Bar Replacement", NWO_CORE: 295.00, SMI_RURAL: 325.00, SMI_PREMIUM: 375.00, dynamic: false },
 
-            "LINE_STAINLESS":       { cat: "RELINING", label: "Titanium Stainless Steel Flue Relining (per linear ft)", NWO_CORE: 125.00, SMI_RURAL: 138.00, SMI_PREMIUM: 155.00, dynamic: true, defQty: 25, unit: "ft" },
-            "LINE_INSUL_BLANKET":    { cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Wrap Kit", NWO_CORE: 350.00, SMI_RURAL: 385.00, SMI_PREMIUM: 430.00, dynamic: false },
+            // VENTING & RELINE FRAMEWORKS
+            "LINE_STAINLESS_6":     { cat: "RELINING", label: "6-Inch Titanium Stainless Steel Flue Relining (per linear ft)", NWO_CORE: 125.00, SMI_RURAL: 138.00, SMI_PREMIUM: 155.00, dynamic: true, defQty: 25, unit: "ft" },
+            "LINE_STAINLESS_8":     { cat: "RELINING", label: "8-Inch Titanium Stainless Steel Flue Relining (per linear ft)", NWO_CORE: 145.00, SMI_RURAL: 160.00, SMI_PREMIUM: 180.00, dynamic: true, defQty: 25, unit: "ft" },
+            "LINE_INSUL_BLANKET":   { cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Wrap Kit (1/2-Inch Outer)", NWO_CORE: 350.00, SMI_RURAL: 385.00, SMI_PREMIUM: 430.00, dynamic: false },
             "LINE_ALUMINUM_GAS":    { cat: "RELINING", label: "Flexible Aluminum Gas Ventilation Reline Array (per linear ft)", NWO_CORE: 65.00, SMI_RURAL: 72.00, SMI_PREMIUM: 82.00, dynamic: true, defQty: 25, unit: "ft" },
             "LINE_B_VENT":          { cat: "RELINING", label: "Double-Wall Galvanized Gas B-Vent Pipe (per linear ft)", NWO_CORE: 85.00, SMI_RURAL: 94.00, SMI_PREMIUM: 108.00, dynamic: true, defQty: 15, unit: "ft" },
             "LINE_TIE_IN":          { cat: "RELINING", label: "Utility Furnace / Water Heater Flue Breach Tie-In Collar", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 225.00, dynamic: false },
+            "LINE_TILE_REMOVAL":    { cat: "RELINING", label: "Internal Damaged Clay Flue Tile Knockout & Air-Chisel Extraction", NWO_CORE: 495.00, SMI_RURAL: 550.00, SMI_PREMIUM: 650.00, dynamic: false },
 
+            // WATERPROOFING & FLASHING MITIGATION
             "WATER_CROWN_SEAL":     { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Membrane Coat", NWO_CORE: 275.00, SMI_RURAL: 305.00, SMI_PREMIUM: 345.00, dynamic: false },
             "WATER_CROWN_POUR":     { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild System", NWO_CORE: 1200.00, SMI_RURAL: 1320.00, SMI_PREMIUM: 1480.00, dynamic: false },
             "WATER_SAVER_SPRAY":    { cat: "WATERPROOFING", label: "ChimneySaver Silane-Siloxane Breathable Repellent Application", NWO_CORE: 195.00, SMI_RURAL: 215.00, SMI_PREMIUM: 245.00, dynamic: false },
             "FLASH_LEAD_REPLACE":   { cat: "WATERPROOFING", label: "Custom Lead Counter-Flashing Roof Intercept Replacement", NWO_CORE: 450.00, SMI_RURAL: 495.00, SMI_PREMIUM: 560.00, dynamic: false },
             "FLASH_CRICKET_POUR":   { cat: "WATERPROOFING", label: "Diversion Roof Cricket Framing Assembly (Prevents Water Pooling)", NWO_CORE: 650.00, SMI_RURAL: 715.00, SMI_PREMIUM: 810.00, dynamic: false },
+            "FLASH_BOOT_BOOTSWAP":  { cat: "WATERPROOFING", label: "Neoprene Pipe Boot Swap Ventilation Intercept Sealing Ring", NWO_CORE: 115.00, SMI_RURAL: 130.00, SMI_PREMIUM: 145.00, dynamic: false },
 
+            // PRE-FAB CHASE & FACTORY SYSTEMS
             "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Anti-Puddling Chase Top Cover Pan", NWO_CORE: 695.00, SMI_RURAL: 765.00, SMI_PREMIUM: 865.00, dynamic: false },
             "CHASE_ALUM_COLOR":     { cat: "PREFAB_CHASE", label: "Custom Factory Powder-Coated Aluminum Chase Pan Cover", NWO_CORE: 575.00, SMI_RURAL: 635.00, SMI_PREMIUM: 715.00, dynamic: false },
             "PIPE_CLASS_A":         { cat: "PREFAB_CHASE", label: "Double-Wall Insulated HT Class-A Prefab Vent Pipe (per ft)", NWO_CORE: 95.00, SMI_RURAL: 105.00, SMI_PREMIUM: 120.00, dynamic: true, defQty: 10, unit: "ft" },
             "PREFAB_REFRACTORY":    { cat: "PREFAB_CHASE", label: "Prefabricated Fireplace Interior Refractory Panel Insert", NWO_CORE: 220.00, SMI_RURAL: 245.00, SMI_PREMIUM: 280.00, dynamic: false },
+            "CHASE_SIDING_PATCH":   { cat: "PREFAB_CHASE", label: "Chase Box Exterior Wall Siding / Sheathing Structural Patch", NWO_CORE: 325.00, SMI_RURAL: 365.00, SMI_PREMIUM: 425.00, dynamic: false },
 
+            // CAPS, DAMPERS & CUSTOM TRIM
             "COMP_CAP_SINGLE":      { cat: "COMPONENTS", label: "Stainless Steel Single-Flue Friction Spark Arrestor Cap", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
             "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", NWO_CORE: 550.00, SMI_RURAL: 610.00, SMI_PREMIUM: 690.00, dynamic: false },
             "COMP_DAMPER_LYEMANCE": { cat: "COMPONENTS", label: "Lyemance Top-Mount Low-Profile Energy Saving Seal Damper", NWO_CORE: 395.00, SMI_RURAL: 435.00, SMI_PREMIUM: 490.00, dynamic: false },
             "COMP_DAMPER_LOCKtop":  { cat: "COMPONENTS", label: "LockTop Energy Saving Cap/Damper Combination Unit", NWO_CORE: 475.00, SMI_RURAL: 525.00, SMI_PREMIUM: 590.00, dynamic: false },
             "COMP_CLEANOUT_DOOR":   { cat: "COMPONENTS", label: "Cast Iron Chimney Base Ash Pit Door Assembly (Replacement)", NWO_CORE: 150.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
+            "COMP_INTAKE_VENT":     { cat: "COMPONENTS", label: "Fresh Air Exterior Fireplace Combustion Supply Vent Hood", NWO_CORE: 185.00, SMI_RURAL: 205.00, SMI_PREMIUM: 235.00, dynamic: false },
 
+            // LOGISTICS, ACCESS & RIGGING FEES
             "LOG_SCAFFOLDING":      { cat: "LOGISTICS", label: "High-Access Multi-Tier Scaffolding Scaffold Rigging Fee", NWO_CORE: 300.00, SMI_RURAL: 330.00, SMI_PREMIUM: 375.00, dynamic: false },
             "LOG_BOOM_LIFT":        { cat: "LOGISTICS", label: "Heavy Equipment Towable Boom Lift Transport Surcharge", NWO_CORE: 650.00, SMI_RURAL: 650.00, SMI_PREMIUM: 750.00, dynamic: false },
             "LOG_PITCH_STEEP":      { cat: "LOGISTICS", label: "Steep Roof Slope Pitch Safety Harness Surcharge (Over 8/12)", NWO_CORE: 180.00, SMI_RURAL: 200.00, SMI_PREMIUM: 230.00, dynamic: false },
             "LOG_3_STORY_ACCESS":   { cat: "LOGISTICS", label: "Extreme Working Elevation Access Surcharge (3+ Stories / Commercial)", NWO_CORE: 250.00, SMI_RURAL: 275.00, SMI_PREMIUM: 315.00, dynamic: false },
+            "LOG_TRAVEL_ZONE":      { cat: "LOGISTICS", label: "Extended Out-Of-Zone Commute Outpost Surcharge Flat", NWO_CORE: 85.00, SMI_RURAL: 100.00, SMI_PREMIUM: 125.00, dynamic: false },
             "LOG_CUSTOM_LINE":      { cat: "LOGISTICS", label: "[Custom Manual Adjustment / Material / Accessory Line Override]", NWO_CORE: 1.00, SMI_RURAL: 1.00, SMI_PREMIUM: 1.00, dynamic: true, defQty: 100, unit: "units" }
         };
 
@@ -245,19 +272,23 @@
         function importSilentFlagsFromDiagnosticMaps() {
             var inheritedFlags = JSON.parse(localStorage.getItem('current_wo_price_book_items')) || {};
             ACTIVE_RUNNING_ESTIMATE = [];
-            ACTIVE_RUNNING_ESTIMATE.push({ key: "SWEEP_STANDARD", qty: 1 });
+            
+            // Core standard tracking item baseline initialization
+            ACTIVE_RUNNING_ESTIMATE.push({ key: "SWEEP_STANDARD", qty: 1, rateOverride: null });
 
             Object.keys(inheritedFlags).forEach(function(flagKey) {
                 var lookupTarget = "";
-                if (flagKey.includes("crown")) lookupTarget = "WATER_CROWN_SEAL";
-                else if (flagKey.includes("flashing")) lookupTarget = "FLASH_LEAD_REPLACE";
-                else if (flagKey.includes("mortar") || flagKey.includes("tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
-                else if (flagKey.includes("brick") || flagKey.includes("spalling")) lookupTarget = "MAS_BRICK_SWAP";
-                else if (flagKey.includes("liner")) lookupTarget = "LINE_STAINLESS";
+                if (flagKey.includes("firebox_brick")) lookupTarget = "MAS_FIREBOX_REBUILD";
+                else if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS_6";
+                else if (flagKey.includes("mortar_tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
+                else if (flagKey.includes("crown_defect")) lookupTarget = "WATER_CROWN_SEAL";
 
                 if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
                     var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
-                    ACTIVE_RUNNING_ESTIMATE.push({ key: lookupTarget, qty: blueprint.dynamic ? blueprint.defQty : 1 });
+                    // Verify if item is already added to prevent duplicates
+                    if (!ACTIVE_RUNNING_ESTIMATE.some(function(e) { return e.key === lookupTarget; })) {
+                        ACTIVE_RUNNING_ESTIMATE.push({ key: lookupTarget, qty: blueprint.dynamic ? blueprint.defQty : 1, rateOverride: null });
+                    }
                 }
             });
         }
@@ -270,7 +301,7 @@
             var redundantCheck = ACTIVE_RUNNING_ESTIMATE.find(function(el) { return el.key === itemKey; });
             if (redundantCheck && !blueprint.dynamic) { alert("Execution Alert: Assigned."); return; }
 
-            ACTIVE_RUNNING_ESTIMATE.push({ key: itemKey, qty: blueprint.dynamic ? blueprint.defQty : 1 });
+            ACTIVE_RUNNING_ESTIMATE.push({ key: itemKey, qty: blueprint.dynamic ? blueprint.defQty : 1, rateOverride: null });
             recalculateMasterLedger();
         }
 
@@ -283,7 +314,7 @@
             var rawItemizedLinesForContract = [];
 
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
                 document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
                 calculateProfitThermometer(0);
                 return;
@@ -293,8 +324,9 @@
                 var spec = COMPLETE_PRICE_BOOK[item.key];
                 if (!spec) return;
 
-                var regionalRateValue = spec[zone];
-                var rowCalculatedTotal = regionalRateValue * item.qty;
+                // Priority assignment logic handles explicit overrides before falling back to book defaults
+                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : spec[zone];
+                var rowCalculatedTotal = appliedUnitRate * item.qty;
                 globalRunningSum += rowCalculatedTotal;
 
                 var variableInputHtml = "";
@@ -304,10 +336,14 @@
                     variableInputHtml = `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed Flat</span>`;
                 }
 
+                // Inject pricing input to allow instant manual unit overrides
+                var rateInputHtml = `<span style="font-size:12px; color:#64748b; font-weight:bold; margin-right:4px;">$</span><input type="number" class="override-price-input" value="${appliedUnitRate.toFixed(2)}" step="0.01" min="0" onchange="modifyUnitPriceOverrideTarget(${idx}, this.value)">`;
+
                 tbody.innerHTML += `
                     <tr>
                         <td style="font-weight: 700; font-size:13px; color: var(--primary);">${spec.label}</td>
                         <td style="text-align: center;">${variableInputHtml}</td>
+                        <td style="text-align: center;">${rateInputHtml}</td>
                         <td style="text-align: right; font-weight: 800; color: #1e293b;">$${rowCalculatedTotal.toFixed(2)}</td>
                         <td style="text-align: center;"><button type="button" class="btn-delete" onclick="dropItemFromActiveLedger(${idx})">Drop</button></td>
                     </tr>
@@ -315,6 +351,8 @@
                 
                 var labelWithQty = spec.dynamic ? `${spec.label} (Qty: ${item.qty} ${spec.unit})` : spec.label;
                 textCompilationScopeLines.push(labelWithQty);
+                
+                // Mask custom pricing calculations from customer-facing screens while keeping the calculated totals accurate
                 rawItemizedLinesForContract.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
             });
 
@@ -361,6 +399,14 @@
         function modifyQuantityIndexTarget(idxTarget, newQuantityVal) {
             var parse = parseInt(newQuantityVal) || 1; if(parse < 1) parse = 1;
             ACTIVE_RUNNING_ESTIMATE[idxTarget].qty = parse; recalculateMasterLedger();
+        }
+
+        // 🧮 UNIT RATE OVERRIDE INTERCEPTOR: Intercepts book defaults and applies Leo's custom field adjustments
+        function modifyUnitPriceOverrideTarget(idxTarget, newPriceVal) {
+            var parse = parseFloat(newPriceVal);
+            if (isNaN(parse) || parse < 0) parse = 0;
+            ACTIVE_RUNNING_ESTIMATE[idxTarget].rateOverride = parse;
+            recalculateMasterLedger();
         }
 
         function dropItemFromActiveLedger(idxTarget) {
