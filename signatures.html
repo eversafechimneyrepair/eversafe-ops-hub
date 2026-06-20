@@ -53,6 +53,14 @@
         .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
         .nav-tab-btn span { font-size: 16px; }
         .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
+
+        /* Receipt Styles */
+        .receipt-container { display: none; background: #f8fafc; border: 2px solid var(--success); border-radius: 8px; padding: 25px 20px; text-align: left; }
+        .receipt-header { color: var(--success-dark); text-align: center; font-size: 20px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; }
+        .receipt-row { margin-bottom: 10px; font-size: 13px; color: #334155; }
+        .receipt-row strong { color: #0f172a; }
+        .receipt-divider { margin: 20px 0; border: 0; border-top: 1px dashed var(--border); }
+        .receipt-signature-img { width: 100%; max-width: 300px; border: 1px solid var(--border); border-radius: 4px; background: white; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -72,30 +80,56 @@
 
     <div class="app-container">
         <div class="app-card">
-            <h3>Customer Sign-Off</h3>
-            <p>Please present this layout array to the property owner to collect their digital structural authorization acknowledgment.</p>
             
-            <div class="legal-clause-box">
-                By signing below, the customer acknowledges that the Level 1/Level 2 venting inspection diagnostic profile has been fully reviewed. Authority is hereby granted to EverSafe Chimney Repair to execute the specified tuckpointing, masonry repairs, or structural updates outlined in the contract documentation. All operations will be performed in conformance with local fire safety codes and industry standards.
+            <!-- ACTIVE SIGNATURE FORM AREA -->
+            <div id="signatureFormArea">
+                <h3>Customer Sign-Off</h3>
+                <p>Please present this layout array to the property owner to collect their digital structural authorization acknowledgment.</p>
+                
+                <div class="legal-clause-box" id="legalClauseText">
+                    By signing below, the customer acknowledges that the Level 1/Level 2 venting inspection diagnostic profile has been fully reviewed. Authority is hereby granted to EverSafe Chimney Repair to execute the specified tuckpointing, masonry repairs, or structural updates outlined in the contract documentation. All operations will be performed in conformance with local fire safety codes and industry standards.
+                </div>
+
+                <div class="form-group">
+                    <label for="signatoryNameInput">Signatory Print Name</label>
+                    <input type="text" id="signatoryNameInput" class="form-control" placeholder="First and last legal name" autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label>Homeowner Digital Signature Pad</label>
+                    <div class="signature-wrapper">
+                        <canvas id="signatureCanvas"></canvas>
+                    </div>
+                    <div class="canvas-controls">
+                        <button type="button" class="btn-clear" onclick="clearSignatureCanvas()">Clear Canvas</button>
+                    </div>
+                </div>
+                
+                <button type="button" class="btn-action" id="submitSignatureBtn" onclick="transmitSignaturePayloadStream()">Lock & Transmit Signature</button>
+                <div id="signatureStatusLine" class="status-msg">Awaiting digital authorization...</div>
             </div>
 
-            <div class="form-group">
-                <label for="signatoryNameInput">Signatory Print Name</label>
-                <input type="text" id="signatoryNameInput" class="form-control" placeholder="First and last legal name" autocomplete="off">
+            <!-- HIDDEN RECEIPT AREA (Shows on Success) -->
+            <div id="contractReceiptArea" class="receipt-container">
+                <div class="receipt-header">✅ Contract Executed</div>
+                <div class="receipt-row"><strong>Customer:</strong> <span id="recName"></span></div>
+                <div class="receipt-row"><strong>Service Address:</strong> <span id="recAddress"></span></div>
+                <div class="receipt-row"><strong>Scope of Work:</strong> <span id="recScope"></span></div>
+                <div class="receipt-row"><strong>Estimated Cost:</strong> $<span id="recCost"></span></div>
+                
+                <div class="receipt-divider"></div>
+                
+                <div style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase; margin-bottom: 8px;">Terms Acknowledged:</div>
+                <div style="font-size: 11px; color: #64748b; line-height: 1.5; margin-bottom: 20px; font-style: italic;">
+                    By signing below, the customer acknowledges that the Level 1/Level 2 venting inspection diagnostic profile has been fully reviewed. Authority is hereby granted to EverSafe Chimney Repair to execute the specified tuckpointing, masonry repairs, or structural updates outlined in the contract documentation. All operations will be performed in conformance with local fire safety codes and industry standards.
+                </div>
+
+                <div class="receipt-row"><strong>Digital Signature Lock:</strong></div>
+                <img id="recSignatureImage" class="receipt-signature-img" src="" alt="Customer Signature">
+                
+                <button type="button" class="btn-action" onclick="window.location.href='billing-invoice.html'" style="margin-top: 30px;">Proceed to Billing</button>
             </div>
 
-            <div class="form-group">
-                <label>Homeowner Digital Signature Pad</label>
-                <div class="signature-wrapper">
-                    <canvas id="signatureCanvas"></canvas>
-                </div>
-                <div class="canvas-controls">
-                    <button type="button" class="btn-clear" onclick="clearSignatureCanvas()">Clear Canvas</button>
-                </div>
-            </div>
-            
-            <button type="button" class="btn-action" id="submitSignatureBtn" onclick="transmitSignaturePayloadStream()">Lock & Transmit Signature</button>
-            <div id="signatureStatusLine" class="status-msg">Awaiting digital authorization...</div>
         </div>
     </div>
 
@@ -243,7 +277,7 @@
                     body: JSON.stringify({
                         route: "updateWorkOrderSignature",
                         customerName: printName,
-                        customerEmail: savedCustomerEmail, // Included in payload
+                        customerEmail: savedCustomerEmail,
                         base64Data: base64SignatureData,
                         filename: cleanFilename
                     })
@@ -251,10 +285,20 @@
                 let result = await response.json();
 
                 if (result.success) {
-                    statusDiv.innerHTML = "✅ Legal Signature Vault Lock Complete! Proceed to Invoicing.";
-                    statusDiv.style.color = "var(--success-dark)";
-                    document.getElementById('signatoryNameInput').value = "";
-                    clearSignatureCanvas();
+                    // Populate Receipt Data
+                    document.getElementById('recName').textContent = printName;
+                    document.getElementById('recAddress').textContent = localStorage.getItem('current_wo_service_address') || "Address on file";
+                    document.getElementById('recScope').textContent = localStorage.getItem('current_wo_work_scope') || "Scope parameters on file";
+                    
+                    let storedCost = parseFloat(localStorage.getItem('current_wo_est_cost') || 0);
+                    document.getElementById('recCost').textContent = storedCost.toFixed(2);
+                    
+                    document.getElementById('recSignatureImage').src = base64SignatureData;
+
+                    // Switch UI Views
+                    document.getElementById('signatureFormArea').style.display = "none";
+                    document.getElementById('contractReceiptArea').style.display = "block";
+
                 } else {
                     statusDiv.innerHTML = "❌ Gateway Error: " + result.error;
                     statusDiv.style.color = "var(--danger)";
