@@ -57,6 +57,12 @@
 </head>
 <body>
 
+    <script>
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
+    </script>
+
     <div class="app-header">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Hub</div>
@@ -105,9 +111,8 @@
 
     <script>
         window.addEventListener('DOMContentLoaded', function() {
-            // Re-inflate baseline cache pointers directly into user interface views
             var name = localStorage.getItem('current_wo_customer_name') || "Customer Profile Bypassed";
-            var addr = document.getElementById('clientAddressText').innerText = localStorage.getItem('current_wo_service_address') || "Address Specification Offline";
+            document.getElementById('clientAddressText').innerText = localStorage.getItem('current_wo_service_address') || "Address Specification Offline";
             
             document.getElementById('clientNameText').innerText = name;
             document.getElementById('documentDateText').innerText = new Date().toLocaleDateString();
@@ -120,7 +125,6 @@
             var container = document.getElementById('clientScopeContainer');
             container.innerHTML = "";
 
-            // Parse json transmission string generated on private estimation deck
             var rawJsonString = localStorage.getItem('current_wo_itemized_json');
             
             if (rawJsonString) {
@@ -138,7 +142,6 @@
                 } catch(e) { console.error("Cache array reading mismatch, triggering text string parsing fallbacks", e); }
             }
 
-            // Fallback tracking loop if JSON cache block is blank
             var rawTextScope = localStorage.getItem('current_wo_work_scope') || "Standard Sweeping & Stabilization Maintenance Package.";
             var simpleLines = rawTextScope.split('\n');
             simpleLines.forEach(function(line) {
