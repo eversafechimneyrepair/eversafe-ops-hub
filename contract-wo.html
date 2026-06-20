@@ -125,6 +125,15 @@
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
 
+        // APP MEMORY RECOVERY: Automatically fills text fields if hitting "Back" from Signatures
+        window.addEventListener('DOMContentLoaded', function() {
+            if(localStorage.getItem('current_wo_customer_name')) document.getElementById('customerNameInput').value = localStorage.getItem('current_wo_customer_name');
+            if(localStorage.getItem('current_wo_customer_email')) document.getElementById('customerEmailInput').value = localStorage.getItem('current_wo_customer_email');
+            if(localStorage.getItem('current_wo_service_address')) document.getElementById('serviceAddressInput').value = localStorage.getItem('current_wo_service_address');
+            if(localStorage.getItem('current_wo_work_scope')) document.getElementById('workScopeInput').value = localStorage.getItem('current_wo_work_scope');
+            if(localStorage.getItem('current_wo_est_cost')) document.getElementById('estimatedCostInput').value = localStorage.getItem('current_wo_est_cost');
+        });
+
         async function executeLogContractAndEmailCopy() {
             var logBtn = document.getElementById('logContractBtn');
             var statusDiv = document.getElementById('contractStatusLine');
@@ -185,18 +194,9 @@
                         statusDiv.style.color = "var(--accent-dark)";
                     }
                     
-                    // Failsafe: Wrap element values resetting so missing elements won't crash the script execution flow
-                    try {
-                        if(document.getElementById('customerNameInput')) document.getElementById('customerNameInput').value = "";
-                        if(document.getElementById('customerEmailInput')) document.getElementById('customerEmailInput').value = "";
-                        if(document.getElementById('serviceAddressInput')) document.getElementById('serviceAddressInput').value = "";
-                        if(document.getElementById('workScopeInput')) document.getElementById('workScopeInput').value = "";
-                        if(document.getElementById('estimatedCostInput')) document.getElementById('estimatedCostInput').value = "";
-                    } catch(formClearError) {
-                        console.warn("Failsafe Notice: Element resetting intercept skipped.", formClearError);
-                    }
+                    // NOTE: Form values are purposefully NOT cleared here anymore so back-button caching retains visibility
                     
-                    // Hardened location replacement directive to instantly clear cache loop restrictions
+                    // Hardened location replacement directive to instantly clear cache loops
                     setTimeout(function() {
                         window.location.replace("signatures.html");
                     }, 1000);
