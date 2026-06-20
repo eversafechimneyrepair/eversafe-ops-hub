@@ -119,6 +119,14 @@
         var isDrawing = false;
         var hasSigned = false;
 
+        // Pull saved data from the Contract page to prevent duplicate typing
+        window.addEventListener('DOMContentLoaded', function() {
+            var savedCustomerName = localStorage.getItem('current_wo_customer_name');
+            if (savedCustomerName) {
+                document.getElementById('signatoryNameInput').value = savedCustomerName;
+            }
+        });
+
         // Hardened mobile dimensions initialization matrix
         function setupCanvasMatrix() {
             var rect = canvas.getBoundingClientRect();
@@ -208,6 +216,8 @@
             var submitBtn = document.getElementById('submitSignatureBtn');
             var statusDiv = document.getElementById('signatureStatusLine');
             var printName = document.getElementById('signatoryNameInput').value.trim();
+            // Fetch the email saved from the contract page
+            var savedCustomerEmail = localStorage.getItem('current_wo_customer_email') || "No Email Provided";
 
             if (!printName) {
                 alert("Validation Omission: Signatory printed name is mandatory.");
@@ -233,6 +243,7 @@
                     body: JSON.stringify({
                         route: "updateWorkOrderSignature",
                         customerName: printName,
+                        customerEmail: savedCustomerEmail, // Included in payload
                         base64Data: base64SignatureData,
                         filename: cleanFilename
                     })
