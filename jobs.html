@@ -43,7 +43,7 @@
         
         .card-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         
-        .btn-utility { background: var(--primary-light); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 11px; cursor: pointer; text-align: center; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; }
+        .btn-utility { background: var(--primary-light); color: white; font-weight: bold; padding: 12px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 11px; cursor: pointer; text-align: center; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; border: 1px solid transparent; }
         .btn-utility:hover { background: var(--primary); }
         .btn-sms-trigger { background: #f0f7ff; color: var(--sms-blue); border: 1px solid #bae6fd; }
         .btn-sms-trigger:hover { background: #e0f2fe; }
@@ -53,6 +53,7 @@
 </head>
 <body>
 
+    <!-- SECURE MASTER ACCESS CONTROL SYSTEM -->
     <script>
         if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
             window.location.replace("index.html");
@@ -70,7 +71,17 @@
         <h3>Daily Field Work Orders</h3>
         <p class="subtitle">Deploy your active field session workspace cache to populate form subtotals automatically, or broadcast transit status updates to homeowners.</p>
 
+        <!-- 🔁 ACTIVE SESSION PURGE UTILITY CARD -->
+        <div class="dispatch-card" style="border: 1px dashed var(--danger); background: #fff1f2; text-align: center; margin-bottom: 25px;">
+            <span style="font-size: 11px; font-weight: 800; color: var(--danger); text-transform: uppercase; letter-spacing: 0.5px;">System Data Management</span>
+            <div style="font-size: 14px; font-weight: bold; margin: 4px 0 10px 0; color: var(--primary);">Active Field Session Cache Engaged</div>
+            <button type="button" class="btn-utility" style="background: var(--danger); max-width: 260px; margin: 0 auto; color: white;" onclick="clearActiveJobSession()">
+                🔄 Clear Active Job &amp; Reset Forms
+            </button>
+        </div>
+
         <div id="manifestContainer">
+            <!-- JOB 1: ALIGNED TO OHIO PRICE BOOK JURISDICTION -->
             <div class="dispatch-card active-run">
                 <div class="job-time">⏰ 09:00 AM - Scheduled Arrival</div>
                 <div class="job-title" id="name_job1">Johnathan Miller</div>
@@ -82,7 +93,7 @@
                 
                 <div class="card-actions-grid">
                     <button type="button" class="btn-utility btn-sms-trigger" onclick="triggerClientTransitNotification('job1')">
-                        自由 💬 Notify On My Way
+                        💬 Notify On My Way
                     </button>
                     <button type="button" class="btn-utility" style="background: var(--success);" onclick="loadJobTelemetryIntoCache('job1')">
                         🛠️ Deploy Hub Session
@@ -90,6 +101,7 @@
                 </div>
             </div>
 
+            <!-- JOB 2: ALIGNED TO MICHIGAN PRICE BOOK JURISDICTION -->
             <div class="dispatch-card">
                 <div class="job-time">⏰ 01:30 PM - Scheduled Arrival</div>
                 <div class="job-title" id="name_job2">Sarah Jenkins (Corporate Account)</div>
@@ -111,6 +123,7 @@
         </div>
     </div>
 
+    <!-- UNIVERSAL ACCELERATED FOOTER RAIL ANCHOR -->
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
@@ -145,6 +158,30 @@
 
             alert("🚀 Hub Session Synchronized!\nLoaded Workspace for: " + name);
             window.location.replace("inspection-l1.html");
+        }
+
+        // GARBAGE COLLECTION LAYER: Clear active tracking parameters from storage memory strings smoothly
+        function clearActiveJobSession() {
+            var trackingKeys = [
+                'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
+                'current_wo_work_scope', 'current_wo_est_cost', 'current_wo_selected_tier',
+                'current_wo_price_book_items', 'current_wo_itemized_json', 'current_wo_slideshow_data',
+                'cached_wo_cust', 'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
+                'current_l2_n1', 'current_l2_n2', 'current_l2_n3', 'current_l2_n4', 'current_l2_n5', 
+                'current_l2_n6', 'current_l2_n7', 'current_l2_n8', 'current_l2_summary', 'current_l2_client_initials'
+            ];
+            
+            trackingKeys.forEach(function(key) {
+                localStorage.removeItem(key);
+            });
+            
+            // Wipe standard checklist loop items dynamically
+            for (var i = 1; i <= 8; i++) { 
+                localStorage.removeItem('current_cache_l2_c' + i); 
+            }
+
+            alert("🧼 Workspace purges successful! All forms and bid sheets have been reset to blank.");
+            window.location.reload(); 
         }
 
         function triggerClientTransitNotification(idSuffix) {
