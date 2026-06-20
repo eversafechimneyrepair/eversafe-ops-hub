@@ -5,31 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Level 1 Area Map</title>
     <style>
-        :root { --primary: #0f172a; --primary-light: #1e293b; --accent: #F28C28; --bg: #f8fafc; --border: #cbd5e1; --success: #22c55e; --danger: #ef4444; }
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706; 
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --danger: #ef4444; 
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
         
-        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; }
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
-        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; }
+        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
         .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        h3 { margin-bottom: 15px; font-size: 18px; text-transform: uppercase; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 35px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
+        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+        p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.45; text-align: center; }
 
-        input[type="text"], input[type="date"], textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; margin-top: 4px; text-align: center; font-family: inherit; }
+        input[type="text"], input[type="date"], textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 4px; text-align: center; font-family: inherit; background: #fff; color: #0f172a; }
+        input[type="text"]:focus, input[type="date"]:focus, textarea:focus { outline: none; border-color: var(--accent); }
+        textarea { text-align: left; padding: 12px; resize: vertical; }
+        
+        .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-top: 12px; letter-spacing: 0.5px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        .section-title { font-size: 13px; background: var(--primary); color: white; padding: 6px 12px; font-weight: bold; text-transform: uppercase; margin-top: 22px; border-radius: 4px 4px 0 0; }
-        .mapping-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; text-align: center; }
-        .mapping-table th { background-color: #f1f5f9; text-align: center; font-size: 11px; padding: 8px 10px; border: 1px solid var(--border); color: #475569; }
-        .mapping-table td { padding: 6px 10px; border: 1px solid var(--border); font-size: 13.5px; vertical-align: middle; text-align: center; }
+        .mapping-table { width: 100%; border-collapse: collapse; margin: 20px 0; text-align: center; }
+        .mapping-table th { background-color: #f1f5f9; text-align: center; font-size: 11px; padding: 10px; border: 1px solid var(--border); color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        .mapping-table td { padding: 10px; border: 1px solid var(--border); font-size: 13.5px; vertical-align: middle; text-align: center; background: white; }
         input[type="checkbox"] { transform: scale(1.4); cursor: pointer; display: block; margin: 0 auto; }
-        .input-notes { width: 100%; padding: 4px 0; border: none; border-bottom: 1px solid transparent; background: transparent; font-family: inherit; font-size: 13px; color: #0000ff; text-align: center; }
+        
+        .input-notes { width: 100%; padding: 8px; border: 1px solid transparent; background: #f8fafc; border-radius: 4px; font-family: inherit; font-size: 13px; color: #1e293b; text-align: left; }
+        .input-notes:focus { background: #fff; border-color: var(--accent); outline: none; }
 
-        .btn-action { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 14px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 20px; }
+        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 25px auto 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+        .btn-action:hover { background-color: var(--accent-dark); }
+        .btn-action:active { transform: scale(0.98); }
+        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; }
+
+        .status-msg { margin-top: 20px; font-weight: bold; font-size: 14px; color: #475569; min-height: 20px; text-align: center; }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
         .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
@@ -55,57 +76,70 @@
 
     <div class="app-container">
         <div class="app-card">
-            <h3>Section I: Level 1 Accessible Interior Checklist</h3>
+            <h3>Level 1 Accessible Interior Checklist</h3>
+            <p>Complete fire safety evaluations in accordance with standard NFPA 211 regulatory parameters.</p>
             
             <div class="grid-2">
-                <div><label>Customer Name:</label><input type="text" id="l1_cust"></div>
-                <div><label>Date:</label><input type="date" id="l1_date"></div>
+                <div class="form-group"><label for="l1_cust">Customer Name:</label><input type="text" id="l1_cust" placeholder="Client name"></div>
+                <div class="form-group"><label for="l1_date">Evaluation Date:</label><input type="date" id="l1_date"></div>
             </div>
-            <div style="margin-bottom: 15px;"><label>Site Address:</label><input type="text" id="l1_addr"></div>
+            <div class="form-group" style="margin-bottom: 15px;"><label for="l1_addr">Site Address:</label><input type="text" id="l1_addr" placeholder="Service location address"></div>
 
             <table class="mapping-table">
-                <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">Component Checklist</th><th style="width:55%;">Real-Time Checklist Field Notes</th></tr></thead>
+                <thead>
+                    <tr>
+                        <th style="width:12%;">Pass</th>
+                        <th style="width:38%;">Component Checklist</th>
+                        <th style="width:50%;">Real-Time Field Notes</th>
+                    </tr>
+                </thead>
                 <tbody>
                     <tr>
                         <td><input type="checkbox" id="l1_c1" checked></td>
-                        <td>export <strong>Hearth Extension Face</strong></td>
-                        <td><input type="text" id="l1_n1" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:12px;">Hearth Extension Face</td>
+                        <td><input type="text" id="l1_n1" class="input-notes" placeholder="Condition details..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l1_c2" checked></td>
-                        <td><strong>Appliance Connector Pipe</strong></td>
-                        <td><input type="text" id="l1_n2" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:12px;">Appliance Connector Pipe</td>
+                        <td><input type="text" id="l1_n2" class="input-notes" placeholder="Condition details..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l1_c3" checked></td>
-                        <td><strong>Damper Assembly Frame</strong></td>
-                        <td><input type="text" id="l1_n3" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:12px;">Damper Assembly Frame</td>
+                        <td><input type="text" id="l1_n3" class="input-notes" placeholder="Condition details..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l1_c4" checked></td>
-                        <td><strong>Accessible Flue Vent Base</strong></td>
-                        <td><input type="text" id="l1_n4" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:12px;">Accessible Flue Vent Base</td>
+                        <td><input type="text" id="l1_n4" class="input-notes" placeholder="Condition details..."></td>
                     </tr>
                 </tbody>
             </table>
 
-            <div style="margin-top: 20px;"><label>Final Evaluation Summary Remarks:</label><textarea id="l1_summary" rows="3"></textarea></div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="l1_summary">Final Evaluation Summary Remarks:</label>
+                <textarea id="l1_summary" rows="3" placeholder="Enter formal diagnostic structural summaries..."></textarea>
+            </div>
+            
             <div class="grid-2" style="margin-top:15px;">
-                <div><label>Lead Field Tech Name:</label><input type="text" id="l1_tech" readonly style="background:#f1f5f9; font-weight:bold;"></div>
-                <div><label>Customer Verification Sign:</label><input type="text" id="l1_client" placeholder="Type initials to verify..."></div>
+                <div class="form-group"><label for="l1_tech">Lead Field Tech Name:</label><input type="text" id="l1_tech" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                <div class="form-group"><label for="l1_client">Customer Verification Initials:</label><input type="text" id="l1_client" placeholder="Type initials to verify..."></div>
             </div>
 
-            <button type="button" class="btn-action" onclick="submitLevel1ChecklistForm()">Submit Level 1 Report</button>
+            <button type="button" class="btn-action" id="submitL1FormBtn" onclick="submitLevel1ChecklistForm()">Submit Level 1 Report</button>
+            <div id="checklistStatusLine" class="status-msg">Ready for report compilation</div>
         </div>
     </div>
 
     <div class="fixed-bottom-nav-bar">
         <div class="nav-tabs-scroll">
             <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
+            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
             <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
             <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
             <a href="inspection-l1.html" class="nav-tab-btn active-tab"><span>🔍</span>L1 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>⚡</span>Routes</a>
+            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
             <a href="vault-upload.html" class="nav-tab-btn"><span>📁</span>Camera</a>
         </div>
     </div>
@@ -113,27 +147,136 @@
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
 
+        // REAL-TIME AUTO-SAVING COMPONENT ARCHITECTURE
         window.addEventListener('DOMContentLoaded', function() {
+            // Instantly resolve base structural values from parent process tracking matrices
             document.getElementById('l1_tech').value = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
-            document.getElementById('l1_cust').value = localStorage.getItem('cached_wo_cust') || "";
-            document.getElementById('l1_addr').value = localStorage.getItem('cached_wo_addr') || "";
+            
+            // Handle automatic systemic date assignment rules
+            var dateBox = document.getElementById('l1_date');
+            var savedDate = localStorage.getItem('current_l1_date');
+            if (savedDate) {
+                dateBox.value = savedDate;
+            } else {
+                dateBox.value = new Date().toISOString().substring(0, 10);
+                localStorage.setItem('current_l1_date', dateBox.value);
+            }
+
+            var textBindings = {
+                'l1_cust': 'current_wo_customer_name',
+                'l1_addr': 'current_wo_service_address',
+                'l1_n1': 'current_l1_n1',
+                'l1_n2': 'current_l1_n2',
+                'l1_n3': 'current_l1_n3',
+                'l1_n4': 'current_l1_n4',
+                'l1_summary': 'current_l1_summary',
+                'l1_client': 'current_l1_client_initials',
+                'l1_date': 'current_l1_date'
+            };
+
+            var checkBindings = ['l1_c1', 'l1_c2', 'l1_c3', 'l1_c4'];
+
+            // Bind text entries tracking loops
+            Object.keys(textBindings).forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    var cache = localStorage.getItem(textBindings[id]);
+                    if (cache !== null) el.value = cache;
+                    
+                    el.addEventListener('input', function() {
+                        localStorage.setItem(textBindings[id], el.value);
+                    });
+                }
+            });
+
+            // Bind checkbox configurations tracking loops
+            checkBindings.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    var cache = localStorage.getItem('current_cache_' + id);
+                    if (cache !== null) el.checked = (cache === 'true');
+                    
+                    el.addEventListener('change', function() {
+                        localStorage.setItem('current_cache_' + id, el.checked);
+                    });
+                }
+            });
         });
 
         async function submitLevel1ChecklistForm() {
+            var submitBtn = document.getElementById('submitL1FormBtn');
+            var statusDiv = document.getElementById('checklistStatusLine');
+            
+            var custName = document.getElementById('l1_cust').value.trim();
+            var jobAddr = document.getElementById('l1_addr').value.trim();
+            var dateVal = document.getElementById('l1_date').value;
+            var initialCheck = document.getElementById('l1_client').value.trim();
+
+            if (!custName || !jobAddr || !initialCheck) {
+                alert("Validation Fault: Customer details, address, and confirmation initials are required properties.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            statusDiv.innerHTML = "⏳ Transmitting level 1 telemetry to master database ledger...";
+            statusDiv.style.color = "#475569";
+
             var payload = [
-                document.getElementById('l1_cust').value, document.getElementById('l1_date').value, document.getElementById('l1_addr').value,
+                custName, 
+                dateVal, 
+                jobAddr,
                 document.getElementById('l1_c1').checked ? "Pass" : "Fail", document.getElementById('l1_n1').value,
                 document.getElementById('l1_c2').checked ? "Pass" : "Fail", document.getElementById('l1_n2').value,
                 document.getElementById('l1_c3').checked ? "Pass" : "Fail", document.getElementById('l1_n3').value,
                 document.getElementById('l1_c4').checked ? "Pass" : "Fail", document.getElementById('l1_n4').value,
-                document.getElementById('l1_summary').value, document.getElementById('l1_tech').value, document.getElementById('l1_client').value
+                document.getElementById('l1_summary').value, 
+                document.getElementById('l1_tech').value, 
+                initialCheck
             ];
-            await fetch(GOOGLE_API_GATEWAY_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ route: "recordFieldData", sheetName: "Level1_Inspections", payload: payload })});
-            alert("Level 1 Checklist Form Dispatched Successfully!");
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, { 
+                    method: "POST", 
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ 
+                        route: "recordFieldData", 
+                        sheetName: "Level1_Inspections", 
+                        payload: payload 
+                    })
+                });
+                let result = await response.json();
+
+                if (result.success || response.ok) {
+                    statusDiv.innerHTML = "✅ Level 1 Checklist Dispatched Successfully!";
+                    statusDiv.style.color = "var(--success-dark)";
+                    
+                    // Clear out page-specific inspection cache upon successful processing run
+                    ['current_l1_n1', 'current_l1_n2', 'current_l1_n3', 'current_l1_n4', 'current_l1_summary', 'current_l1_client_initials'].forEach(function(k) {
+                        localStorage.removeItem(k);
+                    });
+                    ['l1_c1', 'l1_c2', 'l1_c3', 'l1_c4'].forEach(function(id) {
+                        localStorage.removeItem('current_cache_' + id);
+                    });
+                    
+                    setTimeout(function() {
+                        window.location.replace("inspection-l2.html");
+                    }, 1200);
+
+                } else {
+                    statusDiv.innerHTML = "❌ Gateway Error: " + (result.error || "Server validation failure.");
+                    statusDiv.style.color = "var(--danger)";
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                statusDiv.innerHTML = "⚠️ Ledger Synced (Offline No-Cors Callback Triggered).";
+                statusDiv.style.color = "var(--accent-dark)";
+                submitBtn.disabled = false;
+            }
         }
 
         function executeFieldCrewLogout() {
-            localStorage.clear(); window.location.replace("index.html");
+            localStorage.clear(); 
+            window.location.replace("index.html");
         }
     </script>
 </body>
