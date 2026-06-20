@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Historical File Vault</title>
+    
+    <link rel="icon" type="image/jpeg" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
+
     <style>
         :root { 
             --primary: #0f172a; 
@@ -29,16 +34,13 @@
         h3 { margin-bottom: 12px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
         p { color: #64748b; font-size: 13px; margin-bottom: 20px; line-height: 1.45; text-align: center; }
         
-        /* Search Field Group layout */
         .search-flex-group { display: flex; gap: 8px; margin-bottom: 5px; }
         .search-input { flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; outline: none; background: #fff; color: #0f172a; }
         .search-input:focus { border-color: var(--accent); }
         
         .btn-action { background: var(--accent); color: white; font-weight: bold; padding: 14px 24px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
         .btn-action:hover { background-color: var(--accent-dark); }
-        .btn-action:active { transform: scale(0.98); }
 
-        /* Dynamic Result Card Element Array */
         #resultsWrapper { margin-top: 20px; }
         .result-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); position: relative; }
         
@@ -60,12 +62,7 @@
         .btn-vault-link.highlight-action:hover { background: var(--primary-light); }
 
         .center-status-line { text-align: center; font-size: 13px; color: #64748b; margin-top: 25px; font-weight: bold; line-height: 1.5; }
-
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-        .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
-        .nav-tab-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; flex: 1; height: 100%; background: transparent; border: none; color: #94a3b8; font-size: 9.5px; font-weight: bold; text-transform: uppercase; cursor: pointer; gap: 2px; text-decoration: none; }
-        .nav-tab-btn span { font-size: 16px; }
-        .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
     </style>
 </head>
 <body>
@@ -84,8 +81,6 @@
     </div>
 
     <div class="app-container">
-        
-        <!-- Re-engineered Search Frame Interface Component -->
         <div class="app-card">
             <h3>📁 Company Historical File Vault</h3>
             <p>Query client parameters in real time to instantly retrieve historical authorized contracts, digital signatures, and valuations.</p>
@@ -96,31 +91,17 @@
             </div>
         </div>
 
-        <!-- Dynamic Destination Wrapper Target for Server Rows Injection -->
         <div id="resultsWrapper">
             <div class="center-status-line">Enter client parameters above to pull documents from cloud storage.</div>
         </div>
-
     </div>
 
-    <!-- App Unified Core Navigation Utility -->
-    <div class="fixed-bottom-nav-bar">
-        <div class="nav-tabs-scroll">
-            <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
-            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
-            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
-            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
-            <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
-            <!-- Pointed text cleanly to Vault status but preserved file naming connectivity -->
-            <a href="dispatches.html" class="nav-tab-btn active-tab"><span>📁</span>Vault</a>
-            <a href="vault-upload.html" class="nav-tab-btn"><span>📁</span>Camera</a>
-        </div>
-    </div>
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
 
-        // Keyboard Event Bind: Lets Leo execute lookups fast via native 'Enter' clicks
         document.getElementById('vaultSearchQueryInput').addEventListener('keyup', function(event) {
             if (event.key === 'Enter') {
                 executeVaultLookupStream();
@@ -143,10 +124,7 @@
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({
-                        route: "searchClientVault",
-                        searchQuery: queryString
-                    })
+                    body: JSON.stringify({ route: "searchClientVault", searchQuery: queryString })
                 });
                 let result = await response.json();
 
@@ -162,7 +140,6 @@
                         var statusClass = isSigned ? "status-badge badge-signed" : "status-badge badge-auth";
                         var displayStatus = isSigned ? "Finalized & Signed" : "Authorized (Unsigned)";
                         
-                        // Formulate signature file button state parameters safely
                         var signatureButtonHtml = record.signatureUrl 
                             ? `<a href="${record.signatureUrl}" target="_blank" class="btn-vault-link">📝 View Signature</a>`
                             : `<button class="btn-vault-link" disabled style="opacity:0.4; cursor:not-allowed;">📝 No Signature</button>`;
@@ -183,7 +160,7 @@
                                 </div>
                                 <div class="card-actions-row">
                                     ${signatureButtonHtml}
-                                    <a href="billing-invoice.html" class="btn-vault-link highlight-action" onclick="passVaultDataToBilling('${record.customerName.replace(/'/g, "\\'")}', '${record.customerEmail.replace(/'/g, "\\'")}', '${record.serviceAddress.replace(/'/g, "\\'")}', '${record.estimatedCost}')">🧾 Push to Invoice</a>
+                                    <a href="proposals.html" class="btn-vault-link highlight-action" onclick="passVaultDataToSystemCache('${record.customerName.replace(/'/g, "\\'")}', '${record.customerEmail.replace(/'/g, "\\'")}', '${record.serviceAddress.replace(/'/g, "\\'")}', '${record.estimatedCost}')">📊 Load to Proposals</a>
                                 </div>
                             </div>
                         `;
@@ -199,8 +176,7 @@
             }
         }
 
-        // Bridge Component: If Leo hits "Push to Invoice", it auto-seeds all invoice layout fields and memory tracking instantly
-        function passVaultDataToBilling(name, email, address, cost) {
+        function passVaultDataToSystemCache(name, email, address, cost) {
             localStorage.setItem('current_wo_customer_name', name);
             localStorage.setItem('current_wo_customer_email', email);
             localStorage.setItem('current_wo_service_address', address);
