@@ -5,17 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Chimney Operations Suite</title>
     <style>
-        :root { --primary: #0f172a; --accent: #F28C28; --bg: #f8fafc; }
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706; 
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --danger: #ef4444; 
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--primary); display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; color: white; text-align: center; }
-        .login-card { background: white; color: #0f172a; width: 100%; max-width: 420px; padding: 35px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { font-size: 24px; margin-bottom: 5px; }
-        p { color: #64748b; font-size: 14px; margin-bottom: 25px; }
-        input[type="password"] { width: 100%; padding: 12px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; margin-top: 5px; text-align: center; outline: none; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--primary); display: flex; justify-content: center; align-items: center; height: 100vh; padding: 20px; color: white; text-align: center; }
+        
+        .login-card { background: white; color: #0f172a; width: 100%; max-width: 420px; padding: 40px 35px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.35); }
+        h2 { font-size: 24px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary); }
+        p { color: #64748b; font-size: 13px; margin-bottom: 25px; font-weight: 500; }
+        
+        input[type="password"] { width: 100%; padding: 14px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 16px; margin-top: 6px; text-align: center; outline: none; background: #fff; color: #0f172a; transition: border-color 0.2s; }
         input[type="password"]:focus { border-color: var(--accent); background-color: #fdfcfa; }
-        .btn-unlock { width: 100%; background-color: var(--accent); color: white; font-weight: bold; padding: 14px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 14px; cursor: pointer; margin-top: 20px; transition: background 0.2s; }
-        .btn-unlock:hover { background-color: #d97706; }
-        .error-line { color: #ef4444; font-size: 13px; font-weight: bold; margin-top: 15px; display: none; }
+        
+        .btn-unlock { width: 100%; background-color: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 25px; transition: background 0.2s, transform 0.1s; box-shadow: 0 4px 6px rgba(242, 140, 40, 0.2); }
+        .btn-unlock:hover { background-color: var(--accent-dark); }
+        .btn-unlock:active { transform: scale(0.99); }
+        .btn-unlock:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; box-shadow: none; }
+        
+        .error-line { color: var(--danger); background-color: #fef2f2; border: 1px solid #fee2e2; padding: 10px; border-radius: 6px; font-size: 13px; font-weight: bold; margin-top: 20px; display: none; text-align: center; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -23,11 +37,13 @@
     <div class="login-card">
         <h2>EverSafe Chimney</h2>
         <p>Enterprise Operations Suite v6.5</p>
+        
         <div style="text-align: left;">
-            <label style="font-size:11px; font-weight:bold; color:#1e293b; text-transform:uppercase; letter-spacing:0.5px;">Enter Crew Access Key:</label>
-            <input type="password" id="passkeyField" placeholder="••••••••">
+            <label for="passkeyField" style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">Enter Crew Access Key:</label>
+            <input type="password" id="passkeyField" placeholder="••••••••" autocomplete="current-password">
         </div>
-        <button type="button" class="btn-unlock" onclick="authenticateFieldCrewShift()">Unlock System Dashboard</button>
+        
+        <button type="button" class="btn-unlock" id="loginSubmitBtn" onclick="authenticateFieldCrewShift()">Unlock System Dashboard</button>
         <div id="loginErrorMsg" class="error-line"></div>
     </div>
 
@@ -37,17 +53,37 @@
         window.addEventListener('DOMContentLoaded', function() {
             var sessionActive = localStorage.getItem('eversafe_session_active');
             var cachedUser = localStorage.getItem('eversafe_authenticated_user');
+            
+            // Instantly bypass login route if a valid session token array is active
             if (sessionActive === 'true' && cachedUser) {
                 window.location.replace("contract-wo.html");
             } else {
-                document.getElementById('passkeyField').focus();
+                var field = document.getElementById('passkeyField');
+                field.focus();
+                
+                // HIGH-VELOCITY BIND: Lets Leo execute auth directly from key up commands
+                field.addEventListener('keyup', function(event) {
+                    if (event.key === 'Enter') {
+                        authenticateFieldCrewShift();
+                    }
+                });
             }
         });
 
         async function authenticateFieldCrewShift() {
             var inputKey = document.getElementById('passkeyField').value;
             var errorMsg = document.getElementById('loginErrorMsg');
+            var submitBtn = document.getElementById('loginSubmitBtn');
+            
+            if (!inputKey.trim()) {
+                errorMsg.innerText = "Validation Error: Crew security passcode input cannot be empty.";
+                errorMsg.style.display = "block";
+                return;
+            }
+
             errorMsg.style.display = "none";
+            submitBtn.disabled = true;
+            submitBtn.innerText = "⏳ Verifying Access Credentials...";
             
             try {
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
@@ -58,15 +94,21 @@
                 });
                 let result = await response.json();
                 
-                if(result.success) {
+                if (result.success) {
                     localStorage.setItem('eversafe_authenticated_user', result.authorizedUser);
                     localStorage.setItem('eversafe_session_active', 'true');
                     window.location.assign("contract-wo.html");
                 } else {
-                    errorMsg.innerText = result.error; errorMsg.style.display = "block";
+                    errorMsg.innerText = "❌ Verification Failure: " + (result.error || "Invalid security key proxy profile.");
+                    errorMsg.style.display = "block";
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = "Unlock System Dashboard";
                 }
             } catch (err) {
-                errorMsg.innerText = "Connection Error: Network Endpoint Offline."; errorMsg.style.display = "block";
+                errorMsg.innerText = "❌ Connection Error: Master gateway node or remote data endpoint offline.";
+                errorMsg.style.display = "block";
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Unlock System Dashboard";
             }
         }
     </script>
