@@ -130,7 +130,7 @@
                 </div>
             </div>
 
-            <!-- INLINE INLINE COMMAND INTENTS -->
+            <!-- AUTOMATED INTERCEPT COMMAND TRIGGERS -->
             <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent(event)">📲 Tap to Pay via Square App</button>
             <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">Finalize Ledger &amp; Charge Card</button>
 
@@ -149,7 +149,6 @@
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
 
         window.addEventListener('DOMContentLoaded', function() {
-            // Read upstream unified storage parameters cleanly with regression fallbacks
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || localStorage.getItem('cached_wo_email') || "";
             document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || localStorage.getItem('cached_wo_addr') || "";
@@ -159,7 +158,7 @@
             runTotalsCalc();
             initializeBillingCanvasPads();
             mountSecureSquareSDKForm();
-            toggleSquareDisplayFields(); // Ensure field states match channel default state
+            toggleSquareDisplayFields(); 
         });
 
         function runTotalsCalc() {
@@ -301,19 +300,48 @@
             }
         }
 
+        // DUAL-OS INTENT ENGINE: Detects device architecture to handle Square POS payloads correctly
         function processSquareAppMobileIntent(event) {
             if(event && event.preventDefault) event.preventDefault();
             
             var total = document.getElementById('inv_final_total').value || "0.00";
-            var cents = Math.round(parseFloat(total) * 100); if(cents <= 0) return alert("Value missing.");
+            var cents = Math.round(parseFloat(total) * 100); 
+            if(cents <= 0) return alert("Value missing.");
             
-            var callback = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/billing-invoice.html";
-            var linkUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify({
+            var customerName = document.getElementById('inv_cust').value || "Customer";
+            var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/billing-invoice.html";
+            
+            // Build cross-platform parameters
+            var dataPayload = {
                 "amount_money": { "amount": cents, "currency_code": "USD" },
-                "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE"], "auto_return": true },
-                "client_id": SQUARE_APP_ID, "location_id": SQUARE_LOC_ID, "notes": "EverSafe Field Run", "callback_url": callback, "version": "1.3"
-            }));
-            window.location.assign(linkUrl);
+                "options": { 
+                    "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE", "CASH"], 
+                    "auto_return": true 
+                },
+                "client_id": SQUARE_APP_ID,
+                "location_id": SQUARE_LOC_ID,
+                "notes": "EverSafe Run: " + customerName,
+                "callback_url": callbackUrl,
+                "version": "1.3"
+            };
+
+            // Detect mobile platform variant via user agent string
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            var isAndroid = /android/i.test(userAgent);
+            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+
+            if (isAndroid) {
+                // Strict Android intent construction structure format required for Chrome
+                var androidIntentUrl = 
+                    "intent://payment/create?data=" + encodeURIComponent(JSON.stringify(dataPayload)) +
+                    "#Intent;scheme=square-commerce-v1;package=com.squareup;S.browser_fallback_url=" + 
+                    encodeURIComponent(callbackUrl) + ";end";
+                window.location.href = androidIntentUrl;
+            } else {
+                // Standard URL scheme formatting execution loop parameter for Apple iOS devices
+                var iosSchemeUrl = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(dataPayload));
+                window.location.assign(iosSchemeUrl);
+            }
         }
 
         function executeFieldCrewLogout() {
