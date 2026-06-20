@@ -57,22 +57,33 @@
         .nav-tab-btn span { font-size: 16px; }
         .nav-tab-btn.active-tab { color: var(--accent); background-color: rgba(255,255,255,0.03); }
 
-        /* Receipt Styles */
-        .receipt-container { display: none; background: #fff; border: 2px solid var(--success); border-radius: 8px; padding: 25px 20px; text-align: left; }
-        .receipt-header { color: var(--success-dark); text-align: center; font-size: 20px; margin-bottom: 20px; font-weight: bold; text-transform: uppercase; border-bottom: 2px solid var(--border); padding-bottom: 15px;}
+        /* === BRANDED RECEIPT STYLES === */
+        .receipt-container { display: none; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 25px 20px; text-align: left; }
+        
+        .receipt-brand-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid var(--primary); }
+        .brand-info { flex: 1; }
+        .brand-info h2 { font-size: 18px; margin-bottom: 4px; color: var(--primary); text-transform: uppercase; }
+        .brand-info p { font-size: 12px; margin-bottom: 2px; color: #475569; text-align: left; line-height: 1.4; }
+        .brand-seals { display: flex; gap: 10px; align-items: center; }
+        .brand-seals img { max-height: 50px; width: auto; object-fit: contain; }
+
+        .receipt-title { color: #0f172a; font-size: 16px; font-weight: bold; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
         .receipt-row { margin-bottom: 12px; font-size: 13px; color: #334155; }
         .receipt-row strong { color: #0f172a; display: inline-block; width: 120px;}
         .receipt-divider { margin: 25px 0; border: 0; border-top: 1px dashed var(--border); }
         .receipt-signature-img { width: 100%; max-width: 300px; border: 1px solid var(--border); border-radius: 4px; background: white; margin-top: 10px; }
+        
+        .terms-block { page-break-inside: avoid; }
 
-        /* PRINT MEDIA STYLES - Hides the app interface, shows only the contract */
+        /* === PRINT MEDIA STYLES === */
         @media print {
             body { padding: 0; background: white; color: black; }
             .app-header, .fixed-bottom-nav-bar, .btn-action, .btn-secondary, .canvas-controls { display: none !important; }
             .app-container { width: 100%; max-width: 100%; margin: 0; padding: 0; }
             .app-card { border: none; box-shadow: none; padding: 0; }
-            .receipt-container { display: block !important; border: none; padding: 0; }
-            .receipt-header { color: black !important; }
+            .receipt-container { display: block !important; border: none !important; padding: 0 !important; }
+            .receipt-brand-header { border-bottom: 2px solid black; }
+            .brand-info h2, .receipt-title { color: black !important; }
         }
     </style>
 </head>
@@ -94,12 +105,13 @@
     <div class="app-container">
         <div class="app-card">
             
+            <!-- ACTIVE SIGNATURE FORM AREA -->
             <div id="signatureFormArea">
                 <h3>Customer Sign-Off</h3>
                 <p>Please present this layout array to the property owner to collect their digital structural authorization acknowledgment.</p>
                 
                 <div class="legal-clause-box" id="legalClauseText">
-                    By signing below, the customer acknowledges that the Level 1/Level 2 venting inspection diagnostic profile has been fully reviewed. Authority is hereby granted to EverSafe Chimney Repair to execute the specified tuckpointing, masonry repairs, or structural updates outlined in the contract documentation. All operations will be performed in conformance with local fire safety codes and industry standards.
+                    By signing below, you authorize EverSafe Chimney Repair LLC to perform the masonry and venting services outlined in this agreement. We pride ourselves on transparent, code-compliant craftsmanship (NFPA 211 standards). Unforeseen Conditions: Chimney systems often hide internal damage; if our technicians discover structural issues beyond the original scope once work begins, we will pause and consult with you before proceeding. Payment is due upon completion.
                 </div>
 
                 <div class="form-group">
@@ -121,8 +133,26 @@
                 <div id="signatureStatusLine" class="status-msg">Awaiting digital authorization...</div>
             </div>
 
+            <!-- HIDDEN OFFICIAL CONTRACT RECEIPT AREA (Shows on Success) -->
             <div id="contractReceiptArea" class="receipt-container">
-                <div class="receipt-header">EverSafe Chimney Repair<br><span style="font-size: 14px; color: #64748b;">Official Work Order Contract</span></div>
+                
+                <!-- Professional Branding Header -->
+                <div class="receipt-brand-header">
+                    <div class="brand-info">
+                        <h2>EverSafe Chimney Repair</h2>
+                        <p><strong>Phone:</strong> 419-517-1888</p>
+                        <p><strong>Web:</strong> eversafechimneyrepair.com</p>
+                        <p>Northwest Ohio & Southeast Michigan</p>
+                    </div>
+                    <div class="brand-seals">
+                        <!-- Pulls your generic logo, if you have a full specific logo image path, replace '/favicon.png' below -->
+                        <img src="/favicon.png" alt="EverSafe Logo" onerror="this.style.display='none'">
+                        <!-- Pulls your explicit BBB seal -->
+                        <img src="https://eversafechimneyrepair.com/images/eversafe-chimney-bbb-accreditation-seal-blue.png" alt="BBB Accredited Business">
+                    </div>
+                </div>
+
+                <div class="receipt-title">Official Work Order Contract</div>
                 
                 <div class="receipt-row"><strong>Date / Time:</strong> <span id="recDate"></span></div>
                 <div class="receipt-row"><strong>Customer:</strong> <span id="recName"></span></div>
@@ -136,14 +166,19 @@
                 
                 <div class="receipt-divider"></div>
                 
-                <div style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase; margin-bottom: 8px;">Terms Acknowledged:</div>
-                <div style="font-size: 11px; color: #000; line-height: 1.5; margin-bottom: 20px; font-style: italic; text-align: justify;">
-                    By signing below, the customer acknowledges that the Level 1/Level 2 venting inspection diagnostic profile has been fully reviewed. Authority is hereby granted to EverSafe Chimney Repair to execute the specified tuckpointing, masonry repairs, or structural updates outlined in the contract documentation. All operations will be performed in conformance with local fire safety codes and industry standards.
-                </div>
+                <div class="terms-block">
+                    <div style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase; margin-bottom: 8px;">Terms Acknowledged:</div>
+                    <div style="font-size: 11px; color: #000; line-height: 1.5; margin-bottom: 20px; text-align: justify;">
+                        <strong>Authorization:</strong> By signing below, you authorize EverSafe Chimney Repair LLC to perform the masonry, sweeping, and/or venting services outlined in this agreement. All operations are executed in conformance with local fire safety codes and NFPA 211 standards.<br><br>
+                        <strong>Unforeseen Conditions:</strong> Chimney systems frequently conceal internal deterioration. If our technicians discover structural defects or hazards beyond the original visual scope once operations commence, we will immediately pause work and consult with you regarding necessary adjustments before proceeding.<br><br>
+                        <strong>Payment & Warranties:</strong> Payment in full is due upon completion of the specified work unless prior arrangements are documented. We guarantee our craftsmanship; however, pre-existing structural decay or moisture intrusion outside the scope of this work is not covered. We respect your property and will maintain a safe, professional workspace throughout the duration of the project.
+                    </div>
 
-                <div class="receipt-row" style="font-weight: bold; margin-bottom: 5px;">Digital Signature Lock:</div>
-                <img id="recSignatureImage" class="receipt-signature-img" src="" alt="Customer Signature">
+                    <div class="receipt-row" style="font-weight: bold; margin-bottom: 5px;">Digital Signature Lock:</div>
+                    <img id="recSignatureImage" class="receipt-signature-img" src="" alt="Customer Signature">
+                </div>
                 
+                <!-- Action Buttons: One for PDF/Print, one to move forward -->
                 <button type="button" class="btn-action btn-secondary" onclick="window.print()">🖨️ Print / Save as PDF</button>
                 <button type="button" class="btn-action" onclick="window.location.href='billing-invoice.html'">Proceed to Billing &rarr;</button>
             </div>
@@ -151,6 +186,7 @@
         </div>
     </div>
 
+    <!-- ... Fixed Bottom Nav Code ... -->
     <div class="fixed-bottom-nav-bar">
         <div class="nav-tabs-scroll">
             <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
