@@ -3,29 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Field Dispatches</title>
+    <title>EverSafe Hub - Historical File Vault</title>
     <style>
-        :root { --primary: #0f172a; --primary-light: #1e293b; --accent: #F28C28; --bg: #f8fafc; --border: #cbd5e1; --danger: #ef4444; }
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706; 
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --danger: #ef4444; 
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; text-align: center; }
         
-        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; }
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
-        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; }
+        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
-        .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        h3 { margin-bottom: 15px; font-size: 18px; text-transform: uppercase; }
+        .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; text-align: left; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        h3 { margin-bottom: 12px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+        p { color: #64748b; font-size: 13px; margin-bottom: 20px; line-height: 1.45; text-align: center; }
+        
+        /* Search Field Group layout */
+        .search-flex-group { display: flex; gap: 8px; margin-bottom: 5px; }
+        .search-input { flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; outline: none; background: #fff; color: #0f172a; }
+        .search-input:focus { border-color: var(--accent); }
+        
+        .btn-action { background: var(--accent); color: white; font-weight: bold; padding: 14px 24px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+        .btn-action:hover { background-color: var(--accent-dark); }
+        .btn-action:active { transform: scale(0.98); }
 
-        input[type="text"], input[type="time"] { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; margin-top: 4px; text-align: center; font-family: inherit; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+        /* Dynamic Result Card Element Array */
+        #resultsWrapper { margin-top: 20px; }
+        .result-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); position: relative; }
+        
+        .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
+        .client-meta h4 { font-size: 16px; color: var(--primary); font-weight: bold; }
+        .client-meta p { font-size: 11px; color: #64748b; margin-top: 2px; }
+        
+        .status-badge { font-size: 10px; font-weight: bold; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap; }
+        .badge-signed { background: #dcfce7; color: var(--success-dark); }
+        .badge-auth { background: #fef3c7; color: var(--accent-dark); }
 
-        .input-error-shake { border-color: var(--danger) !important; background-color: #fef2f2 !important; animation: alertShake 0.4s ease; }
-        @keyframes alertShake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+        .card-body-row { font-size: 13px; color: #334155; line-height: 1.45; margin-bottom: 15px; }
+        .card-body-row div { margin-bottom: 5px; }
 
-        .btn-action { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 14px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; }
+        .card-actions-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-vault-link { flex: 1; min-width: 120px; text-align: center; padding: 11px; font-size: 11px; font-weight: bold; text-transform: uppercase; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--primary); background: #f8fafc; transition: background 0.2s; }
+        .btn-vault-link:hover { background: #e2e8f0; }
+        .btn-vault-link.highlight-action { background: var(--primary); color: white; border-color: var(--primary); }
+        .btn-vault-link.highlight-action:hover { background: var(--primary-light); }
+
+        .center-status-line { text-align: center; font-size: 13px; color: #64748b; margin-top: 25px; font-weight: bold; line-height: 1.5; }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
         .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
@@ -50,31 +84,35 @@
     </div>
 
     <div class="app-container">
+        
+        <!-- Re-engineered Search Frame Interface Component -->
         <div class="app-card">
-            <h3>Field Routing Matrix</h3>
+            <h3>📁 Company Historical File Vault</h3>
+            <p>Query client parameters in real time to instantly retrieve historical authorized contracts, digital signatures, and valuations.</p>
             
-            <div class="grid-2">
-                <div><label>Target Arrival:</label><input type="time" id="disp_time" value="08:00"></div>
-                <div><label>Tech Logged In:</label><input type="text" id="disp_crew" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+            <div class="search-flex-group">
+                <input type="text" id="vaultSearchQueryInput" class="search-input" placeholder="Type a customer name, street name, or email..." autocomplete="off">
+                <button type="button" class="btn-action" onclick="executeVaultLookupStream()">Search</button>
             </div>
-            <div style="margin-bottom:15px;"><label>Job Site Location Address:</label><input type="text" id="disp_addr" placeholder="Street layout route data..."></div>
-            
-            <div style="margin: 15px auto; padding: 15px; background: #fafafa; border: 1px solid var(--border); border-radius: 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; justify-items: center;">
-                <label style="font-weight:bold;"><input type="checkbox" id="disp_arr" style="transform: scale(1.4); margin-right: 8px;"> Crew Has Arrived</label>
-                <label style="font-weight:bold;"><input type="checkbox" id="disp_comp" style="transform: scale(1.4); margin-right: 8px;"> Job Route Closed</label>
-            </div>
-
-            <button type="button" class="btn-action" onclick="submitDispatchRoutingLog()">Update Office Status Log</button>
         </div>
+
+        <!-- Dynamic Destination Wrapper Target for Server Rows Injection -->
+        <div id="resultsWrapper">
+            <div class="center-status-line">Enter client parameters above to pull documents from cloud storage.</div>
+        </div>
+
     </div>
 
+    <!-- App Unified Core Navigation Utility -->
     <div class="fixed-bottom-nav-bar">
         <div class="nav-tabs-scroll">
             <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
+            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
             <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
             <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
             <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn active-tab"><span>⚡</span>Routes</a>
+            <!-- Pointed text cleanly to Vault status but preserved file naming connectivity -->
+            <a href="dispatches.html" class="nav-tab-btn active-tab"><span>📁</span>Vault</a>
             <a href="vault-upload.html" class="nav-tab-btn"><span>📁</span>Camera</a>
         </div>
     </div>
@@ -82,38 +120,96 @@
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
 
-        window.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('disp_crew').value = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
-            document.getElementById('disp_addr').value = localStorage.getItem('cached_wo_addr') || "";
+        // Keyboard Event Bind: Lets Leo execute lookups fast via native 'Enter' clicks
+        document.getElementById('vaultSearchQueryInput').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                executeVaultLookupStream();
+            }
         });
 
-        async function submitDispatchRoutingLog() {
-            var locationAddress = document.getElementById('disp_addr').value.trim();
-            
-            if (!locationAddress) {
-                alert("Omission Error: Provide target Job Site Location Address parameters before updating status log rows.");
-                var el = document.getElementById('disp_addr');
-                el.classList.add('input-error-shake'); setTimeout(function() { el.classList.remove('input-error-shake'); }, 600);
+        async function executeVaultLookupStream() {
+            var inputField = document.getElementById('vaultSearchQueryInput');
+            var resultsDisplay = document.getElementById('resultsWrapper');
+            var queryString = inputField.value.trim();
+
+            if (!queryString) {
+                alert("Search Validation Error: Please enter a target keyword name or address string first.");
                 return;
             }
-            
-            var arrivalString = document.getElementById('disp_arr').checked ? "ARRIVED" : "NOT_YET";
-            var trackingRouteString = document.getElementById('disp_comp').checked ? "COMPLETE" : "OPEN";
-            
-            var structuredPayloadArray = [
-                document.getElementById('disp_time').value, 
-                document.getElementById('disp_crew').value, 
-                locationAddress, 
-                arrivalString, 
-                trackingRouteString
-            ];
-            
-            await fetch(GOOGLE_API_GATEWAY_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ route: "recordFieldData", sheetName: "Dispatches", payload: structuredPayloadArray })});
-            alert("⚡ Dispatch Vector Track Synchronized Successfully.");
+
+            resultsDisplay.innerHTML = '<div class="center-status-line">⏳ Querying database and parsing drive assets...</div>';
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({
+                        route: "searchClientVault",
+                        searchQuery: queryString
+                    })
+                });
+                let result = await response.json();
+
+                if (result.success) {
+                    if (result.records.length === 0) {
+                        resultsDisplay.innerHTML = '<div class="center-status-line">❌ No matching files discovered for "' + queryString + '".<br>Verify tracking syntax spellings.</div>';
+                        return;
+                    }
+
+                    var compiledHtml = "";
+                    result.records.forEach(function(record) {
+                        var isSigned = record.status === "SIGNED";
+                        var statusClass = isSigned ? "status-badge badge-signed" : "status-badge badge-auth";
+                        var displayStatus = isSigned ? "Finalized & Signed" : "Authorized (Unsigned)";
+                        
+                        // Formulate signature file button state parameters safely
+                        var signatureButtonHtml = record.signatureUrl 
+                            ? `<a href="${record.signatureUrl}" target="_blank" class="btn-vault-link">📝 View Signature</a>`
+                            : `<button class="btn-vault-link" disabled style="opacity:0.4; cursor:not-allowed;">📝 No Signature</button>`;
+
+                        compiledHtml += `
+                            <div class="result-card">
+                                <div class="card-header-row">
+                                    <div class="client-meta">
+                                        <h4>${record.customerName}</h4>
+                                        <p>Logged: ${record.date} | ${record.customerEmail}</p>
+                                    </div>
+                                    <span class="${statusClass}">${displayStatus}</span>
+                                </div>
+                                <div class="card-body-row">
+                                    <div><strong>Service Address:</strong> ${record.serviceAddress}</div>
+                                    <div><strong>Scope of Work:</strong> ${record.workScope}</div>
+                                    <div><strong>Project Valuation:</strong> $${record.estimatedCost}</div>
+                                </div>
+                                <div class="card-actions-row">
+                                    ${signatureButtonHtml}
+                                    <a href="billing-invoice.html" class="btn-vault-link highlight-action" onclick="passVaultDataToBilling('${record.customerName.replace(/'/g, "\\'")}', '${record.customerEmail.replace(/'/g, "\\'")}', '${record.serviceAddress.replace(/'/g, "\\'")}', '${record.estimatedCost}')">🧾 Push to Invoice</a>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    resultsDisplay.innerHTML = compiledHtml;
+
+                } else {
+                    resultsDisplay.innerHTML = `<div class="center-status-line" style="color:var(--danger)">❌ Core Backend Fault: ${result.error}</div>`;
+                }
+            } catch (err) {
+                resultsDisplay.innerHTML = '<div class="center-status-line" style="color:var(--danger)">❌ API Network Exception: Endpoint connection timed out or lost.</div>';
+            }
+        }
+
+        // Bridge Component: If Leo hits "Push to Invoice", it auto-seeds all invoice layout fields and memory tracking instantly
+        function passVaultDataToBilling(name, email, address, cost) {
+            localStorage.setItem('current_wo_customer_name', name);
+            localStorage.setItem('current_wo_customer_email', email);
+            localStorage.setItem('current_wo_service_address', address);
+            localStorage.setItem('current_wo_est_cost', cost);
         }
 
         function executeFieldCrewLogout() {
-            localStorage.clear(); window.location.replace("index.html");
+            localStorage.clear(); 
+            window.location.replace("index.html");
         }
     </script>
 </body>
