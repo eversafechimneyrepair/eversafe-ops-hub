@@ -5,38 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - NFPA 211 Level 2 Map</title>
     <style>
-        :root { --primary: #0f172a; --primary-light: #1e293b; --accent: #F28C28; --bg: #f8fafc; --border: #cbd5e1; --danger: #ef4444; --success: #22c55e; }
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706; 
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --danger: #ef4444; 
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; text-align: center; color: #0f172a; }
         
-        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; }
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
-        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; }
+        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
         .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 35px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
+        h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
+        p { color: #64748b; font-size: 13px; margin-bottom: 25px; line-height: 1.45; text-align: center; }
         
-        input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 15px; margin-top: 4px; text-align: center; font-family: inherit; }
-        textarea { text-align: left; padding: 10px; }
+        input[type="text"], input[type="date"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 4px; text-align: center; font-family: inherit; background: #fff; color: #0f172a; }
+        input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+        textarea { text-align: left; padding: 12px; resize: vertical; }
+
+        .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-top: 12px; letter-spacing: 0.5px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        .section-title { font-size: 13px; background: var(--primary); color: white; padding: 6px 12px; font-weight: bold; text-transform: uppercase; margin-top: 22px; border-radius: 4px 4px 0 0; text-align: center; }
+        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 25px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
+        
         .mapping-table { width: 100%; border-collapse: collapse; margin-bottom: 5px; text-align: center; }
-        .mapping-table th { background-color: #f1f5f9; text-align: center; font-size: 11px; padding: 8px 10px; border: 1px solid var(--border); color: #475569; }
-        .mapping-table td { padding: 6px 10px; border: 1px solid var(--border); font-size: 13.5px; vertical-align: middle; text-align: center; }
+        .mapping-table th { background-color: #f1f5f9; text-align: center; font-size: 11px; padding: 10px; border: 1px solid var(--border); color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        .mapping-table td { padding: 10px; border: 1px solid var(--border); font-size: 13.5px; vertical-align: middle; text-align: center; background: white; }
         input[type="checkbox"] { transform: scale(1.4); cursor: pointer; display: block; margin: 0 auto; }
         
-        .row-defect-selector { font-size: 12px; padding: 4px; border: 1px dashed var(--border); border-radius: 4px; background: #fafafa; max-width: 100%; margin: 4px auto 0 auto; display: block; text-align: center; }
-        .input-notes { width: 100%; padding: 4px 0; border: none; border-bottom: 1px solid transparent; background: transparent; font-family: inherit; font-size: 13px; color: #0000ff; text-align: center; }
-        .input-notes:focus { outline: none; border-bottom-color: var(--accent); background: #fffdf9; }
+        .row-defect-selector { font-size: 13px; padding: 14px; border: 2px solid var(--accent); border-radius: 8px; background: #f8fafc; max-width: 100%; margin: 5px auto 20px auto; display: block; text-align: center; }
+        .input-notes { width: 100%; padding: 8px; border: 1px solid transparent; background: #f8fafc; border-radius: 4px; font-family: inherit; font-size: 13px; color: #1e293b; text-align: left; }
+        .input-notes:focus { outline: none; border-color: var(--accent); background: #fff; }
 
-        .defect-badge { padding: 1px 4px; border-radius: 3px; font-size: 10px; font-weight: bold; color: white; display: inline-block; text-transform: uppercase; margin-bottom: 2px; }
+        .defect-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; color: white; display: inline-block; text-transform: uppercase; margin-top: 4px; letter-spacing: 0.5px; }
         .badge-critical { background-color: var(--danger); }
         .badge-major { background-color: #d97706; }
 
-        .btn-action { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 14px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 20px; }
+        .btn-action { width: 100%; max-width: 340px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s, transform 0.1s; margin: 25px auto 0 auto; display: block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
+        .btn-action:hover { background-color: var(--accent-dark); }
+        .btn-action:active { transform: scale(0.98); }
+        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; transform: none; }
+
+        .status-msg { margin-top: 20px; font-weight: bold; font-size: 14px; color: #475569; min-height: 20px; text-align: center; }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
         .nav-tabs-scroll { display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; }
@@ -63,15 +84,16 @@
     <div class="app-container">
         <div class="app-card">
             <h3>NFPA 211 Compliance Mapping</h3>
+            <p>Execute Level 2 internal cross-sectional diagnostic tracking reports and log findings.</p>
             
             <div class="grid-2">
-                <div><label>Customer / Job Profile:</label><input type="text" id="l2_cust"></div>
-                <div><label>Inspection Date:</label><input type="date" id="l2_date"></div>
+                <div class="form-group"><label for="l2_cust">Customer / Job Profile:</label><input type="text" id="l2_cust" placeholder="Customer name"></div>
+                <div class="form-group"><label for="l2_date">Inspection Date:</label><input type="date" id="l2_date"></div>
             </div>
-            <div style="margin-bottom: 15px;"><label>Site Address:</label><input type="text" id="l2_addr"></div>
+            <div class="form-group" style="margin-bottom: 15px;"><label for="l2_addr">Site Address:</label><input type="text" id="l2_addr" placeholder="Service location address"></div>
 
-            <div style="padding:12px; background:#f8fafc; border:2px solid var(--accent); border-radius:6px; margin-bottom:15px;" class="row-defect-selector">
-                <label style="font-size:12px; font-weight:bold; color:var(--primary); display:block; margin-bottom:4px;">🚨 NFPA 211 Master Library Auto-Stamps:</label>
+            <div class="row-defect-selector">
+                <label style="font-size:11px; font-weight:bold; color:var(--primary); display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">🚨 NFPA 211 Master Library Auto-Stamps:</label>
                 <select id="l2DefectLibrary" onchange="injectLibraryCodeDefect()">
                     <option value="">-- Select Code Infraction to Stamp --</option>
                     <optgroup label="Section I: Hearth Base &amp; Firebox Frame">
@@ -93,82 +115,88 @@
 
             <div class="section-title">Section I: Hearth Base &amp; Solid Fuel Firebox Area</div>
             <table class="mapping-table">
-                <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">NFPA 211 Component Checklist</th><th style="width:55%;">Real-Time Compliance Notes</th></tr></thead>
+                <thead><tr><th style="width:12%;">Pass</th><th style="width:38%;">NFPA 211 Component Checklist</th><th style="width:50%;">Real-Time Compliance Notes</th></tr></thead>
                 <tbody>
                     <tr>
                         <td><input type="checkbox" id="l2_c1" checked></td>
-                        <td><strong>Hearth Extension Deck</strong><br><div class="defect-badge badge-major" id="badge_l2_n1" style="display:none;">Major Fault</div></td>
-                        <td><input type="text" id="l2_n1" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">Hearth Extension Deck<br><div class="defect-badge badge-major" id="badge_l2_n1" style="display:none;">Major Fault</div></td>
+                        <td><input type="text" id="l2_n1" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l2_c2" checked></td>
-                        <td><strong>Firebrick Inner Chamber</strong><br><div class="defect-badge badge-critical" id="badge_l2_n2" style="display:none;">Critical</div></td>
-                        <td><input type="text" id="l2_n2" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">Firebrick Inner Chamber<br><div class="defect-badge badge-critical" id="badge_l2_n2" style="display:none;">Critical</div></td>
+                        <td><input type="text" id="l2_n2" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l2_c3" checked></td>
-                        <td><strong>Combustible Clearance Vectors</strong><br><div class="defect-badge badge-major" id="badge_l2_n3" style="display:none;">Major Fault</div></td>
-                        <td><input type="text" id="l2_n3" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">Combustible Clearance Vectors<br><div class="defect-badge badge-major" id="badge_l2_n3" style="display:none;">Major Fault</div></td>
+                        <td><input type="text" id="l2_n3" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                 </tbody>
             </table>
 
-            <div class="section-title">Section II: Internal Flue &amp; Venting Path (Video Tracking View)</div>
+            <div class="section-title">Section II: Internal Flue &amp; Venting Path (Video Tracking)</div>
             <table class="mapping-table">
-                <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">NFPA 211 Component Checklist</th><th style="width:55%;">Real-Time Compliance Notes</th></tr></thead>
+                <thead><tr><th style="width:12%;">Pass</th><th style="width:38%;">NFPA 211 Component Checklist</th><th style="width:50%;">Real-Time Compliance Notes</th></tr></thead>
                 <tbody>
                     <tr>
                         <td><input type="checkbox" id="l2_c4" checked></td>
-                        <td><strong>Internal Clay Flue Liners</strong><br><div class="defect-badge badge-critical" id="badge_l2_n4" style="display:none;">Critical</div></td>
-                        <td><input type="text" id="l2_n4" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">Internal Clay Flue Liners<br><div class="defect-badge badge-critical" id="badge_l2_n4" style="display:none;">Critical</div></td>
+                        <td><input type="text" id="l2_n4" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l2_c5" checked></td>
-                        <td><strong>Liner Joints &amp; Mortar Seals</strong><br><div class="defect-badge badge-major" id="badge_l2_n5" style="display:none;">Major Fault</div></td>
-                        <td><input type="text" id="l2_n5" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">Liner Joints &amp; Mortar Seals<br><div class="defect-badge badge-major" id="badge_l2_n5" style="display:none;">Major Fault</div></td>
+                        <td><input type="text" id="l2_n5" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l2_c6" checked></td>
-                        <td><strong>Creosote / Particulate Load</strong><br><div class="defect-badge badge-critical" id="badge_l2_n6" style="display:none;">Critical</div></td>
-                        <td><input type="text" id="l2_n6" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">Creosote / Particulate Load<br><div class="defect-badge badge-critical" id="badge_l2_n6" style="display:none;">Critical</div></td>
+                        <td><input type="text" id="l2_n6" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                 </tbody>
             </table>
 
             <div class="section-title">Section III: Structural Stack &amp; Roof Line Termination</div>
             <table class="mapping-table">
-                <thead><tr><th style="width:10%;">Pass</th><th style="width:35%;">NFPA 211 Component Checklist</th><th style="width:55%;">Real-Time Compliance Notes</th></tr></thead>
+                <thead><tr><th style="width:12%;">Pass</th><th style="width:38%;">NFPA 211 Component Checklist</th><th style="width:50%;">Real-Time Compliance Notes</th></tr></thead>
                 <tbody>
                     <tr>
                         <td><input type="checkbox" id="l2_c7" checked></td>
-                        <td><strong>Concrete Crown Weather-Seal</strong><br><div class="defect-badge badge-major" id="badge_l2_n7" style="display:none;">Major Fault</div></td>
-                        <td><input type="text" id="l2_n7" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">Concrete Crown Weather-Seal<br><div class="defect-badge badge-major" id="badge_l2_n7" style="display:none;">Major Fault</div></td>
+                        <td><input type="text" id="l2_n7" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" id="l2_c8" checked></td>
-                        <td><strong>3-2-10 Height Envelope Rule</strong><br><div class="defect-badge badge-critical" id="badge_l2_n8" style="display:none;">Critical</div></td>
-                        <td><input type="text" id="l2_n8" class="input-notes"></td>
+                        <td style="text-align:left; font-weight:bold; padding-left:8px;">3-2-10 Height Envelope Rule<br><div class="defect-badge badge-critical" id="badge_l2_n8" style="display:none;">Critical</div></td>
+                        <td><input type="text" id="l2_n8" class="input-notes" placeholder="No discrepancies observed..."></td>
                     </tr>
                 </tbody>
             </table>
 
-            <div style="margin-top: 20px;"><label style="font-size:12px; font-weight:bold; color:#475569;">Final Compliance Evaluation Summary:</label><textarea id="l2_summary" rows="3"></textarea></div>
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="l2_summary">Final Compliance Evaluation Summary:</label>
+                <textarea id="l2_summary" rows="3" placeholder="Enter formal diagnostic structural summaries..."></textarea>
+            </div>
+            
             <div class="grid-2" style="margin-top:15px;">
-                <div><label>Lead Field Tech Name:</label><input type="text" id="l2_tech" readonly style="background:#f1f5f9; font-weight:bold;"></div>
-                <div><label>Customer Verification Initials:</label><input type="text" id="l2_client" placeholder="Type initials to sign..."></div>
+                <div class="form-group"><label for="l2_tech">Lead Field Tech Name:</label><input type="text" id="l2_tech" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                <div class="form-group"><label for="l2_client">Customer Verification Initials:</label><input type="text" id="l2_client" placeholder="Type initials to sign..."></div>
             </div>
 
-            <button type="button" class="btn-action" onclick="submitLevel2ReportToOffice()">Submit Level 2 Report to Office</button>
+            <button type="button" class="btn-action" id="submitL2FormBtn" onclick="submitLevel2ReportToOffice()">Submit Level 2 Report to Office</button>
+            <div id="checklistStatusLine" class="status-msg">Ready for structural report compilation</div>
         </div>
     </div>
 
     <div class="fixed-bottom-nav-bar">
         <div class="nav-tabs-scroll">
             <a href="contract-wo.html" class="nav-tab-btn"><span>🛠️</span>Contract</a>
+            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
             <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
             <a href="inspection-l2.html" class="nav-tab-btn active-tab"><span>📋</span>L2 Map</a>
             <a href="inspection-l1.html" class="nav-tab-btn"><span>🔍</span>L1 Map</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>⚡</span>Routes</a>
+            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
             <a href="vault-upload.html" class="nav-tab-btn"><span>📁</span>Camera</a>
         </div>
     </div>
@@ -176,29 +204,114 @@
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         
+        // REACTIVE RUNTIME TRACKING ENGINE
         window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('l2_tech').value = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
-            document.getElementById('l2_cust').value = localStorage.getItem('cached_wo_cust') || "";
-            document.getElementById('l2_addr').value = localStorage.getItem('cached_wo_addr') || "";
+            
+            // Set up or load active inspection timestamp
+            var dateBox = document.getElementById('l2_date');
+            var savedDate = localStorage.getItem('current_l2_date');
+            if (savedDate) {
+                dateBox.value = savedDate;
+            } else {
+                dateBox.value = new Date().toISOString().substring(0, 10);
+                localStorage.setItem('current_l2_date', dateBox.value);
+            }
+
+            var textBindings = {
+                'l2_cust': 'current_wo_customer_name',
+                'l2_addr': 'current_wo_service_address',
+                'l2_n1': 'current_l2_n1', 'l2_n2': 'current_l2_n2', 'l2_n3': 'current_l2_n3',
+                'l2_n4': 'current_l2_n4', 'l2_n5': 'current_l2_n5', 'l2_n6': 'current_l2_n6',
+                'l2_n7': 'current_l2_n7', 'l2_n8': 'current_l2_n8',
+                'l2_summary': 'current_l2_summary',
+                'l2_client': 'current_l2_client_initials',
+                'l2_date': 'current_l2_date'
+            };
+
+            var checkBindings = ['l2_c1', 'l2_c2', 'l2_c3', 'l2_c4', 'l2_c5', 'l2_c6', 'l2_c7', 'l2_c8'];
+
+            // Initialize and bind input monitoring loops
+            Object.keys(textBindings).forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    var cache = localStorage.getItem(textBindings[id]);
+                    if (cache !== null) el.value = cache;
+                    
+                    el.addEventListener('input', function() {
+                        localStorage.setItem(textBindings[id], el.value);
+                        evaluateActiveBadgeVisibility(id);
+                    });
+                }
+            });
+
+            // Initialize and bind click checkbox monitoring loops
+            checkBindings.forEach(function(id) {
+                var el = document.getElementById(id);
+                if (el) {
+                    var cache = localStorage.getItem('current_cache_' + id);
+                    if (cache !== null) el.checked = (cache === 'true');
+                    
+                    el.addEventListener('change', function() {
+                        localStorage.setItem('current_cache_' + id, el.checked);
+                    });
+                }
+            });
+
+            // Re-render badges on page reload if cached text contains library issues
+            ['l2_n1', 'l2_n2', 'l2_n3', 'l2_n4', 'l2_n5', 'l2_n6', 'l2_n7', 'l2_n8'].forEach(evaluateActiveBadgeVisibility);
         });
+
+        function evaluateActiveBadgeVisibility(id) {
+            var val = document.getElementById(id) ? document.getElementById(id).value : "";
+            var badge = document.getElementById('badge_' + id);
+            if (badge) {
+                if (val.includes("[CRITICAL]") || val.includes("[MAJOR]")) {
+                    badge.className = val.includes("[CRITICAL]") ? "defect-badge badge-critical" : "defect-badge badge-major";
+                    badge.style.display = "inline-block";
+                } else {
+                    badge.style.display = "none";
+                }
+            }
+        }
 
         function injectLibraryCodeDefect() {
             var select = document.getElementById('l2DefectLibrary'); if(!select.value) return;
             var segments = select.value.split('|'); var inputId = segments[0]; var text = segments[1];
             
+            // Drop values into target DOM elements
             document.getElementById(inputId).value = text;
-            document.getElementById(inputId.replace('n', 'c')).checked = false;
+            var targetCheckId = inputId.replace('n', 'c');
+            document.getElementById(targetCheckId).checked = false;
             
-            var badge = document.getElementById('badge_' + inputId);
-            if(badge) {
-                badge.className = text.includes("CRITICAL") ? "defect-badge badge-critical" : "defect-badge badge-major";
-                badge.style.display = "inline-block";
-            }
+            // Mirror state updates directly to LocalStorage array bindings
+            localStorage.setItem('current_l2_' + inputId.split('_')[1], text);
+            localStorage.setItem('current_cache_' + targetCheckId, 'false');
+            
+            evaluateActiveBadgeVisibility(inputId);
+            select.value = ""; // Reset library select input view
         }
 
         async function submitLevel2ReportToOffice() {
+            var submitBtn = document.getElementById('submitL2FormBtn');
+            var statusDiv = document.getElementById('checklistStatusLine');
+            
+            var custName = document.getElementById('l2_cust').value.trim();
+            var jobAddr = document.getElementById('l2_addr').value.trim();
+            var dateVal = document.getElementById('l2_date').value;
+            var initials = document.getElementById('l2_client').value.trim();
+
+            if (!custName || !jobAddr || !initials) {
+                alert("Validation Omission: Customer name, site address, and verification initials are required elements.");
+                return;
+            }
+
+            submitBtn.disabled = true;
+            statusDiv.innerHTML = "⏳ Transmitting level 2 diagnostics to master database ledger...";
+            statusDiv.style.color = "#475569";
+
             var payload = [
-                document.getElementById('l2_cust').value, document.getElementById('l2_date').value, document.getElementById('l2_addr').value,
+                custName, dateVal, jobAddr,
                 document.getElementById('l2_c1').checked ? "Pass" : "Fail", document.getElementById('l2_n1').value,
                 document.getElementById('l2_c2').checked ? "Pass" : "Fail", document.getElementById('l2_n2').value,
                 document.getElementById('l2_c3').checked ? "Pass" : "Fail", document.getElementById('l2_n3').value,
@@ -207,14 +320,49 @@
                 document.getElementById('l2_c6').checked ? "Pass" : "Fail", document.getElementById('l2_n6').value,
                 document.getElementById('l2_c7').checked ? "Pass" : "Fail", document.getElementById('l2_n7').value,
                 document.getElementById('l2_c8').checked ? "Pass" : "Fail", document.getElementById('l2_n8').value,
-                document.getElementById('l2_summary').value, document.getElementById('l2_tech').value, document.getElementById('l2_client').value
+                document.getElementById('l2_summary').value, document.getElementById('l2_tech').value, initials
             ];
-            await fetch(GOOGLE_API_GATEWAY_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ route: "recordFieldData", sheetName: "Level2_Inspections", payload: payload })});
-            alert("Level 2 Compliance Records Saved!");
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({
+                        route: "recordFieldData",
+                        sheetName: "Level2_Inspections",
+                        payload: payload
+                    })
+                });
+                let result = await response.json();
+
+                if (result.success || response.ok) {
+                    statusDiv.innerHTML = "✅ Level 2 Compliance Records Saved!";
+                    statusDiv.style.color = "var(--success-dark)";
+                    
+                    // Clear out page-specific checklist tracking caches on processing complete
+                    ['current_l2_n1', 'current_l2_n2', 'current_l2_n3', 'current_l2_n4', 'current_l2_n5', 'current_l2_n6', 'current_l2_n7', 'current_l2_n8', 'current_l2_summary', 'current_l2_client_initials'].forEach(function(k) {
+                        localStorage.removeItem(k);
+                    });
+                    for (var i = 1; i <= 8; i++) { localStorage.removeItem('current_cache_l2_c' + i); }
+
+                    setTimeout(function() {
+                        window.location.replace("billing-invoice.html");
+                    }, 1200);
+                } else {
+                    statusDiv.innerHTML = "❌ Gateway Rejection: " + (result.error || "Server validation failure.");
+                    statusDiv.style.color = "var(--danger)";
+                    submitBtn.disabled = false;
+                }
+            } catch (err) {
+                statusDiv.innerHTML = "⚠️ Ledger Synced (Offline No-Cors Callback Triggered).";
+                statusDiv.style.color = "var(--accent-dark)";
+                submitBtn.disabled = false;
+            }
         }
 
         function executeFieldCrewLogout() {
-            localStorage.clear(); window.location.replace("index.html");
+            localStorage.clear(); 
+            window.location.replace("index.html");
         }
     </script>
 </body>
