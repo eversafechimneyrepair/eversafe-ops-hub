@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Universal Merchant Billing</title>
     
-    <!-- Mobile App Icon & Manifest Configuration -->
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
     <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
     
-    <!-- Secure Core Square Production Web SDK Library Loader -->
     <script src="https://web.squarecdn.com/v1/square.js"></script>
     
     <style>
@@ -110,14 +108,12 @@
                 <div class="form-group"><label>Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;"></div>
             </div>
 
-            <!-- ENCAPSULATED SQUARE WEB SDK (FOR PC/DESKTOP AND MANUAL FALLBACKS) -->
             <div id="squareFormWrapper" style="display:block; margin-top:20px; padding:15px; background:#f8fafc; border:1px dashed var(--border); border-radius:6px;">
                 <p style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-align:center; color: var(--primary);">🔒 Secure Credit Card Terminal</p>
                 <div id="sq-card-element"></div>
                 <input type="text" id="manualRefInput" placeholder="Optional: Type Manual Verification Hash Key" style="margin-top:10px;">
             </div>
 
-            <!-- UNIVERSAL SIGNATURE CAPTURE VIEW MATRIX -->
             <div class="signature-grid">
                 <div class="signature-wrapper">
                     <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#475569; margin-bottom:4px;">Billing Agent Signature:</p>
@@ -131,7 +127,6 @@
                 </div>
             </div>
 
-            <!-- DYNAMIC TARGET BUTTON MATRIX -->
             <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent()">📲 Tap to Pay via Square App</button>
             <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">Finalize Ledger &amp; Charge Card</button>
 
@@ -139,7 +134,6 @@
         </div>
     </div>
 
-    <!-- GLOBAL APP NAVIGATION GATEWAY -->
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
@@ -310,20 +304,26 @@
             var tSig = extractCanvasBase64DataStringUrl('inv_tech_sig');
             var cSig = extractCanvasBase64DataStringUrl('inv_client_sig');
 
+            // 🚨 HIGH-TICKET SMS INTEGRATION ALERT METRIC
+            var finalLedgerVal = parseFloat(document.getElementById('inv_final_total').value) || 0;
+            var highTicketLimit = 1500.00;
+            var triggerHighTicketAlert = (finalLedgerVal >= highTicketLimit) ? "TRUE" : "FALSE";
+
             var payload = [
                 document.getElementById('inv_cust').value, 
                 new Date().toLocaleDateString(), 
                 document.getElementById('inv_addr').value, 
                 document.getElementById('inv_scope').value, 
                 document.getElementById('inv_subtotal').value, 
-                document.getElementById('inv_final_total').value, 
+                finalLedgerVal.toFixed(2), 
                 document.getElementById('inv_payment').value, 
                 document.getElementById('inv_status').value, 
                 CURRENT_USER, 
                 document.getElementById('inv_email').value, 
                 tokenStr, 
                 tSig, 
-                cSig
+                cSig,
+                triggerHighTicketAlert // 👈 Appended to column 14 for background script text distribution
             ];
             
             try {
@@ -338,10 +338,13 @@
                     'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
                     'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier',
                     'current_wo_price_book_items', 'current_wo_slideshow_data', 'cached_wo_cust', 
-                    'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal'
+                    'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
+                    'current_wo_itemized_json'
                 ];
                 sessionKeys.forEach(function(k) { localStorage.removeItem(k); });
-                window.location.replace("dispatches.html");
+                
+                // Reroute back to active daily manifest hub cockpit
+                window.location.replace("jobs.html");
             } catch(e) {
                 alert("Critical API Transmission Exception. Retrying secondary ledger hooks...");
                 document.getElementById('chargeCardBtn').disabled = false;
@@ -379,7 +382,6 @@
             var targetDeepLink = "";
 
             if (isAndroid) {
-                // EXPLICIT SQUARE INTENT RULE MATRIX STRUCTURE FOR GOOGLE CHROME/ANDROID PHONES
                 targetDeepLink = "intent:#Intent;" +
                     "action=com.squareup.pos.action.CHARGE;" +
                     "package=com.squareup;" +
@@ -394,7 +396,6 @@
                     "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
                     "end";
             } else {
-                // STANDARD ENCODED JSON OBJECT SPEC FOR APPLE SAFARI/IOS PHONES
                 var iosDataPayload = {
                     "amount_money": { "amount": cents, "currency_code": "USD" },
                     "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE", "CASH"], "auto_return": true },
@@ -407,7 +408,6 @@
                 targetDeepLink = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(iosDataPayload));
             }
 
-            // Programmatic anchor routing injection protects hardware pipeline handoffs
             var virtualAnchor = document.createElement("a");
             virtualAnchor.setAttribute("href", targetDeepLink);
             virtualAnchor.style.display = "none";
