@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Secure Merchant Billing</title>
+    <title>EverSafe Hub - Universal Merchant Billing</title>
     
+    <!-- Mobile App Icon & Manifest Configuration -->
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
     <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
     
+    <!-- Secure Core Square Production Web SDK Library Loader -->
     <script src="https://web.squarecdn.com/v1/square.js"></script>
     
     <style>
@@ -51,9 +53,10 @@
         .sig-canvas { border: 2px dashed var(--border); background: #fafbfc; border-radius: 6px; touch-action: none; width: 100%; height: 120px; display: block; }
         .btn-clear { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 10px; text-transform: uppercase; border-radius: 4px; cursor: pointer; margin-top: 6px; font-weight: bold; }
 
-        .btn-action { width: 100%; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; display: block; }
+        .btn-action { width: 100%; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; display: block; transition: opacity 0.2s; }
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; box-shadow: none; }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
+        .status-msg { margin-top: 20px; font-weight: bold; font-size: 13px; color: #475569; min-height: 20px; text-align: center; }
     </style>
 </head>
 <body>
@@ -107,12 +110,14 @@
                 <div class="form-group"><label>Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;"></div>
             </div>
 
+            <!-- ENCAPSULATED SQUARE WEB SDK (FOR PC/DESKTOP AND MANUAL FALLBACKS) -->
             <div id="squareFormWrapper" style="display:block; margin-top:20px; padding:15px; background:#f8fafc; border:1px dashed var(--border); border-radius:6px;">
                 <p style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-align:center; color: var(--primary);">🔒 Secure Credit Card Terminal</p>
                 <div id="sq-card-element"></div>
                 <input type="text" id="manualRefInput" placeholder="Optional: Type Manual Verification Hash Key" style="margin-top:10px;">
             </div>
 
+            <!-- UNIVERSAL SIGNATURE CAPTURE VIEW MATRIX -->
             <div class="signature-grid">
                 <div class="signature-wrapper">
                     <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#475569; margin-bottom:4px;">Billing Agent Signature:</p>
@@ -126,6 +131,7 @@
                 </div>
             </div>
 
+            <!-- DYNAMIC TARGET BUTTON MATRIX -->
             <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent()">📲 Tap to Pay via Square App</button>
             <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">Finalize Ledger &amp; Charge Card</button>
 
@@ -133,6 +139,7 @@
         </div>
     </div>
 
+    <!-- GLOBAL APP NAVIGATION GATEWAY -->
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
@@ -144,32 +151,34 @@
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
 
         window.addEventListener('DOMContentLoaded', function() {
-            // Re-inflate values from cache on load
+            // Re-inflate values from local cache loops instantly
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || localStorage.getItem('cached_wo_email') || "";
             document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || localStorage.getItem('cached_wo_addr') || "";
             document.getElementById('inv_scope').value = localStorage.getItem('current_wo_work_scope') || localStorage.getItem('cached_inv_scope') || "";
             document.getElementById('inv_subtotal').value = localStorage.getItem('current_wo_est_cost') || localStorage.getItem('cached_inv_subtotal') || "0.00";
             
-            // Set up active keystroke tracking loops to prevent data loss on page refreshes
+            // Safe Sync Watchers to protect against hard page closures or app swaps
             document.getElementById('inv_cust').addEventListener('input', function() { localStorage.setItem('current_wo_customer_name', this.value); });
             document.getElementById('inv_email').addEventListener('input', function() { localStorage.setItem('current_wo_customer_email', this.value); });
             document.getElementById('inv_addr').addEventListener('input', function() { localStorage.setItem('current_wo_service_address', this.value); });
             document.getElementById('inv_scope').addEventListener('input', function() { localStorage.setItem('current_wo_work_scope', this.value); });
 
             runTotalsCalc();
-            initializeBillingCanvasPads();
+            initializeUniversalPointerCanvasPads();
             mountSecureSquareSDKForm();
             toggleSquareDisplayFields(); 
             
-            // SQUARE RESPONSE RADAR: Intercept incoming transaction parameter callbacks
+            // Detect desktop PCs and modify UX parameters gracefully
+            evaluateHardwareProfileUX();
+
+            // Run Callback Intercept Loop
             checkForActiveSquareReturnPayloads();
         });
 
         function runTotalsCalc() {
             var v = parseFloat(document.getElementById('inv_subtotal').value) || 0;
             document.getElementById('inv_final_total').value = v.toFixed(2);
-            // Lock value instantly to cache so redirect loops cannot clear out the balance total
             localStorage.setItem('current_wo_est_cost', v.toFixed(2));
         }
 
@@ -186,6 +195,21 @@
             }
         }
 
+        function evaluateHardwareProfileUX() {
+            var userAgent = navigator.userAgent || navigator.vendor;
+            var isAndroid = /android/i.test(userAgent);
+            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
+            
+            // If device is a desktop PC/Mac laptop, safely adapt the Tap-to-Pay button
+            if (!isAndroid && !isIOS) {
+                var mobileBtn = document.getElementById('tapToPayBtn');
+                mobileBtn.innerHTML = "💻 Tap to Pay Locked (Use Form on PC)";
+                mobileBtn.style.background = "#64748b";
+                mobileBtn.style.opacity = "0.6";
+                mobileBtn.disabled = true;
+            }
+        }
+
         async function mountSecureSquareSDKForm() {
             try {
                 const payments = Square.payments(SQUARE_APP_ID, SQUARE_LOC_ID);
@@ -197,7 +221,8 @@
             }
         }
 
-        function initializeBillingCanvasPads() {
+        // UNIFIED POINTER MATRIX: Works flawlessly on Laptops, Styluses, Android & Apple multi-touch
+        function initializeUniversalPointerCanvasPads() {
             ['inv_tech_sig', 'inv_client_sig'].forEach(function(id) {
                 var canvas = document.getElementById(id); if(!canvas) return;
                 
@@ -206,22 +231,39 @@
                 canvas.height = 120;
 
                 var ctx = canvas.getContext("2d"); ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3; ctx.lineCap = "round";
-                var draw = false; var lx = 0; var ly = 0;
+                var isDrawing = false; var lastX = 0; var lastY = 0;
                 
-                function getXY(e) { 
+                function getPointerXY(e) { 
                     var r = canvas.getBoundingClientRect(); 
-                    var cx = e.touches ? e.touches[0].clientX : e.clientX; 
-                    var cy = e.touches ? e.touches[0].clientY : e.clientY; 
-                    return { x: cx - r.left, y: cy - r.top }; 
+                    return { x: e.clientX - r.left, y: e.clientY - r.top }; 
                 }
                 
-                canvas.addEventListener("mousedown", function(e) { draw = true; var c = getXY(e); lx = c.x; ly = c.y; });
-                canvas.addEventListener("mousemove", function(e) { if(!draw) return; e.preventDefault(); var c = getXY(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(c.x, c.y); ctx.stroke(); lx = c.x; ly = c.y; });
-                window.addEventListener("mouseup", function() { draw = false; });
+                canvas.addEventListener("pointerdown", function(e) {
+                    canvas.setPointerCapture(e.pointerId);
+                    isDrawing = true;
+                    var coords = getPointerXY(e);
+                    lastX = coords.x; lastY = coords.y;
+                });
                 
-                canvas.addEventListener("touchstart", function(e) { draw = true; var c = getXY(e); lx = c.x; ly = c.y; });
-                canvas.addEventListener("touchmove", function(e) { if(!draw) return; e.preventDefault(); var c = getXY(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(c.x, c.y); ctx.stroke(); lx = c.x; ly = c.y; }, { passive: false });
-                canvas.addEventListener("touchend", function() { draw = false; });
+                canvas.addEventListener("pointermove", function(e) {
+                    if(!isDrawing) return;
+                    e.preventDefault();
+                    var coords = getPointerXY(e);
+                    ctx.beginPath();
+                    ctx.moveTo(lastX, lastY);
+                    ctx.lineTo(coords.x, coords.y);
+                    ctx.stroke();
+                    lastX = coords.x; lastY = coords.y;
+                });
+                
+                function stopDrawing(e) {
+                    if(isDrawing) {
+                        canvas.releasePointerCapture(e.pointerId);
+                        isDrawing = false;
+                    }
+                }
+                canvas.addEventListener("pointerup", stopDrawing);
+                canvas.addEventListener("pointercancel", stopDrawing);
                 
                 CANVAS_MAP[id] = { canvas: canvas, ctx: ctx };
             });
@@ -326,38 +368,46 @@
             var customerName = document.getElementById('inv_cust').value || "Customer";
             var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/billing-invoice.html";
             
-            var dataPayload = {
-                "amount_money": { "amount": cents, "currency_code": "USD" },
-                "options": { 
-                    "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE", "CASH"], 
-                    "auto_return": true 
-                },
-                "client_id": SQUARE_APP_ID,
-                "location_id": SQUARE_LOC_ID,
-                "notes": "EverSafe Run: " + customerName,
-                "callback_url": callbackUrl,
-                "version": "1.3"
-            };
-
             var userAgent = navigator.userAgent || navigator.vendor;
             var isAndroid = /android/i.test(userAgent);
-            var jsonPayloadString = JSON.stringify(dataPayload);
-            var targetDeepLink = "";
-
-            if (isAndroid) {
-                targetDeepLink = "intent://payment/create?data=" + encodeURIComponent(jsonPayloadString) +
-                    "#Intent;scheme=square-commerce-v1;package=com.squareup;S.browser_fallback_url=" + 
-                    encodeURIComponent(callbackUrl) + ";end";
-            } else {
-                targetDeepLink = "square-commerce-v1://payment/create?data=" + encodeURIComponent(jsonPayloadString);
-            }
 
             if (statusLine) {
                 statusLine.innerHTML = "📡 Handing payload off to native Square POS App architecture...";
                 statusLine.style.color = "#2563eb";
             }
 
-            // PROGRAMMATIC ANCHOR TRIGGER: Bypasses native webview sandboxing rules
+            var targetDeepLink = "";
+
+            if (isAndroid) {
+                // EXPLICIT SQUARE INTENT RULE MATRIX STRUCTURE FOR GOOGLE CHROME/ANDROID PHONES
+                targetDeepLink = "intent:#Intent;" +
+                    "action=com.squareup.pos.action.CHARGE;" +
+                    "package=com.squareup;" +
+                    "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
+                    "S.com.squareup.pos.CLIENT_ID=" + SQUARE_APP_ID + ";" +
+                    "S.com.squareup.pos.LOCATION_ID=" + SQUARE_LOC_ID + ";" +
+                    "S.com.squareup.pos.API_VERSION=v2.0;" +
+                    "i.com.squareup.pos.TOTAL_AMOUNT=" + cents + ";" +
+                    "S.com.squareup.pos.CURRENCY_CODE=USD;" +
+                    "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD,com.squareup.pos.TENDER_CARD_ON_FILE,com.squareup.pos.TENDER_CASH,com.squareup.pos.TENDER_OTHER;" +
+                    "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe Run: " + customerName) + ";" +
+                    "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
+                    "end";
+            } else {
+                // STANDARD ENCODED JSON OBJECT SPEC FOR APPLE SAFARI/IOS PHONES
+                var iosDataPayload = {
+                    "amount_money": { "amount": cents, "currency_code": "USD" },
+                    "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE", "CASH"], "auto_return": true },
+                    "client_id": SQUARE_APP_ID,
+                    "location_id": SQUARE_LOC_ID,
+                    "callback_url": callbackUrl,
+                    "notes": "EverSafe Run: " + customerName,
+                    "version": "1.3"
+                };
+                targetDeepLink = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(iosDataPayload));
+            }
+
+            // Programmatic anchor routing injection protects hardware pipeline handoffs
             var virtualAnchor = document.createElement("a");
             virtualAnchor.setAttribute("href", targetDeepLink);
             virtualAnchor.style.display = "none";
@@ -369,7 +419,6 @@
             }, 100);
         }
 
-        // PARSE THE URL RETURN PARAMS DELIVERED FROM THE SQUARE HARDWARE HANDOFF
         function checkForActiveSquareReturnPayloads() {
             var urlParams = new URLSearchParams(window.location.search);
             var statusLine = document.getElementById('invoiceStatusLine');
@@ -381,12 +430,10 @@
                     if (responseData.status === 'ok' || responseData.status === 'success') {
                         var transId = responseData.client_transaction_id || responseData.transaction_id || "SQUARE_POS_CHARGED";
                         if (statusLine) {
-                            statusLine.innerHTML = "✅ Square Payment Confirmed! Processing file vault upload layers...";
+                            statusLine.innerHTML = "✅ Square Payment Confirmed! Finalizing workbook entry...";
                             statusLine.style.color = "var(--success)";
                         }
                         document.getElementById('inv_status').value = "PAID_SETTLED";
-                        
-                        // Pass confirmation token off to spreadsheet ledger automatically
                         uploadInvoiceToOfficeSheet(transId);
                     } 
                     else if (responseData.status === 'error' || responseData.error_code) {
@@ -398,7 +445,7 @@
                         }
                     }
                 } catch (err) {
-                    console.error("Inbound telemetry encryption mismatch", err);
+                    console.error("Telemetry tracking exception", err);
                 }
             }
         }
