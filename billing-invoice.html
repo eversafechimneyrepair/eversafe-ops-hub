@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Secure Merchant Billing</title>
     
+    <!-- Mobile App Icon & Manifest Configuration -->
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
     <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
     
+    <!-- Secure Core Square Production Web SDK Library Loader -->
     <script src="https://web.squarecdn.com/v1/square.js"></script>
     
     <style>
@@ -37,24 +39,22 @@
         input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
         textarea { text-align: left; padding: 12px; resize: vertical; }
         
+        .form-group { margin-bottom: 5px; }
         .form-group label { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-top: 12px; letter-spacing: 0.5px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
         .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 22px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
         
-        /* Custom Encapsulated Square Rendering Frames */
         #sq-card-element { margin: 15px auto; max-width: 440px; min-height: 80px; padding: 14px; border: 2px dashed var(--accent); background: #ffffff; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
         
-        /* Dual Signature Matrix Layout Structures */
         .signature-grid { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
         .signature-wrapper { text-align: center; margin-top: 10px; width: 100%; max-width: 380px; flex: 1; min-width: 260px; }
         .sig-canvas { border: 2px dashed var(--border); background: #fafbfc; border-radius: 6px; touch-action: none; width: 100%; height: 120px; display: block; }
         .btn-clear { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 10px; text-transform: uppercase; border-radius: 4px; cursor: pointer; margin-top: 6px; font-weight: bold; }
 
-        .btn-action { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; display: block; }
+        .btn-action { width: 100%; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; display: block; }
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; box-shadow: none; }
-
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
 </head>
@@ -94,7 +94,14 @@
                         <option value="CASH">Direct Cash / Check Collected</option>
                     </select>
                 </div>
-                <div class="form-group"><label>Realtime Status:</label><input type="text" id="inv_status" value="Paid / Settled Ledger" readonly style="color:var(--success); font-weight:bold; background:#f8fafc;"></div>
+                <div class="form-group">
+                    <label>Realtime Status:</label>
+                    <select id="inv_status" style="color: var(--accent-dark); font-weight: bold;">
+                        <option value="PENDING_COLLECTION" style="color: var(--danger);">⏳ Awaiting Field Payment</option>
+                        <option value="PAID_SETTLED" style="color: var(--success);" selected>✅ Paid / Settled Ledger</option>
+                        <option value="NET_30_ACCOUNT">🏢 Bill to Corporate Account (Net 30)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="grid-2" style="background:#f1f5f9; padding:15px; border-radius:6px; margin-top:15px;">
@@ -102,12 +109,14 @@
                 <div class="form-group"><label>Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;"></div>
             </div>
 
+            <!-- ENCAPSULATED SQUARE CORE INTERFACE -->
             <div id="squareFormWrapper" style="display:block; margin-top:20px; padding:15px; background:#f8fafc; border:1px dashed var(--border); border-radius:6px;">
                 <p style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-align:center; color: var(--primary);">🔒 Secure Credit Card Terminal</p>
                 <div id="sq-card-element"></div>
                 <input type="text" id="manualRefInput" placeholder="Optional: Type Manual Verification Hash Key" style="margin-top:10px;">
             </div>
 
+            <!-- SIGNATURE CAPTURE VIEW MATRIX -->
             <div class="signature-grid">
                 <div class="signature-wrapper">
                     <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#475569; margin-bottom:4px;">Billing Agent Signature:</p>
@@ -121,12 +130,14 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn">📲 Tap to Pay via Square App</button>
+            <!-- INLINE INLINE COMMAND INTENTS -->
+            <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent(event)">📲 Tap to Pay via Square App</button>
             <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">Finalize Ledger &amp; Charge Card</button>
 
         </div>
     </div>
 
+    <!-- GLOBAL APP NAVIGATION GATEWAY -->
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
@@ -138,7 +149,7 @@
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
 
         window.addEventListener('DOMContentLoaded', function() {
-            // INTEGRATED STATE RE-ROUTING BRIDGE: Read upstream variables or fall back to your hardcoded keys
+            // Read upstream unified storage parameters cleanly with regression fallbacks
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || localStorage.getItem('cached_wo_email') || "";
             document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || localStorage.getItem('cached_wo_addr') || "";
@@ -148,6 +159,7 @@
             runTotalsCalc();
             initializeBillingCanvasPads();
             mountSecureSquareSDKForm();
+            toggleSquareDisplayFields(); // Ensure field states match channel default state
         });
 
         function runTotalsCalc() {
@@ -157,7 +169,15 @@
 
         function toggleSquareDisplayFields() {
             var m = document.getElementById('inv_payment').value;
-            document.getElementById('squareFormWrapper').style.display = (m === "CARD_ON_SITE") ? "block" : "none";
+            var statusField = document.getElementById('inv_status');
+            
+            if (m === "CARD_ON_SITE") {
+                document.getElementById('squareFormWrapper').style.display = "block";
+                statusField.value = "PENDING_COLLECTION";
+            } else {
+                document.getElementById('squareFormWrapper').style.display = "none";
+                statusField.value = "PAID_SETTLED";
+            }
         }
 
         async function mountSecureSquareSDKForm() {
@@ -175,9 +195,9 @@
             ['inv_tech_sig', 'inv_client_sig'].forEach(function(id) {
                 var canvas = document.getElementById(id); if(!canvas) return;
                 
-                // Establish proper resolution scaling parameters relative to card parent blocks
                 var rect = canvas.parentNode.getBoundingClientRect();
-                canvas.width = rect.width; canvas.height = 120;
+                canvas.width = rect.width || canvas.offsetWidth || 340; 
+                canvas.height = 120;
 
                 var ctx = canvas.getContext("2d"); ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 3; ctx.lineCap = "round";
                 var draw = false; var lx = 0; var ly = 0;
@@ -218,7 +238,7 @@
             if(!SQ_CARD_INSTANCE) {
                 var ref = document.getElementById('manualRefInput').value.trim();
                 if(!ref) { alert("Settle charge manually or link row tracking hash above."); btn.disabled = false; btn.innerText = "Finalize Ledger & Charge Card"; return; }
-                uploadInvoiceToOfficeSheet("MANUAL_TRACE: " + ref); return; // FIXED REFERENCE FROM REGRESSION INTERCEPT
+                uploadInvoiceToOfficeSheet("MANUAL_TRACE: " + ref); return; 
             }
             try {
                 const result = await SQ_CARD_INSTANCE.tokenize();
@@ -266,7 +286,6 @@
                 });
                 alert("Ledger finalized and successfully sent to office workbook!");
                 
-                // Session Flush Sequence
                 var sessionKeys = [
                     'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
                     'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier',
@@ -278,12 +297,13 @@
             } catch(e) {
                 alert("Critical API Transmission Exception. Retrying secondary ledger hooks...");
                 document.getElementById('chargeCardBtn').disabled = false;
+                document.getElementById('chargeCardBtn').innerText = "Finalize Ledger & Charge Card";
             }
         }
 
-        // SQUARE APP-TO-APP INTENT GATEWAY LINK FOR HARDWARE SWIPERS
-        document.getElementById('tapToPayBtn').addEventListener('click', function(e) {
-            e.preventDefault();
+        function processSquareAppMobileIntent(event) {
+            if(event && event.preventDefault) event.preventDefault();
+            
             var total = document.getElementById('inv_final_total').value || "0.00";
             var cents = Math.round(parseFloat(total) * 100); if(cents <= 0) return alert("Value missing.");
             
@@ -294,7 +314,7 @@
                 "client_id": SQUARE_APP_ID, "location_id": SQUARE_LOC_ID, "notes": "EverSafe Field Run", "callback_url": callback, "version": "1.3"
             }));
             window.location.assign(linkUrl);
-        });
+        }
 
         function executeFieldCrewLogout() {
             localStorage.clear(); window.location.replace("index.html");
