@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EverSafe Hub - Master Estimator Engine</title>
+    
+    <link rel="icon" type="image/jpeg" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
+
+    <style>
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --success: #22c55e; 
+            --danger: #ef4444; 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; text-align: center; }
+        
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
+        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+
+        .app-container { max-width: 950px; margin: 0 auto; padding: 0 15px; text-align: left; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
+        p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 20px; text-align: center; line-height: 1.45; }
+
+        label.control-header { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-top: 10px; letter-spacing: 0.5px; }
+        select, input[type="text"], input[type="number"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 4px; background: #fff; font-family: inherit; color: #0f172a; }
+        select { font-weight: bold; color: var(--primary); background: #f1f5f9; }
+
+        .grid-3 { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
+        @media (max-width: 600px) { .grid-3, .grid-2 { grid-template-columns: 1fr; gap: 8px; } }
+
+        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
+        
+        .estimate-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
+        .estimate-table th { background-color: #f1f5f9; padding: 10px; border: 1px solid var(--border); font-size: 11px; text-transform: uppercase; color: #475569; text-align: left; }
+        .estimate-table td { padding: 12px 10px; border: 1px solid var(--border); font-size: 13.5px; background: white; }
+        
+        .dimension-input { width: 70px; padding: 6px; text-align: center; font-weight: bold; border: 2px solid var(--accent); border-radius: 4px; }
+        .btn-delete { background: var(--danger); color: white; border: none; padding: 6px 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
+        .btn-add-item { background: var(--primary-light); color: white; border: none; padding: 12px; font-weight: bold; text-transform: uppercase; font-size: 11px; border-radius: 6px; cursor: pointer; width: 100%; letter-spacing: 0.5px; margin-top: 4px; }
+        
+        .summary-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .total-banner { font-size: 26px; font-weight: 800; color: #14532d; }
+
+        .btn-action { width: 100%; max-width: 360px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 25px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="app-header">
+        <div class="brand-row">
+            <div class="brand-text">EverSafe Operations Hub</div>
+            <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <div class="app-card">
+            <h3>🧮 Project Estimate Builder</h3>
+            <p class="subtitle">Internal calculator matrix. Infractions port silently from inspection maps. Adjust units and track profitability telemetry parameters below.</p>
+
+            <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <label class="control-header" style="color: var(--accent-dark);">📍 Active Territory Price Book Multiplier</label>
+                <select id="regionalZoneSelector" onchange="recalculateMasterLedger()">
+                    <option value="NWO_CORE" selected>Northwest Ohio Core (Toledo, Perrysburg, Sandusky, Findlay)</option>
+                    <option value="SMI_RURAL">Southeast Michigan Rural / Border (Monroe, Adrian, Hillsdale)</option>
+                    <option value="SMI_PREMIUM">Southeast Michigan Premium Hub (Ann Arbor, Ypsilanti, Outer Wayne Co.)</option>
+                </select>
+            </div>
+
+            <div class="grid-3">
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Account Name</span><input type="text" id="wo_cust_view" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Service Location</span><input type="text" id="wo_addr_view" readonly style="background:#f1f5f9; font-weight:bold;"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
+            </div>
+
+            <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px;">
+                <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:var(--primary); margin-bottom:8px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
+                <div class="grid-2">
+                    <div>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Category Selector</span>
+                        <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
+                            <option value="MAINTENANCE">Maintenance &amp; Diagnostics</option>
+                            <option value="MASONRY">Masonry Structural Repairs</option>
+                            <option value="RELINING">Venting &amp; Reline Frameworks</option>
+                            <option value="WATERPROOFING">Waterproofing &amp; Flashing Mitigation</option>
+                            <option value="PREFAB_CHASE">Pre-Fab Chase &amp; Factory Systems</option>
+                            <option value="COMPONENTS">Caps, Dampers &amp; Custom Trim</option>
+                            <option value="LOGISTICS">Logistics, Access &amp; Rigging Fees</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Item Selection</span>
+                        <select id="catalogItemSelector">
+                            </select>
+                    </div>
+                </div>
+                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white;">Inject Line Item Into Bid</button>
+            </div>
+
+            <div class="section-title">Compiled Project Cost Matrix</div>
+            <table class="estimate-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50%;">Task Description / Scope Parameter</th>
+                        <th style="width: 25%; text-align: center;">Variables / Unit Qty</th>
+                        <th style="width: 15%; text-align: right;">Total Price</th>
+                        <th style="width: 10%; text-align: center;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="bidTableBody">
+                    </tbody>
+            </table>
+
+            <div class="summary-box">
+                <div>
+                    <span style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">Calculated Subtotal</span>
+                    <div style="font-size:12px; color:#3f6212; font-weight:500;">Aggregated project price matrix balance</div>
+                </div>
+                <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>
+            </div>
+
+            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Leo's Eyes Only)</p>
+                <div class="grid-2" style="margin-bottom: 10px;">
+                    <div>
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Expenses ($) (Labor + Mat)</span>
+                        <input type="number" id="internalJobCostInput" value="150.00" oninput="calculateProfitThermometer()" step="0.01" style="border:1px solid #94a3b8; font-weight:bold;">
+                    </div>
+                    <div>
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>
+                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>
+                    </div>
+                </div>
+                <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">
+                    <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>
+                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>
+                </div>
+            </div>
+
+            <button type="button" class="btn-action" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile &amp; Generate Work Order ➔</button>
+        </div>
+    </div>
+
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
+
+    <script>
+        var COMPLETE_PRICE_BOOK = {
+            "SWEEP_STANDARD":       { cat: "MAINTENANCE", label: "Standard Woodburning Cleaning Sweep & L1 Inspection", NWO_CORE: 249.00, SMI_RURAL: 269.00, SMI_PREMIUM: 299.00, dynamic: false },
+            "SWEEP_PELLET":         { cat: "MAINTENANCE", label: "Pellet/Corn Stove Insert Deep Mechanical Clean Run", NWO_CORE: 289.00, SMI_RURAL: 319.00, SMI_PREMIUM: 359.00, dynamic: false },
+            "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "Level 2 Internal Flue Video Scan Diagnostic (NFPA 211)", NWO_CORE: 180.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
+            "DRYER_VENT_CLEAN":     { cat: "MAINTENANCE", label: "Dryer Vent Line Air-Jet Cleaning (up to 20ft)", NWO_CORE: 149.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
+            "GAS_LOG_SERVICE":      { cat: "MAINTENANCE", label: "Gas Fireplace Maintenance, Pilot Flush & Burner Tune", NWO_CORE: 225.00, SMI_RURAL: 245.00, SMI_PREMIUM: 275.00, dynamic: false },
+
+            "MAS_TUCKPOINT":        { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry Repair (per sq ft)", NWO_CORE: 18.00, SMI_RURAL: 22.00, SMI_PREMIUM: 28.00, dynamic: true, defQty: 10, unit: "sq ft" },
+            "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement", NWO_CORE: 25.00, SMI_RURAL: 28.00, SMI_PREMIUM: 34.00, dynamic: true, defQty: 5, unit: "bricks" },
+            "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", NWO_CORE: 110.00, SMI_RURAL: 125.00, SMI_PREMIUM: 145.00, dynamic: true, defQty: 5, unit: "courses" },
+            "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", NWO_CORE: 35.00, SMI_RURAL: 38.00, SMI_PREMIUM: 45.00, dynamic: true, defQty: 15, unit: "bricks" },
+            "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (Smoktite)", NWO_CORE: 850.00, SMI_RURAL: 940.00, SMI_PREMIUM: 1050.00, dynamic: false },
+            "MAS_LIME_MATCH":       { cat: "MASONRY", label: "Historic Lime Mortar Tint Analysis & Custom Blending Fee", NWO_CORE: 150.00, SMI_RURAL: 175.00, SMI_PREMIUM: 210.00, dynamic: false },
+
+            "LINE_STAINLESS":       { cat: "RELINING", label: "Titanium Stainless Steel Flue Relining (per linear ft)", NWO_CORE: 125.00, SMI_RURAL: 138.00, SMI_PREMIUM: 155.00, dynamic: true, defQty: 25, unit: "ft" },
+            "LINE_INSUL_BLANKET":    { cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Wrap Kit", NWO_CORE: 350.00, SMI_RURAL: 385.00, SMI_PREMIUM: 430.00, dynamic: false },
+            "LINE_ALUMINUM_GAS":    { cat: "RELINING", label: "Flexible Aluminum Gas Ventilation Reline Array (per linear ft)", NWO_CORE: 65.00, SMI_RURAL: 72.00, SMI_PREMIUM: 82.00, dynamic: true, defQty: 25, unit: "ft" },
+            "LINE_B_VENT":          { cat: "RELINING", label: "Double-Wall Galvanized Gas B-Vent Pipe (per linear ft)", NWO_CORE: 85.00, SMI_RURAL: 94.00, SMI_PREMIUM: 108.00, dynamic: true, defQty: 15, unit: "ft" },
+            "LINE_TIE_IN":          { cat: "RELINING", label: "Utility Furnace / Water Heater Flue Breach Tie-In Collar", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 225.00, dynamic: false },
+
+            "WATER_CROWN_SEAL":     { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Membrane Coat", NWO_CORE: 275.00, SMI_RURAL: 305.00, SMI_PREMIUM: 345.00, dynamic: false },
+            "WATER_CROWN_POUR":     { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild System", NWO_CORE: 1200.00, SMI_RURAL: 1320.00, SMI_PREMIUM: 1480.00, dynamic: false },
+            "WATER_SAVER_SPRAY":    { cat: "WATERPROOFING", label: "ChimneySaver Silane-Siloxane Breathable Repellent Application", NWO_CORE: 195.00, SMI_RURAL: 215.00, SMI_PREMIUM: 245.00, dynamic: false },
+            "FLASH_LEAD_REPLACE":   { cat: "WATERPROOFING", label: "Custom Lead Counter-Flashing Roof Intercept Replacement", NWO_CORE: 450.00, SMI_RURAL: 495.00, SMI_PREMIUM: 560.00, dynamic: false },
+            "FLASH_CRICKET_POUR":   { cat: "WATERPROOFING", label: "Diversion Roof Cricket Framing Assembly (Prevents Water Pooling)", NWO_CORE: 650.00, SMI_RURAL: 715.00, SMI_PREMIUM: 810.00, dynamic: false },
+
+            "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Anti-Puddling Chase Top Cover Pan", NWO_CORE: 695.00, SMI_RURAL: 765.00, SMI_PREMIUM: 865.00, dynamic: false },
+            "CHASE_ALUM_COLOR":     { cat: "PREFAB_CHASE", label: "Custom Factory Powder-Coated Aluminum Chase Pan Cover", NWO_CORE: 575.00, SMI_RURAL: 635.00, SMI_PREMIUM: 715.00, dynamic: false },
+            "PIPE_CLASS_A":         { cat: "PREFAB_CHASE", label: "Double-Wall Insulated HT Class-A Prefab Vent Pipe (per ft)", NWO_CORE: 95.00, SMI_RURAL: 105.00, SMI_PREMIUM: 120.00, dynamic: true, defQty: 10, unit: "ft" },
+            "PREFAB_REFRACTORY":    { cat: "PREFAB_CHASE", label: "Prefabricated Fireplace Interior Refractory Panel Insert", NWO_CORE: 220.00, SMI_RURAL: 245.00, SMI_PREMIUM: 280.00, dynamic: false },
+
+            "COMP_CAP_SINGLE":      { cat: "COMPONENTS", label: "Stainless Steel Single-Flue Friction Spark Arrestor Cap", NWO_CORE: 175.00, SMI_RURAL: 195.00, SMI_PREMIUM: 220.00, dynamic: false },
+            "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", NWO_CORE: 550.00, SMI_RURAL: 610.00, SMI_PREMIUM: 690.00, dynamic: false },
+            "COMP_DAMPER_LYEMANCE": { cat: "COMPONENTS", label: "Lyemance Top-Mount Low-Profile Energy Saving Seal Damper", NWO_CORE: 395.00, SMI_RURAL: 435.00, SMI_PREMIUM: 490.00, dynamic: false },
+            "COMP_DAMPER_LOCKtop":  { cat: "COMPONENTS", label: "LockTop Energy Saving Cap/Damper Combination Unit", NWO_CORE: 475.00, SMI_RURAL: 525.00, SMI_PREMIUM: 590.00, dynamic: false },
+            "COMP_CLEANOUT_DOOR":   { cat: "COMPONENTS", label: "Cast Iron Chimney Base Ash Pit Door Assembly (Replacement)", NWO_CORE: 150.00, SMI_RURAL: 165.00, SMI_PREMIUM: 185.00, dynamic: false },
+
+            "LOG_SCAFFOLDING":      { cat: "LOGISTICS", label: "High-Access Multi-Tier Scaffolding Scaffold Rigging Fee", NWO_CORE: 300.00, SMI_RURAL: 330.00, SMI_PREMIUM: 375.00, dynamic: false },
+            "LOG_BOOM_LIFT":        { cat: "LOGISTICS", label: "Heavy Equipment Towable Boom Lift Transport Surcharge", NWO_CORE: 650.00, SMI_RURAL: 650.00, SMI_PREMIUM: 750.00, dynamic: false },
+            "LOG_PITCH_STEEP":      { cat: "LOGISTICS", label: "Steep Roof Slope Pitch Safety Harness Surcharge (Over 8/12)", NWO_CORE: 180.00, SMI_RURAL: 200.00, SMI_PREMIUM: 230.00, dynamic: false },
+            "LOG_3_STORY_ACCESS":   { cat: "LOGISTICS", label: "Extreme Working Elevation Access Surcharge (3+ Stories / Commercial)", NWO_CORE: 250.00, SMI_RURAL: 275.00, SMI_PREMIUM: 315.00, dynamic: false },
+            "LOG_CUSTOM_LINE":      { cat: "LOGISTICS", label: "[Custom Manual Adjustment / Material / Accessory Line Override]", NWO_CORE: 1.00, SMI_RURAL: 1.00, SMI_PREMIUM: 1.00, dynamic: true, defQty: 100, unit: "units" }
+        };
+
+        var ACTIVE_RUNNING_ESTIMATE = [];
+
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('wo_cust_view').value = localStorage.getItem('current_wo_customer_name') || "Profile Not Deployed";
+            document.getElementById('wo_addr_view').value = localStorage.getItem('current_wo_service_address') || "Address Cache Offline";
+            document.getElementById('wo_date_view').value = new Date().toLocaleDateString();
+
+            var mappingAddress = (localStorage.getItem('current_wo_service_address') || "").toUpperCase();
+            if (mappingAddress.includes(" MI") || mappingAddress.includes("MICHIGAN")) {
+                if (mappingAddress.includes("ANN ARBOR") || mappingAddress.includes("YPSILANTI")) {
+                    document.getElementById('regionalZoneSelector').value = "SMI_PREMIUM";
+                } else {
+                    document.getElementById('regionalZoneSelector').value = "SMI_RURAL";
+                }
+            }
+
+            populateItemsFromCategoryDropdown();
+            importSilentFlagsFromDiagnosticMaps();
+            recalculateMasterLedger();
+        });
+
+        function populateItemsFromCategoryDropdown() {
+            var selectedCategory = document.getElementById('catalogCategorySelector').value;
+            var itemSelector = document.getElementById('catalogItemSelector');
+            itemSelector.innerHTML = "";
+
+            Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
+                var mapping = COMPLETE_PRICE_BOOK[key];
+                if (mapping.cat === selectedCategory) {
+                    itemSelector.innerHTML += `<option value="${key}">${mapping.label}</option>`;
+                }
+            });
+        }
+
+        function importSilentFlagsFromDiagnosticMaps() {
+            var inheritedFlags = JSON.parse(localStorage.getItem('current_wo_price_book_items')) || {};
+            ACTIVE_RUNNING_ESTIMATE = [];
+            ACTIVE_RUNNING_ESTIMATE.push({ key: "SWEEP_STANDARD", qty: 1 });
+
+            Object.keys(inheritedFlags).forEach(function(flagKey) {
+                var lookupTarget = "";
+                if (flagKey.includes("crown")) lookupTarget = "WATER_CROWN_SEAL";
+                else if (flagKey.includes("flashing")) lookupTarget = "FLASH_LEAD_REPLACE";
+                else if (flagKey.includes("mortar") || flagKey.includes("tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
+                else if (flagKey.includes("brick") || flagKey.includes("spalling")) lookupTarget = "MAS_BRICK_SWAP";
+                else if (flagKey.includes("liner")) lookupTarget = "LINE_STAINLESS";
+
+                if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
+                    var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
+                    ACTIVE_RUNNING_ESTIMATE.push({ key: lookupTarget, qty: blueprint.dynamic ? blueprint.defQty : 1 });
+                }
+            });
+        }
+
+        function injectItemFromCatalogSelection() {
+            var itemKey = document.getElementById('catalogItemSelector').value;
+            if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) return;
+            var blueprint = COMPLETE_PRICE_BOOK[itemKey];
+            
+            var redundantCheck = ACTIVE_RUNNING_ESTIMATE.find(function(el) { return el.key === itemKey; });
+            if (redundantCheck && !blueprint.dynamic) { alert("Execution Alert: Assigned."); return; }
+
+            ACTIVE_RUNNING_ESTIMATE.push({ key: itemKey, qty: blueprint.dynamic ? blueprint.defQty : 1 });
+            recalculateMasterLedger();
+        }
+
+        function recalculateMasterLedger() {
+            var zone = document.getElementById('regionalZoneSelector').value;
+            var tbody = document.getElementById('bidTableBody');
+            tbody.innerHTML = "";
+            var globalRunningSum = 0;
+            var textCompilationScopeLines = [];
+            var rawItemizedLinesForContract = [];
+
+            if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
+                document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
+                calculateProfitThermometer(0);
+                return;
+            }
+
+            ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
+                var spec = COMPLETE_PRICE_BOOK[item.key];
+                if (!spec) return;
+
+                var regionalRateValue = spec[zone];
+                var rowCalculatedTotal = regionalRateValue * item.qty;
+                globalRunningSum += rowCalculatedTotal;
+
+                var variableInputHtml = "";
+                if (spec.dynamic) {
+                    variableInputHtml = `<input type="number" class="dimension-input" value="${item.qty}" min="1" onchange="modifyQuantityIndexTarget(${idx}, this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">${spec.unit}</span>`;
+                } else {
+                    variableInputHtml = `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed Flat</span>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight: 700; font-size:13px; color: var(--primary);">${spec.label}</td>
+                        <td style="text-align: center;">${variableInputHtml}</td>
+                        <td style="text-align: right; font-weight: 800; color: #1e293b;">$${rowCalculatedTotal.toFixed(2)}</td>
+                        <td style="text-align: center;"><button type="button" class="btn-delete" onclick="dropItemFromActiveLedger(${idx})">Drop</button></td>
+                    </tr>
+                `;
+                
+                var labelWithQty = spec.dynamic ? `${spec.label} (Qty: ${item.qty} ${spec.unit})` : spec.label;
+                textCompilationScopeLines.push(labelWithQty);
+                rawItemizedLinesForContract.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
+            });
+
+            document.getElementById('bidLiveTotalDisplay').innerText = "$" + globalRunningSum.toFixed(2);
+            localStorage.setItem('current_wo_est_cost', globalRunningSum.toFixed(2));
+            localStorage.setItem('current_wo_work_scope', textCompilationScopeLines.join("\n"));
+            localStorage.setItem('current_wo_itemized_json', JSON.stringify(rawItemizedLinesForContract));
+            
+            calculateProfitThermometer(globalRunningSum);
+        }
+
+        function calculateProfitThermometer(forcedTotal) {
+            var priceCharged = typeof forcedTotal === 'number' ? forcedTotal : parseFloat(document.getElementById('bidLiveTotalDisplay').innerText.replace('$', '')) || 0;
+            var expenses = parseFloat(document.getElementById('internalJobCostInput').value) || 0;
+            
+            var thermBar = document.getElementById('thermometerBar');
+            var thermLabel = document.getElementById('thermometerLabel');
+            var percentDisplay = document.getElementById('marginPercentageDisplay');
+            
+            if (priceCharged <= 0) {
+                thermBar.style.width = "0%"; thermLabel.innerText = "Awaiting Data"; percentDisplay.innerText = "0.00%"; return;
+            }
+            
+            var grossProfit = priceCharged - expenses;
+            var marginPercent = (grossProfit / priceCharged) * 100;
+            
+            if (marginPercent < 0) marginPercent = 0;
+            if (marginPercent > 100) marginPercent = 100;
+            
+            percentDisplay.innerText = marginPercent.toFixed(2) + "%";
+            thermBar.style.width = marginPercent + "%";
+            
+            if (marginPercent < 40) {
+                thermBar.style.backgroundColor = "#ef4444"; thermLabel.innerText = "🔴 BAD MARGIN BRACKET"; thermLabel.style.color = "#ffffff";
+            } else if (marginPercent >= 40 && marginPercent < 55) {
+                thermBar.style.backgroundColor = "#eab308"; thermLabel.innerText = "🟡 GOOD MARGIN BRACKET"; thermLabel.style.color = "#0f172a";
+            } else if (marginPercent >= 55 && marginPercent < 70) {
+                thermBar.style.backgroundColor = "#22c55e"; thermLabel.innerText = "🟢 BETTER MARGIN BRACKET"; thermLabel.style.color = "#ffffff";
+            } else {
+                thermBar.style.backgroundColor = "#2563eb"; thermLabel.innerText = "🔵 BEST MARGIN BRACKET 🔥"; thermLabel.style.color = "#ffffff";
+            }
+        }
+
+        function modifyQuantityIndexTarget(idxTarget, newQuantityVal) {
+            var parse = parseInt(newQuantityVal) || 1; if(parse < 1) parse = 1;
+            ACTIVE_RUNNING_ESTIMATE[idxTarget].qty = parse; recalculateMasterLedger();
+        }
+
+        function dropItemFromActiveLedger(idxTarget) {
+            ACTIVE_RUNNING_ESTIMATE.splice(idxTarget, 1); recalculateMasterLedger();
+        }
+
+        function lockBidAndAdvanceToWorkOrderReview() {
+            if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
+            window.location.replace("contract-wo.html");
+        }
+
+        function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
+    </script>
+</body>
+</html>
