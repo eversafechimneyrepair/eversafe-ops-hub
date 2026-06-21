@@ -74,7 +74,6 @@
 </head>
 <body>
 
-    <!-- SECURE MASTER ACCESS CONTROL SYSTEM -->
     <script>
         if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
             window.location.replace("index.html");
@@ -92,7 +91,6 @@
         <h3>Daily Field Work Orders</h3>
         <p class="subtitle">Pull scheduled jobs from the master ledger or instantly generate a walk-up field lead.</p>
 
-        <!-- 🔁 ACTIVE SESSION PURGE UTILITY CARD -->
         <div class="dispatch-card" style="border: 1px dashed var(--danger); background: #fff1f2; text-align: center; margin-bottom: 25px;">
             <span style="font-size: 11px; font-weight: 800; color: var(--danger); text-transform: uppercase; letter-spacing: 0.5px;">System Data Management</span>
             <div style="font-size: 14px; font-weight: bold; margin: 4px 0 10px 0; color: var(--primary);">Active Field Session Cache Engaged</div>
@@ -101,20 +99,17 @@
             </button>
         </div>
 
-        <!-- COMMAND CONTROLS -->
         <div class="search-flex-group">
-            <input type="text" id="jobSearchInput" class="search-input" placeholder="Enter Job ID (e.g. J-101)...">
-            <button type="button" class="btn-action" onclick="fetchDispatchFromLedger()">Lookup</button>
+            <input type="text" id="jobSearchInput" class="search-input" placeholder="Type name, address, or tech...">
+            <button type="button" class="btn-action" onclick="fetchDispatchFromLedger()">Search</button>
         </div>
         <button type="button" class="btn-secondary" onclick="openWalkUpModal()">➕ Generate Walk-Up Lead</button>
 
-        <!-- DYNAMIC DISPATCH BOARD -->
         <div id="manifestContainer">
             <div class="center-status-line">Awaiting dispatch lookup or new lead generation.</div>
         </div>
     </div>
 
-    <!-- WALK-UP LEAD MODAL -->
     <div id="walkUpModal" class="modal-overlay">
         <div class="modal-content">
             <h3 style="text-align:left;">Generate Field Lead</h3>
@@ -145,32 +140,35 @@
     <script src="navbar.js"></script>
 
     <script>
-        // 🚨 LIVE V9.0 API URL PRE-LOADED 🚨
+        // 🚨 LIVE V9.1 API URL PRE-LOADED 🚨
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         var DRIVER_NAME = localStorage.getItem('eversafe_authenticated_user') || "Leo";
         var jobCounter = 1;
 
         async function fetchDispatchFromLedger() {
-            var jobId = document.getElementById('jobSearchInput').value.trim();
+            var searchQuery = document.getElementById('jobSearchInput').value.trim();
             var manifestDisplay = document.getElementById('manifestContainer');
 
-            if (!jobId) { alert("Please enter a valid Job ID."); return; }
+            if (!searchQuery) { alert("Please enter a valid keyword."); return; }
 
-            manifestDisplay.innerHTML = '<div class="center-status-line">⏳ Connecting to master dispatch ledger...</div>';
+            manifestDisplay.innerHTML = '<div class="center-status-line">⏳ Scanning dispatch ledger...</div>';
 
             try {
                 let response = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({ route: "fetchJobDispatches", jobId: jobId })
+                    body: JSON.stringify({ route: "fetchJobDispatches", jobId: searchQuery })
                 });
                 let result = await response.json();
 
                 if (result.success) {
-                    manifestDisplay.innerHTML = ""; // Clear loader
-                    renderDispatchCard(result.customerName, result.siteAddress, "On File", result.customerEmail, result.scheduledNotes || "Dispatched via Hub", "0.00");
+                    manifestDisplay.innerHTML = ""; 
+                    result.records.forEach(function(job) {
+                        var notes = `Time: ${job.arrivalTime} | Route: ${job.routeStatus} | Tech: ${job.techName}`;
+                        renderDispatchCard(job.customerName, job.siteAddress, job.customerPhone, "", notes, "0.00");
+                    });
                 } else {
-                    manifestDisplay.innerHTML = `<div class="center-status-line" style="color:var(--danger)">❌ Dispatch Error: ${result.error}</div>`;
+                    manifestDisplay.innerHTML = `<div class="center-status-line" style="color:var(--danger)">❌ ${result.error}</div>`;
                 }
             } catch (err) {
                 manifestDisplay.innerHTML = '<div class="center-status-line" style="color:var(--danger)">❌ API Network Exception: Connection timed out.</div>';
@@ -196,13 +194,13 @@
             if (!name || !address) { alert("Name and Address are required to generate a lead."); return; }
             
             closeWalkUpModal();
-            
             var manifestDisplay = document.getElementById('manifestContainer');
             if(manifestDisplay.innerHTML.includes("Awaiting dispatch lookup")) { manifestDisplay.innerHTML = ""; }
 
             renderDispatchCard(name, address, phone, email, "Walk-Up Lead generated by Superintendent.", "0.00");
         }
 
+        // --- NEW STATUS TRACKING BUTTONS INJECTED HERE ---
         function renderDispatchCard(name, address, phone, email, scope, cost) {
             var idSuffix = 'dyn' + jobCounter++;
             var container = document.getElementById('manifestContainer');
@@ -213,26 +211,67 @@
                     <div class="job-title" id="name_${idSuffix}">${name || "Unnamed Profile"}</div>
                     <div class="job-meta">📍 <span id="addr_${idSuffix}">${address || "N/A"}</span></div>
                     <div class="job-meta">📞 <span id="phone_${idSuffix}">${phone || "N/A"}</span></div>
-                    <div class="job-meta">✉️ <span id="email_${idSuffix}">${email || "No Email"}</span></div>
-                    <div style="display:none;" id="scope_${idSuffix}">${scope || ""}</div>
+                    <div style="display:none;" id="email_${idSuffix}">${email || "No Email"}</div>
+                    <div class="job-meta">📝 <span id="scope_${idSuffix}">${scope || ""}</span></div>
                     <div style="display:none;" id="cost_${idSuffix}">${cost || "0.00"}</div>
                     
                     <div class="card-actions-grid">
                         <button type="button" class="btn-utility btn-sms-trigger" onclick="triggerClientTransitNotification('${idSuffix}')">
                             💬 Notify On My Way
                         </button>
-                        <button type="button" class="btn-utility" style="background: var(--danger);" onclick="document.getElementById('card_${idSuffix}').style.display='none'">
-                            🗑️ Archive Lead
+                        <button type="button" class="btn-utility" style="background: #0284c7;" id="btn_arrive_${idSuffix}" onclick="updateJobStatus('${idSuffix}', 'ARRIVED')">
+                            📍 Mark Arrived
                         </button>
                     </div>
 
-                    <div class="card-routing-grid">
+                    <div class="card-routing-grid" style="margin-top:8px;">
                         <button class="btn-route primary" onclick="routeToWorkflow('${idSuffix}', 'proposals.html')">📊 Build Estimate</button>
-                        <button class="btn-route" onclick="routeToWorkflow('${idSuffix}', 'signatures.html')">✍️ Jump to Contract</button>
+                        <button type="button" class="btn-utility" style="background: var(--success-dark);" id="btn_complete_${idSuffix}" onclick="updateJobStatus('${idSuffix}', 'COMPLETED')">
+                            ✅ Mark Complete
+                        </button>
                     </div>
                 </div>
             `;
             container.insertAdjacentHTML('afterbegin', html);
+        }
+
+        // --- NEW LIVE SPREADSHEET UPDATE ENGINE ---
+        async function updateJobStatus(idSuffix, statusType) {
+            var name = document.getElementById('name_' + idSuffix).innerText;
+            var addr = document.getElementById('addr_' + idSuffix).innerText;
+            var button = statusType === 'ARRIVED' ? document.getElementById('btn_arrive_' + idSuffix) : document.getElementById('btn_complete_' + idSuffix);
+            
+            var originalText = button.innerHTML;
+            button.innerHTML = "⏳ Sending...";
+            button.style.opacity = "0.7";
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ 
+                        route: "updateDispatchStatus", 
+                        customerName: name,
+                        serviceAddress: addr,
+                        statusType: statusType
+                    })
+                });
+                let result = await response.json();
+
+                if (result.success) {
+                    button.innerHTML = statusType === 'ARRIVED' ? "✅ Arrived Logged" : "🏁 Job Closed Out";
+                    button.style.background = "#475569"; 
+                    button.disabled = true;
+                } else {
+                    alert("Error updating status: " + result.error);
+                    button.innerHTML = originalText;
+                    button.style.opacity = "1";
+                }
+            } catch (err) {
+                alert("Network error. Please try again.");
+                button.innerHTML = originalText;
+                button.style.opacity = "1";
+            }
         }
 
         function routeToWorkflow(idSuffix, targetPage) {
@@ -242,18 +281,15 @@
             var scope = document.getElementById('scope_' + idSuffix).innerText;
             var cost = document.getElementById('cost_' + idSuffix).innerText;
 
-            // Clear legacy stale array tokens
             localStorage.removeItem('current_wo_price_book_items');
             localStorage.removeItem('current_wo_itemized_json');
 
-            // Hydrate primary production memory registers
             localStorage.setItem('current_wo_customer_name', name);
             localStorage.setItem('current_wo_customer_email', email === "No Email" ? "" : email);
             localStorage.setItem('current_wo_service_address', addr);
             localStorage.setItem('current_wo_work_scope', scope);
             localStorage.setItem('current_wo_est_cost', cost);
             
-            // Hydrate backwards-compatible text fallbacks
             localStorage.setItem('cached_wo_cust', name);
             localStorage.setItem('cached_wo_email', email === "No Email" ? "" : email);
             localStorage.setItem('cached_wo_addr', addr);
@@ -263,7 +299,6 @@
             window.location.href = targetPage;
         }
 
-        // GARBAGE COLLECTION LAYER: 100% Retained from original file
         function clearActiveJobSession() {
             var trackingKeys = [
                 'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
@@ -275,14 +310,12 @@
             ];
             
             trackingKeys.forEach(function(key) { localStorage.removeItem(key); });
-            
             for (var i = 1; i <= 8; i++) { localStorage.removeItem('current_cache_l2_c' + i); }
 
             alert("🧼 Workspace purges successful! All forms and bid sheets have been reset to blank.");
             window.location.reload(); 
         }
 
-        // SMS NOTIFICATION TRIGGER: 100% Retained from original file
         function triggerClientTransitNotification(idSuffix) {
             var clientName = document.getElementById('name_' + idSuffix).innerText.split('(')[0].trim();
             var phoneText = document.getElementById('phone_' + idSuffix).innerText;
@@ -290,7 +323,7 @@
             
             if(!rawPhone || rawPhone.length < 7) { alert("Data Error: Client does not have a valid registered phone number."); return; }
 
-            var messageText = "Hi " + clientName + ", this is " + DRIVER_NAME + " from EverSafe Chimney Repair. I've compiled my field gear and I am officially on my way to your service location. See you shortly!";
+            var messageText = "Hi " + clientName + ", this is " + DRIVER_NAME + " from EverSafe Chimney Repair. I'm officially on my way to your service location!";
             
             var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
             var smsLinkSeparator = isIOS ? "&" : "?";
