@@ -36,7 +36,7 @@
 
     <div class="login-card">
         <h2>EverSafe Chimney</h2>
-        <p>Enterprise Operations Suite v6.5</p>
+        <p>Enterprise Operations Suite v9.3</p>
         
         <div style="text-align: left;">
             <label for="passkeyField" style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">Enter Crew Access Key:</label>
@@ -54,14 +54,13 @@
             var sessionActive = localStorage.getItem('eversafe_session_active');
             var cachedUser = localStorage.getItem('eversafe_authenticated_user');
             
-            // Instantly bypass login route if a valid session token array is active
+            // Instantly redirects directly to the launchpad if session token is still active
             if (sessionActive === 'true' && cachedUser) {
-                window.location.replace("contract-wo.html");
+                window.location.replace("jobs.html");
             } else {
                 var field = document.getElementById('passkeyField');
                 field.focus();
                 
-                // HIGH-VELOCITY BIND: Lets Leo execute auth directly from key up commands
                 field.addEventListener('keyup', function(event) {
                     if (event.key === 'Enter') {
                         authenticateFieldCrewShift();
@@ -97,7 +96,9 @@
                 if (result.success) {
                     localStorage.setItem('eversafe_authenticated_user', result.authorizedUser);
                     localStorage.setItem('eversafe_session_active', 'true');
-                    window.location.assign("contract-wo.html");
+                    
+                    // SUCCESS REROUTE: Drops user directly onto the launchpad
+                    window.location.assign("jobs.html");
                 } else {
                     errorMsg.innerText = "❌ Verification Failure: " + (result.error || "Invalid security key proxy profile.");
                     errorMsg.style.display = "block";
