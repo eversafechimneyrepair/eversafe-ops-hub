@@ -35,14 +35,14 @@
         p { color: #64748b; font-size: 13px; margin-bottom: 20px; line-height: 1.45; text-align: center; }
         
         .search-flex-group { display: flex; gap: 8px; margin-bottom: 5px; }
-        .search-input { flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; outline: none; background: #fff; color: #0f172a; }
-        .search-input:focus { border-color: var(--accent); }
+        .search-input { flex: 1; padding: 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; outline: none; background: #fff; color: #0f172a; font-weight: bold; border-color: var(--accent); }
+        .search-input:focus { border-color: var(--accent-dark); }
         
         .btn-action { background: var(--accent); color: white; font-weight: bold; padding: 14px 24px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; transition: background 0.2s; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; }
         .btn-action:hover { background-color: var(--accent-dark); }
 
         #resultsWrapper { margin-top: 20px; }
-        .result-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); position: relative; }
+        .result-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); position: relative; border-left: 5px solid var(--primary-light); }
         
         .card-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; }
         .client-meta h4 { font-size: 16px; color: var(--primary); font-weight: bold; }
@@ -56,12 +56,12 @@
         .card-body-row div { margin-bottom: 5px; }
 
         .card-actions-row { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-vault-link { flex: 1; min-width: 120px; text-align: center; padding: 11px; font-size: 11px; font-weight: bold; text-transform: uppercase; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--primary); background: #f8fafc; transition: background 0.2s; }
+        .btn-vault-link { flex: 1; min-width: 120px; text-align: center; padding: 11px; font-size: 11px; font-weight: bold; text-transform: uppercase; border: 1px solid var(--border); border-radius: 4px; text-decoration: none; color: var(--primary); background: #f8fafc; transition: background 0.2s; display: inline-flex; align-items: center; justify-content: center; }
         .btn-vault-link:hover { background: #e2e8f0; }
         .btn-vault-link.highlight-action { background: var(--primary); color: white; border-color: var(--primary); }
         .btn-vault-link.highlight-action:hover { background: var(--primary-light); }
 
-        .center-status-line { text-align: center; font-size: 13px; color: #64748b; margin-top: 25px; font-weight: bold; line-height: 1.5; }
+        .center-status-line { text-align: center; font-size: 13px; color: #64748b; margin-top: 25px; font-weight: bold; line-height: 1.5; text-transform: uppercase; letter-spacing: 0.5px; }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
 </head>
@@ -100,9 +100,9 @@
     <script src="navbar.js"></script>
 
     <script>
+        // 🚨 LIVE GOOGLE API ENDPOINT 🚨
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         
-        // Global system array memory cache to insulate index mapping from syntax string crash risks
         window.vaultRecordsCache = [];
 
         document.getElementById('vaultSearchQueryInput').addEventListener('keyup', function(event) {
@@ -121,7 +121,7 @@
                 return;
             }
 
-            resultsDisplay.innerHTML = '<div class="center-status-line">⏳ Querying database and parsing drive assets...</div>';
+            resultsDisplay.innerHTML = '<div class="center-status-line">⏳ Querying central server database registers...</div>';
             window.vaultRecordsCache = [];
 
             try {
@@ -133,36 +133,35 @@
                 let result = await response.json();
 
                 if (result.success) {
-                    if (result.records.length === 0) {
-                        resultsDisplay.innerHTML = '<div class="center-status-line">❌ No matching files discovered for "' + queryString + '".<br>Verify tracking syntax spellings.</div>';
+                    if (!result.records || result.records.length === 0) {
+                        resultsDisplay.innerHTML = '<div class="center-status-line">❌ No matching ledger entries discovered for "' + queryString + '".<br>Verify syntax or spellings.</div>';
                         return;
                     }
 
-                    // Hydrate system global memory array track safely
                     window.vaultRecordsCache = result.records;
-
                     var compiledHtml = "";
+
                     result.records.forEach(function(record, idx) {
-                        var isSigned = record.status === "SIGNED";
+                        var isSigned = (record.status === "SIGNED" || record.status === "Finalized & Signed");
                         var statusClass = isSigned ? "status-badge badge-signed" : "status-badge badge-auth";
                         var displayStatus = isSigned ? "Finalized & Signed" : "Authorized (Unsigned)";
                         
-                        var signatureButtonHtml = record.signatureUrl 
-                            ? `<a href="${record.signatureUrl}" target="_blank" class="btn-vault-link">📝 View Signature</a>`
-                            : `<button class="btn-vault-link" disabled style="opacity:0.4; cursor:not-allowed;">📝 No Signature</button>`;
+                        var signatureButtonHtml = (record.signatureUrl && record.signatureUrl.startsWith("http"))
+                            ? `<a href="${record.signatureUrl}" target="_blank" class="btn-vault-link">📝 View Asset</a>`
+                            : `<button class="btn-vault-link" disabled style="opacity:0.4; cursor:not-allowed;">📝 No Asset Found</button>`;
 
                         compiledHtml += `
                             <div class="result-card">
                                 <div class="card-header-row">
                                     <div class="client-meta">
-                                        <h4>${record.customerName}</h4>
-                                        <p>Logged: ${record.date} | ${record.customerEmail}</p>
+                                        <h4>${record.customerName || "Unnamed Profile"}</h4>
+                                        <p>Logged: ${record.date || "N/A"} | ${record.customerEmail || "No Email"}</p>
                                     </div>
                                     <span class="${statusClass}">${displayStatus}</span>
                                 </div>
                                 <div class="card-body-row">
-                                    <div><strong>Service Address:</strong> ${record.serviceAddress}</div>
-                                    <div><strong>Scope of Work:</strong> ${record.workScope}</div>
+                                    <div><strong>Service Address:</strong> ${record.serviceAddress || "N/A"}</div>
+                                    <div><strong>Scope of Work:</strong> ${record.workScope || "No details filed."}</div>
                                     <div><strong>Project Valuation:</strong> $${parseFloat(record.estimatedCost || 0).toFixed(2)}</div>
                                 </div>
                                 <div class="card-actions-row">
@@ -176,10 +175,11 @@
                     resultsDisplay.innerHTML = compiledHtml;
 
                 } else {
-                    resultsDisplay.innerHTML = `<div class="center-status-line" style="color:var(--danger)">❌ Core Backend Fault: ${result.error}</div>`;
+                    resultsDisplay.innerHTML = `<div class="center-status-line" style="color:var(--danger)">❌ Core Backend Fault: ${result.error || "Unknown Application Rejection"}</div>`;
                 }
             } catch (err) {
-                resultsDisplay.innerHTML = '<div class="center-status-line" style="color:var(--danger)">❌ API Network Exception: Endpoint connection timed out or lost.</div>';
+                console.error("Vault Intercept Error Exception: ", err);
+                resultsDisplay.innerHTML = '<div class="center-status-line" style="color:var(--danger)">❌ API Network Exception: Connection lost, endpoint URL stale, or server script configuration crash.</div>';
             }
         }
 
@@ -193,7 +193,6 @@
             localStorage.setItem('current_wo_work_scope', targetRecord.workScope || "");
             localStorage.setItem('current_wo_est_cost', parseFloat(targetRecord.estimatedCost || 0).toFixed(2));
             
-            // Wipe clean volatile line keys to avoid price list spillover corruptions
             localStorage.removeItem('current_wo_price_book_items');
             localStorage.removeItem('current_wo_itemized_json');
         }
