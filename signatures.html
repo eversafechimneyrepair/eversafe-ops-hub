@@ -102,13 +102,11 @@
             ctx.strokeStyle = '#0f172a';
         }
 
-        // UNIFIED NATIVE POINTER SYSTEM: Hardened layout with absolute screen bounding metrics
+        // HARDENED POINTER TRACKING LAYER: Fixed variable mappings prevent runtime exceptions
         function setupCanvasPointerListeners() {
             function getCoordinates(e) {
                 var rect = canvas.getBoundingClientRect();
-                return { x: e.clientX - rect.left, y: e.clientY - r.top };
-                var r = canvas.getBoundingClientRect();
-                return { x: e.clientX - r.left, y: e.clientY - r.top };
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
             }
 
             canvas.addEventListener('pointerdown', function(e) {
