@@ -569,11 +569,6 @@
             
             var internalSumLeoPartnerCut = 0;
             var internalSumEverSafeRetained = 0;
-
-            var hasLinerActive = false;
-            var hasPrerequisiteActive = false;
-            var hasBlanketWrapActive = false;
-            var hasStructuralWorkActive = false;
             var activeCodeInfractions = [];
 
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
@@ -611,7 +606,7 @@
                 var spec = COMPLETE_PRICE_BOOK[item.key];
                 if (!spec) return;
 
-                if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") hasStructuralWorkActive = true;
+                if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS" || spec.cat === "COMPONENTS") hasStructuralWorkActive = true;
                 
                 if (chimneyMaterial === "PREFAB" && (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING")) {
                     activeCodeInfractions.push(`❌ <b>Structural Mismatch Error:</b> You have assigned a Masonry or Concrete repair line item (<b>${spec.label}</b>), but the chimney infrastructure is set to a Pre-Fab Siding Chase Box.`);
@@ -620,11 +615,19 @@
                     activeCodeInfractions.push(`❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>${spec.label}</b>), but the structural type is set to a Pre-Fab Siding Chase Box.`);
                 }
 
+                // 📐 ENGINE MULTIPLIER CORRECTION APPLIED HERE
                 var currentItemDiameterScalar = (spec.cat === "RELINING") ? diameterScalar : 1.0;
-                var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
+                var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "COMPONENTS" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
+                
+                // Environmental difficulty scale now compounds directly onto retail lines if they are physical structural tasks
+                var environmentalPriceScalar = 1.0;
+                if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "COMPONENTS" || spec.cat === "REMOVALS") {
+                    environmentalPriceScalar = eraLaborScalar * heightElevationLaborScalar;
+                }
+
                 var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL" || item.key === "DIAG_VIDEO_L2" || item.key === "INSP_NFPA_LEVEL_2") ? flueQty : 1;
 
-                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar);
+                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar * environmentalPriceScalar);
                 var rowCalculatedTotal = appliedUnitRate * item.qty * currentItemFlueMultiplier;
                 grossCatalogSubtotal += rowCalculatedTotal;
 
@@ -673,14 +676,6 @@
                 var variableInputHtml = spec.dynamic ? 
                     `<input type="number" class="dimension-input" value="${item.qty}" min="1" onchange="modifyQuantityIndexTarget(${idx}, this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">${spec.unit}</span>` : 
                     `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed</span>`;
-
-                var rateInputHtml = `<span style="font-size:11px; color:#64748b; font-weight:bold; margin-right:2px;">$</span><input type="number" class="override-price-input" value="${appliedUnitRate.toFixed(2)}" step="0.01" min="0" onchange="modifyUnitPriceOverrideTarget(${idx}, this.value)">`;
-
-                var displayLabel = spec.label;
-                if (spec.cat === "RELINING") displayLabel = `${flueSize}-Inch ${spec.label}`;
-                if (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") displayLabel = `${spec.label} (${chimneyTypeLabelDisplay})`;
-                if (propertyEra !== "MODERN" || elevationStories !== "1") displayLabel += ` [Scope: ${eraLabelDisplay} / ${elevationLabelDisplay}]`;
-                if (currentItemFlueMultiplier > 1) displayLabel += ` [x${currentItemFlueMultiplier} Flues Active]`;
 
                 var splitPayoutDisplayHtml = (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
                     `<div style="font-size:12px; font-weight:700; color:#1e40af;">$${rowLeoNetPayout.toFixed(2)} <span style="font-weight:400; color:#64748b;">Leo</span></div>
@@ -901,6 +896,7 @@
             window.location.replace("contract-wo.html");
         }
 
+        // Clean cache entries for security operations reset loops
         function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
