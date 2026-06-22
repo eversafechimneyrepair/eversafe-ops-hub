@@ -222,7 +222,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px;">Inject Selected Line Item into Bid Matrix ➔</button>
+                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px; cursor:pointer;">Inject Selected Line Item into Bid Matrix ➔</button>
             </div>
 
             <div class="section-title">Compiled Project Cost Matrix &amp; Construction Takeoff Drawer</div>            
@@ -231,12 +231,12 @@
                     <thead>                        
                         <tr>                            
                             <th style="width: 35%;">Task Scope / Production Parameter</th>                            
-                            <th style="width: 15%; text-align: center;">Takeoff Qty</th>                            
+                            <th style="width: 13%; text-align: center;">Takeoff Qty</th>                            
                             <th style="width: 15%; text-align: center;">Labor Payout Split</th>                            
                             <th style="width: 11%; text-align: center;">Mat Cost</th>                            
                             <th style="width: 11%; text-align: center;">True Expense</th>                            
-                            <th style="width: 12%; text-align: right;">Unit Rate [Ovr]</th>                            
-                            <th style="width: 5%; text-align: center;">Drop</th>                        
+                            <th style="width: 11%; text-align: right;">UnitPrice [Ovr]</th>                            
+                            <th style="width: 4%; text-align: center;">Drop</th>                        
                         </tr>                    
                     </thead>                    
                     <tbody id="bidTableBody">                    
@@ -474,27 +474,35 @@
             if (optionsFoundCount === 0) { itemSelector.innerHTML += `<option value="">❌ No matches found for "${document.getElementById('itemSearchFilter').value}"</option>`; }
         }
 
+        // 🛡️ SECURITY VAULT Overhaul - Protects loading cycle from variable type mismatches
         function importSilentFlagsFromDiagnosticMaps() {
-            var inheritedFlags = JSON.parse(localStorage.getItem('current_wo_price_book_items')) || {};
-            ACTIVE_RUNNING_ESTIMATE = [];
+            try {
+                var flagsStr = localStorage.getItem('current_wo_price_book_items');
+                if (!flagsStr) { ACTIVE_RUNNING_ESTIMATE = []; return; }
+                var inheritedFlags = JSON.parse(flagsStr) || {};
+                ACTIVE_RUNNING_ESTIMATE = [];
 
-            Object.keys(inheritedFlags).forEach(function(flagKey) {
-                var lookupTarget = "";
-                if (flagKey.includes("firebox_brick")) lookupTarget = "MAS_FIREBOX_REBUILD";
-                else if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS";
-                else if (flagKey.includes("mortar_tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
-                else if (flagKey.includes("crown_defect")) lookupTarget = "WATER_CROWN_SEAL";
+                Object.keys(inheritedFlags).forEach(function(flagKey) {
+                    var lookupTarget = "";
+                    if (flagKey.includes("firebox_brick")) lookupTarget = "MAS_FIREBOX_REBUILD";
+                    else if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS";
+                    else if (flagKey.includes("mortar_tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
+                    else if (flagKey.includes("crown_defect")) lookupTarget = "WATER_CROWN_SEAL";
 
-                if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
-                    var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
-                    ACTIVE_RUNNING_ESTIMATE.push({ 
-                        id: "FLAG_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
-                        key: lookupTarget, 
-                        qty: blueprint.dynamic ? blueprint.defQty : 1, 
-                        rateOverride: null 
-                    });
-                }
-            });
+                    if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
+                        var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
+                        ACTIVE_RUNNING_ESTIMATE.push({ 
+                            id: "FLAG_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+                            key: lookupTarget, 
+                            qty: blueprint.dynamic ? blueprint.defQty : 1, 
+                            rateOverride: null 
+                        });
+                    }
+                });
+            } catch (err) {
+                console.log("Flag cache exception handled safely: " + err.toString());
+                ACTIVE_RUNNING_ESTIMATE = [];
+            }
         }
 
         function injectItemFromCatalogSelection() {
@@ -569,6 +577,10 @@
             
             var internalSumLeoPartnerCut = 0;
             var internalSumEverSafeRetained = 0;
+            var hasLinerActive = false;
+            var hasPrerequisiteActive = false;
+            var hasBlanketWrapActive = false;
+            var hasStructuralWorkActive = false;
             var activeCodeInfractions = [];
 
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
@@ -615,11 +627,9 @@
                     activeCodeInfractions.push(`❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>${spec.label}</b>), but the structural type is set to a Pre-Fab Siding Chase Box.`);
                 }
 
-                // 📐 ENGINE MULTIPLIER CORRECTION APPLIED HERE
                 var currentItemDiameterScalar = (spec.cat === "RELINING") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "COMPONENTS" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
                 
-                // Environmental difficulty scale now compounds directly onto retail lines if they are physical structural tasks
                 var environmentalPriceScalar = 1.0;
                 if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "COMPONENTS" || spec.cat === "REMOVALS") {
                     environmentalPriceScalar = eraLaborScalar * heightElevationLaborScalar;
@@ -674,22 +684,43 @@
                 internalSumLaborBurdens += rowTotalLaborPool;
 
                 var variableInputHtml = spec.dynamic ? 
-                    `<input type="number" class="dimension-input" value="${item.qty}" min="1" onchange="modifyQuantityIndexTarget(${idx}, this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">${spec.unit}</span>` : 
-                    `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed</span>`;
+                    '<input type="number" class="dimension-input" value="' + item.qty + '" min="1" onchange="modifyQuantityIndexTarget(' + idx + ', this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">' + spec.unit + '</span>' : 
+                    '<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed</span>';
+
+                var rateInputHtml = '<span style="font-size:11px; color:#475569; font-weight:bold; margin-right:2px;">$</span><input type="number" class="override-price-input" value="' + appliedUnitRate.toFixed(2) + '" step="0.01" min="0" onchange="modifyUnitPriceOverrideTarget(' + idx + ', this.value)">';
+
+                var displayLabel = spec.label;
+                if (spec.cat === "RELINING") displayLabel = flueSize + "-Inch " + spec.label;
+                if (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") displayLabel = spec.label + " (" + chimneyTypeLabelDisplay + ")";
+                if (propertyEra !== "MODERN" || elevationStories !== "1") displayLabel += " [Scope: " + eraLabelDisplay + " / " + elevationLabelDisplay + "]";
+                if (currentItemFlueMultiplier > 1) displayLabel += " [x" + currentItemFlueMultiplier + " Flues Active]";
 
                 var splitPayoutDisplayHtml = (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
-                    `<div style="font-size:12px; font-weight:700; color:#1e40af;">$${rowLeoNetPayout.toFixed(2)} <span style="font-weight:400; color:#64748b;">Leo</span></div>
-                     <div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$${rowHelperPayout.toFixed(2)} <span style="font-weight:400; color:#64748b;">Help</span></div>` :
-                    `<div style="font-size:12px; font-weight:700; color:#1e40af;">$${rowLeoNetPayout.toFixed(2)} <span style="font-size:10px; font-weight:400; color:#64748b; display:block;">(${rowHours.toFixed(1)} hrs)</span></div>`;
+                    '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
+                    '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-size:10px; font-weight:400; color:#64748b; display:block;">(' + rowHours.toFixed(1) + ' hrs)</span></div>';
 
-                var inlineWbsElements = spec.wbs ? spec.wbs.map(function(t) { return `<li><span>🔹</span><span>${t}</span></li>`; }).join('') : '<li><span>🔹</span><span>Generic task setup parameter sequence executed.</span></li>';
-                var inlineMatElements = spec.mats ? spec.mats.map(function(m, mIdx) {
-                    var scalingText = (spec.dynamic && mIdx === 0) ? ` <span style="color:#b45309; font-weight:bold;">(${item.qty} ${spec.unit})</span>` : '';
-                    var displayMatName = m;
-                    if (spec.cat === "RELINING") displayMatName = m.replace("6-Inch", flueSize + "-Inch");
-                    if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = m.replace("brick", chimneyMaterial.toLowerCase() + " structures");
-                    return `<li><span>▪️</span><span>${displayMatName}${scalingText}</span></li>`;
-                }).join('') : '<li><span>▪️</span><span>No dedicated materials allocated.</span></li>';
+                // 💎 FLAT RE-CONCATENATION: Completely replaces dangerous nested backticks with safe string builders
+                var inlineWbsElements = "";
+                if (spec.wbs) {
+                    spec.wbs.forEach(function(taskText) {
+                        inlineWbsElements += '<li><span>🔹</span><span>' + taskText + '</span></li>';
+                    });
+                } else {
+                    inlineWbsElements = '<li><span>🔹</span><span>Generic structural implementation run performed.</span></li>';
+                }
+
+                var inlineMatElements = "";
+                if (spec.mats) {
+                    spec.mats.forEach(function(matText, mIdx) {
+                        var scalingText = (spec.dynamic && mIdx === 0) ? ' <span style="color:#b45309; font-weight:bold;">(' + item.qty + ' ' + spec.unit + ')</span>' : '';
+                        var displayMatName = matText;
+                        if (spec.cat === "RELINING") displayMatName = matText.replace("6-Inch", flueSize + "-Inch");
+                        if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = matText.replace("brick", chimneyMaterial.toLowerCase() + " structures");
+                        inlineMatElements += '<li><span>▪️</span><span>' + displayMatName + scalingText + '</span></li>';
+                    });
+                } else {
+                    inlineMatElements = '<li><span>▪️</span><span>No isolated picking warehouse raw items assigned.</span></li>';
+                }
 
                 htmlConstructionBuffer += `
                     <tr style="border-bottom:none;">
@@ -698,7 +729,7 @@
                         <td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:14px;">${splitPayoutDisplayHtml}</td>
                         <td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$${rowMatCost.toFixed(2)}</td>
                         <td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$${(rowMatCost + rowTotalLaborPool).toFixed(2)}</td>
-                        <td style="text-align: right; font-weight: 800; color: #1e293b; vertical-align: top; padding-top:14px;">$${rowCalculatedTotal.toFixed(2)}</td>
+                        <td style="text-align: right; vertical-align: top; padding-top:10px;">${rateInputHtml}</td>
                         <td style="text-align: center; vertical-align: top; padding-top:12px;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(${idx})">X</button></td>
                     </tr>
                     <tr>
@@ -717,7 +748,7 @@
                     </tr>
                 `;
                 
-                var labelWithQty = spec.dynamic ? `${displayLabel} (Qty: ${item.qty} ${spec.unit})` : displayLabel;
+                var labelWithQty = spec.dynamic ? displayLabel + " (Qty: " + item.qty + " " + spec.unit + ")" : displayLabel;
                 GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
             });
 
@@ -889,14 +920,11 @@
 
         function lockBidAndAdvanceToWorkOrderReview() {
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
-            
             localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
             localStorage.setItem('current_wo_est_cost', GLOBAL_GRAND_TOTAL.toFixed(2));
-            
             window.location.replace("contract-wo.html");
         }
 
-        // Clean cache entries for security operations reset loops
         function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
