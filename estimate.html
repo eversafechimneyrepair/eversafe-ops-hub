@@ -80,7 +80,7 @@
         .matrix-badge { font-size: 10px; font-weight: bold; background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; }
 
         .btn-action { width: 100%; max-width: 360px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 25px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
-        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed !important; box-shadow: none !important; }
+        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed !allowed !important; box-shadow: none !important; }
     </style>
 </head>
 <body>
@@ -151,7 +151,7 @@
                     </div>
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#1e40af; text-transform:uppercase;">Elevation Height</span>
-                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px; color:#1e40af; background:#eff6ff; border-color:#bfdbfe;">
+                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
                             <option value="1" selected>1 Story (Base)</option>
                             <option value="2">2 Stories (+15% Labor Buffer)</option>
                             <option value="3">3+ Stories [+35% Labor Buffer]</option>
@@ -430,7 +430,7 @@
                     optionsFoundCount++;
                 }
             });
-            if (optionsFoundCount === 0) { itemSelector.innerHTML = `<option value="">❌ No matches found for "${document.getElementById('itemSearchFilter').value}"</option>`; }
+            if (optionsFoundCount === 0) { itemSelector.innerHTML += `<option value="">❌ No matches found for "${document.getElementById('itemSearchFilter').value}"</option>`; }
         }
 
         function importSilentFlagsFromDiagnosticMaps() {
@@ -483,7 +483,6 @@
 
             var mileageSurchargeFee = TRAVEL_SURCHARGES[zone] || 0.00;
 
-            // 🛡️ REFIXED REGIONAL COUPLING POINTER (Maps directly to catalog array fields 1:1)
             var targetPriceTierKey = zone; 
 
             var diameterScalar = 1.0;
@@ -561,13 +560,15 @@
                 if (chimneyMaterial === "PREFAB" && (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING")) {
                     activeCodeInfractions.push(`❌ <b>Structural Mismatch Error:</b> You have assigned a Masonry or Concrete repair line item (<b>${spec.label}</b>), but the chimney infrastructure is set to a Pre-Fab Siding Chase Box.`);
                 }
-                if (chimneyMaterial === "PREFAB" && spec.key === "RMV_STACK_DOWN") {
+                // 🛠️ BUG FIXED: Re-mapped structural checker targeting key checks 1:1
+                if (chimneyMaterial === "PREFAB" && item.key === "RMV_STACK_DOWN") {
                     activeCodeInfractions.push(`❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>${spec.label}</b>), but the structural type is set to a Pre-Fab Siding Chase Box.`);
                 }
 
                 var currentItemDiameterScalar = (spec.cat === "RELINING") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
-                var currentItemFlueMultiplier = (spec.cat === "RELINING" || spec.key.includes("SWEEP_") || spec.key === "LINE_TILE_REMOVAL") ? flueQty : 1;
+                // 🛠️ BUG FIXED: Re-mapped flue tracking multipliers to standard item parameters
+                var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL") ? flueQty : 1;
 
                 var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar);
                 var rowCalculatedTotal = appliedUnitRate * item.qty * currentItemFlueMultiplier;
