@@ -85,12 +85,6 @@
 </head>
 <body>
 
-    <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
-            window.location.replace("index.html");
-        }
-    </script>
-
     <div class="app-header">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Hub</div>
@@ -172,22 +166,25 @@
                 <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
             </div>
 
+            <!-- 🛠️ PERFECTED WORKFLOW LAYOUT: STACKED SEARCH AND DUAL DROPDOWN GRID -->
             <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-top: 15px;">
                 <p style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--primary); margin-bottom:12px; text-align:left; letter-spacing:0.5px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
                 
-                <div class="grid-2">
-                    <div style="border-right: 1px dashed var(--border); padding-right:15px;">
-                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Channel A: High-Speed Text Search Engine</span>
-                        <div class="search-container">
-                            <span class="search-icon">🔍</span>
-                            <input type="text" id="itemSearchFilter" class="search-input-box" placeholder="Type key phrases (e.g., Sweep, Liner, Tuckpoint)..." oninput="filterCatalogItems()">
-                        </div>
+                <!-- Full-Width Option A Row (Spans across top) -->
+                <div style="margin-bottom: 14px;">
+                    <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option A: High-Speed Keyword Filter Engine</span>
+                    <div class="search-container">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="itemSearchFilter" class="search-input-box" placeholder="Start typing keywords here to instantly filter catalog directory items..." oninput="filterCatalogItems()">
                     </div>
+                </div>
 
-                    <div style="padding-left:5px;">
-                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Channel B: Filter Matrix By Category Group</span>
+                <!-- Option B & C side-by-side Dual-Bar Grid -->
+                <div class="grid-2" style="margin-bottom:0;">
+                    <div>
+                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option B: Filter By Trade Category Group</span>
                         <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
-                            <option value="ALL">-- Show All Trade Categories --</option>
+                            <option value="ALL" selected>-- Step 1: Choose Category (Optional) --</option>
                             <option value="MAINTENANCE">Maintenance &amp; Diagnostics</option>
                             <option value="MASONRY">Masonry Structural Repairs</option>
                             <option value="RELINING">Venting &amp; Reline Frameworks</option>
@@ -197,15 +194,15 @@
                             <option value="REMOVALS">Demolition &amp; System Extractions</option>
                         </select>
                     </div>
+                    <div>
+                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option C: Traditional Catalog Item Selector</span>
+                        <select id="catalogItemSelector">
+                            <option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div style="margin-top:14px; border-top:1px solid #e2e8f0; padding-top:14px;">
-                    <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px; text-align:left;">Step 2: Choose Isolated Scope Item From Target Directory</span>
-                    <select id="catalogItemSelector" style="background:white; color:var(--primary); font-weight:600;">
-                        <option value="" disabled selected hidden>-- Select Item to Inject --</option>
-                    </select>
-                    <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:10px; padding:14px; font-size:12px;">Inject Selected Line Item into Matrix ➔</button>
-                </div>
+                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px;">Inject Selected Line Item into Bid Matrix ➔</button>
             </div>
 
             <div class="section-title">Compiled Project Cost Matrix</div>
@@ -221,16 +218,21 @@
                         </tr>
                     </thead>
                     <tbody id="bidTableBody">
-                        </tbody>
+                        <!-- Dynamic rows assemble here -->
+                    </tbody>
                 </table>
             </div>
 
+            <!-- 🚨 GATEKEEPER CRITICAL WARNING TRAY INTERCEPTOR -->
             <div id="gatekeeperCodeViolationTray" class="gatekeeper-panel"></div>
 
+            <!-- 🛡️ AUTOMATED COUNTY JURISDICTIONAL LICENSING COMPLIANCE ADVISOR -->
             <div id="localityLicensingGatekeeperTray" class="licensing-panel"></div>
 
+            <!-- 💡 DYNAMIC INTUITIVE DEPENDENCY ALERT TRAY CONTAINER -->
             <div id="dependencyAlertTray" class="dependency-alert-box" style="display:none;"></div>
 
+            <!-- 📋 AUTO-GENERATING TASKS, HOURS, LABOR RATES, & MATERIAL COST MATRICES -->
             <div class="breakdown-matrix-grid">
                 <div class="matrix-box" id="wbsPanelMatrix">
                     <h4>📋 Work Breakdown Structure &amp; Budgeted Labor Hours</h4>
@@ -246,6 +248,7 @@
                 </div>
             </div>
 
+            <!-- 📊 AUTOMATED CORPORATE MULTIPLIER EXPENSE LEDGER -->
             <div class="revenue-breakdown-card">
                 <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>
                 
@@ -395,25 +398,24 @@
             recalculateMasterLedger();
         });
 
-        // 🧠 UX CLEANUP: Populates item options cleanly with standardized standby anchors
+        // 🧠 UX COUPLING: Renders dropdown directory cleanly using standalone default placeholder options
         function populateItemsFromCategoryDropdown() {
             var selectedCategory = document.getElementById('catalogCategorySelector').value;
             var itemSelector = document.getElementById('catalogItemSelector');
             
-            // Inject structural standalone placeholder tracking element
+            // Re-mount standardized stand-by instructional anchor
             itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
 
             Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
                 var entry = COMPLETE_PRICE_BOOK[key];
                 if (selectedCategory === "ALL" || entry.cat === selectedCategory) {
-                    // Stripped repetitive [CATEGORY] noise out for meticulous readability
                     itemSelector.innerHTML += `<option value="${key}">${entry.label}</option>`;
                 }
             });
             if (selectedCategory !== "ALL") { document.getElementById('itemSearchFilter').value = ""; }
         }
 
-        // 🧠 UX CLEANUP: High Speed filter engine isolates options cleanly without visual clutter
+        // 🧠 UX COUPLING: High speed text search updates selector values dynamically
         function filterCatalogItems() {
             var inputStr = document.getElementById('itemSearchFilter').value.toLowerCase().trim();
             var categorySelector = document.getElementById('catalogCategorySelector');
@@ -421,7 +423,7 @@
             
             if (inputStr.length > 0) { categorySelector.value = "ALL"; }
             
-            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Select isolated Match Hit Below --</option>';
+            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Select Match Hit Below --</option>';
             var optionsFoundCount = 0;
 
             Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
@@ -460,7 +462,7 @@
             if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) { alert("Selection Note: Please pick a verified scope item from the directory list before attempting injection."); return; }
             executeDirectCartAddition(itemKey);
             
-            // Soft reset standby placeholder configuration state
+            // Soft reset placeholder configuration state after addition
             document.getElementById('itemSearchFilter').value = "";
             document.getElementById('catalogCategorySelector').value = "ALL";
             populateItemsFromCategoryDropdown();
