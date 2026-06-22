@@ -139,7 +139,7 @@
                         </select>
                     </div>
                     <div>
-                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Chimney Chimney Type</span>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Chimney Type</span>
                         <select id="chimneyTypeSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
                             <option value="BRICK" selected>Brick Masonry (1.0x)</option>
                             <option value="BLOCK">Cinder Block (1.15x)</option>
@@ -172,22 +172,22 @@
                 <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
             </div>
 
-            <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px;">
-                <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:var(--primary); margin-bottom:8px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
+            <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-top: 15px;">
+                <p style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--primary); margin-bottom:12px; text-align:left; letter-spacing:0.5px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
                 
-                <div class="form-group" style="margin-bottom: 12px;">
-                    <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Option A: Instant Search Filter Engine</span>
-                    <div class="search-container">
-                        <span class="search-icon">🔍</span>
-                        <input type="text" id="itemSearchFilter" class="search-input-box" placeholder="Start typing keywords here to narrow down the dropdown list instantly..." oninput="filterCatalogItems()">
-                    </div>
-                </div>
-
                 <div class="grid-2">
-                    <div>
-                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Option B: Filter By Category Group</span>
+                    <div style="border-right: 1px dashed var(--border); padding-right:15px;">
+                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Channel A: High-Speed Text Search Engine</span>
+                        <div class="search-container">
+                            <span class="search-icon">🔍</span>
+                            <input type="text" id="itemSearchFilter" class="search-input-box" placeholder="Type key phrases (e.g., Sweep, Liner, Tuckpoint)..." oninput="filterCatalogItems()">
+                        </div>
+                    </div>
+
+                    <div style="padding-left:5px;">
+                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Channel B: Filter Matrix By Category Group</span>
                         <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
-                            <option value="ALL" selected>-- Show All Categories --</option>
+                            <option value="ALL">-- Show All Trade Categories --</option>
                             <option value="MAINTENANCE">Maintenance &amp; Diagnostics</option>
                             <option value="MASONRY">Masonry Structural Repairs</option>
                             <option value="RELINING">Venting &amp; Reline Frameworks</option>
@@ -197,13 +197,15 @@
                             <option value="REMOVALS">Demolition &amp; System Extractions</option>
                         </select>
                     </div>
-                    <div>
-                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Option C: Traditional Dropdown Menu Selector</span>
-                        <select id="catalogItemSelector">
-                            </select>
-                    </div>
                 </div>
-                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white;">Inject Line Item Into Bid</button>
+
+                <div style="margin-top:14px; border-top:1px solid #e2e8f0; padding-top:14px;">
+                    <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px; text-align:left;">Step 2: Choose Isolated Scope Item From Target Directory</span>
+                    <select id="catalogItemSelector" style="background:white; color:var(--primary); font-weight:600;">
+                        <option value="" disabled selected hidden>-- Select Item to Inject --</option>
+                    </select>
+                    <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:10px; padding:14px; font-size:12px;">Inject Selected Line Item into Matrix ➔</button>
+                </div>
             </div>
 
             <div class="section-title">Compiled Project Cost Matrix</div>
@@ -330,21 +332,18 @@
             "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement", OH_LUCAS: 17.00, OH_WOOD: 17.00, OH_MID_DIST: 17.00, OH_EXTENDED: 17.00, MI_MONROE_CORE: 19.00, MI_MONROE_OUTER: 19.00, MI_WASHTENAW_MID: 23.00, MI_EXTENDED: 23.00, dynamic: true, defQty: 5, unit: "bricks", matCost: 4.00, labRate: 45.00, labHours: 0.30, wbs: ["Chisel out fractured spalled bricks", "Re-bed structure with high-bond layout mortar"], mats: ["Severe-weather structural face replacements", "High-bond structural masonry contact paste"] },
             "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", OH_LUCAS: 75.00, OH_WOOD: 75.00, OH_MID_DIST: 75.00, OH_EXTENDED: 75.00, MI_MONROE_CORE: 85.00, MI_MONROE_OUTER: 85.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: true, defQty: 5, unit: "courses", matCost: 18.00, labRate: 50.00, labHours: 1.0, wbs: ["Dismantle unstable chimney brick segments", "Relay structural perimeter lines to plumb level"], mats: ["Severe-weather grade replacement structural pieces", "Premium masonry mortar allocation packs"] },
             "MAS_REBUILD_TOTAL":    { cat: "MASONRY", label: "Complete Structural Demolition & Ground-Up Rebuild (per course)", OH_LUCAS: 119.00, OH_WOOD: 119.00, OH_MID_DIST: 119.00, OH_EXTENDED: 119.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 155.00, MI_EXTENDED: 155.00, dynamic: true, defQty: 20, unit: "courses", matCost: 24.00, labRate: 50.00, labHours: 1.5, wbs: ["Execute total structural teardown blocks", "Erect heavy framing access scaffolding sets", "Relay entire chimney architecture plumb"], mats: ["Full industrial pallet brick configurations", "Structural reinforcement steel mesh bars"] },
-            "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 31.00, MI_EXTENDED: 31.00, dynamic: true, defQty: 15, unit: "bricks", matCost: 6.50, labRate: 45.00, labHours: 0.40, wbs: ["Extract compromised cracked firebrick tiles", "Mix refractory high-heat fire clay solutions", "Lay clean tight thermal joints"], mats: ["High-density golden thermal firebrick tiles", "Refractory high-temp fire clay mortar pre-mix"] },
+            "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_HANCOCK: 24.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 31.00, MI_EXTENDED: 31.00, dynamic: true, defQty: 15, unit: "bricks", matCost: 6.50, labRate: 45.00, labHours: 0.40, wbs: ["Extract compromised cracked firebrick tiles", "Mix refractory high-heat fire clay solutions", "Lay clean tight thermal joints"], mats: ["High-density golden thermal firebrick tiles", "Refractory high-temp fire clay mortar pre-mix"] },
             "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (Smoktite)", OH_LUCAS: 580.00, OH_WOOD: 580.00, OH_MID_DIST: 580.00, OH_EXTENDED: 580.00, MI_MONROE_CORE: 640.00, MI_MONROE_OUTER: 640.00, MI_WASHTENAW_MID: 715.00, MI_EXTENDED: 715.00, dynamic: false, matCost: 220.00, labRate: 55.00, labHours: 4.0, wbs: ["Spray insulate inner corbel brick walls", "Smooth coat smoke chamber to direct frictionless air"], mats: ["Smoktite ceramic refractory insulation mixture"] },
 
             // VENTING & RELINE FRAMEWORKS
             "LINE_STAINLESS":       { cat: "RELINING", label: "Titanium Stainless Steel Flue Relining (per linear ft)", OH_LUCAS: 85.00, OH_WOOD: 85.00, OH_MID_DIST: 85.00, OH_EXTENDED: 85.00, MI_MONROE_CORE: 95.00, MI_MONROE_OUTER: 95.00, MI_WASHTENAW_MID: 105.00, MI_EXTENDED: 105.00, dynamic: true, defQty: 25, unit: "ft", matCost: 32.00, labRate: 55.00, labHours: 0.5, wbs: ["Pull flexible titanium liner down flue structural core", "Anchor top plate flashing assemblies securely", "Secure bottom snout connections into baseline breach"], mats: ["Flexible AL29-4C titanium stainless steel liner coil", "Premium top plate ventilation anchoring flashing sets"] },
             "LINE_OVAL_6":          { cat: "RELINING", label: "Custom Ovalized Stainless Steel Liner Profile Modification (per ft)", OH_LUCAS: 115.00, OH_WOOD: 115.00, OH_MID_DIST: 115.00, OH_EXTENDED: 115.00, MI_MONROE_CORE: 129.00, MI_MONROE_OUTER: 129.00, MI_WASHTENAW_MID: 145.00, MI_EXTENDED: 145.00, dynamic: true, defQty: 25, unit: "ft", matCost: 52.00, labRate: 55.00, labHours: 0.7, wbs: ["Reshape round steel liners via mechanical press", "Pass profile lines into constrained brick cavities"], mats: ["Ovalized structural stainless steel liner stock", "Custom matching transition adapters to round fittings"] },
             "LINE_INSUL_BLANKET":   { cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Wrap Kit (1/2-Inch Outer)", OH_LUCAS: 239.00, OH_WOOD: 239.00, OH_MID_DIST: 239.00, OH_EXTENDED: 239.00, MI_MONROE_CORE: 265.00, MI_MONROE_OUTER: 265.00, MI_WASHTENAW_MID: 295.00, MI_EXTENDED: 295.00, dynamic: false, matCost: 140.00, labRate: 50.00, labHours: 2.0, wbs: ["Wrap liner exterior with high-density blankets", "Secure insulation shields using mesh reinforcement wire"], mats: ["1/2-Inch ceramic insulation thermal blanket roll", "Stainless steel outer protection mesh tracking screen"] },
-            // 🏢 CUBIC FOOTAGE UPGRADE MODIFIED PARSING ANCHOR (Tracks structural void parameters perfectly)
             "LINE_INSUL_POUR":      { cat: "RELINING", label: "Thermix Lightweight Insulating Masonry Pour Shield (per cubic foot)", OH_LUCAS: 18.00, OH_WOOD: 18.00, OH_MID_DIST: 18.00, OH_EXTENDED: 18.00, MI_MONROE_CORE: 22.00, MI_MONROE_OUTER: 22.00, MI_WASHTENAW_MID: 26.00, MI_EXTENDED: 26.00, dynamic: true, defQty: 12, unit: "cu ft", matCost: 7.50, labRate: 45.00, labHours: 0.15, wbs: ["Mix insulated vermiculite dry compounds with baseline hydration layers", "Pour thermal setting lightweight compound smoothly down chimney void perimeters", "Tap outer brick frames gently to clear air bubbles and optimize structural cure"], mats: ["Thermix volumetric masonry dry blend insulation pour sacks"] },
 
             // WATERPROOFING & FLASHING MITIGATION
-            // 📐 Dynamic Square Footage Scopes
             "WATER_CROWN_SEAL":     { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Membrane Coat", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 28.00, MI_MONROE_OUTER: 28.00, MI_WASHTENAW_MID: 34.00, MI_EXTENDED: 34.00, dynamic: true, defQty: 8, unit: "sq ft", matCost: 6.00, labRate: 50.00, labHours: 0.20, wbs: ["Wire brush debris off baseline concrete perimeter tracks", "Trowel smooth flexible seamless protection elastomeric membrane barriers across crown surface boundaries"], mats: ["CrownCoat high-performance weatherproofing structural gel formulation"] },
             "WATER_CROWN_POUR":     { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild System", OH_LUCAS: 820.00, OH_WOOD: 820.00, OH_MID_DIST: 820.00, OH_EXTENDED: 820.00, MI_MONROE_CORE: 900.00, MI_MONROE_OUTER: 900.00, MI_WASHTENAW_MID: 1020.00, MI_EXTENDED: 1020.00, dynamic: false, matCost: 280.00, labRate: 55.00, labHours: 6.0, wbs: ["Erect timber structural concrete form templates", "Mix and pour reinforced fiber concrete crown pads", "Incorporate engineered expansion bond breakers"], mats: ["Fiber-reinforced concrete dry blend bags", "Forming lumber strips, perimeter expansion bond breaker shields"] },
-            // 📐 Dynamic Square Footage Scopes
             "WATER_SAVER_SPRAY":    { cat: "WATERPROOFING", label: "ChimneySaver Silane-Siloxane Breathable Repellent Application", OH_LUCAS: 1.50, OH_WOOD: 1.50, OH_MID_DIST: 1.50, OH_EXTENDED: 1.50, MI_MONROE_CORE: 1.95, MI_MONROE_OUTER: 1.95, MI_WASHTENAW_MID: 2.35, MI_EXTENDED: 2.35, dynamic: true, defQty: 80, unit: "sq ft", matCost: 0.35, labRate: 45.00, labHours: 0.01, wbs: ["Saturate external brick face fields via low-pressure hydraulic pump equipment", "Monitor chemical saturation matrices across outer brick boundaries"], mats: ["ChimneySaver industrial water repellent flashing solution compound"] },
             "FLASH_LEAD_REPLACE":   { cat: "WATERPROOFING", label: "Custom Lead Counter-Flashing Roof Intercept Replacement", OH_LUCAS: 310.00, OH_WOOD: 310.00, OH_MID_DIST: 310.00, OH_EXTENDED: 310.00, MI_MONROE_CORE: 339.00, MI_MONROE_OUTER: 339.00, MI_WASHTENAW_MID: 385.00, MI_EXTENDED: 385.00, dynamic: false, matCost: 95.00, labRate: 55.00, labHours: 3.5, wbs: ["Cut step tracking joints into mortar brick layers", "Weave lead panels under roofing shingles lines"], mats: ["Heavy roll specialty construction counter-lead flashing"] },
 
@@ -355,7 +354,6 @@
             // EXTRACTION & DEMOLITION MODULES
             "LINE_TILE_REMOVAL":    { cat: "REMOVALS", label: "Damaged Clay Flue Tile Knockout & Air-Chisel Extraction", OH_LUCAS: 339.00, OH_WOOD: 339.00, OH_MID_DIST: 339.00, OH_EXTENDED: 339.00, MI_MONROE_CORE: 375.00, MI_MONROE_OUTER: 375.00, MI_WASHTENAW_MID: 445.00, MI_EXTENDED: 445.00, dynamic: false, matCost: 50.00, labRate: 60.00, labHours: 4.0, wbs: ["Run weighted pneumatic impact breaker heads down internal flue channels", "Extract sharp fractured clay tile shrapnel cleanly from baseline cleanouts", "Clear vertical profile barriers to verify clean pathing for liner insertions"], mats: ["Heavy duty rubberized extraction waste buckets", "Air-compressor fuel depletion surcharge index"] },
             "RMV_STACK_DOWN":       { cat: "REMOVALS", label: "Unsafe Masonry Core Structure Knockdown (per vertical ft)", OH_LUCAS: 110.00, OH_WOOD: 110.00, OH_MID_DIST: 110.00, OH_EXTENDED: 110.00, MI_MONROE_CORE: 125.00, MI_MONROE_OUTER: 125.00, MI_WASHTENAW_MID: 145.00, MI_EXTENDED: 145.00, dynamic: true, defQty: 5, unit: "vertical ft", matCost: 40.00, labRate: 55.00, labHours: 2.0, wbs: ["Erect temporary tarps and heavy canvas debris canopy frameworks", "Hand dismantle unsafe masonry course arrays sequentially down to roof boundaries", "Sort and lower damaged bulk brick volumes safely down from high elevations"], mats: ["Commercial roll-off container dumpster tonnage tipping fees", "Contractor high-tensile waste containment storage sacks"] },
-            // 📐 Dynamic Square Footage Scopes
             "RMV_HEARTH_DEMO":      { cat: "REMOVALS", label: "Hearth Extension Floor Deck Concrete Demolition Breakout", OH_LUCAS: 22.00, OH_WOOD: 22.00, OH_MID_DIST: 22.00, OH_EXTENDED: 22.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 32.00, MI_EXTENDED: 32.00, dynamic: true, defQty: 15, unit: "sq ft", matCost: 2.00, labRate: 50.00, labHours: 0.30, wbs: ["Run electric demolition jackhammers to break apart reinforced hearth concrete slabs", "Chisel boundary tie-in tracks off chimney throat structures", "Shovel and bag dense masonry rubble for environmental scrap tracking runs"], mats: ["Heavy canvas dust furniture drops", "Heavy-duty commercial demolition disposal bags"] },
             "RMV_BREACH_DEMO":      { cat: "REMOVALS", label: "Structural Masonry Breach Breakout for Utility Snout Tie-In", OH_LUCAS: 145.00, OH_WOOD: 145.00, OH_MID_DIST: 145.00, OH_EXTENDED: 145.00, MI_MONROE_CORE: 165.00, MI_MONROE_OUTER: 165.00, MI_WASHTENAW_MID: 185.00, MI_EXTENDED: 185.00, dynamic: false, matCost: 15.00, labRate: 50.00, labHours: 1.5, wbs: ["Core drill precise pilot perimeter tracking lines through base walls", "Chisel clean, uniform circular openings matching liner snout dimensions", "Evacuate baseline dust soot masonry fragments prior to appliance integration"], mats: ["High-temp internal chamber masonry furnace packing insulation", "Replacement access viewport frame shields"] }
         };
@@ -397,35 +395,44 @@
             recalculateMasterLedger();
         });
 
+        // 🧠 UX CLEANUP: Populates item options cleanly with standardized standby anchors
         function populateItemsFromCategoryDropdown() {
             var selectedCategory = document.getElementById('catalogCategorySelector').value;
             var itemSelector = document.getElementById('catalogItemSelector');
-            itemSelector.innerHTML = "";
+            
+            // Inject structural standalone placeholder tracking element
+            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
 
             Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
-                var mapping = COMPLETE_PRICE_BOOK[key];
-                if (selectedCategory === "ALL" || mapping.cat === selectedCategory) {
-                    itemSelector.innerHTML += `<option value="${key}">[${mapping.cat}] ${mapping.label}</option>`;
+                var entry = COMPLETE_PRICE_BOOK[key];
+                if (selectedCategory === "ALL" || entry.cat === selectedCategory) {
+                    // Stripped repetitive [CATEGORY] noise out for meticulous readability
+                    itemSelector.innerHTML += `<option value="${key}">${entry.label}</option>`;
                 }
             });
             if (selectedCategory !== "ALL") { document.getElementById('itemSearchFilter').value = ""; }
         }
 
+        // 🧠 UX CLEANUP: High Speed filter engine isolates options cleanly without visual clutter
         function filterCatalogItems() {
             var inputStr = document.getElementById('itemSearchFilter').value.toLowerCase().trim();
+            var categorySelector = document.getElementById('catalogCategorySelector');
             var itemSelector = document.getElementById('catalogItemSelector');
-            itemSelector.innerHTML = "";
+            
+            if (inputStr.length > 0) { categorySelector.value = "ALL"; }
+            
+            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Select isolated Match Hit Below --</option>';
             var optionsFoundCount = 0;
 
             Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
                 var entry = COMPLETE_PRICE_BOOK[key];
                 var labelMatches = entry.label.toLowerCase().includes(inputStr) || entry.cat.toLowerCase().includes(inputStr);
                 if (labelMatches) {
-                    itemSelector.innerHTML += `<option value="${key}">[${entry.cat}] ${entry.label}</option>`;
+                    itemSelector.innerHTML += `<option value="${key}">${entry.label}</option>`;
                     optionsFoundCount++;
                 }
             });
-            if (optionsFoundCount === 0) { itemSelector.innerHTML = `<option value="">❌ No matches found</option>`; }
+            if (optionsFoundCount === 0) { itemSelector.innerHTML = `<option value="">❌ No matches found for "${document.getElementById('itemSearchFilter').value}"</option>`; }
         }
 
         function importSilentFlagsFromDiagnosticMaps() {
@@ -450,8 +457,13 @@
 
         function injectItemFromCatalogSelection() {
             var itemKey = document.getElementById('catalogItemSelector').value;
-            if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) return;
+            if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) { alert("Selection Note: Please pick a verified scope item from the directory list before attempting injection."); return; }
             executeDirectCartAddition(itemKey);
+            
+            // Soft reset standby placeholder configuration state
+            document.getElementById('itemSearchFilter').value = "";
+            document.getElementById('catalogCategorySelector').value = "ALL";
+            populateItemsFromCategoryDropdown();
         }
 
         function executeDirectCartAddition(itemKey) {
@@ -747,7 +759,6 @@
             ACTIVE_RUNNING_ESTIMATE.splice(idxTarget, 1); recalculateMasterLedger();
         }
 
-        // Forward Payload
         function lockBidAndAdvanceToWorkOrderReview() {
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
             window.location.replace("contract-wo.html");
