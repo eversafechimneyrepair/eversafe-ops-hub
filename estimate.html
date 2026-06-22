@@ -384,13 +384,14 @@
         };
 
         var ACTIVE_RUNNING_ESTIMATE = [];
+        var GLOBAL_ITEMIZED_LIST = [];
+        var GLOBAL_GRAND_TOTAL = 0.00;
 
         function toggleCustomLaborField() {
             var model = document.getElementById('laborPayoutModelSelector').value;
             var customWrapper = document.getElementById('customLaborInputWrapper');
             var helperWrapper = document.getElementById('helperSplitInputWrapper');
             
-            // Toggle visibility logic based on model selection
             if (model === "CUSTOM_PERCENT") {
                 customWrapper.style.display = "block";
                 helperWrapper.style.display = "block";
@@ -439,7 +440,6 @@
             populateItemsFromCategoryDropdown();
             importSilentFlagsFromDiagnosticMaps();
             
-            // Ensure proper toggles show on first page load
             toggleCustomLaborField();
             recalculateMasterLedger();
         });
@@ -537,6 +537,9 @@
         }
 
         function recalculateMasterLedger() {
+            GLOBAL_ITEMIZED_LIST = []; 
+            GLOBAL_GRAND_TOTAL = 0.00;
+
             var zone = document.getElementById('regionalZoneSelector').value;
             var marginPctInput = parseFloat(document.getElementById('corporateMarginBufferInput').value) || 0;
             
@@ -573,8 +576,6 @@
             var tbody = document.getElementById('bidTableBody');
             
             var grossCatalogSubtotal = 0;
-            var textCompilationScopeLines = [];
-            var rawItemizedLinesForContract = [];
             
             var internalSumMaterialCosts = 0;
             var internalSumLaborBurdens = 0;
@@ -718,10 +719,10 @@
                 `;
                 
                 var labelWithQty = spec.dynamic ? `${displayLabel} (Qty: ${item.qty} ${spec.unit})` : displayLabel;
-                textCompilationScopeLines.push(labelWithQty);
-                rawItemizedLinesForContract.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
+                
+                // 🛠️ DATA BRIDGE: Populates the global list to be saved to localStorage later
+                GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
 
-                // 🛠️ UPGRADED: Parent/Child Grouping Header System for Clean Readability
                 if (spec.wbs) {
                     aggregatedWBSLines.push(`<li style="background:#f1f5f9; font-weight:800; color:var(--primary-light); padding:8px 10px; border-radius:4px; margin-top:8px;">🛠️ ${displayLabel} <span class="matrix-badge" style="background:var(--accent); color:white; font-size:11px;">⏳ Total: ${rowHours.toFixed(1)} hrs</span></li>`);
                     spec.wbs.forEach(function(task) {
@@ -732,7 +733,6 @@
                 if (spec.mats) {
                     aggregatedMaterialLines.push(`<li style="background:#f0fdf4; font-weight:800; color:#166534; padding:8px 10px; border-radius:4px; margin-top:8px;">📦 ${displayLabel} <span class="matrix-badge" style="background:#059669; color:white; font-size:11px;">Total Cost: $${rowMatCost.toFixed(2)}</span></li>`);
                     spec.mats.forEach(function(mat, mIdx) {
-                        // Only attach scaling indicators to the primary (index 0) material requirement
                         var scalingText = (spec.dynamic && mIdx === 0) ? ` <span style="color:#b45309; font-weight:bold;">(${item.qty} ${spec.unit})</span>` : '';
                         var displayMatName = mat;
                         if (spec.cat === "RELINING") displayMatName = mat.replace("6-Inch", flueSize + "-Inch");
@@ -840,6 +840,9 @@
             var taxableSubtotal = baseSubtotalWithTravel + computedOverhead + computedExpenses + computedMarginBuffer;
             var computedTax = taxableSubtotal * zoneTaxRate;
             var absoluteGrandTotal = taxableSubtotal + computedTax;
+            
+            // 🛠️ DATA BRIDGE: Populates the global total to be saved to localStorage later
+            GLOBAL_GRAND_TOTAL = absoluteGrandTotal;
 
             document.getElementById('wbsContentList').innerHTML = aggregatedWBSLines.length > 0 ? aggregatedWBSLines.join("") : '<li><span style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</span></li>';
             document.getElementById('materialsContentList').innerHTML = aggregatedMaterialLines.length > 0 ? aggregatedMaterialLines.join("") : '<li><span style="color:#94a3b8; font-style:italic;">No materials allocated.</span></li>';
@@ -916,6 +919,11 @@
 
         function lockBidAndAdvanceToWorkOrderReview() {
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
+            
+            // 🛠️ DATA BRIDGE: Locks the global variables securely into the cache
+            localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
+            localStorage.setItem('current_wo_est_cost', GLOBAL_GRAND_TOTAL.toFixed(2));
+            
             window.location.replace("contract-wo.html");
         }
 
