@@ -50,7 +50,7 @@
         .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
         
         .estimate-table-wrapper { width: 100%; overflow-x: auto; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 0 0 6px 6px; }
-        .estimate-table { width: 100%; border-collapse: collapse; min-width: 700px; }
+        .estimate-table { width: 100%; border-collapse: collapse; min-width: 850px; }
         .estimate-table th { background-color: #f1f5f9; padding: 10px; border: 1px solid var(--border); font-size: 11px; text-transform: uppercase; color: #475569; text-align: left; }
         .estimate-table td { padding: 10px; border: 1px solid var(--border); font-size: 13px; background: white; vertical-align: middle; }
         
@@ -146,7 +146,7 @@
                     </div>
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#1e40af; text-transform:uppercase;">Elevation Height</span>
-                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px; color:#1e40af; background:#eff6ff; border-color:#bfdbfe;">
+                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
                             <option value="1" selected>1 Story (Base)</option>
                             <option value="2">2 Stories (+15% Labor Buffer)</option>
                             <option value="3">3+ Stories [+35% Labor Buffer]</option>
@@ -198,97 +198,98 @@
                 <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px;">Inject Selected Line Item into Bid Matrix ➔</button>
             </div>
 
-            <div class="section-title">Compiled Project Cost Matrix</div>
-            <div class="estimate-table-wrapper">
-                <table class="estimate-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 40%;">Task Description / Scope Parameter</th>
-                            <th style="width: 20%; text-align: center;">Variables / Unit Qty</th>
-                            <th style="width: 20%; text-align: center;">Unit Rate ($) [Override]</th>
-                            <th style="width: 12%; text-align: right;">Total Price</th>
-                            <th style="width: 8%; text-align: center;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bidTableBody">
-                    </tbody>
-                </table>
+            <div class="section-title">Compiled Project Cost Matrix &amp; Construction Takeoff Drawer</div>            
+            <div class="estimate-table-wrapper">                
+                <table class="estimate-table">                    
+                    <thead>                        
+                        <tr>                            
+                            <th style="width: 35%;">Task Scope / Production Parameter</th>                            
+                            <th style="width: 15%; text-align: center;">Takeoff Qty</th>                            
+                            <th style="width: 11%; text-align: center;">Labor Qty</th>                            
+                            <th style="width: 11%; text-align: center;">Mat Cost</th>                            
+                            <th style="width: 11%; text-align: center;">Labor Burden</th>                            
+                            <th style="width: 12%; text-align: right;">Unit Rate [Ovr]</th>                            
+                            <th style="width: 5%; text-align: center;">Drop</th>                        
+                        </tr>                    
+                    </thead>                    
+                    <tbody id="bidTableBody">                    
+                    </tbody>                
+                </table>            
             </div>
 
             <div id="gatekeeperCodeViolationTray" class="gatekeeper-panel"></div>
             <div id="localityLicensingGatekeeperTray" class="licensing-panel"></div>
             <div id="dependencyAlertTray" class="dependency-alert-box" style="display:none;"></div>
 
-            <div class="breakdown-matrix-grid">
-                <div class="matrix-box" id="wbsPanelMatrix">
-                    <h4>📋 Work Breakdown Structure &amp; Budgeted Labor Hours</h4>
-                    <ul class="matrix-list" id="wbsContentList">
-                        <li style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</li>
-                    </ul>
-                </div>
-                <div class="matrix-box" id="materialsPanelMatrix">
-                    <h4>📦 Required Materials Matrix Allocation &amp; Hard Cost Ledger</h4>
-                    <ul class="matrix-list" id="materialsContentList">
-                        <li style="color:#94a3b8; font-style:italic;">No materials allocated.</li>
-                    </ul>
-                </div>
+            <div class="breakdown-matrix-grid">                
+                <div class="matrix-box" id="wbsPanelMatrix">                    
+                    <h4>📋 Work Breakdown Structure &amp; Budgeted Labor Hours</h4>                    
+                    <ul class="matrix-list" id="wbsContentList">                        
+                        <li style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</li>                    
+                    </ul>                
+                </div>                
+                <div class="matrix-box" id="materialsPanelMatrix">                    
+                    <h4>📦 Required Materials Matrix Allocation &amp; Warehouse Picking Sheet</h4>                    
+                    <ul class="matrix-list" id="materialsContentList">                        
+                        <li style="color:#94a3b8; font-style:italic;">No materials allocated.</li>                    
+                    </ul>                
+                </div>            
             </div>
 
             <div class="revenue-breakdown-card">
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>
-                
-                <div class="breakdown-row">
-                    <div>Gross Catalog Line Items Subtotal:</div>
-                    <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>
-                </div>
-                <div class="breakdown-row">
-                    <div>Travel &amp; Commute Mileage Surcharge (Distance Fund):</div>
-                    <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>
-                </div>
-                <div class="breakdown-row">
-                    <div>Indirect Operational Overhead Buffer (12.0%):</div>
-                    <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>
-                </div>
-                <div class="breakdown-row">
-                    <div>Regulatory Logistics &amp; Consumables Expense (5.0%):</div>
-                    <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>
-                </div>
-                <div class="breakdown-row" style="background: #f0fdf4;">
-                    <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>
-                    <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>
-                </div>
-                <div class="breakdown-row">
-                    <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>
-                    <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>
-                </div>
-                <div class="breakdown-row grand-prime">
-                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>
-                    <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>
-                </div>
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                
+                <div class="breakdown-row">                    
+                    <div>Gross Catalog Line Items Subtotal:</div>                    
+                    <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                
+                </div>                
+                <div class="breakdown-row">                    
+                    <div>Travel &amp; Commute Mileage Surcharge (Distance Fund):</div>                    
+                    <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                
+                </div>                
+                <div class="breakdown-row">                    
+                    <div>Indirect Operational Overhead Buffer (12.0%):</div>                    
+                    <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                
+                </div>                
+                <div class="breakdown-row">                    
+                    <div>Regulatory Logistics &amp; Consumables Expense (5.0%):</div>                    
+                    <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                
+                </div>                
+                <div class="breakdown-row" style="background: #f0fdf4;">                    
+                    <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                    
+                    <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                
+                </div>                
+                <div class="breakdown-row">                    
+                    <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                    
+                    <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                
+                </div>                
+                <div class="breakdown-row grand-prime">                    
+                    <div>Total Combined Project Valuation:</div>                    
+                    <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                
+                </div>            
             </div>
 
-            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
-                <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>
-                <div class="grid-2" style="margin-bottom: 10px;">
-                    <div>
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Labor Base)</span>
-                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">
-                    </div>
-                    <div>
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>
-                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>
-                    </div>
-                </div>
-                <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">
-                    <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>
-                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>
-                </div>
-            </div>
-            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile &amp; Generate Work Order ➔</button>
-        </div>
+            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                
+                <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                
+                <div class="grid-2" style="margin-bottom: 10px;">                    
+                    <div>                        
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Labor Base)</span>                        
+                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                    
+                    </div>                    
+                    <div>                        
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                        
+                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                    
+                    </div>                
+                </div>                
+                <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">                    
+                    <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                    
+                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                
+                </div>            
+            </div>            
+            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile &amp; Generate Work Order ➔</button>        
+        </div>    
     </div>
 
-    <div class="fixed-bottom-nav-bar"></div>
+    <div class="fixed-bottom-nav-bar"></div>    
     <script src="navbar.js"></script>
 
     <script>
@@ -307,7 +308,6 @@
         var CORPORATE_EXPENSE_RATE = 0.05;  
 
         var COMPLETE_PRICE_BOOK = {
-            // UNBUNDLED MAINTENANCE DATA
             "INSP_NFPA_LEVEL_1":    { cat: "MAINTENANCE", label: "NFPA 211 Level 1 Visual Inspection & Clearance Evaluation", OH_LUCAS: 79.00, OH_WOOD: 79.00, OH_MID_DIST: 79.00, OH_EXTENDED: 79.00, MI_MONROE_CORE: 89.00, MI_MONROE_OUTER: 89.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: false, matCost: 2.00, labRate: 50.00, labHours: 0.75, wbs: ["Examine accessible structural components", "Verify baseline structural clearances", "Verify chimney soot density accumulation layers"], mats: ["Digital administrative inspection checklist token"] },
             "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "NFPA 211 Level 2 Internal Flue Video Scan Diagnostic", OH_LUCAS: 125.00, OH_WOOD: 125.00, OH_MID_DIST: 125.00, OH_EXTENDED: 125.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 149.00, MI_EXTENDED: 149.00, dynamic: false, matCost: 5.00, labRate: 60.00, labHours: 1.0, wbs: ["Setup specialized video recording rigs", "Run panoramic camera modules down flue axis", "Document structural link cracks / joint gaps"], mats: ["Digital cloud logging token allocation"] },
             "SWEEP_WOOD_FLUE":      { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Open Masonry Woodburning Flue", OH_LUCAS: 95.00, OH_WOOD: 95.00, OH_MID_DIST: 95.00, OH_EXTENDED: 95.00, MI_MONROE_CORE: 105.00, MI_MONROE_OUTER: 105.00, MI_WASHTENAW_MID: 115.00, MI_EXTENDED: 115.00, dynamic: false, matCost: 10.00, labRate: 50.00, labHours: 0.75, wbs: ["Run mechanical wire or poly brushes down internal flue", "Vacuum fine ash soot from open smoke shelf terminals"], mats: ["Poly floor protection sheets", "Soot disposal waste containment bags"] },
@@ -321,7 +321,6 @@
             "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement (per brick)", OH_LUCAS: 17.00, OH_WOOD: 17.00, OH_MID_DIST: 17.00, OH_EXTENDED: 17.00, MI_MONROE_CORE: 19.00, MI_MONROE_OUTER: 19.00, MI_WASHTENAW_MID: 23.00, MI_EXTENDED: 23.00, dynamic: true, defQty: 5, unit: "bricks", matCost: 4.00, labRate: 45.00, labHours: 0.30, wbs: ["Chisel out fractured spalled bricks", "Re-bed structure with high-bond layout mortar"], mats: ["Severe-weather structural red clay bricks", "High-bond structural masonry contact paste"] },
             "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", OH_LUCAS: 75.00, OH_WOOD: 75.00, OH_MID_DIST: 75.00, OH_EXTENDED: 75.00, MI_MONROE_CORE: 85.00, MI_MONROE_OUTER: 85.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: true, defQty: 5, unit: "courses", matCost: 18.00, labRate: 50.00, labHours: 1.0, wbs: ["Dismantle unstable chimney brick segments", "Relay structural perimeter lines to plumb level"], mats: ["Severe-weather grade replacement clay bricks", "Premium masonry mortar allocation packs"] },
             "MAS_REBUILD_TOTAL":    { cat: "MASONRY", label: "Complete Structural Demolition & Ground-Up Rebuild (per course)", OH_LUCAS: 119.00, OH_WOOD: 119.00, OH_MID_DIST: 119.00, OH_EXTENDED: 119.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 155.00, MI_EXTENDED: 155.00, dynamic: true, defQty: 20, unit: "courses", matCost: 24.00, labRate: 50.00, labHours: 1.5, wbs: ["Execute total structural teardown blocks", "Erect heavy framing access scaffolding sets", "Relay entire chimney architecture plumb"], mats: ["Full industrial pallet brick configurations", "Structural reinforcement steel mesh bars"] },
-            // 🛡️ REGIONAL KEY GAP REALIGNED FROM OLD PLACEHOLDER PROPERTY
             "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 31.00, MI_EXTENDED: 31.00, dynamic: true, defQty: 15, unit: "bricks", matCost: 6.50, labRate: 45.00, labHours: 0.40, wbs: ["Extract compromised cracked firebrick tiles", "Mix refractory high-heat fire clay solutions", "Lay clean tight thermal joints"], mats: ["High-density golden thermal firebrick tiles", "Refractory high-temp fire clay mortar pre-mix"] },
             "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (Smoktite)", OH_LUCAS: 580.00, OH_WOOD: 580.00, OH_MID_DIST: 580.00, OH_EXTENDED: 580.00, MI_MONROE_CORE: 640.00, MI_MONROE_OUTER: 640.00, MI_WASHTENAW_MID: 715.00, MI_EXTENDED: 715.00, dynamic: false, matCost: 220.00, labRate: 55.00, labHours: 4.0, wbs: ["Spray insulate inner corbel brick walls", "Smooth coat smoke chamber to direct frictionless air"], mats: ["Smoktite ceramic refractory insulation mixture"] },
 
@@ -441,9 +440,12 @@
 
                 if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
                     var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
-                    if (!ACTIVE_RUNNING_ESTIMATE.some(function(e) { return e.key === lookupTarget; })) {
-                        ACTIVE_RUNNING_ESTIMATE.push({ key: lookupTarget, qty: blueprint.dynamic ? blueprint.defQty : 1, rateOverride: null });
-                    }
+                    ACTIVE_RUNNING_ESTIMATE.push({ 
+                        id: "FLAG_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+                        key: lookupTarget, 
+                        qty: blueprint.dynamic ? blueprint.defQty : 1, 
+                        rateOverride: null 
+                    });
                 }
             });
         }
@@ -451,18 +453,27 @@
         function injectItemFromCatalogSelection() {
             var itemKey = document.getElementById('catalogItemSelector').value;
             if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) { alert("Selection Note: Please pick a verified scope item from the options list before clicking inject."); return; }
-            executeDirectCartAddition(itemKey);
             
-            // 🛠️ FIX: Clean text field but retain selection indexes to allow sequential item stack injection runs
+            var blueprint = COMPLETE_PRICE_BOOK[itemKey];
+            ACTIVE_RUNNING_ESTIMATE.push({ 
+                id: "ITEM_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+                key: itemKey, 
+                qty: blueprint.dynamic ? blueprint.defQty : 1, 
+                rateOverride: null 
+            });
+
             document.getElementById('itemSearchFilter').value = "";
+            recalculateMasterLedger();
         }
 
         function executeDirectCartAddition(itemKey) {
             var blueprint = COMPLETE_PRICE_BOOK[itemKey];
-            var redundantCheck = ACTIVE_RUNNING_ESTIMATE.find(function(el) { return el.key === itemKey; });
-            if (redundantCheck && !blueprint.dynamic) { return; }
-
-            ACTIVE_RUNNING_ESTIMATE.push({ key: itemKey, qty: blueprint.dynamic ? blueprint.defQty : 1, rateOverride: null });
+            ACTIVE_RUNNING_ESTIMATE.push({ 
+                id: "QUICK_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
+                key: itemKey, 
+                qty: blueprint.dynamic ? blueprint.defQty : 1, 
+                rateOverride: null 
+            });
             recalculateMasterLedger();
         }
 
@@ -520,7 +531,7 @@
             var activeCodeInfractions = [];
 
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
+                document.getElementById('bidTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
                 document.getElementById('lbl_base_subtotal').innerText = "$0.00";
                 document.getElementById('lbl_travel_surcharge').innerText = "+$0.00";
                 document.getElementById('lbl_indirect_overhead').innerText = "+$0.00";
@@ -535,7 +546,7 @@
                 document.getElementById('masterSubmitProceedBtn').disabled = false;
                 document.getElementById('wbsContentList').innerHTML = '<li style="color:#94a3b8; font-style:italic;">No tasks compiled.</li>';
                 document.getElementById('materialsContentList').innerHTML = '<li style="color:#94a3b8; font-style:italic;">No materials allocated.</li>';
-                calculateProfitThermometer(0);
+                calculateProfitThermometer(0, 0);
                 return;
             }
 
@@ -544,6 +555,8 @@
                 if (item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL") hasPrerequisiteActive = true;
                 if (item.key === "LINE_INSUL_BLANKET") hasBlanketWrapActive = true;
             });
+
+            var htmlConstructionBuffer = "";
 
             ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
                 var spec = COMPLETE_PRICE_BOOK[item.key];
@@ -554,14 +567,12 @@
                 if (chimneyMaterial === "PREFAB" && (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING")) {
                     activeCodeInfractions.push(`❌ <b>Structural Mismatch Error:</b> You have assigned a Masonry or Concrete repair line item (<b>${spec.label}</b>), but the chimney infrastructure is set to a Pre-Fab Siding Chase Box.`);
                 }
-                // 🛠️ BUG FIXED: Mapped conditional validation filters straight to proper item loop contexts
                 if (chimneyMaterial === "PREFAB" && item.key === "RMV_STACK_DOWN") {
                     activeCodeInfractions.push(`❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>${spec.label}</b>), but the structural type is set to a Pre-Fab Siding Chase Box.`);
                 }
 
                 var currentItemDiameterScalar = (spec.cat === "RELINING") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
-                // 🛠️ BUG FIXED: Realigned loop validation parameter strings away from structural spec pointers to clean references
                 var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL") ? flueQty : 1;
 
                 var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar);
@@ -577,9 +588,9 @@
 
                 var variableInputHtml = spec.dynamic ? 
                     `<input type="number" class="dimension-input" value="${item.qty}" min="1" onchange="modifyQuantityIndexTarget(${idx}, this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">${spec.unit}</span>` : 
-                    `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed Flat</span>`;
+                    `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed</span>`;
 
-                var rateInputHtml = `<span style="font-size:12px; color:#64748b; font-weight:bold; margin-right:4px;">$</span><input type="number" class="override-price-input" value="${appliedUnitRate.toFixed(2)}" step="0.01" min="0" onchange="modifyUnitPriceOverrideTarget(${idx}, this.value)">`;
+                var rateInputHtml = `<span style="font-size:11px; color:#64748b; font-weight:bold; margin-right:2px;">$</span><input type="number" class="override-price-input" value="${appliedUnitRate.toFixed(2)}" step="0.01" min="0" onchange="modifyUnitPriceOverrideTarget(${idx}, this.value)">`;
 
                 var displayLabel = spec.label;
                 if (spec.cat === "RELINING") displayLabel = `${flueSize}-Inch ${spec.label}`;
@@ -587,13 +598,16 @@
                 if (propertyEra !== "MODERN" || elevationStories !== "1") displayLabel += ` [Scope: ${eraLabelDisplay} / ${elevationLabelDisplay}]`;
                 if (currentItemFlueMultiplier > 1) displayLabel += ` [x${currentItemFlueMultiplier} Flues Active]`;
 
-                tbody.innerHTML += `
+                // 📐 UPGRADED: ITEMISED QUANTITY TAKEOFF DISPLAY DIRECTLY INTO TABLE MATRIX ROWS
+                htmlConstructionBuffer += `
                     <tr>
                         <td style="font-weight: 700; font-size:13px; color: var(--primary);">${displayLabel}</td>
                         <td style="text-align: center;">${variableInputHtml}</td>
-                        <td style="text-align: center;">${rateInputHtml}</td>
+                        <td style="text-align: center; font-weight:600; color:#475569;">${rowHours.toFixed(1)} hrs</td>
+                        <td style="text-align: center; font-weight:600; color:#047857;">$${rowMatCost.toFixed(2)}</td>
+                        <td style="text-align: center; font-weight:600; color:#1e40af;">$${rowLaborCost.toFixed(2)}</td>
                         <td style="text-align: right; font-weight: 800; color: #1e293b;">$${rowCalculatedTotal.toFixed(2)}</td>
-                        <td style="text-align: center;"><button type="button" class="btn-delete" onclick="dropItemFromActiveLedger(${idx})">Drop</button></td>
+                        <td style="text-align: center;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(${idx})">X</button></td>
                     </tr>
                 `;
                 
@@ -603,7 +617,7 @@
 
                 if (spec.wbs) {
                     spec.wbs.forEach(function(task) {
-                        aggregatedWBSLines.push(`<li><span>🔹 ${task}</span> <span class="matrix-badge">⏳ Budget: ${rowHours.toFixed(1)} hrs</span></li>`);
+                        aggregatedWBSLines.push(`<li><span>🔹 ${task}</span> <span class="matrix-badge">⏳ Takeoff Qty: ${rowHours.toFixed(1)} hrs</span></li>`);
                     });
                 }
                 if (spec.mats) {
@@ -612,10 +626,12 @@
                         var displayMatName = mat;
                         if (spec.cat === "RELINING") displayMatName = mat.replace("6-Inch", flueSize + "-Inch");
                         if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = mat.replace("brick", chimneyMaterial.toLowerCase() + " structures");
-                        aggregatedMaterialLines.push(`<li><span>📦 ${displayMatName}${scalingText}</span> <span class="matrix-badge">Cost: $${rowMatCost.toFixed(2)}</span></li>`);
+                        aggregatedMaterialLines.push(`<li><span>📦 ${displayMatName}${scalingText}</span> <span class="matrix-badge">Cost Takeoff: $${rowMatCost.toFixed(2)}</span></li>`);
                     });
                 }
             });
+
+            tbody.innerHTML = htmlConstructionBuffer;
 
             if (elevationStories === "3" && hasStructuralWorkActive) {
                 aggregatedWBSLines.unshift(`<li><span style="color:var(--danger); font-weight:700;">⚠️ MANDATORY RIGGING OPERATION:</span> <span style="color:#1e40af; font-weight:600;">Erect MIOSHA-compliant structural safety fall-protection harnesses &amp; vertical anchor systems before ascending roof lines.</span></li>`);
@@ -728,7 +744,36 @@
             var absoluteInternalCompanyCost = internalSumMaterialCosts + internalSumLaborBurdens + (mileageSurchargeFee * 0.45);
             document.getElementById('internalJobCostInput').value = absoluteInternalCompanyCost.toFixed(2);
             
-            calculateProfitThermometer(absoluteGrandTotal);
+            calculateProfitThermometer(taxableSubtotal, absoluteInternalCompanyCost);
+        }
+
+        function calculateProfitThermometer(taxableSubtotal, expenses) {
+            var thermBar = document.getElementById('thermometerBar');
+            var thermLabel = document.getElementById('thermometerLabel');
+            var percentDisplay = document.getElementById('marginPercentageDisplay');
+            
+            if (taxableSubtotal <= 0) {
+                thermBar.style.width = "0%"; thermLabel.innerText = "Awaiting Data"; percentDisplay.innerText = "0.00%"; return;
+            }
+            
+            var grossProfit = taxableSubtotal - expenses;
+            var marginPercent = (grossProfit / taxableSubtotal) * 100;
+            
+            if (marginPercent < 0) marginPercent = 0;
+            if (marginPercent > 100) marginPercent = 100;
+            
+            percentDisplay.innerText = marginPercent.toFixed(2) + "%";
+            thermBar.style.width = marginPercent + "%";
+            
+            if (marginPercent < 40) {
+                thermBar.style.backgroundColor = "#ef4444"; thermLabel.innerText = "🔴 BAD MARGIN BRACKET"; thermLabel.style.color = "#ffffff";
+            } else if (marginPercent >= 40 && marginPercent < 55) {
+                thermBar.style.backgroundColor = "#eab308"; thermLabel.innerText = "🟡 GOOD MARGIN BRACKET"; thermLabel.style.color = "#0f172a";
+            } else if (marginPercent >= 55 && marginPercent < 70) {
+                thermBar.style.backgroundColor = "#22c55e"; thermLabel.innerText = "🟢 BETTER MARGIN BRACKET"; thermLabel.style.color = "#ffffff";
+            } else {
+                thermBar.style.backgroundColor = "#2563eb"; thermLabel.innerText = "🔵 BEST MARGIN BRACKET 🔥"; thermLabel.style.color = "#ffffff";
+            }
         }
 
         function modifyQuantityIndexTarget(idxTarget, newQuantityVal) {
