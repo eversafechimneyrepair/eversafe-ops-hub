@@ -31,7 +31,7 @@
 
         .app-container { max-width: 850px; margin: 0 auto; padding: 0 15px; }
         .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); text-align: left; }
-        h3 { margin-bottom: 15px; font-size: 18px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; }
+        h3 { margin-bottom: 15px; font-size: 18px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; color: var(--primary); }
 
         input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; margin-top: 4px; text-align: center; font-family: inherit; background: #fff; color: #0f172a; }
         input[type="text"]:focus, input[type="number"]:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
@@ -95,10 +95,10 @@
                 </div>
                 <div class="form-group">
                     <label>Realtime Status:</label>
-                    <select id="inv_status" style="color: var(--accent-dark); font-weight: bold;">
+                    <select id="inv_status" style="color: var(--accent); font-weight: bold;">
                         <option value="PENDING_COLLECTION" style="color: var(--danger);">⏳ Awaiting Field Payment</option>
                         <option value="PAID_SETTLED" style="color: var(--success);" selected>✅ Paid / Settled Ledger</option>
-                        <option value="NET_30_ACCOUNT">🏢 Bill to Corporate Account (Net 30)</option>
+                        <option value="NET_30_ACCOUNT" style="color: var(--primary);">🏢 Corporate Account (Net 30)</option>
                     </select>
                 </div>
             </div>
@@ -145,14 +145,12 @@
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
 
         window.addEventListener('DOMContentLoaded', function() {
-            // Re-inflate values from local cache loops instantly
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || localStorage.getItem('cached_wo_email') || "";
             document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || localStorage.getItem('cached_wo_addr') || "";
             document.getElementById('inv_scope').value = localStorage.getItem('current_wo_work_scope') || localStorage.getItem('cached_inv_scope') || "";
             document.getElementById('inv_subtotal').value = localStorage.getItem('current_wo_est_cost') || localStorage.getItem('cached_inv_subtotal') || "0.00";
             
-            // Safe Sync Watchers to protect against hard page closures or app swaps
             document.getElementById('inv_cust').addEventListener('input', function() { localStorage.setItem('current_wo_customer_name', this.value); });
             document.getElementById('inv_email').addEventListener('input', function() { localStorage.setItem('current_wo_customer_email', this.value); });
             document.getElementById('inv_addr').addEventListener('input', function() { localStorage.setItem('current_wo_service_address', this.value); });
@@ -163,10 +161,7 @@
             mountSecureSquareSDKForm();
             toggleSquareDisplayFields(); 
             
-            // Detect desktop PCs and modify UX parameters gracefully
             evaluateHardwareProfileUX();
-
-            // Run Callback Intercept Loop
             checkForActiveSquareReturnPayloads();
         });
 
@@ -194,7 +189,6 @@
             var isAndroid = /android/i.test(userAgent);
             var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
             
-            // If device is a desktop PC/Mac laptop, safely adapt the Tap-to-Pay button
             if (!isAndroid && !isIOS) {
                 var mobileBtn = document.getElementById('tapToPayBtn');
                 mobileBtn.innerHTML = "💻 Tap to Pay Locked (Use Form on PC)";
@@ -215,7 +209,6 @@
             }
         }
 
-        // UNIFIED POINTER MATRIX: Works flawlessly on Laptops, Styluses, Android & Apple multi-touch
         function initializeUniversalPointerCanvasPads() {
             ['inv_tech_sig', 'inv_client_sig'].forEach(function(id) {
                 var canvas = document.getElementById(id); if(!canvas) return;
@@ -304,7 +297,6 @@
             var tSig = extractCanvasBase64DataStringUrl('inv_tech_sig');
             var cSig = extractCanvasBase64DataStringUrl('inv_client_sig');
 
-            // 🚨 HIGH-TICKET SMS INTEGRATION ALERT METRIC
             var finalLedgerVal = parseFloat(document.getElementById('inv_final_total').value) || 0;
             var highTicketLimit = 1500.00;
             var triggerHighTicketAlert = (finalLedgerVal >= highTicketLimit) ? "TRUE" : "FALSE";
@@ -323,7 +315,7 @@
                 tokenStr, 
                 tSig, 
                 cSig,
-                triggerHighTicketAlert // 👈 Appended to column 14 for background script text distribution
+                triggerHighTicketAlert 
             ];
             
             try {
@@ -334,16 +326,17 @@
                 });
                 alert("Ledger finalized and successfully sent to office workbook!");
                 
+                // 🛠️ FIX: Added the massive Base64 variables to prevent the iPad from running out of memory!
                 var sessionKeys = [
                     'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
                     'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier',
                     'current_wo_price_book_items', 'current_wo_slideshow_data', 'cached_wo_cust', 
                     'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
-                    'current_wo_itemized_json'
+                    'current_wo_itemized_json', 'final_client_signature', 'final_tech_signature', 
+                    'current_wo_status'
                 ];
                 sessionKeys.forEach(function(k) { localStorage.removeItem(k); });
                 
-                // Reroute back to active daily manifest hub cockpit
                 window.location.replace("jobs.html");
             } catch(e) {
                 alert("Critical API Transmission Exception. Retrying secondary ledger hooks...");
