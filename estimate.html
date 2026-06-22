@@ -279,7 +279,7 @@
                 <div class="breakdown-row">                                        
                     <div>Regulatory Logistics &amp; Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                
+                </div>                                                                
                 <div class="breakdown-row" style="background: #f0fdf4;">                                        
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                        
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -287,7 +287,7 @@
                 <div class="breakdown-row">                                        
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                        
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                
+                </div>                                                                
                 <div class="breakdown-row grand-prime">                                        
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                        
                     <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
@@ -298,14 +298,14 @@
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
                 
                 <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                        
-                    <div>                                                
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                
+                    <div>                                                                                
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                
                         <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                        
                     </div>                                        
-                    <div>                                                
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                
+                    <div>                                                                                
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                
                         <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                        
-                    </div>                                
+                    </div>                                        
                 </div>   
                 
                 <div id="partnerSplitDashboard" class="partner-telemetry-box" style="display:none;">
@@ -324,7 +324,7 @@
                     <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                                        
                     <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                
                 </div>                        
-            </div>                        
+            </div>                                                
             <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile &amp; Generate Work Order ➔</button>                
         </div>        
     </div>
@@ -359,8 +359,11 @@
 
             "MAS_TUCKPOINT":        { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry Repair (per sq ft)", OH_LUCAS: 12.50, OH_WOOD: 12.50, OH_MID_DIST: 12.50, OH_EXTENDED: 12.50, MI_MONROE_CORE: 15.00, MI_MONROE_OUTER: 15.00, MI_WASHTENAW_MID: 19.00, MI_EXTENDED: 19.00, dynamic: true, defQty: 10, unit: "sq ft", matCost: 2.50, labRate: 55.00, labHours: 0.15, wbs: ["Grind out failing brick mortar joints", "Mix weather-tight mortar solutions", "Pack deep structural voids via slicker tool"], mats: ["Premium weatherproof structural Type-N mortar mix", "Hydrated lime modification additive solutions"] },
             "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement (per brick)", OH_LUCAS: 17.00, OH_WOOD: 17.00, OH_MID_DIST: 17.00, OH_EXTENDED: 17.00, MI_MONROE_CORE: 19.00, MI_MONROE_OUTER: 19.00, MI_WASHTENAW_MID: 23.00, MI_EXTENDED: 23.00, dynamic: true, defQty: 5, unit: "bricks", matCost: 4.00, labRate: 55.00, labHours: 0.30, wbs: ["Chisel out fractured spalled bricks", "Re-bed structure with high-bond layout mortar"], mats: ["Severe-weather structural red clay bricks", "High-bond structural masonry contact paste"] },
-            "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", OH_LUCAS: 75.00, OH_WOOD: 75.00, OH_MID_DIST: 75.00, OH_EXTENDED: 75.00, MI_MONROE_CORE: 85.00, MI_MONROE_OUTER: 85.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: true, defQty: 5, unit: "courses", matCost: 18.00, labRate: 55.00, labHours: 1.0, wbs: ["Dismantle unstable chimney brick segments", "Relay structural perimeter lines to plumb level"], mats: ["Severe-weather grade replacement clay bricks", "Premium masonry mortar allocation packs"] },
-            "MAS_REBUILD_TOTAL":    { cat: "MASONRY", label: "Complete Structural Demolition & Ground-Up Rebuild (per course)", OH_LUCAS: 119.00, OH_WOOD: 119.00, OH_MID_DIST: 119.00, OH_EXTENDED: 119.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 155.00, MI_EXTENDED: 155.00, dynamic: true, defQty: 20, unit: "courses", matCost: 24.00, labRate: 55.00, labHours: 1.5, wbs: ["Execute total structural teardown blocks", "Erect heavy framing access scaffolding sets", "Relay entire chimney architecture plumb"], mats: ["Full industrial pallet brick configurations", "Structural reinforcement steel mesh bars"] },
+            
+            // 🧱 HAMMERED DOWN REBUILD OPTIONS (Leo's Verified System Rules Applied Below)
+            "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per vertical ft)", OH_LUCAS: 375.00, OH_WOOD: 375.00, OH_MID_DIST: 375.00, OH_EXTENDED: 375.00, MI_MONROE_CORE: 375.00, MI_MONROE_OUTER: 375.00, MI_WASHTENAW_MID: 375.00, MI_EXTENDED: 375.00, dynamic: true, defQty: 1, unit: "vertical ft", matCost: 90.00, labRate: 55.00, labHours: 3.5, wbs: ["Dismantle unstable chimney brick segments down to solid foundation", "Relay structural perimeter lines to plumb level using standard brick stack metrics"], mats: ["Severe-weather grade replacement clay bricks", "Premium masonry mortar allocation packs"] },
+            "MAS_REBUILD_TOTAL":    { cat: "MASONRY", label: "Complete Structural Demolition & Ground-Up Rebuild Flat Package (Up to 4ft)", OH_LUCAS: 2380.00, OH_WOOD: 2380.00, OH_MID_DIST: 2380.00, OH_EXTENDED: 2380.00, MI_MONROE_CORE: 2380.00, MI_MONROE_OUTER: 2380.00, MI_WASHTENAW_MID: 2380.00, MI_EXTENDED: 2380.00, dynamic: false, matCost: 480.00, labRate: 55.00, labHours: 12.0, wbs: ["Execute total structural teardown blocks from top down to baseline structural roof joints", "Erect heavy framing access scaffolding sets with advanced fall protection configurations", "Relay entire chimney architecture plumb and level to native local building codes"], mats: ["Full industrial pallet brick configurations and core structures", "Structural reinforcement steel mesh bars and layout compounds"] },
+            
             "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 31.00, MI_EXTENDED: 31.00, dynamic: true, defQty: 15, unit: "bricks", matCost: 6.50, labRate: 55.00, labHours: 0.40, wbs: ["Extract compromised cracked firebrick tiles", "Mix refractory high-heat fire clay solutions", "Lay clean tight thermal joints"], mats: ["High-density golden thermal firebrick tiles", "Refractory high-temp fire clay mortar pre-mix"] },
             "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (per sq ft)", OH_LUCAS: 32.00, OH_WOOD: 32.00, OH_MID_DIST: 32.00, OH_EXTENDED: 32.00, MI_MONROE_CORE: 35.00, MI_MONROE_OUTER: 35.00, MI_WASHTENAW_MID: 39.00, MI_EXTENDED: 39.00, dynamic: true, defQty: 18, unit: "sq ft", matCost: 12.00, labRate: 55.00, labHours: 0.22, wbs: ["Spray/trowel insulate inner corbel brick walls", "Smooth coat smoke chamber to direct frictionless air", "Seal structural gaps to baseline flue tile"], mats: ["Smoktite ceramic refractory insulation mixture"] },
 
@@ -720,7 +723,6 @@
                 
                 var labelWithQty = spec.dynamic ? `${displayLabel} (Qty: ${item.qty} ${spec.unit})` : displayLabel;
                 
-                // 🛠️ DATA BRIDGE: Populates the global list to be saved to localStorage later
                 GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
 
                 if (spec.wbs) {
@@ -841,7 +843,6 @@
             var computedTax = taxableSubtotal * zoneTaxRate;
             var absoluteGrandTotal = taxableSubtotal + computedTax;
             
-            // 🛠️ DATA BRIDGE: Populates the global total to be saved to localStorage later
             GLOBAL_GRAND_TOTAL = absoluteGrandTotal;
 
             document.getElementById('wbsContentList').innerHTML = aggregatedWBSLines.length > 0 ? aggregatedWBSLines.join("") : '<li><span style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</span></li>';
@@ -920,7 +921,6 @@
         function lockBidAndAdvanceToWorkOrderReview() {
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
             
-            // 🛠️ DATA BRIDGE: Locks the global variables securely into the cache
             localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
             localStorage.setItem('current_wo_est_cost', GLOBAL_GRAND_TOTAL.toFixed(2));
             
