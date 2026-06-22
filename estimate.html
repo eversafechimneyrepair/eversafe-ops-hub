@@ -99,11 +99,11 @@
                         <option value="OH_LUCAS" selected>Lucas County, OH [Local Core: 0-20 mi] — (7.75% Tax)</option>
                         <option value="OH_WOOD">Wood County, OH [Local Core: 0-20 mi] — (6.75% Tax)</option>
                         <option value="MI_MONROE_CORE">Monroe County, MI [Local Core: 0-20 mi] — (6.00% Tax)</option>
-                        <option value="OH_MID_DIST">Fulton/Henry/Ottawa/Sandusky [20-40 mi] — (7.25% Tax)</option>
-                        <option value="MI_MONROE_OUTER">Lenawee &amp; Hillsdale, MI [20-40 mi] — (6.00% Tax)</option>
-                        <option value="MI_WASHTENAW_MID">Washtenaw Co / Ann Arbor, MI [20-40 mi] — (6.00% Tax)</option>
-                        <option value="OH_EXTENDED">Hancock &amp; Seneca Counties, OH [40-60 mi] — (7.25% Tax)</option>
-                        <option value="MI_EXTENDED">Wayne &amp; Outer Washtenaw, MI [40-60 mi] — (6.00% Tax)</option>
+                        <option value="OH_MID_DIST">Fulton / Henry / Ottawa / Sandusky, OH [Zone 1: 20-40 mi] — (7.25% Tax)</option>
+                        <option value="MI_MONROE_OUTER">Lenawee &amp; Hillsdale Counties, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
+                        <option value="MI_WASHTENAW_MID">Washtenaw County / Ann Arbor, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
+                        <option value="OH_EXTENDED">Hancock &amp; Seneca Counties, OH [Zone 2: 40-60 mi] — (7.25% Tax)</option>
+                        <option value="MI_EXTENDED">Wayne &amp; Outer Washtenaw, MI [Zone 2: 40-60 mi] — (6.00% Tax)</option>
                     </select>
                 </div>
                 <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px; border-radius: 6px;">
@@ -115,7 +115,7 @@
                     </select>
                 </div>
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 6px;">
-                    <label class="control-header" style="color: #16a34a; margin-top:0;">💵 Margin Target Buffer (%)</label>
+                    <label class="control-header" style="color: #16a34a; margin-top:0;">💵 Target Margin Profit Earnings Buffer (%)</label>
                     <input type="number" id="corporateMarginBufferInput" value="20" min="0" max="80" step="1" oninput="recalculateMasterLedger()" style="margin-top:4px; padding:10px; font-weight:bold; color:#14532d; border-color:#86efac;">
                 </div>
             </div>
@@ -154,7 +154,7 @@
                     </div>
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#1e40af; text-transform:uppercase;">Elevation Height</span>
-                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px; color:#1e40af; background:#eff6ff; border-color:#bfdbfe;">
+                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
                             <option value="1" selected>1 Story (Base)</option>
                             <option value="2">2 Stories (+15% Labor Buffer)</option>
                             <option value="3">3+ Stories [+35% Labor Buffer]</option>
@@ -170,7 +170,8 @@
             </div>
 
             <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-top: 15px;">
-                <p style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--primary); margin-bottom:12px; text-align:left; letter-spacing:0.5px;">🛠️ Inject Catalog Item or Construct Custom Run</p>                                
+                <p style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--primary); margin-bottom:12px; text-align:left; letter-spacing:0.5px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
+                
                 <div style="margin-bottom: 14px;">
                     <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option A: High-Speed Keyword Filter Engine</span>
                     <div class="search-container">
@@ -178,6 +179,7 @@
                         <input type="text" id="itemSearchFilter" class="search-input-box" placeholder="Start typing keywords here to instantly filter catalog directory items..." oninput="filterCatalogItems()">
                     </div>
                 </div>
+
                 <div class="grid-2" style="margin-bottom:0;">
                     <div>
                         <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option B: Filter By Trade Category Group</span>
@@ -200,24 +202,27 @@
                         </select>
                     </div>
                 </div>
+
                 <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px;">Inject Selected Line Item into Bid Matrix ➔</button>
             </div>
 
-            <div class="section-title">Compiled Project Cost Matrix &amp; Construction Takeoff Drawer</div>                        
-            <div class="estimate-table-wrapper">                                
-                <table class="estimate-table">                                        
-                    <thead>                                                
-                        <tr>                                                        
-                            <th style="width: 35%;">Task Scope / Production Parameter</th>                                                        
-                            <th style="width: 15%; text-align: center;">Takeoff Qty</th>                                                        
-                            <th style="width: 11%; text-align: center;">Labor Payout</th>                                                        
-                            <th style="width: 11%; text-align: center;">Mat Cost</th>                                                        
-                            <th style="width: 11%; text-align: center;">True Expense</th>                                                        
-                            <th style="width: 12%; text-align: right;">Unit Rate [Ovr]</th>                                                        
-                            <th style="width: 5%; text-align: center;">Drop</th>                                                </tr>                                        </thead>                                        
-                    <tbody id="bidTableBody">                                        
-                    </tbody>                                
-                </table>                        
+            <div class="section-title">Compiled Project Cost Matrix &amp; Construction Takeoff Drawer</div>            
+            <div class="estimate-table-wrapper">                
+                <table class="estimate-table">                    
+                    <thead>                        
+                        <tr>                            
+                            <th style="width: 35%;">Task Scope / Production Parameter</th>                            
+                            <th style="width: 15%; text-align: center;">Takeoff Qty</th>                            
+                            <th style="width: 11%; text-align: center;">Labor Payout</th>                            
+                            <th style="width: 11%; text-align: center;">Mat Cost</th>                            
+                            <th style="width: 11%; text-align: center;">True Expense</th>                            
+                            <th style="width: 12%; text-align: right;">Unit Rate [Ovr]</th>                            
+                            <th style="width: 5%; text-align: center;">Drop</th>                        
+                        </tr>                    
+                    </thead>                    
+                    <tbody id="bidTableBody">                    
+                    </tbody>                
+                </table>            
             </div>
 
             <div id="gatekeeperCodeViolationTray" class="gatekeeper-panel"></div>            
@@ -292,7 +297,7 @@
         </div>        
     </div>
 
-    <div class="fixed-bottom-nav-bar"></div>        
+    <div class="fixed-bottom-nav-bar"></div>            
     <script src="navbar.js"></script>
     
     <script>        
@@ -311,28 +316,41 @@
         var COMPLETE_PRICE_BOOK = {            
             "INSP_NFPA_LEVEL_1":    { cat: "MAINTENANCE", label: "NFPA 211 Level 1 Visual Inspection & Clearance Evaluation", OH_LUCAS: 79.00, OH_WOOD: 79.00, OH_MID_DIST: 79.00, OH_EXTENDED: 79.00, MI_MONROE_CORE: 89.00, MI_MONROE_OUTER: 89.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: false, matCost: 2.00, labRate: 55.00, labHours: 0.75, wbs: ["Examine accessible structural components", "Verify baseline structural clearances", "Verify chimney soot density accumulation layers"], mats: ["Digital administrative inspection checklist token"] },            
             "INSP_NFPA_LEVEL_2":    { cat: "MAINTENANCE", label: "NFPA 211 Level 2 Comprehensive Safety Inspection (Real Estate/Transfer)", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 195.00, MI_MONROE_OUTER: 195.00, MI_WASHTENAW_MID: 215.00, MI_EXTENDED: 215.00, dynamic: false, matCost: 10.00, labRate: 55.00, labHours: 1.75, wbs: ["Examine dynamic crawlspace/attic clearances", "Audit complete internal flue layout connectivity matrices", "Document safety system draft defects"], mats: ["L2 structural report filing token validation"] },            
-            "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "Targeted Internal Flue Axis Video Camera Diagnostic Scan Run", OH_LUCAS: 125.00, OH_WOOD: 125.00, OH_MID_DIST: 125.00, OH_EXTENDED: 125.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 149.00, MI_EXTENDED: 149.00, dynamic: false, matCost: 5.00, labRate: 55.00, labHours: 1.0, wbs: ["Setup specialized video recording rigs", "Run panoramic camera modules down flue axis", "Document structural link cracks / joint gaps"], mats: ["Digital cloud logging token allocation"] },            
+            
+            // 📐 REBUILT DYNAMIC SYSTEM: Converted camera diagnostics to run as linear footage metrics
+            "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "Targeted Internal Flue Axis Video Camera Scan Diagnostic", OH_LUCAS: 5.00, OH_WOOD: 5.00, OH_MID_DIST: 5.00, OH_EXTENDED: 5.00, MI_MONROE_CORE: 5.40, MI_MONROE_OUTER: 5.40, MI_WASHTENAW_MID: 6.00, MI_EXTENDED: 6.00, dynamic: true, defQty: 25, unit: "ft", matCost: 0.20, labRate: 55.00, labHours: 0.04, wbs: ["Setup specialized video recording equipment links", "Run panoramic lens nodes down vertical flue pathways", "Document structural joint fracture breaches inside channel tracks"], mats: ["Digital panoramic scan logging token allocation"] },            
+            
             "SWEEP_WOOD_FLUE":      { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Open Masonry Woodburning Flue", OH_LUCAS: 95.00, OH_WOOD: 95.00, OH_MID_DIST: 95.00, OH_EXTENDED: 95.00, MI_MONROE_CORE: 105.00, MI_MONROE_OUTER: 105.00, MI_WASHTENAW_MID: 115.00, MI_EXTENDED: 115.00, dynamic: false, matCost: 10.00, labRate: 55.00, labHours: 0.75, wbs: ["Run mechanical wire or poly brushes down internal flue", "Vacuum fine ash soot from open smoke shelf terminals"], mats: ["Poly floor protection sheets", "Soot disposal waste containment bags"] },            
             "SWEEP_WOOD_INSERT":    { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Wood Insert Pull & Extraction Clean", OH_LUCAS: 269.00, OH_WOOD: 269.00, OH_MID_DIST: 269.00, OH_EXTENDED: 269.00, MI_MONROE_CORE: 289.00, MI_MONROE_OUTER: 289.00, MI_WASHTENAW_MID: 319.00, MI_EXTENDED: 319.00, dynamic: false, matCost: 45.00, labRate: 55.00, labHours: 3.0, wbs: ["Extract heavy internal wood burning core insert from box", "Chisel vitreous glazed creosote coatings from vent walls"], mats: ["Creosote chimneys wash fluid", "Venting seal insulation rope wraps"] },            
             "SWEEP_PELLET":         { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Pellet/Corn Venting Mechanical Service", OH_LUCAS: 195.00, OH_WOOD: 195.00, OH_MID_DIST: 195.00, OH_EXTENDED: 195.00, MI_MONROE_CORE: 215.00, MI_MONROE_OUTER: 215.00, MI_WASHTENAW_MID: 239.00, MI_EXTENDED: 239.00, dynamic: false, matCost: 25.00, labRate: 55.00, labHours: 2.0, wbs: ["Scrape ash deposits out of internal combustion pots", "Run soft flexible sweeping whips through small pellet vents"], mats: ["High-temp sealing replacement gasket cord"] },            
             "SWEEP_GAS_OIL":        { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Utility Furnace Gas/Oil Flue Pathway", OH_LUCAS: 125.00, OH_WOOD: 125.00, OH_MID_DIST: 125.00, OH_EXTENDED: 125.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 149.00, MI_EXTENDED: 149.00, dynamic: false, matCost: 8.00, labRate: 55.00, labHours: 1.0, wbs: ["Clear scaling chemical sulfur crust deposits from utility flues", "Clean out base of chimney line intersections near Snout fields"], mats: ["Corrosive soot sweeping containment shields"] },            
             "DRYER_VENT_CLEAN":     { cat: "MAINTENANCE", label: "Dryer Vent Line Air-Jet Cleaning Sequence (up to 20ft)", OH_LUCAS: 99.00, OH_WOOD: 99.00, OH_MID_DIST: 99.00, OH_EXTENDED: 99.00, MI_MONROE_CORE: 115.00, MI_MONROE_OUTER: 115.00, MI_WASHTENAW_MID: 129.00, MI_EXTENDED: 129.00, dynamic: false, matCost: 12.00, labRate: 45.00, labHours: 1.2, wbs: ["Run reverse-inflation pneumatic air jets through lines", "Clear link lint blockages from termination hood terminals"], mats: ["Replacement louvre exterior hood terminal flap"] },
+            
+            // MASONRY STRUCTURAL REPAIRS
             "MAS_TUCKPOINT":        { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry Repair (per sq ft)", OH_LUCAS: 12.50, OH_WOOD: 12.50, OH_MID_DIST: 12.50, OH_EXTENDED: 12.50, MI_MONROE_CORE: 15.00, MI_MONROE_OUTER: 15.00, MI_WASHTENAW_MID: 19.00, MI_EXTENDED: 19.00, dynamic: true, defQty: 10, unit: "sq ft", matCost: 2.50, labRate: 55.00, labHours: 0.15, wbs: ["Grind out failing brick mortar joints", "Mix weather-tight mortar solutions", "Pack deep structural voids via slicker tool"], mats: ["Premium weatherproof structural Type-N mortar mix", "Hydrated lime modification additive solutions"] },            
             "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement (per brick)", OH_LUCAS: 17.00, OH_WOOD: 17.00, OH_MID_DIST: 17.00, OH_EXTENDED: 17.00, MI_MONROE_CORE: 19.00, MI_MONROE_OUTER: 19.00, MI_WASHTENAW_MID: 23.00, MI_EXTENDED: 23.00, dynamic: true, defQty: 5, unit: "bricks", matCost: 4.00, labRate: 55.00, labHours: 0.30, wbs: ["Chisel out fractured spalled bricks", "Re-bed structure with high-bond layout mortar"], mats: ["Severe-weather structural red clay bricks", "High-bond structural masonry contact paste"] },            
             "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", OH_LUCAS: 75.00, OH_WOOD: 75.00, OH_MID_DIST: 75.00, OH_EXTENDED: 75.00, MI_MONROE_CORE: 85.00, MI_MONROE_OUTER: 85.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: true, defQty: 5, unit: "courses", matCost: 18.00, labRate: 55.00, labHours: 1.0, wbs: ["Dismantle unstable chimney brick segments", "Relay structural perimeter lines to plumb level"], mats: ["Severe-weather grade replacement clay bricks", "Premium masonry mortar allocation packs"] },            
             "MAS_REBUILD_TOTAL":    { cat: "MASONRY", label: "Complete Structural Demolition & Ground-Up Rebuild (per course)", OH_LUCAS: 119.00, OH_WOOD: 119.00, OH_MID_DIST: 119.00, OH_EXTENDED: 119.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 155.00, MI_EXTENDED: 155.00, dynamic: true, defQty: 20, unit: "courses", matCost: 24.00, labRate: 55.00, labHours: 1.5, wbs: ["Execute total structural teardown blocks", "Erect heavy framing access scaffolding sets", "Relay entire chimney architecture plumb"], mats: ["Full industrial pallet brick configurations", "Structural reinforcement steel mesh bars"] },            
             "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 31.00, MI_EXTENDED: 31.00, dynamic: true, defQty: 15, unit: "bricks", matCost: 6.50, labRate: 55.00, labHours: 0.40, wbs: ["Extract compromised cracked firebrick tiles", "Mix refractory high-heat fire clay solutions", "Lay clean tight thermal joints"], mats: ["High-density golden thermal firebrick tiles", "Refractory high-temp fire clay mortar pre-mix"] },            
             "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (Smoktite)", OH_LUCAS: 580.00, OH_WOOD: 580.00, OH_MID_DIST: 580.00, OH_EXTENDED: 580.00, MI_MONROE_CORE: 640.00, MI_MONROE_OUTER: 640.00, MI_WASHTENAW_MID: 715.00, MI_EXTENDED: 715.00, dynamic: false, matCost: 220.00, labRate: 55.00, labHours: 4.0, wbs: ["Spray insulate inner corbel brick walls", "Smooth coat smoke chamber to direct frictionless air"], mats: ["Smoktite ceramic refractory insulation mixture"] },
+            
+            // VENTING & RELINE FRAMEWORKS
             "LINE_STAINLESS":       { cat: "RELINING", label: "Titanium Stainless Steel Flue Relining (per linear ft)", OH_LUCAS: 85.00, OH_WOOD: 85.00, OH_MID_DIST: 85.00, OH_EXTENDED: 85.00, MI_MONROE_CORE: 95.00, MI_MONROE_OUTER: 95.00, MI_WASHTENAW_MID: 105.00, MI_EXTENDED: 105.00, dynamic: true, defQty: 25, unit: "ft", matCost: 32.00, labRate: 55.00, labHours: 0.5, wbs: ["Pull flexible titanium liner down flue structural core", "Anchor top plate flashing assemblies securely", "Secure bottom snout connections into baseline breach"], mats: ["Flexible AL29-4C titanium stainless steel liner coil", "Premium top plate ventilation anchoring flashing sets"] },            
             "LINE_OVAL_6":          { cat: "RELINING", label: "Custom Ovalized Stainless Steel Liner Profile Modification (per linear ft)", OH_LUCAS: 115.00, OH_WOOD: 115.00, OH_MID_DIST: 115.00, OH_EXTENDED: 115.00, MI_MONROE_CORE: 129.00, MI_MONROE_OUTER: 129.00, MI_WASHTENAW_MID: 145.00, MI_EXTENDED: 145.00, dynamic: true, defQty: 25, unit: "ft", matCost: 52.00, labRate: 55.00, labHours: 0.7, wbs: ["Reshape round steel liners via mechanical press", "Pass profile lines into constrained brick cavities"], mats: ["Ovalized structural stainless steel liner stock", "Custom matching transition adapters to round fittings"] },            
             "LINE_INSUL_BLANKET":   { cat: "RELINING", label: "Ceramic Flue Reline Insulation Blanket Wrap Kit (1/2-Inch Outer)", OH_LUCAS: 239.00, OH_WOOD: 239.00, OH_MID_DIST: 239.00, OH_EXTENDED: 239.00, MI_MONROE_CORE: 265.00, MI_MONROE_OUTER: 265.00, MI_WASHTENAW_MID: 295.00, MI_EXTENDED: 295.00, dynamic: false, matCost: 140.00, labRate: 55.00, labHours: 2.0, wbs: ["Wrap liner exterior with high-density blankets", "Secure insulation shields using mesh reinforcement wire"], mats: ["1/2-Inch ceramic insulation thermal blanket roll", "Stainless steel outer protection mesh tracking screen"] },            
             "LINE_INSUL_POUR":      { cat: "RELINING", label: "Thermix Lightweight Insulating Masonry Pour Shield (per cubic foot)", OH_LUCAS: 18.00, OH_WOOD: 18.00, OH_MID_DIST: 18.00, OH_EXTENDED: 18.00, MI_MONROE_CORE: 22.00, MI_MONROE_OUTER: 22.00, MI_WASHTENAW_MID: 26.00, MI_EXTENDED: 26.00, dynamic: true, defQty: 12, unit: "cu ft", matCost: 7.50, labRate: 55.00, labHours: 0.15, wbs: ["Mix insulated vermiculite dry compounds with hydration matrices", "Pour thermal setting lightweight compound smoothly down chimney void perimeters", "Tap brick lines to eliminate dynamic hollow pockets"], mats: ["Thermix lightweight insulation dry blend compound bags"] },
+            
+            // WATERPROOFING
             "WATER_CROWN_SEAL":     { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Membrane Coat (per sq ft)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 28.00, MI_MONROE_OUTER: 28.00, MI_WASHTENAW_MID: 34.00, MI_EXTENDED: 34.00, dynamic: true, defQty: 8, unit: "sq ft", matCost: 6.00, labRate: 55.00, labHours: 0.20, wbs: ["Wire brush debris off baseline concrete perimeter tracks", "Trowel smooth flexible seamless protection elastomeric membrane barriers across crown surface boundaries"], mats: ["CrownCoat high-performance weatherproofing structural gel formulation"] },            
             "WATER_CROWN_POUR":     { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild System", OH_LUCAS: 820.00, OH_WOOD: 820.00, OH_MID_DIST: 820.00, OH_EXTENDED: 820.00, MI_MONROE_CORE: 900.00, MI_MONROE_OUTER: 900.00, MI_WASHTENAW_MID: 1020.00, MI_EXTENDED: 1020.00, dynamic: false, matCost: 280.00, labRate: 55.00, labHours: 6.0, wbs: ["Erect timber structural concrete form templates", "Mix and pour reinforced fiber concrete crown pads", "Incorporate engineered expansion bond breakers"], mats: ["Fiber-reinforced concrete dry blend bags", "Forming lumber strips, perimeter expansion bond breaker shields"] },            
             "WATER_SAVER_SPRAY":    { cat: "WATERPROOFING", label: "ChimneySaver Silane-Siloxane Breathable Repellent Application (per sq ft)", OH_LUCAS: 1.50, OH_WOOD: 1.50, OH_MID_DIST: 1.50, OH_EXTENDED: 1.50, MI_MONROE_CORE: 1.95, MI_MONROE_OUTER: 1.95, MI_WASHTENAW_MID: 2.35, MI_EXTENDED: 2.35, dynamic: true, defQty: 80, unit: "sq ft", matCost: 0.35, labRate: 55.00, labHours: 0.01, wbs: ["Saturate external brick face fields via low-pressure pumps", "Monitor uniform multi-surface saturation yields"], mats: ["ChimneySaver industrial water repellent solutions"] },            
             "FLASH_LEAD_REPLACE":   { cat: "WATERPROOFING", label: "Custom Lead Counter-Flashing Roof Intercept Replacement", OH_LUCAS: 310.00, OH_WOOD: 310.00, OH_MID_DIST: 310.00, OH_EXTENDED: 310.00, MI_MONROE_CORE: 339.00, MI_MONROE_OUTER: 339.00, MI_WASHTENAW_MID: 385.00, MI_EXTENDED: 385.00, dynamic: false, matCost: 95.00, labRate: 55.00, labHours: 3.5, wbs: ["Cut step tracking joints into mortar brick layers", "Weave lead panels under roofing shingles lines"], mats: ["Heavy roll specialty construction counter-lead flashing"] },
+            
+            // CHASE & HOUSING PREFAB
             "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Anti-Puddling Chase Top Cover Pan (per sq ft)", OH_LUCAS: 48.00, OH_WOOD: 48.00, OH_MID_DIST: 48.00, OH_EXTENDED: 48.00, MI_MONROE_CORE: 54.00, MI_MONROE_OUTER: 54.00, MI_WASHTENAW_MID: 62.00, MI_EXTENDED: 62.00, dynamic: true, defQty: 6, unit: "sq ft", matCost: 15.00, labRate: 55.00, labHours: 0.25, wbs: ["Pop off rusted tracking sheet covers", "Anchor custom cross-bent stainless pans over top chase framing"], mats: ["Custom cross-bent 24-gauge stainless steel chase top pans"] },
             "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", OH_LUCAS: 375.00, OH_WOOD: 375.00, OH_MID_DIST: 375.00, OH_EXTENDED: 375.00, MI_MONROE_CORE: 415.00, MI_MONROE_OUTER: 415.00, MI_WASHTENAW_MID: 475.00, MI_EXTENDED: 475.00, dynamic: false, matCost: 165.00, labRate: 55.00, labHours: 1.5, wbs: ["Drill tap anchor sleeve screws directly into concrete pads", "Apply silicone seal tracking beads underneath corner tracks"], mats: ["Custom engineered top-mount stainless steel multi-flue caps", "Tapcon structural anchoring masonry screws bundle"] },
+            
+            // EXTRACTIONS
             "LINE_TILE_REMOVAL":    { cat: "REMOVALS", label: "Damaged Clay Flue Tile Knockout & Air-Chisel Extraction", OH_LUCAS: 339.00, OH_WOOD: 339.00, OH_MID_DIST: 339.00, OH_EXTENDED: 339.00, MI_MONROE_CORE: 375.00, MI_MONROE_OUTER: 375.00, MI_WASHTENAW_MID: 445.00, MI_EXTENDED: 445.00, dynamic: false, matCost: 50.00, labRate: 60.00, labHours: 4.0, wbs: ["Run weighted impact breaker heads down internal flue channels", "Extract sharp fractured clay tile shrapnel cleanly from baseline cleanouts"], mats: ["Heavy duty rubberized extraction waste buckets"] },            
             "RMV_STACK_DOWN":       { cat: "REMOVALS", label: "Unsafe Masonry Core Structure Knockdown (per vertical ft)", OH_LUCAS: 110.00, OH_WOOD: 110.00, OH_MID_DIST: 110.00, OH_EXTENDED: 110.00, MI_MONROE_CORE: 125.00, MI_MONROE_OUTER: 125.00, MI_WASHTENAW_MID: 145.00, MI_EXTENDED: 145.00, dynamic: true, defQty: 5, unit: "vertical ft", matCost: 40.00, labRate: 55.00, labHours: 2.0, wbs: ["Erect temporary tarps and heavy canvas debris canopy frameworks", "Hand dismantle unsafe masonry course arrays sequentially down to roof boundaries"], mats: ["Commercial roll-off container dumpster tonnage tipping fees"] },            
             "RMV_HEARTH_DEMO":      { cat: "REMOVALS", label: "Hearth Extension Floor Deck Concrete Demolition Breakout (per sq ft)", OH_LUCAS: 22.00, OH_WOOD: 22.00, OH_MID_DIST: 22.00, OH_EXTENDED: 22.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 32.00, MI_EXTENDED: 32.00, dynamic: true, defQty: 15, unit: "sq ft", matCost: 2.00, labRate: 55.00, labHours: 0.30, wbs: ["Run electric demolition jackhammers to break apart reinforced hearth concrete slabs", "Shovel and bag dense masonry rubble for dump extraction transportation runs"], mats: ["Heavy canvas dust furniture drops", "Heavy-duty commercial demolition disposal bags"] }        
@@ -362,7 +380,7 @@
                     targetSelector.value = "OH_WOOD";                
                 } else if (mappingAddress.includes("FINDLAY") || mappingAddress.includes("TIFFIN") || mappingAddress.includes("HANCOCK") || mappingAddress.includes("SENECA")) {                    
                     targetSelector.value = "OH_EXTENDED";                
-                } else if (mappingAddress.includes("FREMONT") || mappingAddress.includes("SANDUSKY") || mappingAddress.includes("FULTON") || mappingAddress.includes("OTTAWA")) {                    
+                } else if (mappingAddress.includes("FREMONT") || mappingAddress.includes("SANDUSKY") || mappingAddress.includes("FULTON") || mappingAddress.includes("OTWAWA")) {                    
                     targetSelector.value = "OH_MID_DIST";                
                 } else {                    
                     targetSelector.value = "OH_LUCAS";                 
@@ -389,7 +407,7 @@
         }
 
         function filterCatalogItems() {            
-            var inputStr = document.getElementById('itemSearchFilter').value.toLowerCase().trim();            
+            var inputStr = document.getElementById('itemSearchFilter').value.toLowerCase().trim();
             var categorySelector = document.getElementById('catalogCategorySelector');            
             var itemSelector = document.getElementById('catalogItemSelector');                        
             
@@ -608,7 +626,7 @@
 
                 if (spec.wbs) {                    
                     spec.wbs.forEach(function(task) {                        
-                        aggregatedWBSLines.push(`<li><span>🔹 ${task}</span> <span class="matrix-badge">⏳ QTO Pay Budget: $${rowLaborPayout.toFixed(2)}</span></li>`);                    
+                        aggregatedWBSLines.push(`<li><span>🔹 ${task}</span> <span class="matrix-badge">⏳ Takeoff Qty: $${rowLaborPayout.toFixed(2)}</span></li>`);                    
                     });                
                 }                
                 if (spec.mats) {                    
@@ -631,7 +649,7 @@
                 activeCodeInfractions.push(`❌ <b>NFPA 211 Safety Violation:</b> 10-Inch industrial diameter flue configurations exceed the maximum internal footprint clearances allowed for combustibles inside standard pre-fabricated siding chase hulls.`);            
             }            
             if (propertyEra === "HISTORIC" && hasLinerActive && !hasBlanketWrapActive) {                
-                activeCodeInfractions.push(`❌ <b>NFPA 211 Historic Code Violation:</b> Pre-1940 / 1800s chimneys lack internal clay flue tile liners. Relining a historical masonry shaft without a 1/2-Inch Ceramic Thermal Blanket Wrap (<b>LINE_INSUL_BLANKET</b>) creates an extreme fire risk.`);            
+                activeCodeInfractions.push(`❌ <b>NFPA 211 Historic Code Violation:</b> Relining a historical masonry shaft without a 1/2-Inch Ceramic Thermal Blanket Wrap (<b>LINE_INSUL_BLANKET</b>) creates an extreme fire risk.`);            
             }            
             
             var infractionPanel = document.getElementById('gatekeeperCodeViolationTray');            
@@ -699,7 +717,7 @@
                         `<li>Monroe Municipal Mechanical Inspection Request Line</li>`;
                     
                     licensingPanel.innerHTML = `                        
-                        <h4>⚖️ State Regulatory Matrix: Michigan Department of Licensing and Regulatory Affairs (LARA)</h4>                        
+                        <h4>⚖️ State Regulatory Matrix: Michigan Department of Licensing and Regulatory Affairs (LARA)</h4>
                         <p style="font-size:12px; color:#6b21a8; font-weight:500;">Under MI Article 24 Public Act 299, any residential repair exceeding $600 requires valid contractor authentication.</p>                        
                         <ul>                            
                             <li>Michigan LARA Residential Builder or M&amp;A License ${needsMichiganLARA ? '<span style="color:var(--danger); font-weight:900;">[STATUTORY COMPLIANCE REQUIRED]</span>' : '[Exempt]'}</li>                            
@@ -715,8 +733,9 @@
             var computedTax = taxableSubtotal * zoneTaxRate;            
             var absoluteGrandTotal = taxableSubtotal + computedTax;
 
-            document.getElementById('wbsContentList').innerHTML = aggregatedWBSLines.join("");            
-            document.getElementById('materialsContentList').innerHTML = aggregatedMaterialLines.join("");
+            // 🛠️ FIX: Re-mapped the rendering endpoints to push takeoff calculations to the inner document nodes securely
+            document.getElementById('wbsContentList').innerHTML = aggregatedWBSLines.length > 0 ? aggregatedWBSLines.join("") : '<li><span style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</span></li>';            
+            document.getElementById('materialsContentList').innerHTML = aggregatedMaterialLines.length > 0 ? aggregatedMaterialLines.join("") : '<li><span style="color:#94a3b8; font-style:italic;">No materials allocated.</span></li>';
 
             document.getElementById('lbl_base_subtotal').innerText = "$" + grossCatalogSubtotal.toFixed(2);            
             document.getElementById('lbl_travel_surcharge').innerText = "+$" + mileageSurchargeFee.toFixed(2);            
