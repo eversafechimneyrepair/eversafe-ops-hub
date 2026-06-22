@@ -9,8 +9,6 @@
     <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
     
-    <script src="https://web.squarecdn.com/v1/square.js"></script>
-    
     <style>
         :root { 
             --primary: #0f172a; 
@@ -44,14 +42,12 @@
 
         .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 22px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
         
-        #sq-card-element { margin: 15px auto; max-width: 440px; min-height: 80px; padding: 14px; border: 2px dashed var(--accent); background: #ffffff; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-        
         .signature-grid { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
         .signature-wrapper { text-align: center; margin-top: 10px; width: 100%; max-width: 380px; flex: 1; min-width: 260px; }
         .sig-canvas { border: 2px dashed var(--border); background: #fafbfc; border-radius: 6px; touch-action: none; width: 100%; height: 120px; display: block; }
         .btn-clear { background: #94a3b8; color: white; border: none; padding: 6px 12px; font-size: 10px; text-transform: uppercase; border-radius: 4px; cursor: pointer; margin-top: 6px; font-weight: bold; }
 
-        .btn-action { width: 100%; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center; display: block; transition: opacity 0.2s; }
+        .btn-action { width: 100%; color: white; font-weight: bold; padding: 18px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 14px; cursor: pointer; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; display: block; transition: opacity 0.2s; }
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; box-shadow: none; }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
         .status-msg { margin-top: 20px; font-weight: bold; font-size: 13px; color: #475569; min-height: 20px; text-align: center; }
@@ -88,9 +84,9 @@
             <div class="grid-2" style="margin-top:15px;">
                 <div class="form-group">
                     <label>Payment Channel:</label>
-                    <select id="inv_payment" onchange="toggleSquareDisplayFields()">
-                        <option value="CARD_ON_SITE">Swipe/Key Card via Secure Form</option>
-                        <option value="CASH">Direct Cash / Check Collected</option>
+                    <select id="inv_payment" onchange="togglePaymentAction()">
+                        <option value="SQUARE_POS_APP" selected>Credit Card (Square POS App)</option>
+                        <option value="CASH_CHECK">Direct Cash / Check Collected</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -108,12 +104,6 @@
                 <div class="form-group"><label>Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;"></div>
             </div>
 
-            <div id="squareFormWrapper" style="display:block; margin-top:20px; padding:15px; background:#f8fafc; border:1px dashed var(--border); border-radius:6px;">
-                <p style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-align:center; color: var(--primary);">🔒 Secure Credit Card Terminal</p>
-                <div id="sq-card-element"></div>
-                <input type="text" id="manualRefInput" placeholder="Optional: Type Manual Verification Hash Key" style="margin-top:10px;">
-            </div>
-
             <div class="signature-grid">
                 <div class="signature-wrapper">
                     <p style="font-size:11px; font-weight:bold; text-transform:uppercase; color:#475569; margin-bottom:4px;">Billing Agent Signature:</p>
@@ -127,10 +117,10 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent()">📲 Tap to Pay via Square App</button>
-            <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">Finalize Ledger &amp; Charge Card</button>
+            <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent()">📲 Open Square POS App to Charge</button>
+            <button type="button" class="btn-action" style="background:var(--success); display:none;" id="manualRecordBtn" onclick="uploadInvoiceToOfficeSheet('CASH_OR_MANUAL_ENTRY')">✅ Record Payment to Ledger</button>
 
-            <div id="invoiceStatusLine" class="status-msg" style="color: var(--primary); margin-top: 15px; font-size: 12px;">System online. Ready for terminal deployment.</div>
+            <div id="invoiceStatusLine" class="status-msg" style="color: var(--primary); margin-top: 15px; font-size: 12px;">System online. Ready for execution.</div>
         </div>
     </div>
 
@@ -141,7 +131,7 @@
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         var SQUARE_APP_ID = "sq0idp-fqkdBa3JdRp-jbMeD9CYEw";
         var SQUARE_LOC_ID = "LS2898MVN1702";
-        var SQ_CARD_INSTANCE = null; var CANVAS_MAP = {};
+        var CANVAS_MAP = {};
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
 
         window.addEventListener('DOMContentLoaded', function() {
@@ -158,9 +148,7 @@
 
             runTotalsCalc();
             initializeUniversalPointerCanvasPads();
-            mountSecureSquareSDKForm();
-            toggleSquareDisplayFields(); 
-            
+            togglePaymentAction(); 
             evaluateHardwareProfileUX();
             checkForActiveSquareReturnPayloads();
         });
@@ -171,16 +159,20 @@
             localStorage.setItem('current_wo_est_cost', v.toFixed(2));
         }
 
-        function toggleSquareDisplayFields() {
+        // Toggles the primary action button based on the payment method selected
+        function togglePaymentAction() {
             var m = document.getElementById('inv_payment').value;
-            var statusField = document.getElementById('inv_status');
+            var tapBtn = document.getElementById('tapToPayBtn');
+            var manualBtn = document.getElementById('manualRecordBtn');
             
-            if (m === "CARD_ON_SITE") {
-                document.getElementById('squareFormWrapper').style.display = "block";
-                statusField.value = "PENDING_COLLECTION";
+            if (m === "SQUARE_POS_APP") {
+                tapBtn.style.display = "block";
+                manualBtn.style.display = "none";
+                document.getElementById('inv_status').value = "PENDING_COLLECTION";
             } else {
-                document.getElementById('squareFormWrapper').style.display = "none";
-                statusField.value = "PAID_SETTLED";
+                tapBtn.style.display = "none";
+                manualBtn.style.display = "block";
+                document.getElementById('inv_status').value = "PAID_SETTLED";
             }
         }
 
@@ -191,21 +183,9 @@
             
             if (!isAndroid && !isIOS) {
                 var mobileBtn = document.getElementById('tapToPayBtn');
-                mobileBtn.innerHTML = "💻 Tap to Pay Locked (Use Form on PC)";
+                mobileBtn.innerHTML = "💻 Mobile POS Required (Use iPad/Phone)";
                 mobileBtn.style.background = "#64748b";
-                mobileBtn.style.opacity = "0.6";
                 mobileBtn.disabled = true;
-            }
-        }
-
-        async function mountSecureSquareSDKForm() {
-            try {
-                const payments = Square.payments(SQUARE_APP_ID, SQUARE_LOC_ID);
-                const card = await payments.card();
-                await card.attach('#sq-card-element');
-                SQ_CARD_INSTANCE = card;
-            } catch(e) { 
-                document.getElementById('sq-card-element').innerHTML = "<p style='color:#64748b;font-size:12px;font-weight:bold;'>Vault Connection Standard Active.</p>"; 
             }
         }
 
@@ -266,33 +246,6 @@
             if(c.toDataURL() === b.toDataURL()) return "EMPTY"; return c.toDataURL("image/png");
         }
 
-        async function processSecureNativePayment() {
-            var btn = document.getElementById('chargeCardBtn');
-            btn.disabled = true; btn.innerText = "🔒 Processing...";
-            
-            if(!SQ_CARD_INSTANCE) {
-                var ref = document.getElementById('manualRefInput').value.trim();
-                if(!ref) { alert("Settle charge manually or link row tracking hash above."); btn.disabled = false; btn.innerText = "Finalize Ledger & Charge Card"; return; }
-                uploadInvoiceToOfficeSheet("MANUAL_TRACE: " + ref); return; 
-            }
-            try {
-                const result = await SQ_CARD_INSTANCE.tokenize();
-                if(result.status === 'OK') { 
-                    uploadInvoiceToOfficeSheet("SQUARE_NONCE: " + result.token); 
-                } else { 
-                    throw new Error("Token failure"); 
-                }
-            } catch(err) { 
-                var ref = document.getElementById('manualRefInput').value.trim();
-                if(ref) {
-                    uploadInvoiceToOfficeSheet("FALLBACK_TRACE: " + ref);
-                } else { 
-                    alert("Square Frame Intercept. Key verification token above."); 
-                    btn.disabled = false; btn.innerText = "Finalize Ledger & Charge Card"; 
-                }
-            }
-        }
-
         async function uploadInvoiceToOfficeSheet(tokenStr) {
             var tSig = extractCanvasBase64DataStringUrl('inv_tech_sig');
             var cSig = extractCanvasBase64DataStringUrl('inv_client_sig');
@@ -319,6 +272,11 @@
             ];
             
             try {
+                // Disable buttons to prevent double submission
+                document.getElementById('tapToPayBtn').disabled = true;
+                document.getElementById('manualRecordBtn').disabled = true;
+                document.getElementById('invoiceStatusLine').innerHTML = "⏳ Transmitting data to secure office ledger...";
+
                 await fetch(GOOGLE_API_GATEWAY_URL, { 
                     method: "POST", 
                     mode: "no-cors", 
@@ -326,7 +284,6 @@
                 });
                 alert("Ledger finalized and successfully sent to office workbook!");
                 
-                // 🛠️ FIX: Added the massive Base64 variables to prevent the iPad from running out of memory!
                 var sessionKeys = [
                     'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
                     'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier',
@@ -340,8 +297,8 @@
                 window.location.replace("jobs.html");
             } catch(e) {
                 alert("Critical API Transmission Exception. Retrying secondary ledger hooks...");
-                document.getElementById('chargeCardBtn').disabled = false;
-                document.getElementById('chargeCardBtn').innerText = "Finalize Ledger & Charge Card";
+                document.getElementById('manualRecordBtn').disabled = false;
+                document.getElementById('tapToPayBtn').disabled = false;
             }
         }
 
