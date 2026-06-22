@@ -85,7 +85,7 @@
                 <div class="form-group">
                     <label>Payment Channel:</label>
                     <select id="inv_payment" onchange="togglePaymentAction()">
-                        <option value="SQUARE_POS_APP" selected>Credit Card (Square POS App)</option>
+                        <option value="SQUARE_POS_APP" selected>Credit Card (via Square POS App)</option>
                         <option value="CASH_CHECK">Direct Cash / Check Collected</option>
                     </select>
                 </div>
@@ -117,6 +117,7 @@
                 </div>
             </div>
 
+            <!-- Dynamic Action Buttons -->
             <button type="button" class="btn-action" style="background:#2563eb;" id="tapToPayBtn" onclick="processSquareAppMobileIntent()">📲 Open Square POS App to Charge</button>
             <button type="button" class="btn-action" style="background:var(--success); display:none;" id="manualRecordBtn" onclick="uploadInvoiceToOfficeSheet('CASH_OR_MANUAL_ENTRY')">✅ Record Payment to Ledger</button>
 
@@ -159,7 +160,6 @@
             localStorage.setItem('current_wo_est_cost', v.toFixed(2));
         }
 
-        // Toggles the primary action button based on the payment method selected
         function togglePaymentAction() {
             var m = document.getElementById('inv_payment').value;
             var tapBtn = document.getElementById('tapToPayBtn');
@@ -319,6 +319,8 @@
             }
             
             var customerName = document.getElementById('inv_cust').value || "Customer";
+            
+            // This URL tells Square exactly where to bring the user back to once the payment is finished
             var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/billing-invoice.html";
             
             var userAgent = navigator.userAgent || navigator.vendor;
