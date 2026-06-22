@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Custom Estimate Builder</title>
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
-    <link class="js-meta-tag" rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
     <style>
         :root { 
@@ -13,8 +13,8 @@
             --primary-light: #1e293b; 
             --accent: #F28C28; 
             --accent-dark: #d97706; 
-            --success: #22c55e;
-            --success-dark: #16a34a;
+            --success: #22c55e; 
+            --success-dark: #16a34a; 
             --bg: #f8fafc; 
             --border: #cbd5e1; 
             --danger: #ef4444; 
@@ -111,23 +111,56 @@
                 <div class="macro-pill" onclick="injectScopeMacro('reline')">📜 Smooth-Flue Stainless Relining</div>
             </div>
 
-            <label class="section-title">3. Modular Safety Add-Ons</label>
+            <label class="section-title">3. Modular Safety &amp; Material Upgrades</label>
             <div class="addon-grid">
                 
-                <div class="addon-row" id="row_addon_cap" onclick="toggleModularUpgradeOption('cap')">
+                <!-- 🧪 NEW SYSTEM ELEMENT: TITANIUM 316TI STABILIZED LINER BLOCK -->
+                <div class="addon-row" id="row_addon_ti" onclick="toggleModularUpgradeOption('ti')">
                     <div class="addon-info">
-                        <div class="addon-name">Premium Rain Cap Upgrade</div>
-                        <div class="addon-desc">Supply & install custom heavy-gauge stainless steel multi-flue cap.</div>
+                        <div class="addon-name">Premium 316Ti 'Titanium' Alloy Upgrade</div>
+                        <div class="addon-desc">Titanium-stabilized metal matrix core protects against thermal shock and high-heat creosote acid attack. Includes lifetime corporate warranty.</div>
+                    </div>
+                    <div class="addon-price-tag">+$295.00</div>
+                    <input type="checkbox" id="chk_addon_ti" class="switch-input" data-price="295.00" data-label="[ALLOY UPGRADE] Premium 316Ti Titanium-Stabilized Stainless Steel Flue Liner Core Modification package. Interlocked internal barrier links optimized for extreme corrosion lockout safeguards.">
+                    <div class="switch-rail"><div class="switch-button"></div></div>
+                </div>
+
+                <!-- 🧱 NEW SYSTEM ELEMENT: PRECAST CONCRETE CROWN SLAB SLIDER -->
+                <div class="addon-row" id="row_addon_precast" onclick="toggleModularUpgradeOption('precast')">
+                    <div class="addon-info">
+                        <div class="addon-name">Precast Concrete Engineered Crown Slab</div>
+                        <div class="addon-desc">Hoist and precisely anchor an industrial precast concrete crown slab leveling pad plumb over flue terminals.</div>
+                    </div>
+                    <div class="addon-price-tag">+$495.00</div>
+                    <input type="checkbox" id="chk_addon_precast" class="switch-input" data-price="495.00" data-label="[COMPONENTS] Precast Concrete Engineered Chimney Crown Slab Installation over uniform structural high-bond layout leveling compounds.">
+                    <div class="switch-rail"><div class="switch-button"></div></div>
+                </div>
+
+                <!-- 💎 NEW SYSTEM ELEMENT: SINGLE-FLUE STAINLESS CAP SLIDER -->
+                <div class="addon-row" id="row_addon_singlecap" onclick="toggleModularUpgradeOption('singlecap')">
+                    <div class="addon-info">
+                        <div class="addon-name">Standard Single-Flue Stainless Protective Cap</div>
+                        <div class="addon-desc">Supply &amp; mechanically fasten single-flue stainless compression cap assembly directly to chimney tile extension projections.</div>
                     </div>
                     <div class="addon-price-tag">+$185.00</div>
-                    <input type="checkbox" id="chk_addon_cap" class="switch-input" data-price="185.00" data-label="[ADD-ON] Premium Stainless Steel Multi-Flue Rain Cap Installation.">
+                    <input type="checkbox" id="chk_addon_singlecap" class="switch-input" data-price="185.00" data-label="[COMPONENTS] Standard Single-Flue Stainless Steel Protective Chimney Cap mechanical compression hex fastener lock configuration run.">
+                    <div class="switch-rail"><div class="switch-button"></div></div>
+                </div>
+
+                <div class="addon-row" id="row_addon_cap" onclick="toggleModularUpgradeOption('cap')">
+                    <div class="addon-info">
+                        <div class="addon-name">Premium Multi-Flue Rain Cap Upgrade</div>
+                        <div class="addon-desc">Supply & install custom heavy-gauge stainless steel multi-flue cap anchored to crown perimeter pads.</div>
+                    </div>
+                    <div class="addon-price-tag">+$375.00</div>
+                    <input type="checkbox" id="chk_addon_cap" class="switch-input" data-price="375.00" data-label="[ADD-ON] Premium Stainless Steel Multi-Flue Rain Cap Installation.">
                     <div class="switch-rail"><div class="switch-button"></div></div>
                 </div>
 
                 <div class="addon-row" id="row_addon_crown" onclick="toggleModularUpgradeOption('crown')">
                     <div class="addon-info">
                         <div class="addon-name">CrownCoat Elastomeric Membrane</div>
-                        <div class="addon-desc">Apply premium structural weatherproofing compound over concrete pad.</div>
+                        <div class="addon-desc">Apply premium structural weatherproofing compound over concrete pad perimeter footprints.</div>
                     </div>
                     <div class="addon-price-tag">+$350.00</div>
                     <input type="checkbox" id="chk_addon_crown" class="switch-input" data-price="350.00" data-label="[ADD-ON] Full application of CrownCoat elastomeric masonry weather-seal system over concrete perimeter footprint. Includes 5-Year warrantee coverage.">
@@ -137,7 +170,7 @@
                 <div class="addon-row" id="row_addon_flash" onclick="toggleModularUpgradeOption('flash')">
                     <div class="addon-info">
                         <div class="addon-name">FlashSeal Flashing Remediation</div>
-                        <div class="addon-desc">Waterproof worn-out structural junction roofs with woven mesh shields.</div>
+                        <div class="addon-desc">Waterproof worn-out structural junction roofs with embedded woven reinforcing meshes.</div>
                     </div>
                     <div class="addon-price-tag">+$220.00</div>
                     <input type="checkbox" id="chk_addon_flash" class="switch-input" data-price="220.00" data-label="[ADD-ON] FlashSeal flashing barrier remediation run. Re-layered underlying base joints with embedded reinforcing mesh fabrics.">
@@ -171,19 +204,21 @@
             reline: "Premium relining engineering overhaul sequence executed. Removed obsolete internal flue tile partitions, dropped down a custom UL-Listed smooth-wall stainless steel insulation liner profile core, and structurally sealed connection terminals."
         };
 
+        // 📡 MASTER SYSTEM MATRIX ARRAY REGISTER REGISTERED HERE
+        var SYSTEM_ADDON_REGISTRY = ['ti', 'precast', 'singlecap', 'cap', 'crown', 'flash'];
+
         window.addEventListener('DOMContentLoaded', function() {
             var currentCust = localStorage.getItem('current_wo_customer_name') || "No Active Job (Check Vault)";
             document.getElementById('proposal_cust_name').innerText = currentCust;
             
-            // Re-hydrate existing custom inputs if tech returns from the next stage
             var savedCost = localStorage.getItem('current_wo_base_price_raw');
             var savedScope = localStorage.getItem('current_wo_base_scope_raw');
             
             if(savedCost) { document.getElementById('base_price_field').value = parseFloat(savedCost); }
             if(savedScope) { document.getElementById('base_scope_textarea').value = savedScope; }
             
-            // Restore chosen add-on check states from session memory if they exist
-            ['cap', 'crown', 'flash'].forEach(function(id) {
+            // Re-hydrate choice parameters smoothly from memory vault lines
+            SYSTEM_ADDON_REGISTRY.forEach(function(id) {
                 if(localStorage.getItem('addon_state_' + id) === 'true') {
                     var row = document.getElementById('row_addon_' + id);
                     var box = document.getElementById('chk_addon_' + id);
@@ -231,7 +266,7 @@
             var basePrice = parseFloat(document.getElementById('base_price_field').value) || 0;
             var addonTotal = 0;
             
-            ['cap', 'crown', 'flash'].forEach(function(id) {
+            SYSTEM_ADDON_REGISTRY.forEach(function(id) {
                 var box = document.getElementById('chk_addon_' + id);
                 if(box && box.checked) {
                     addonTotal += parseFloat(box.getAttribute('data-price')) || 0;
@@ -255,8 +290,7 @@
             var finalizedRunningCost = basePrice;
             var compiledScopePayload = rawScopeText;
             
-            // Loop and bind checked modular scope parameters into structural memory
-            ['cap', 'crown', 'flash'].forEach(function(id) {
+            SYSTEM_ADDON_REGISTRY.forEach(function(id) {
                 var box = document.getElementById('chk_addon_' + id);
                 if(box && box.checked) {
                     finalizedRunningCost += parseFloat(box.getAttribute('data-price')) || 0;
@@ -264,20 +298,16 @@
                 }
             });
             
-            // Retain uncompiled configurations for field back-button stability
             localStorage.setItem('current_wo_base_price_raw', basePrice);
             localStorage.setItem('current_wo_base_scope_raw', rawScopeText);
             
-            // Lock synchronized elements directly to core app parameters expected by backend compiled layers
             localStorage.setItem('current_wo_selected_tier', 'Custom Proposal Block');
             localStorage.setItem('current_wo_est_cost', finalizedRunningCost.toFixed(2));
             localStorage.setItem('current_wo_work_scope', compiledScopePayload);
             
-            // Legacy backwards-compatible hooks for secondary validation engines
             localStorage.setItem('cached_inv_subtotal', finalizedRunningCost.toFixed(2));
             localStorage.setItem('cached_inv_scope', compiledScopePayload);
 
-            // 🚀 BUG FIX: Route Leo FORWARD into contract execution, not backward to metrics!
             window.location.replace('contract-wo.html');
         }
 
