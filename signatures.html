@@ -32,14 +32,20 @@
         h3 { margin-bottom: 8px; font-size: 18px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; color: var(--primary); }
         p { color: #64748b; font-size: 13px; margin-bottom: 20px; line-height: 1.45; text-align: center; }
         
-        .signature-canvas-frame { background: #ffffff; border: 2px dashed var(--border); border-radius: 6px; position: relative; cursor: crosshair; touch-action: none; margin-bottom: 12px; }
-        #signatureCanvasTarget { width: 100%; height: 220px; display: block; }
+        .signature-section { margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid var(--border); }
+        .signature-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         
-        .control-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; }
-        .btn-clear { background: #e2e8f0; color: #475569; font-weight: bold; padding: 15px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 12px; cursor: pointer; }
-        .btn-submit { background: var(--accent); color: white; font-weight: bold; padding: 15px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 12px; cursor: pointer; box-shadow: 0 4px 6px rgba(242,140,40,0.15); text-align: center; }
+        .canvas-frame { background: #ffffff; border: 2px dashed #94a3b8; border-radius: 6px; position: relative; cursor: crosshair; touch-action: none; height: 180px; width: 100%; overflow: hidden; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .btn-clear { background: #e2e8f0; color: #475569; font-weight: bold; padding: 6px 12px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 10px; cursor: pointer; }
+        .btn-clear:hover { background: #cbd5e1; }
+        
+        .btn-submit { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 18px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; box-shadow: 0 4px 6px rgba(242,140,40,0.15); text-align: center; margin-top: 10px; }
         .btn-submit:disabled { background: #cbd5e1!important; color: #94a3b8!important; cursor: not-allowed; box-shadow: none; }
         
+        .btn-back { width: 100%; background: #94a3b8; color: white; font-weight: bold; padding: 14px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 12px; cursor: pointer; margin-top: 15px; }
+
         .status-msg { margin-top: 20px; text-align: center; font-weight: bold; font-size: 13px; color: #475569; min-height: 20px; }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
@@ -61,17 +67,31 @@
 
     <div class="app-container">
         <div class="app-card">
-            <h3>Secure Client Authorization</h3>
-            <p>Homeowner signature commits structural parameters, pricing layers, and inspection notes to the office ledger and triggers automated compliance documents.</p>
+            <h3>Secure Contract Execution</h3>
+            <p>Signatures commit structural parameters and pricing layers to the office ledger and trigger automated compliance PDF generation.</p>
             
-            <div class="signature-canvas-frame">
-                <canvas id="signatureCanvasTarget"></canvas>
+            <div class="signature-section">
+                <div class="signature-title">
+                    <span>1. Client Authorization (<span id="clientNameDisplay">Homeowner</span>)</span>
+                    <button type="button" class="btn-clear" onclick="flushCanvas('clientCanvas')">Clear</button>
+                </div>
+                <div class="canvas-frame">
+                    <canvas id="clientCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="signature-section">
+                <div class="signature-title">
+                    <span>2. EverSafe Representative</span>
+                    <button type="button" class="btn-clear" onclick="flushCanvas('techCanvas')">Clear</button>
+                </div>
+                <div class="canvas-frame">
+                    <canvas id="techCanvas"></canvas>
+                </div>
             </div>
             
-            <div class="control-grid">
-                <button type="button" class="btn-clear" onclick="flushCanvasStrokeEngine()">Clear Pad</button>
-                <button type="button" class="btn-submit" id="submitSigBtn" onclick="transmitSignatureAndCompilePDF()">Finalize &amp; Compile Contract</button>
-            </div>
+            <button type="button" class="btn-submit" id="submitSigBtn" onclick="transmitSignaturesAndCompilePDF()">Finalize &amp; Compile Contract ✔️</button>
+            <button type="button" class="btn-back" onclick="window.location.replace('contract-wo.html')">⬅️ Back to Contract Review</button>
             
             <div id="sigStatusLine" class="status-msg">Awaiting verification trace input...</div>
         </div>
@@ -82,28 +102,28 @@
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
-        var canvas = document.getElementById('signatureCanvasTarget');
-        var ctx = canvas.getContext('2d');
-        var isDrawingActive = false;
-
+        
         window.addEventListener('DOMContentLoaded', function() {
-            adjustCanvasResolutionScale();
-            window.addEventListener('resize', adjustCanvasResolutionScale);
-            setupCanvasPointerListeners();
+            var custName = localStorage.getItem('current_wo_customer_name');
+            if(custName) document.getElementById('clientNameDisplay').innerText = custName;
+
+            setupCanvas('clientCanvas');
+            setupCanvas('techCanvas');
+            
+            window.addEventListener('resize', function() {
+                resizeCanvas('clientCanvas');
+                resizeCanvas('techCanvas');
+            });
         });
 
-        function adjustCanvasResolutionScale() {
-            var rect = canvas.parentNode.getBoundingClientRect();
-            canvas.width = rect.width; 
-            canvas.height = 220;
-            ctx.lineWidth = 3; 
-            ctx.lineCap = 'round'; 
-            ctx.lineJoin = 'round';
-            ctx.strokeStyle = '#0f172a';
-        }
+        // Modular Canvas Setup for multiple pads
+        function setupCanvas(canvasId) {
+            var canvas = document.getElementById(canvasId);
+            resizeCanvas(canvasId);
+            
+            var ctx = canvas.getContext('2d');
+            var isDrawingActive = false;
 
-        // HARDENED POINTER TRACKING LAYER: Fixed variable mappings prevent runtime exceptions
-        function setupCanvasPointerListeners() {
             function getCoordinates(e) {
                 var rect = canvas.getBoundingClientRect();
                 return { x: e.clientX - rect.left, y: e.clientY - rect.top };
@@ -132,40 +152,75 @@
                     canvas.releasePointerCapture(e.pointerId);
                 }
             }
+            
             canvas.addEventListener('pointerup', stopDrawing);
             canvas.addEventListener('pointercancel', stopDrawing);
         }
 
-        function flushCanvasStrokeEngine() { 
+        function resizeCanvas(canvasId) {
+            var canvas = document.getElementById(canvasId);
+            var ctx = canvas.getContext('2d');
+            var rect = canvas.parentNode.getBoundingClientRect();
+            
+            // Save existing image data before resizing so it doesn't wipe
+            var data = canvas.toDataURL();
+            
+            canvas.width = rect.width; 
+            canvas.height = 180;
+            ctx.lineWidth = 3; 
+            ctx.lineCap = 'round'; 
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#0f172a';
+
+            // Restore image data
+            var img = new Image();
+            img.src = data;
+            img.onload = function() { ctx.drawImage(img, 0, 0); };
+        }
+
+        function flushCanvas(canvasId) { 
+            var canvas = document.getElementById(canvasId);
+            var ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height); 
         }
 
-        async function transmitSignatureAndCompilePDF() {
+        function isCanvasBlank(canvasId) {
+            var canvas = document.getElementById(canvasId);
+            var blank = document.createElement('canvas');
+            blank.width = canvas.width; 
+            blank.height = canvas.height;
+            return canvas.toDataURL() === blank.toDataURL();
+        }
+
+        async function transmitSignaturesAndCompilePDF() {
             var btn = document.getElementById('submitSigBtn');
             var statusDiv = document.getElementById('sigStatusLine');
             var custName = localStorage.getItem('current_wo_customer_name');
 
-            // Form validation check blocks submission if canvas buffer matches an empty screen layer
-            var blankCheckBuffer = document.createElement('canvas');
-            blankCheckBuffer.width = canvas.width; 
-            blankCheckBuffer.height = canvas.height;
-            if (canvas.toDataURL() === blankCheckBuffer.toDataURL()) {
-                alert("Validation Exception: Signature pad is empty. Homeowner authorization trace required before locking contract layers.");
+            if (isCanvasBlank('clientCanvas') || isCanvasBlank('techCanvas')) {
+                alert("Validation Exception: Both the Homeowner and the EverSafe Representative must sign the pad to execute this contract.");
                 return;
             }
 
-            if (!custName) { alert("Execution Error: No active customer selection detected in local memory arrays."); return; }
+            if (!custName) { alert("Execution Error: No active customer selection detected in local memory."); return; }
 
             btn.disabled = true;
             statusDiv.innerHTML = "⏳ Compiling structural parameters and building cryptographic contract PDF...";
             statusDiv.style.color = "var(--primary)";
 
-            var base64ImageString = canvas.toDataURL('image/png');
+            var clientBase64 = document.getElementById('clientCanvas').toDataURL('image/png');
+            var techBase64 = document.getElementById('techCanvas').toDataURL('image/png');
             var cleanFilename = "Sig_" + custName.replace(/[^a-z0-9]/gi, '_') + "_" + Date.now() + ".png";
+
+            // Save to local storage for the invoice page to access if needed
+            localStorage.setItem('final_client_signature', clientBase64);
+            localStorage.setItem('final_tech_signature', techBase64);
+            localStorage.setItem('current_wo_status', 'EXECUTED');
 
             var payload = {
                 route: "updateWorkOrderSignature",
-                base64Data: base64ImageString,
+                base64Data: clientBase64, // Client Signature (Kept for backward compatibility with your Apps Script)
+                techBase64Data: techBase64, // New EverSafe Rep Signature 
                 filename: cleanFilename,
                 customerName: custName,
                 customerEmail: localStorage.getItem('current_wo_customer_email') || "No Email Provided",
