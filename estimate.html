@@ -65,12 +65,10 @@
 
         .dependency-alert-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 12px 16px; margin-top: -5px; margin-bottom: 15px; font-size: 13px; font-weight: 500; color: #1e40af; display: flex; justify-content: space-between; align-items: center; }
         .btn-quick-add { background: #2563eb; color: white; border: none; padding: 5px 12px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
-
         .revenue-breakdown-card { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 20px; margin-top: 20px; }
         .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #475569; }
         .breakdown-row.grand-prime { border-bottom: none; padding-top: 15px; margin-top: 5px; }
         .total-banner { font-size: 28px; font-weight: 900; color: #16a34a; }
-
         .breakdown-matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
         @media (max-width: 768px) { .breakdown-matrix-grid { grid-template-columns: 1fr; } }
         .matrix-box { background: #fdfdfd; border: 1px solid #cbd5e1; border-radius: 6px; padding: 15px; }
@@ -78,25 +76,22 @@
         .matrix-list { list-style: none; font-size: 12.5px; color: #334155; text-align: left; }
         .matrix-list li { padding: 5px 0; border-bottom: 1px dashed #f1f5f9; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
         .matrix-badge { font-size: 10px; font-weight: bold; background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; }
-
         .btn-action { width: 100%; max-width: 360px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 25px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
-        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed !allowed !important; box-shadow: none !important; }
+        .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed !important; box-shadow: none !important; }
     </style>
 </head>
 <body>
-
     <div class="app-header">
         <div class="brand-row">
             <div class="brand-text">EverSafe Operations Hub</div>
             <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
         </div>
     </div>
-
     <div class="app-container">
         <div class="app-card">
             <h3>🧮 Project Estimate Builder</h3>
             <p class="subtitle">Internal calculation matrix. Infractions port silently from inspection maps. Adjust units, apply manual price overrides, and track profitability parameters below.</p>
-
+            
             <div class="grid-2">
                 <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 12px; border-radius: 6px;">
                     <label class="control-header" style="color: var(--accent-dark); margin-top:0;">📍 Active Operational Service Territory (Toledo Base)</label>
@@ -151,7 +146,7 @@
                     </div>
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#1e40af; text-transform:uppercase;">Elevation Height</span>
-                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
+                        <select id="workingElevationSelector" onchange="recalculateMasterLedger()" style="margin-top:4px; color:#1e40af; background:#eff6ff; border-color:#bfdbfe;">
                             <option value="1" selected>1 Story (Base)</option>
                             <option value="2">2 Stories (+15% Labor Buffer)</option>
                             <option value="3">3+ Stories [+35% Labor Buffer]</option>
@@ -216,7 +211,7 @@
                         </tr>
                     </thead>
                     <tbody id="bidTableBody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
 
@@ -289,7 +284,6 @@
                     <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>
                 </div>
             </div>
-
             <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile &amp; Generate Work Order ➔</button>
         </div>
     </div>
@@ -327,6 +321,7 @@
             "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement (per brick)", OH_LUCAS: 17.00, OH_WOOD: 17.00, OH_MID_DIST: 17.00, OH_EXTENDED: 17.00, MI_MONROE_CORE: 19.00, MI_MONROE_OUTER: 19.00, MI_WASHTENAW_MID: 23.00, MI_EXTENDED: 23.00, dynamic: true, defQty: 5, unit: "bricks", matCost: 4.00, labRate: 45.00, labHours: 0.30, wbs: ["Chisel out fractured spalled bricks", "Re-bed structure with high-bond layout mortar"], mats: ["Severe-weather structural red clay bricks", "High-bond structural masonry contact paste"] },
             "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per course)", OH_LUCAS: 75.00, OH_WOOD: 75.00, OH_MID_DIST: 75.00, OH_EXTENDED: 75.00, MI_MONROE_CORE: 85.00, MI_MONROE_OUTER: 85.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: true, defQty: 5, unit: "courses", matCost: 18.00, labRate: 50.00, labHours: 1.0, wbs: ["Dismantle unstable chimney brick segments", "Relay structural perimeter lines to plumb level"], mats: ["Severe-weather grade replacement clay bricks", "Premium masonry mortar allocation packs"] },
             "MAS_REBUILD_TOTAL":    { cat: "MASONRY", label: "Complete Structural Demolition & Ground-Up Rebuild (per course)", OH_LUCAS: 119.00, OH_WOOD: 119.00, OH_MID_DIST: 119.00, OH_EXTENDED: 119.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 155.00, MI_EXTENDED: 155.00, dynamic: true, defQty: 20, unit: "courses", matCost: 24.00, labRate: 50.00, labHours: 1.5, wbs: ["Execute total structural teardown blocks", "Erect heavy framing access scaffolding sets", "Relay entire chimney architecture plumb"], mats: ["Full industrial pallet brick configurations", "Structural reinforcement steel mesh bars"] },
+            // 🛡️ REGIONAL KEY GAP REALIGNED FROM OLD PLACEHOLDER PROPERTY
             "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 31.00, MI_EXTENDED: 31.00, dynamic: true, defQty: 15, unit: "bricks", matCost: 6.50, labRate: 45.00, labHours: 0.40, wbs: ["Extract compromised cracked firebrick tiles", "Mix refractory high-heat fire clay solutions", "Lay clean tight thermal joints"], mats: ["High-density golden thermal firebrick tiles", "Refractory high-temp fire clay mortar pre-mix"] },
             "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (Smoktite)", OH_LUCAS: 580.00, OH_WOOD: 580.00, OH_MID_DIST: 580.00, OH_EXTENDED: 580.00, MI_MONROE_CORE: 640.00, MI_MONROE_OUTER: 640.00, MI_WASHTENAW_MID: 715.00, MI_EXTENDED: 715.00, dynamic: false, matCost: 220.00, labRate: 55.00, labHours: 4.0, wbs: ["Spray insulate inner corbel brick walls", "Smooth coat smoke chamber to direct frictionless air"], mats: ["Smoktite ceramic refractory insulation mixture"] },
 
@@ -457,9 +452,9 @@
             var itemKey = document.getElementById('catalogItemSelector').value;
             if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) { alert("Selection Note: Please pick a verified scope item from the options list before clicking inject."); return; }
             executeDirectCartAddition(itemKey);
+            
+            // 🛠️ FIX: Clean text field but retain selection indexes to allow sequential item stack injection runs
             document.getElementById('itemSearchFilter').value = "";
-            document.getElementById('catalogCategorySelector').value = "";
-            populateItemsFromCategoryDropdown();
         }
 
         function executeDirectCartAddition(itemKey) {
@@ -482,7 +477,6 @@
             var elevationStories = document.getElementById('workingElevationSelector').value;
 
             var mileageSurchargeFee = TRAVEL_SURCHARGES[zone] || 0.00;
-
             var targetPriceTierKey = zone; 
 
             var diameterScalar = 1.0;
@@ -556,18 +550,18 @@
                 if (!spec) return;
 
                 if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") hasStructuralWorkActive = true;
-
+                
                 if (chimneyMaterial === "PREFAB" && (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING")) {
                     activeCodeInfractions.push(`❌ <b>Structural Mismatch Error:</b> You have assigned a Masonry or Concrete repair line item (<b>${spec.label}</b>), but the chimney infrastructure is set to a Pre-Fab Siding Chase Box.`);
                 }
-                // 🛠️ BUG FIXED: Re-mapped structural checker targeting key checks 1:1
+                // 🛠️ BUG FIXED: Mapped conditional validation filters straight to proper item loop contexts
                 if (chimneyMaterial === "PREFAB" && item.key === "RMV_STACK_DOWN") {
                     activeCodeInfractions.push(`❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>${spec.label}</b>), but the structural type is set to a Pre-Fab Siding Chase Box.`);
                 }
 
                 var currentItemDiameterScalar = (spec.cat === "RELINING") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
-                // 🛠️ BUG FIXED: Re-mapped flue tracking multipliers to standard item parameters
+                // 🛠️ BUG FIXED: Realigned loop validation parameter strings away from structural spec pointers to clean references
                 var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL") ? flueQty : 1;
 
                 var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar);
@@ -656,7 +650,6 @@
             }
 
             var baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
-
             var computedOverhead = baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE;
             var computedExpenses = baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE;
             var computedMarginBuffer = baseSubtotalWithTravel * (marginPctInput / 100);
