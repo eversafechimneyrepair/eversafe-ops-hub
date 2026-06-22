@@ -99,11 +99,11 @@
                         <option value="OH_LUCAS" selected>Lucas County, OH [Local Core: 0-20 mi] — (7.75% Tax)</option>
                         <option value="OH_WOOD">Wood County, OH [Local Core: 0-20 mi] — (6.75% Tax)</option>
                         <option value="MI_MONROE_CORE">Monroe County, MI [Local Core: 0-20 mi] — (6.00% Tax)</option>
-                        <option value="OH_MID_DIST">Fulton/Henry/Ottawa/Sandusky [20-40 mi] — (7.25% Tax)</option>
-                        <option value="MI_MONROE_OUTER">Lenawee &amp; Hillsdale, MI [20-40 mi] — (6.00% Tax)</option>
-                        <option value="MI_WASHTENAW_MID">Washtenaw Co / Ann Arbor, MI [20-40 mi] — (6.00% Tax)</option>
-                        <option value="OH_EXTENDED">Hancock &amp; Seneca Counties, OH [40-60 mi] — (7.25% Tax)</option>
-                        <option value="MI_EXTENDED">Wayne &amp; Outer Washtenaw, MI [40-60 mi] — (6.00% Tax)</option>
+                        <option value="OH_MID_DIST">Fulton / Henry / Ottawa / Sandusky, OH [Zone 1: 20-40 mi] — (7.25% Tax)</option>
+                        <option value="MI_MONROE_OUTER">Lenawee &amp; Hillsdale Counties, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
+                        <option value="MI_WASHTENAW_MID">Washtenaw County / Ann Arbor, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
+                        <option value="OH_EXTENDED">Hancock &amp; Seneca Counties, OH [Zone 2: 40-60 mi] — (7.25% Tax)</option>
+                        <option value="MI_EXTENDED">Wayne &amp; Outer Washtenaw, MI [Zone 2: 40-60 mi] — (6.00% Tax)</option>
                     </select>
                 </div>
                 <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px; border-radius: 6px;">
@@ -115,7 +115,7 @@
                     </select>
                 </div>
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 6px;">
-                    <label class="control-header" style="color: #16a34a; margin-top:0;">💵 Margin Target Buffer (%)</label>
+                    <label class="control-header" style="color: #16a34a; margin-top:0;">💵 Target Margin Profit Earnings Buffer (%)</label>
                     <input type="number" id="corporateMarginBufferInput" value="20" min="0" max="80" step="1" oninput="recalculateMasterLedger()" style="margin-top:4px; padding:10px; font-weight:bold; color:#14532d; border-color:#86efac;">
                 </div>
             </div>
@@ -249,15 +249,15 @@
                 <div class="breakdown-row">                                        
                     <div>Gross Catalog Line Items Subtotal:</div>                                        
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
-                </div>                                
+                </div>                
                 <div class="breakdown-row">                                        
                     <div>Travel &amp; Commute Mileage Surcharge (Distance Fund):</div>                                        
                     <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                
+                </div>                
                 <div class="breakdown-row">                                        
                     <div>Indirect Operational Overhead Buffer (12.0%):</div>                                        
                     <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                
+                </div>                
                 <div class="breakdown-row">                                        
                     <div>Regulatory Logistics &amp; Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
@@ -265,7 +265,7 @@
                 <div class="breakdown-row" style="background: #f0fdf4;">                                        
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                        
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
-                </div>                                
+                </div>                
                 <div class="breakdown-row">                                        
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                        
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
@@ -316,8 +316,10 @@
         var CORPORATE_EXPENSE_RATE = 0.05;  
 
         var COMPLETE_PRICE_BOOK = {
+            // UNBUNDLED MAINTENANCE & INSPECTIONS
             "INSP_NFPA_LEVEL_1":    { cat: "MAINTENANCE", label: "NFPA 211 Level 1 Visual Inspection & Clearance Evaluation", OH_LUCAS: 79.00, OH_WOOD: 79.00, OH_MID_DIST: 79.00, OH_EXTENDED: 79.00, MI_MONROE_CORE: 89.00, MI_MONROE_OUTER: 89.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: false, matCost: 2.00, labRate: 55.00, labHours: 0.75, wbs: ["Examine accessible structural components", "Verify baseline structural clearances", "Verify chimney soot density accumulation layers"], mats: ["Digital administrative inspection checklist token"] },
-            "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "NFPA 211 Level 2 Internal Flue Video Scan Diagnostic", OH_LUCAS: 125.00, OH_WOOD: 125.00, OH_MID_DIST: 125.00, OH_EXTENDED: 125.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 149.00, MI_EXTENDED: 149.00, dynamic: false, matCost: 5.00, labRate: 55.00, labHours: 1.0, wbs: ["Setup specialized video recording rigs", "Run panoramic camera modules down flue axis", "Document structural link cracks / joint gaps"], mats: ["Digital cloud logging token allocation"] },
+            "INSP_NFPA_LEVEL_2":    { cat: "MAINTENANCE", label: "NFPA 211 Level 2 Comprehensive Safety Inspection (Real Estate/Transfer)", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 195.00, MI_MONROE_OUTER: 195.00, MI_WASHTENAW_MID: 215.00, MI_EXTENDED: 215.00, dynamic: false, matCost: 10.00, labRate: 55.00, labHours: 1.75, wbs: ["Examine dynamic crawlspace/attic clearances", "Audit complete internal flue layout connectivity matrices", "Document safety system draft defects"], mats: ["L2 structural report filing token validation"] },
+            "DIAG_VIDEO_L2":        { cat: "MAINTENANCE", label: "Targeted Internal Flue Axis Video Camera Diagnostic Scan Run", OH_LUCAS: 125.00, OH_WOOD: 125.00, OH_MID_DIST: 125.00, OH_EXTENDED: 125.00, MI_MONROE_CORE: 135.00, MI_MONROE_OUTER: 135.00, MI_WASHTENAW_MID: 149.00, MI_EXTENDED: 149.00, dynamic: false, matCost: 5.00, labRate: 55.00, labHours: 1.0, wbs: ["Setup specialized video recording rigs", "Run panoramic camera modules down flue axis", "Document structural link cracks / joint gaps"], mats: ["Digital cloud logging token allocation"] },
             "SWEEP_WOOD_FLUE":      { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Open Masonry Woodburning Flue", OH_LUCAS: 95.00, OH_WOOD: 95.00, OH_MID_DIST: 95.00, OH_EXTENDED: 95.00, MI_MONROE_CORE: 105.00, MI_MONROE_OUTER: 105.00, MI_WASHTENAW_MID: 115.00, MI_EXTENDED: 115.00, dynamic: false, matCost: 10.00, labRate: 55.00, labHours: 0.75, wbs: ["Run mechanical wire or poly brushes down internal flue", "Vacuum fine ash soot from open smoke shelf terminals"], mats: ["Poly floor protection sheets", "Soot disposal waste containment bags"] },
             "SWEEP_WOOD_INSERT":    { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Wood Insert Pull & Extraction Clean", OH_LUCAS: 269.00, OH_WOOD: 269.00, OH_MID_DIST: 269.00, OH_EXTENDED: 269.00, MI_MONROE_CORE: 289.00, MI_MONROE_OUTER: 289.00, MI_WASHTENAW_MID: 319.00, MI_EXTENDED: 319.00, dynamic: false, matCost: 45.00, labRate: 55.00, labHours: 3.0, wbs: ["Extract heavy internal wood burning core insert from box", "Chisel vitreous glazed creosote coatings from vent walls"], mats: ["Creosote chimneys wash fluid", "Venting seal insulation rope wraps"] },
             "SWEEP_PELLET":         { cat: "MAINTENANCE", label: "Physical Cleaning Sweep - Pellet/Corn Venting Mechanical Service", OH_LUCAS: 195.00, OH_WOOD: 195.00, OH_MID_DIST: 195.00, OH_EXTENDED: 195.00, MI_MONROE_CORE: 215.00, MI_MONROE_OUTER: 215.00, MI_WASHTENAW_MID: 239.00, MI_EXTENDED: 239.00, dynamic: false, matCost: 25.00, labRate: 55.00, labHours: 2.0, wbs: ["Scrape ash deposits out of internal combustion pots", "Run soft flexible sweeping whips through small pellet vents"], mats: ["High-temp sealing replacement gasket cord"] },
@@ -505,7 +507,7 @@
             var activeCodeInfractions = [];
 
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
-                document.getElementById('bidTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
                 document.getElementById('lbl_base_subtotal').innerText = "$0.00";
                 document.getElementById('lbl_travel_surcharge').innerText = "+$0.00";
                 document.getElementById('lbl_indirect_overhead').innerText = "+$0.00";
@@ -531,7 +533,6 @@
             });
 
             var htmlConstructionBuffer = "";
-
             ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
                 var spec = COMPLETE_PRICE_BOOK[item.key];
                 if (!spec) return;
@@ -547,7 +548,9 @@
 
                 var currentItemDiameterScalar = (spec.cat === "RELINING") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
-                var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL") ? flueQty : 1;
+                
+                // 🛠️ MULTI-FLUE VIDEO ESCALATION MODIFIER ANCHOR
+                var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL" || item.key === "DIAG_VIDEO_L2" || item.key === "INSP_NFPA_LEVEL_2") ? flueQty : 1;
 
                 var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar);
                 var rowCalculatedTotal = appliedUnitRate * item.qty * currentItemFlueMultiplier;
@@ -571,8 +574,6 @@
                 var variableInputHtml = spec.dynamic ? 
                     `<input type="number" class="dimension-input" value="${item.qty}" min="1" onchange="modifyQuantityIndexTarget(${idx}, this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">${spec.unit}</span>` : 
                     `<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed</span>`;
-
-                var rateInputHtml = `<span style="font-size:11px; color:#64748b; font-weight:bold; margin-right:2px;">$</span><input type="number" class="override-price-input" value="${appliedUnitRate.toFixed(2)}" step="0.01" min="0" onchange="modifyUnitPriceOverrideTarget(${idx}, this.value)">`;
 
                 var displayLabel = spec.label;
                 if (spec.cat === "RELINING") displayLabel = `${flueSize}-Inch ${spec.label}`;
@@ -646,7 +647,7 @@
                 alertTray.style.display = "none";
             }
 
-            var baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
+            var baseSubtotalWithTravel = baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
             var computedOverhead = baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE;
             var computedExpenses = baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE;
             var computedMarginBuffer = baseSubtotalWithTravel * (marginPctInput / 100);
@@ -710,11 +711,8 @@
             var computedTax = taxableSubtotal * zoneTaxRate;
             var absoluteGrandTotal = taxableSubtotal + computedTax;
 
-            document.getElementById('wbsContentList').innerHTML = aggregatedWBSLines.join("");
-            document.getElementById('materialsContentList').innerHTML = aggregatedMaterialLines.join("");
-
             document.getElementById('lbl_base_subtotal').innerText = "$" + grossCatalogSubtotal.toFixed(2);
-            document.getElementById('travel_surcharge').innerText = "+$" + mileageSurchargeFee.toFixed(2);
+            document.getElementById('lbl_travel_surcharge').innerText = "+$" + mileageSurchargeFee.toFixed(2);
             document.getElementById('lbl_indirect_overhead').innerText = "+$" + computedOverhead.toFixed(2);
             document.getElementById('lbl_business_expense').innerText = "+$" + computedExpenses.toFixed(2);
             document.getElementById('lbl_margin_buffer').innerText = "+$" + computedMarginBuffer.toFixed(2);
