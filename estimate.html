@@ -73,8 +73,8 @@
         @media (max-width: 768px) { .breakdown-matrix-grid { grid-template-columns: 1fr; } }
         .matrix-box { background: #fdfdfd; border: 1px solid #cbd5e1; border-radius: 6px; padding: 15px; }
         .matrix-box h4 { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 4px; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .matrix-list { list-style: none; font-size: 12.5px; color: #334155; text-align: left; }
-        .matrix-list li { padding: 5px 0; border-bottom: 1px dashed #f1f5f9; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+        .matrix-list { list-style: none; font-size: 12.5px; color: #334155; text-align: left; padding-top:4px; }
+        .matrix-list li { padding: 5px 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
         .matrix-badge { font-size: 10px; font-weight: bold; background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; }
         .btn-action { width: 100%; max-width: 360px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 25px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed !important; box-shadow: none !important; }
@@ -114,7 +114,6 @@
                 <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px; border-radius: 6px;">
                     <label class="control-header" style="color: #1e40af; margin-top:0;">🛠️ Operational Labor Payout Model</label>
                     <select id="laborPayoutModelSelector" onchange="toggleCustomLaborField(); recalculateMasterLedger();" style="color:#1e40af; border-color:#93c5fd;">
-                        <!-- 🏢 NEW: JOINT VENTURE PARTNER SPLIT OPTION ADDED -->
                         <option value="PARTNER_SPLIT_60_40" selected>60/40 Net Profit Split (After Mats & Helper)</option>
                         <option value="HOURLY_BURDENED">Hourly Blended Crew ($55/hr Base + 25% True Burden)</option>
                         <option value="PIECE_RATE_20">Piece-Rate Installer Commission (20% Net Job Cut)</option>
@@ -188,7 +187,6 @@
                 <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
             </div>
 
-            <!-- INJECTION DASHBOARD -->
             <div style="background: #f1f5f9; border: 1px solid var(--border); border-radius: 6px; padding: 18px; margin-top: 15px;">
                 <p style="font-size:11px; font-weight:800; text-transform:uppercase; color:var(--primary); margin-bottom:12px; text-align:left; letter-spacing:0.5px;">🛠️ Inject Catalog Item or Construct Custom Run</p>
                 
@@ -226,7 +224,6 @@
                 <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px;">Inject Selected Line Item into Bid Matrix ➔</button>
             </div>
 
-            <!-- COMPREHENSIVE TAKEOFF AND PRODUCTION GRID -->
             <div class="section-title">Compiled Project Cost Matrix &amp; Construction Takeoff Drawer</div>            
             <div class="estimate-table-wrapper">                
                 <table class="estimate-table">                    
@@ -299,6 +296,7 @@
 
             <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
+                
                 <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                        
                     <div>                                                
                         <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                
@@ -310,7 +308,6 @@
                     </div>                                
                 </div>   
                 
-                <!-- 🏢 NEW: JOINT VENTURE SPLIT TRACKER BOARD -->
                 <div id="partnerSplitDashboard" class="partner-telemetry-box" style="display:none;">
                     <span style="font-size:10px; font-weight:900; color:#a21caf; text-transform:uppercase; display:block; margin-bottom:8px; border-bottom:1px solid #fbcfe8; padding-bottom:4px;">Joint Venture Payout Breakdown (Post-Materials/Helper)</span>
                     <div class="partner-row">
@@ -393,7 +390,6 @@
             var customWrapper = document.getElementById('customLaborInputWrapper');
             var helperWrapper = document.getElementById('helperSplitInputWrapper');
             
-            // Toggle visibility logic based on model selection
             if (model === "CUSTOM_PERCENT") {
                 customWrapper.style.display = "block";
                 helperWrapper.style.display = "block";
@@ -442,7 +438,6 @@
             populateItemsFromCategoryDropdown();
             importSilentFlagsFromDiagnosticMaps();
             
-            // Ensure proper toggles show on first page load
             toggleCustomLaborField();
             recalculateMasterLedger();
         });
@@ -582,7 +577,6 @@
             var internalSumMaterialCosts = 0;
             var internalSumLaborBurdens = 0;
             
-            // 🏢 NEW: Global tally for the Partnership Split
             var internalSumLeoPartnerCut = 0;
             var internalSumEverSafeRetained = 0;
 
@@ -655,17 +649,15 @@
                 var rowTotalLaborPool = 0;   
                 var rowHelperPayout = 0;
                 var rowLeoNetPayout = 0;
-                
-                var rowEverSafeRetained = 0; // Only used explicitly for the 60/40 model
+                var rowEverSafeRetained = 0;
 
                 var chosenHelperPct = parseFloat(document.getElementById('helperLaborValueInput').value) || 0;
 
-                // 🏢 NEW PARTNER SPLIT LOGIC
                 if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
                     rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
                     
                     var rowNetProfitPool = rowCalculatedTotal - rowMatCost - rowHelperPayout;
-                    if (rowNetProfitPool < 0) rowNetProfitPool = 0; // Protection against upside-down jobs
+                    if (rowNetProfitPool < 0) rowNetProfitPool = 0; 
                     
                     rowLeoNetPayout = rowNetProfitPool * 0.60;
                     rowEverSafeRetained = rowNetProfitPool * 0.40;
@@ -727,19 +719,24 @@
                 textCompilationScopeLines.push(labelWithQty);
                 rawItemizedLinesForContract.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
 
+                // 🛠️ UPGRADED: Parent/Child Grouping Header System for Clean Readability
                 if (spec.wbs) {
+                    aggregatedWBSLines.push(`<li style="background:#f1f5f9; font-weight:800; color:var(--primary-light); padding:8px 10px; border-radius:4px; margin-top:8px;">🛠️ ${displayLabel} <span class="matrix-badge" style="background:var(--accent); color:white; font-size:11px;">⏳ Total: ${rowHours.toFixed(1)} hrs</span></li>`);
                     spec.wbs.forEach(function(task) {
-                        // 🛠️ SANITIZED: Strict mapping to the rowHours clock. No dollar signs allowed.
-                        aggregatedWBSLines.push(`<li><span>🔹 ${task}</span> <span class="matrix-badge">⏳ ${rowHours.toFixed(1)} hrs</span></li>`);
+                        aggregatedWBSLines.push(`<li style="padding-left: 18px; font-size: 12px; color: #475569; border-bottom: none; padding-top: 3px; padding-bottom: 3px;">🔹 ${task}</li>`);
                     });
                 }
+                
                 if (spec.mats) {
-                    spec.mats.forEach(function(mat) {
-                        var scalingText = spec.dynamic ? ` (${item.qty} ${spec.unit})` : '';
+                    aggregatedMaterialLines.push(`<li style="background:#f0fdf4; font-weight:800; color:#166534; padding:8px 10px; border-radius:4px; margin-top:8px;">📦 ${displayLabel} <span class="matrix-badge" style="background:#059669; color:white; font-size:11px;">Total Cost: $${rowMatCost.toFixed(2)}</span></li>`);
+                    spec.mats.forEach(function(mat, mIdx) {
+                        // Only attach scaling indicators to the primary (index 0) material requirement
+                        var scalingText = (spec.dynamic && mIdx === 0) ? ` <span style="color:#b45309; font-weight:bold;">(${item.qty} ${spec.unit})</span>` : '';
                         var displayMatName = mat;
                         if (spec.cat === "RELINING") displayMatName = mat.replace("6-Inch", flueSize + "-Inch");
                         if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = mat.replace("brick", chimneyMaterial.toLowerCase() + " structures");
-                        aggregatedMaterialLines.push(`<li><span>📦 ${displayMatName}${scalingText}</span> <span class="matrix-badge">Cost Takeoff: $${rowMatCost.toFixed(2)}</span></li>`);
+                        
+                        aggregatedMaterialLines.push(`<li style="padding-left: 18px; font-size: 12px; color: #475569; border-bottom: none; padding-top: 3px; padding-bottom: 3px;">▪️ ${displayMatName}${scalingText}</li>`);
                     });
                 }
             });
@@ -857,7 +854,6 @@
             var absoluteInternalCompanyCost = internalSumMaterialCosts + internalSumLaborBurdens + (mileageSurchargeFee * 0.45);
             document.getElementById('internalJobCostInput').value = absoluteInternalCompanyCost.toFixed(2);
             
-            // 🏢 TELEMETRY DISPLAY TOGGLE: Switch bottom tracker based on the selected Payout Model
             if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
                 document.getElementById('standardTelemetryGrid').style.display = "none";
                 document.getElementById('partnerSplitDashboard').style.display = "block";
