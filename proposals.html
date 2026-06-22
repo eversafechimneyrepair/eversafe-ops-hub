@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>EverSafe Hub - Custom Estimate Builder</title>
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
-    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link class="js-meta-tag" rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
     <style>
         :root { 
@@ -20,12 +20,12 @@
             --danger: #ef4444; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 95px; color: #0f172a; }
         
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
         
         .app-container { max-width: 700px; margin: 0 auto; padding: 0 15px; }
         .meta-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
@@ -35,40 +35,37 @@
         .builder-card { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 25px 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 20px; }
         .section-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px; margin-bottom: 12px; display: block; }
         
-        .price-input-wrapper { display: flex; align-items: center; background: #f8fafc; border: 2px solid var(--border); border-radius: 8px; padding: 5px 15px; margin-bottom: 20px; }
+        .price-input-wrapper { display: flex; align-items: center; background: #f8fafc; border: 2px solid var(--border); border-radius: 8px; padding: 8px 15px; margin-bottom: 20px; }
         .price-input-wrapper:focus-within { border-color: var(--accent); background: white; }
-        .currency-symbol { font-size: 24px; font-weight: bold; color: #64748b; margin-right: 5px; }
+        .currency-symbol { font-size: 24px; font-weight: bold; color: #64748b; margin-right: 8px; user-select: none; }
         .main-price-field { width: 100%; border: none; background: transparent; font-size: 28px; font-weight: 800; color: var(--primary); outline: none; }
         
-        .scope-textarea { width: 100%; border: 2px solid var(--border); border-radius: 8px; padding: 12px; font-size: 14px; font-family: inherit; resize: vertical; background: white; color: #0f172a; outline: none; transition: border-color 0.2s; }
+        .scope-textarea { width: 100%; border: 2px solid var(--border); border-radius: 8px; padding: 14px; font-size: 14px; font-family: inherit; line-height: 1.5; resize: vertical; background: white; color: #0f172a; outline: none; transition: border-color 0.2s; }
         .scope-textarea:focus { border-color: var(--accent); }
         
-        /* Cheat-Sheet Injection Tray */
         .macro-tray { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; margin-bottom: 25px; }
-        .macro-pill { background: #f1f5f9; border: 1px solid var(--border); color: #334155; font-size: 11px; font-weight: bold; padding: 6px 12px; border-radius: 20px; cursor: pointer; user-select: none; transition: all 0.2s; }
+        .macro-pill { background: #f1f5f9; border: 1px solid var(--border); color: #334155; font-size: 11px; font-weight: bold; padding: 8px 14px; border-radius: 20px; cursor: pointer; user-select: none; transition: all 0.2s; }
         .macro-pill:hover { background: var(--primary-light); color: white; border-color: var(--primary-light); }
         
-        /* Add-on Matrix Toggle Blocks */
         .addon-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 25px; }
-        .addon-row { display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.2s; }
+        .addon-row { display: flex; align-items: center; justify-content: space-between; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; cursor: pointer; user-select: none; transition: all 0.2s; }
         .addon-row:hover { background: #f1f5f9; border-color: #94a3b8; }
         .addon-row.active-addon { border-left: 4px solid var(--accent); background: #fffcf9; border-color: #fde6d2; }
-        .addon-info { text-align: left; padding-right: 15px; }
+        .addon-info { text-align: left; padding-right: 15px; flex-grow: 1; }
         .addon-name { font-size: 14px; font-weight: bold; color: var(--primary); }
-        .addon-desc { font-size: 12px; color: #64748b; margin-top: 2px; }
+        .addon-desc { font-size: 12px; color: #64748b; margin-top: 2px; line-height: 1.35; }
         .addon-price-tag { font-size: 14px; font-weight: 800; color: var(--accent-dark); white-space: nowrap; margin-right: 15px; }
         
-        /* Custom Premium Toggle Switch */
         .switch-input { display: none; }
-        .switch-rail { width: 44px; height: 24px; background: #cbd5e1; border-radius: 20px; position: relative; transition: background 0.2s; }
+        .switch-rail { width: 44px; height: 24px; background: #cbd5e1; border-radius: 20px; position: relative; transition: background 0.2s; flex-shrink: 0; }
         .switch-button { width: 18px; height: 18px; background: white; border-radius: 50%; position: absolute; top: 3px; left: 3px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: transform 0.2s; }
         .active-addon .switch-rail { background: var(--success); }
         .active-addon .switch-button { transform: translateX(20px); }
         
-        /* Real-Time Totalizer Control Panel */
-        .totalizer-panel { background: var(--primary); color: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15); margin-top: 25px; }
+        .totalizer-panel { background: var(--primary); color: white; border-radius: 12px; padding: 22px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.15); margin-top: 25px; }
+        .totalizer-breakdown { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 8px; padding: 0 5px; }
         .totalizer-label { font-size: 11px; font-weight: bold; text-transform: uppercase; color: #94a3b8; letter-spacing: 1px; }
-        .totalizer-val { font-size: 36px; font-weight: 900; color: white; margin: 4px 0 15px 0; }
+        .totalizer-val { font-size: 38px; font-weight: 900; color: white; margin: 4px 0 18px 0; letter-spacing: -0.5px; }
         .btn-proceed { width: 100%; background: var(--success); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3); transition: background 0.2s; }
         .btn-proceed:hover { background: var(--success-dark); }
     </style>
@@ -93,7 +90,7 @@
         <p class="subtitle">Input core pricing metrics, throw in structural modular add-ons, and compile the contract payload.</p>
         
         <div class="meta-card">
-            <span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase;">Active Account:</span>
+            <span style="font-size:11px; font-weight:bold; color:#64748b; text-transform:uppercase; letter-spacing:0.5px;">Active Account:</span>
             <div id="proposal_cust_name" style="font-size:16px; font-weight:bold; color:var(--primary); margin-top:2px;">Loading...</div>
         </div>
 
@@ -101,13 +98,13 @@
             <label class="section-title">1. Base Job Production Cost</label>
             <div class="price-input-wrapper">
                 <span class="currency-symbol">$</span>
-                <input type="number" id="base_price_field" class="main-price-field" placeholder="0.00" step="0.01" oninput="calculateRealTimeInvoiceMetrics()">
+                <input type="number" id="base_price_field" class="main-price-field" placeholder="0.00" step="0.01" inputmode="decimal" oninput="calculateRealTimeInvoiceMetrics()">
             </div>
 
             <label class="section-title">2. Detailed Scope of Work Description</label>
             <textarea id="base_scope_textarea" class="scope-textarea" rows="6" placeholder="Describe core masonry or sweeping activities here..."></textarea>
             
-            <label class="form-label-mini" style="font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-top: 12px; display: block;">Quick-Insert Scope Templates:</label>
+            <label style="font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; margin-top: 14px; display: block; letter-spacing:0.5px;">Quick-Insert Scope Templates:</label>
             <div class="macro-tray">
                 <div class="macro-pill" onclick="injectScopeMacro('sweep')">🧹 Standard Maintenance Sweep</div>
                 <div class="macro-pill" onclick="injectScopeMacro('masonry')">🛠️ Localized Tuckpointing Repair</div>
@@ -150,6 +147,10 @@
             </div>
 
             <div class="totalizer-panel">
+                <div class="totalizer-breakdown">
+                    <span>Base: <span id="breakdown_base">$0.00</span></span>
+                    <span>Add-ons: <span id="breakdown_addons">$0.00</span></span>
+                </div>
                 <div class="totalizer-label">Total Estimate Valuation</div>
                 <div class="totalizer-val" id="invoice_grand_total_display">$0.00</div>
                 <button type="button" class="btn-proceed" onclick="serializeCustomEstimatePayloadAndAdvance()">
@@ -174,12 +175,24 @@
             var currentCust = localStorage.getItem('current_wo_customer_name') || "No Active Job (Check Vault)";
             document.getElementById('proposal_cust_name').innerText = currentCust;
             
-            // Re-hydrate any pre-existing custom inputs if technician hits the back button
-            var savedCost = localStorage.getItem('current_wo_est_cost');
-            var savedScope = localStorage.getItem('current_wo_work_scope');
+            // Re-hydrate existing custom inputs if tech returns from the next stage
+            var savedCost = localStorage.getItem('current_wo_base_price_raw');
+            var savedScope = localStorage.getItem('current_wo_base_scope_raw');
             
             if(savedCost) { document.getElementById('base_price_field').value = parseFloat(savedCost); }
             if(savedScope) { document.getElementById('base_scope_textarea').value = savedScope; }
+            
+            // Restore chosen add-on check states from session memory if they exist
+            ['cap', 'crown', 'flash'].forEach(function(id) {
+                if(localStorage.getItem('addon_state_' + id) === 'true') {
+                    var row = document.getElementById('row_addon_' + id);
+                    var box = document.getElementById('chk_addon_' + id);
+                    if(box && row) {
+                        box.checked = true;
+                        row.classList.add('active-addon');
+                    }
+                }
+            });
             
             calculateRealTimeInvoiceMetrics();
         });
@@ -206,23 +219,29 @@
             checkbox.checked = !checkbox.checked;
             if(checkbox.checked) {
                 row.classList.add('active-addon');
+                localStorage.setItem('addon_state_' + addonId, 'true');
             } else {
                 row.classList.remove('active-addon');
+                localStorage.setItem('addon_state_' + addonId, 'false');
             }
             calculateRealTimeInvoiceMetrics();
         }
 
         function calculateRealTimeInvoiceMetrics() {
             var basePrice = parseFloat(document.getElementById('base_price_field').value) || 0;
-            var runningTotal = basePrice;
+            var addonTotal = 0;
             
             ['cap', 'crown', 'flash'].forEach(function(id) {
                 var box = document.getElementById('chk_addon_' + id);
                 if(box && box.checked) {
-                    runningTotal += parseFloat(box.getAttribute('data-price')) || 0;
+                    addonTotal += parseFloat(box.getAttribute('data-price')) || 0;
                 }
             });
             
+            var runningTotal = basePrice + addonTotal;
+            
+            document.getElementById('breakdown_base').innerText = '$' + basePrice.toFixed(2);
+            document.getElementById('breakdown_addons').innerText = '$' + addonTotal.toFixed(2);
             document.getElementById('invoice_grand_total_display').innerText = '$' + runningTotal.toFixed(2);
         }
 
@@ -236,7 +255,7 @@
             var finalizedRunningCost = basePrice;
             var compiledScopePayload = rawScopeText;
             
-            // Loop and bind checked modular scope parameters into localized memory blocks
+            // Loop and bind checked modular scope parameters into structural memory
             ['cap', 'crown', 'flash'].forEach(function(id) {
                 var box = document.getElementById('chk_addon_' + id);
                 if(box && box.checked) {
@@ -245,17 +264,21 @@
                 }
             });
             
-            // Lock elements into standard multi-system session storage registers
+            // Retain uncompiled configurations for field back-button stability
+            localStorage.setItem('current_wo_base_price_raw', basePrice);
+            localStorage.setItem('current_wo_base_scope_raw', rawScopeText);
+            
+            // Lock synchronized elements directly to core app parameters expected by backend compiled layers
             localStorage.setItem('current_wo_selected_tier', 'Custom Proposal Block');
             localStorage.setItem('current_wo_est_cost', finalizedRunningCost.toFixed(2));
             localStorage.setItem('current_wo_work_scope', compiledScopePayload);
             
-            // Legacy backwards-compatible fallbacks for calculation engines
+            // Legacy backwards-compatible hooks for secondary validation engines
             localStorage.setItem('cached_inv_subtotal', finalizedRunningCost.toFixed(2));
             localStorage.setItem('cached_inv_scope', compiledScopePayload);
 
-            // Forward directly along the operational loop array pathing wire
-            window.location.replace('estimate.html');
+            // 🚀 BUG FIX: Route Leo FORWARD into contract execution, not backward to metrics!
+            window.location.replace('contract-wo.html');
         }
 
         function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
