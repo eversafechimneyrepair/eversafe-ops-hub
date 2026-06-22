@@ -59,8 +59,11 @@
         .btn-delete { background: var(--danger); color: white; border: none; padding: 6px 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
         .btn-add-item { background: var(--primary-light); color: white; border: none; padding: 12px; font-weight: bold; text-transform: uppercase; font-size: 11px; border-radius: 6px; cursor: pointer; width: 100%; letter-spacing: 0.5px; margin-top: 4px; }
         
-        .summary-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .total-banner { font-size: 26px; font-weight: 800; color: #14532d; }
+        /* 📜 UPGRADED LEDGER BREAKDOWN STYLING */
+        .revenue-breakdown-card { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #475569; }
+        .breakdown-row.grand-prime { border-bottom: none; padding-top: 15px; margin-top: 5px; }
+        .total-banner { font-size: 28px; font-weight: 900; color: #16a34a; }
 
         .btn-action { width: 100%; max-width: 360px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 25px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
     </style>
@@ -86,11 +89,11 @@
             <p class="subtitle">Internal calculation matrix. Infractions port silently from inspection maps. Adjust units, apply manual price overrides, and track profitability parameters below.</p>
 
             <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
-                <label class="control-header" style="color: var(--accent-dark);">📍 Active Territory Price Book Multiplier</label>
+                <label class="control-header" style="color: var(--accent-dark);">📍 Active Territory Price Book Multiplier &amp; Local Tax Authority</label>
                 <select id="regionalZoneSelector" onchange="recalculateMasterLedger()">
-                    <option value="NWO_CORE" selected>Northwest Ohio Core (Toledo, Perrysburg, Sandusky, Findlay)</option>
-                    <option value="SMI_RURAL">Southeast Michigan Rural / Border (Monroe, Adrian, Hillsdale)</option>
-                    <option value="SMI_PREMIUM">Southeast Michigan Premium Hub (Ann Arbor, Ypsilanti, Outer Wayne Co.)</option>
+                    <option value="NWO_CORE" selected>Northwest Ohio Core (Blended 7.25% Tax Authority)</option>
+                    <option value="SMI_RURAL">Southeast Michigan Rural / Border (Flat 6.00% Tax Authority)</option>
+                    <option value="SMI_PREMIUM">Southeast Michigan Premium Hub (Flat 6.00% Tax Authority)</option>
                 </select>
             </div>
 
@@ -154,12 +157,30 @@
                 </table>
             </div>
 
-            <div class="summary-box">
-                <div>
-                    <span style="font-size:11px; font-weight:bold; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">Calculated Subtotal</span>
-                    <div style="font-size:12px; color:#3f6212; font-weight:500;">Aggregated project price matrix balance</div>
+            <!-- 📊 AUTOMATED CORPORATE MULTIPLIER EXPENSE LEDGER -->
+            <div class="revenue-breakdown-card">
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>
+                
+                <div class="breakdown-row">
+                    <div>Gross Catalog Line Items Subtotal:</div>
+                    <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>
                 </div>
-                <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>
+                <div class="breakdown-row">
+                    <div>Indirect Operational Overhead Buffer (12.0%):</div>
+                    <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>
+                </div>
+                <div class="breakdown-row">
+                    <div>Regulatory Logistics &amp; Consumables Expense (5.0%):</div>
+                    <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>
+                </div>
+                <div class="breakdown-row">
+                    <div id="lbl_tax_title">Regional Local Sales Tax Rate (7.25%):</div>
+                    <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>
+                </div>
+                <div class="breakdown-row grand-prime">
+                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>
+                    <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>
+                </div>
             </div>
 
             <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
@@ -188,6 +209,15 @@
     <script src="navbar.js"></script>
 
     <script>
+        var REGIONAL_TAX_RATES = {
+            "NWO_CORE": 0.0725,     // 7.25% Blended Ohio Jurisdictional Tax Sourcing
+            "SMI_RURAL": 0.0600,    // 6.00% Flat Michigan Sales & Use Tax Rate
+            "SMI_PREMIUM": 0.0600   // 6.00% Flat Michigan Sales & Use Tax Rate
+        };
+
+        var CORPORATE_OVERHEAD_RATE = 0.12; // 12% Indirect Company Operational Drag
+        var CORPORATE_EXPENSE_RATE = 0.05;  // 5% Core Logistics Surcharge Sinking Fund
+
         var COMPLETE_PRICE_BOOK = {
             // MAINTENANCE & DIAGNOSTICS
             "SWEEP_STANDARD":       { cat: "MAINTENANCE", label: "Standard Woodburning Cleaning Sweep & L1 Inspection", NWO_CORE: 249.00, SMI_RURAL: 269.00, SMI_PREMIUM: 299.00, dynamic: false },
@@ -281,7 +311,6 @@
             recalculateMasterLedger();
         });
 
-        // RE-POPULATES MASTER DROPDOWN SELECTOR MATRIX
         function populateItemsFromCategoryDropdown() {
             var selectedCategory = document.getElementById('catalogCategorySelector').value;
             var itemSelector = document.getElementById('catalogItemSelector');
@@ -293,22 +322,17 @@
                     itemSelector.innerHTML += `<option value="${key}">[${mapping.cat}] ${mapping.label}</option>`;
                 }
             });
-            // Clear the text search box when manually resetting via group box category clicks
             if (selectedCategory !== "ALL") {
                 document.getElementById('itemSearchFilter').value = "";
             }
         }
 
-        // HIGH-SPEED DROPDOWN AUTO-FILTER LISTENER
         function filterCatalogItems() {
             var inputStr = document.getElementById('itemSearchFilter').value.toLowerCase().trim();
             var categorySelector = document.getElementById('catalogCategorySelector');
             var itemSelector = document.getElementById('catalogItemSelector');
             
-            if (inputStr.length > 0) {
-                categorySelector.value = "ALL";
-            }
-            
+            if (inputStr.length > 0) { categorySelector.value = "ALL"; }
             itemSelector.innerHTML = "";
             var optionsFoundCount = 0;
 
@@ -368,28 +392,35 @@
             recalculateMasterLedger();
         }
 
+        // 🧠 UPGRADED: REAL-TIME AUTOMATED FINANCIAL PROTECTION CALCULATOR
         function recalculateMasterLedger() {
             var zone = document.getElementById('regionalZoneSelector').value;
             var tbody = document.getElementById('bidTableBody');
             tbody.innerHTML = "";
-            var globalRunningSum = 0;
+            
+            var grossCatalogSubtotal = 0;
             var textCompilationScopeLines = [];
             var rawItemizedLinesForContract = [];
 
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
+                document.getElementById('lbl_base_subtotal').innerText = "$0.00";
+                document.getElementById('lbl_indirect_overhead').innerText = "+$0.00";
+                document.getElementById('lbl_business_expense').innerText = "+$0.00";
+                document.getElementById('lbl_calculated_tax').innerText = "+$0.00";
                 document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
                 calculateProfitThermometer(0);
                 return;
             }
 
+            // 1. Calculate base line items cost values
             ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
                 var spec = COMPLETE_PRICE_BOOK[item.key];
                 if (!spec) return;
 
                 var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : spec[zone];
                 var rowCalculatedTotal = appliedUnitRate * item.qty;
-                globalRunningSum += rowCalculatedTotal;
+                grossCatalogSubtotal += rowCalculatedTotal;
 
                 var variableInputHtml = "";
                 if (spec.dynamic) {
@@ -415,12 +446,34 @@
                 rawItemizedLinesForContract.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
             });
 
-            document.getElementById('bidLiveTotalDisplay').innerText = "$" + globalRunningSum.toFixed(2);
-            localStorage.setItem('current_wo_est_cost', globalRunningSum.toFixed(2));
+            // 2. Compute corporate overhead factors and geographic tax vectors
+            var computedOverhead = grossCatalogSubtotal * CORPORATE_OVERHEAD_RATE;
+            var computedExpenses = grossCatalogSubtotal * CORPORATE_EXPENSE_RATE;
+            
+            var targetedTaxRate = REGIONAL_TAX_RATES[zone] || 0.06;
+            var taxAuthorityLabel = zone === "NWO_CORE" ? "Ohio Blended Sales Tax (7.25%):" : "Michigan State Sales Tax (6.00%):";
+            
+            // Tax compounds on top of base catalog items + business drag parameters
+            var computedTax = (grossCatalogSubtotal + computedOverhead + computedExpenses) * targetedTaxRate;
+            var absoluteGrandTotal = grossCatalogSubtotal + computedOverhead + computedExpenses + computedTax;
+
+            // 3. Update User Interface components
+            document.getElementById('lbl_base_subtotal').innerText = "$" + grossCatalogSubtotal.toFixed(2);
+            document.getElementById('lbl_indirect_overhead').innerText = "+$" + computedOverhead.toFixed(2);
+            document.getElementById('lbl_business_expense').innerText = "+$" + computedExpenses.toFixed(2);
+            document.getElementById('lbl_tax_title').innerText = taxAuthorityLabel;
+            document.getElementById('lbl_calculated_tax').innerText = "+$" + computedTax.toFixed(2);
+            document.getElementById('bidLiveTotalDisplay').innerText = "$" + absoluteGrandTotal.toFixed(2);
+
+            // 4. Save calculations to local session vaults
+            localStorage.setItem('current_wo_est_cost', absoluteGrandTotal.toFixed(2));
             localStorage.setItem('current_wo_work_scope', textCompilationScopeLines.join("\n"));
             localStorage.setItem('current_wo_itemized_json', JSON.stringify(rawItemizedLinesForContract));
             
-            calculateProfitThermometer(globalRunningSum);
+            // Legacy backwards-compatible fallback array mapping registers
+            localStorage.setItem('cached_inv_subtotal', absoluteGrandTotal.toFixed(2));
+            
+            calculateProfitThermometer(absoluteGrandTotal);
         }
 
         function calculateProfitThermometer(forcedTotal) {
@@ -468,7 +521,8 @@
         }
 
         function dropItemFromActiveLedger(idxTarget) {
-            ACTIVE_RUNNING_ESTIMATE.splice(idxTarget, 1); recalculateMasterLedger();
+            var conf = confirm("Drop this line item completely from the structural contract?");
+            if(conf) { ACTIVE_RUNNING_ESTIMATE.splice(idxTarget, 1); recalculateMasterLedger(); }
         }
 
         function lockBidAndAdvanceToWorkOrderReview() {
