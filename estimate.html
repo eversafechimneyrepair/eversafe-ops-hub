@@ -82,6 +82,13 @@
         .partner-telemetry-box { background: #fdf4ff; border: 2px solid #e879f9; padding: 15px; border-radius: 6px; margin-top: 12px; }
         .partner-row { display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; color: #86198f; margin-bottom: 6px; }
         .partner-row.ever-safe { color: #065f46; font-size: 18px; margin-top: 10px; border-top: 1px solid #fbcfe8; padding-top: 10px; }
+        
+        .inline-breakdown-card { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.02); margin-top: -2px; }
+        @media(max-width: 768px) { .inline-breakdown-card { grid-template-columns: 1fr; gap: 10px; } }
+        .inline-breakdown-title { font-size: 10px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9; letter-spacing: 0.5px; }
+        .inline-list { list-style: none; padding: 0; margin: 0; font-size: 12px; color: #475569; line-height: 1.45; text-align: left; }
+        .inline-list li { margin-bottom: 4px; display: flex; align-items: flex-start; gap: 6px; }
+        .inline-list li span { flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -359,11 +366,8 @@
 
             "MAS_TUCKPOINT":        { cat: "MASONRY", label: "Tuckpointing Face Joint Masonry Repair (per sq ft)", OH_LUCAS: 12.50, OH_WOOD: 12.50, OH_MID_DIST: 12.50, OH_EXTENDED: 12.50, MI_MONROE_CORE: 15.00, MI_MONROE_OUTER: 15.00, MI_WASHTENAW_MID: 19.00, MI_EXTENDED: 19.00, dynamic: true, defQty: 10, unit: "sq ft", matCost: 2.50, labRate: 55.00, labHours: 0.15, wbs: ["Grind out failing brick mortar joints", "Mix weather-tight mortar solutions", "Pack deep structural voids via slicker tool"], mats: ["Premium weatherproof structural Type-N mortar mix", "Hydrated lime modification additive solutions"] },
             "MAS_BRICK_SWAP":       { cat: "MASONRY", label: "Spalling Freeze-Thaw Structural Face Brick Replacement (per brick)", OH_LUCAS: 17.00, OH_WOOD: 17.00, OH_MID_DIST: 17.00, OH_EXTENDED: 17.00, MI_MONROE_CORE: 19.00, MI_MONROE_OUTER: 19.00, MI_WASHTENAW_MID: 23.00, MI_EXTENDED: 23.00, dynamic: true, defQty: 5, unit: "bricks", matCost: 4.00, labRate: 55.00, labHours: 0.30, wbs: ["Chisel out fractured spalled bricks", "Re-bed structure with high-bond layout mortar"], mats: ["Severe-weather structural red clay bricks", "High-bond structural masonry contact paste"] },
-            
-            // 🧱 HAMMERED DOWN REBUILD OPTIONS (Leo's Verified System Rules Applied Below)
             "MAS_REBUILD_ROOF":     { cat: "MASONRY", label: "Partial Masonry Rebuild From Roofline Up (per vertical ft)", OH_LUCAS: 375.00, OH_WOOD: 375.00, OH_MID_DIST: 375.00, OH_EXTENDED: 375.00, MI_MONROE_CORE: 375.00, MI_MONROE_OUTER: 375.00, MI_WASHTENAW_MID: 375.00, MI_EXTENDED: 375.00, dynamic: true, defQty: 1, unit: "vertical ft", matCost: 90.00, labRate: 55.00, labHours: 3.5, wbs: ["Dismantle unstable chimney brick segments down to solid foundation", "Relay structural perimeter lines to plumb level using standard brick stack metrics"], mats: ["Severe-weather grade replacement clay bricks", "Premium masonry mortar allocation packs"] },
             "MAS_REBUILD_TOTAL":    { cat: "MASONRY", label: "Complete Structural Demolition & Ground-Up Rebuild Flat Package (Up to 4ft)", OH_LUCAS: 2380.00, OH_WOOD: 2380.00, OH_MID_DIST: 2380.00, OH_EXTENDED: 2380.00, MI_MONROE_CORE: 2380.00, MI_MONROE_OUTER: 2380.00, MI_WASHTENAW_MID: 2380.00, MI_EXTENDED: 2380.00, dynamic: false, matCost: 480.00, labRate: 55.00, labHours: 12.0, wbs: ["Execute total structural teardown blocks from top down to baseline structural roof joints", "Erect heavy framing access scaffolding sets with advanced fall protection configurations", "Relay entire chimney architecture plumb and level to native local building codes"], mats: ["Full industrial pallet brick configurations and core structures", "Structural reinforcement steel mesh bars and layout compounds"] },
-            
             "MAS_FIREBOX_REBUILD":  { cat: "MASONRY", label: "Firebox Firebrick Refit Floor/Walls (per brick)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 31.00, MI_EXTENDED: 31.00, dynamic: true, defQty: 15, unit: "bricks", matCost: 6.50, labRate: 55.00, labHours: 0.40, wbs: ["Extract compromised cracked firebrick tiles", "Mix refractory high-heat fire clay solutions", "Lay clean tight thermal joints"], mats: ["High-density golden thermal firebrick tiles", "Refractory high-temp fire clay mortar pre-mix"] },
             "MAS_SMOKE_CHAMBER":    { cat: "MASONRY", label: "Smoke Chamber Refractory Pargeting Smooth Seal (per sq ft)", OH_LUCAS: 32.00, OH_WOOD: 32.00, OH_MID_DIST: 32.00, OH_EXTENDED: 32.00, MI_MONROE_CORE: 35.00, MI_MONROE_OUTER: 35.00, MI_WASHTENAW_MID: 39.00, MI_EXTENDED: 39.00, dynamic: true, defQty: 18, unit: "sq ft", matCost: 12.00, labRate: 55.00, labHours: 0.22, wbs: ["Spray/trowel insulate inner corbel brick walls", "Smooth coat smoke chamber to direct frictionless air", "Seal structural gaps to baseline flue tile"], mats: ["Smoktite ceramic refractory insulation mixture"] },
 
@@ -379,6 +383,9 @@
 
             "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Anti-Puddling Chase Top Cover Pan (per sq ft)", OH_LUCAS: 48.00, OH_WOOD: 48.00, OH_MID_DIST: 48.00, OH_EXTENDED: 48.00, MI_MONROE_CORE: 54.00, MI_MONROE_OUTER: 54.00, MI_WASHTENAW_MID: 62.00, MI_EXTENDED: 62.00, dynamic: true, defQty: 6, unit: "sq ft", matCost: 15.00, labRate: 55.00, labHours: 0.25, wbs: ["Pop off rusted tracking sheet covers", "Anchor custom cross-bent stainless pans over top chase framing"], mats: ["Custom cross-bent 24-gauge stainless steel chase top pans"] },
 
+            // 💎 NEW STRUCTURAL COMPONENTS & PROTECTIVE MATERIALS ENTRIES ADDED BELOW
+            "COMP_CROWN_PRECAST":   { cat: "COMPONENTS", label: "Precast Concrete Engineered Chimney Crown Slab Installation", OH_LUCAS: 495.00, OH_WOOD: 495.00, OH_MID_DIST: 495.00, OH_EXTENDED: 495.00, MI_MONROE_CORE: 525.00, MI_MONROE_OUTER: 525.00, MI_WASHTENAW_MID: 575.00, MI_EXTENDED: 575.00, dynamic: false, matCost: 145.00, labRate: 55.00, labHours: 2.5, wbs: ["Dismantle compromised old crown materials and wire-brush clean structural base surfaces", "Lay uniform layer of structural high-bond layout mortar as an engineered leveling pad", "Hoist, level, and precisely anchor the industrial precast concrete crown slab plumb over flue lines", "Seal internal chimney flue tile projections with premium polymer expansion shields"], mats: ["Premium architectural-grade precast concrete crown unit core", "High-bond structural masonry mortar setup compound packs", "Industrial grade weatherproofing high-temp silicone sealant tubes"] },
+            "COMP_CAP_SINGLE":      { cat: "COMPONENTS", label: "Standard Single-Flue Stainless Steel Protective Chimney Cap", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 195.00, MI_MONROE_OUTER: 195.00, MI_WASHTENAW_MID: 215.00, MI_EXTENDED: 215.00, dynamic: false, matCost: 45.00, labRate: 55.00, labHours: 0.75, wbs: ["Inspect and prep tile terminal projection contact lines to guarantee flush mounting boundaries", "Position single-flue bracket base framework squarely over tile extension edge fields", "Lock down stainless steel compression anchoring hex screws securely against chimney tile structure"], mats: ["Premium heavy-gauge single-flue stainless steel protective chimney cap assembly", "Stainless steel mechanical attachment clamping hex fasteners package"] },
             "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", OH_LUCAS: 375.00, OH_WOOD: 375.00, OH_MID_DIST: 375.00, OH_EXTENDED: 375.00, MI_MONROE_CORE: 415.00, MI_MONROE_OUTER: 415.00, MI_WASHTENAW_MID: 475.00, MI_EXTENDED: 475.00, dynamic: false, matCost: 165.00, labRate: 55.00, labHours: 1.5, wbs: ["Drill tap anchor sleeve screws directly into concrete pads", "Apply silicone seal tracking beads underneath corner tracks"], mats: ["Custom engineered top-mount stainless steel multi-flue caps", "Tapcon structural anchoring masonry screws bundle"] },
 
             "LINE_TILE_REMOVAL":    { cat: "REMOVALS", label: "Damaged Clay Flue Tile Knockout & Air-Chisel Extraction", OH_LUCAS: 339.00, OH_WOOD: 339.00, OH_MID_DIST: 339.00, OH_EXTENDED: 339.00, MI_MONROE_CORE: 375.00, MI_MONROE_OUTER: 375.00, MI_WASHTENAW_MID: 445.00, MI_EXTENDED: 445.00, dynamic: false, matCost: 50.00, labRate: 60.00, labHours: 4.0, wbs: ["Run weighted impact breaker heads down internal flue channels", "Extract sharp fractured clay tile shrapnel cleanly from baseline cleanouts"], mats: ["Heavy duty rubberized extraction waste buckets"] },
@@ -603,6 +610,7 @@
                 document.getElementById('lbl_indirect_overhead').innerText = "+$0.00";
                 document.getElementById('lbl_business_expense').innerText = "+$0.00";
                 document.getElementById('lbl_margin_buffer').innerText = "+$0.00";
+                document.getElementById('lbl_tax_title').innerText = "Sales Tax Authority Sourcing Matrix:";
                 document.getElementById('lbl_calculated_tax').innerText = "+$0.00";
                 document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
                 document.getElementById('internalJobCostInput').value = "0.00";
@@ -709,20 +717,42 @@
                      <div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$${rowHelperPayout.toFixed(2)} <span style="font-weight:400; color:#64748b;">Help</span></div>` :
                     `<div style="font-size:12px; font-weight:700; color:#1e40af;">$${rowLeoNetPayout.toFixed(2)} <span style="font-size:10px; font-weight:400; color:#64748b; display:block;">(${rowHours.toFixed(1)} hrs)</span></div>`;
 
+                var inlineWbsElements = spec.wbs ? spec.wbs.map(function(t) { return `<li><span>🔹</span><span>${t}</span></li>`; }).join('') : '<li><span>🔹</span><span>Generic task setup parameter sequence executed.</span></li>';
+                var inlineMatElements = spec.mats ? spec.mats.map(function(m, mIdx) {
+                    var scalingText = (spec.dynamic && mIdx === 0) ? ` <span style="color:#b45309; font-weight:bold;">(${item.qty} ${spec.unit})</span>` : '';
+                    var displayMatName = m;
+                    if (spec.cat === "RELINING") displayMatName = m.replace("6-Inch", flueSize + "-Inch");
+                    if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = m.replace("brick", chimneyMaterial.toLowerCase() + " structures");
+                    return `<li><span>▪️</span><span>${displayMatName}${scalingText}</span></li>`;
+                }).join('') : '<li><span>▪️</span><span>No dedicated materials allocated.</span></li>';
+
                 htmlConstructionBuffer += `
+                    <tr style="border-bottom:none;">
+                        <td style="font-weight: 700; font-size:13px; color: var(--primary); vertical-align: top; padding-top:14px;">${displayLabel}</td>
+                        <td style="text-align: center; vertical-align: top; padding-top:14px;">${variableInputHtml}</td>
+                        <td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:14px;">${splitPayoutDisplayHtml}</td>
+                        <td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$${rowMatCost.toFixed(2)}</td>
+                        <td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$${(rowMatCost + rowTotalLaborPool).toFixed(2)}</td>
+                        <td style="text-align: right; font-weight: 800; color: #1e293b; vertical-align: top; padding-top:14px;">$${rowCalculatedTotal.toFixed(2)}</td>
+                        <td style="text-align: center; vertical-align: top; padding-top:12px;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(${idx})">X</button></td>
+                    </tr>
                     <tr>
-                        <td style="font-weight: 700; font-size:13px; color: var(--primary);">${displayLabel}</td>
-                        <td style="text-align: center;">${variableInputHtml}</td>
-                        <td style="text-align: left; padding-left:15px;">${splitPayoutDisplayHtml}</td>
-                        <td style="text-align: center; font-weight:600; color:#047857;">$${rowMatCost.toFixed(2)}</td>
-                        <td style="text-align: center; font-weight:800; color:#b45309;">$${(rowMatCost + rowTotalLaborPool).toFixed(2)}</td>
-                        <td style="text-align: right; font-weight: 800; color: #1e293b;">$${rowCalculatedTotal.toFixed(2)}</td>
-                        <td style="text-align: center;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(${idx})">X</button></td>
+                        <td colspan="7" style="padding: 0 10px 14px 10px; border-top:none; background:#ffffff;">
+                            <div class="inline-breakdown-card">
+                                <div>
+                                    <span class="inline-breakdown-title" style="color:var(--primary-light);">📋 Work Breakdown Structure (⏳ ${rowHours.toFixed(1)} Labor Hours)</span>
+                                    <ul class="inline-list">${inlineWbsElements}</ul>
+                                </div>
+                                <div>
+                                    <span class="inline-breakdown-title" style="color:#166534;">📦 Warehouse Picking Sheets</span>
+                                    <ul class="inline-list">${inlineMatElements}</ul>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                 `;
                 
                 var labelWithQty = spec.dynamic ? `${displayLabel} (Qty: ${item.qty} ${spec.unit})` : displayLabel;
-                
                 GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
 
                 if (spec.wbs) {
