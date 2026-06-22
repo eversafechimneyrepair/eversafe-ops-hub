@@ -94,16 +94,16 @@
             
             <div class="grid-3">
                 <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 12px; border-radius: 6px;">
-                    <label class="control-header" style="color: var(--accent-dark); margin-top:0;">📍 Active Operational Service Territory (Toledo Base)</label>
+                    <label class="control-header" style="color: var(--accent-dark); margin-top:0;">📍 Service Territory</label>
                     <select id="regionalZoneSelector" onchange="recalculateMasterLedger()">
                         <option value="OH_LUCAS" selected>Lucas County, OH [Local Core: 0-20 mi] — (7.75% Tax)</option>
                         <option value="OH_WOOD">Wood County, OH [Local Core: 0-20 mi] — (6.75% Tax)</option>
                         <option value="MI_MONROE_CORE">Monroe County, MI [Local Core: 0-20 mi] — (6.00% Tax)</option>
-                        <option value="OH_MID_DIST">Fulton / Henry / Ottawa / Sandusky, OH [Zone 1: 20-40 mi] — (7.25% Tax)</option>
-                        <option value="MI_MONROE_OUTER">Lenawee &amp; Hillsdale Counties, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
-                        <option value="MI_WASHTENAW_MID">Washtenaw County / Ann Arbor, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
-                        <option value="OH_EXTENDED">Hancock &amp; Seneca Counties, OH [Zone 2: 40-60 mi] — (7.25% Tax)</option>
-                        <option value="MI_EXTENDED">Wayne &amp; Outer Washtenaw, MI [Zone 2: 40-60 mi] — (6.00% Tax)</option>
+                        <option value="OH_MID_DIST">Fulton/Henry/Ottawa/Sandusky [20-40 mi] — (7.25% Tax)</option>
+                        <option value="MI_MONROE_OUTER">Lenawee &amp; Hillsdale, MI [20-40 mi] — (6.00% Tax)</option>
+                        <option value="MI_WASHTENAW_MID">Washtenaw Co / Ann Arbor, MI [20-40 mi] — (6.00% Tax)</option>
+                        <option value="OH_EXTENDED">Hancock &amp; Seneca Counties, OH [40-60 mi] — (7.25% Tax)</option>
+                        <option value="MI_EXTENDED">Wayne &amp; Outer Washtenaw, MI [40-60 mi] — (6.00% Tax)</option>
                     </select>
                 </div>
                 <div style="background: #eff6ff; border: 1px solid #bfdbfe; padding: 12px; border-radius: 6px;">
@@ -115,7 +115,7 @@
                     </select>
                 </div>
                 <div style="background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 6px;">
-                    <label class="control-header" style="color: #16a34a; margin-top:0;">💵 Target Margin Profit Earnings Buffer (%)</label>
+                    <label class="control-header" style="color: #16a34a; margin-top:0;">💵 Margin Target Buffer (%)</label>
                     <input type="number" id="corporateMarginBufferInput" value="20" min="0" max="80" step="1" oninput="recalculateMasterLedger()" style="margin-top:4px; padding:10px; font-weight:bold; color:#14532d; border-color:#86efac;">
                 </div>
             </div>
@@ -229,63 +229,63 @@
             <div id="localityLicensingGatekeeperTray" class="licensing-panel"></div>
             <div id="dependencyAlertTray" class="dependency-alert-box" style="display:none;"></div>
 
-            <div class="breakdown-matrix-grid">                
-                <div class="matrix-box" id="wbsPanelMatrix">                    
-                    <h4>📋 Work Breakdown Structure &amp; Budgeted Labor Hours</h4>                    
-                    <ul class="matrix-list" id="wbsContentList">                        
-                        <li style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</li>                    
-                    </ul>                
-                </div>                
-                <div class="matrix-box" id="materialsPanelMatrix">                    
-                    <h4>📦 Required Materials Matrix Allocation &amp; Warehouse Picking Sheet</h4>                    
-                    <ul class="matrix-list" id="materialsContentList">                        
-                        <li style="color:#94a3b8; font-style:italic;">No materials allocated.</li>                    
-                    </ul>                
-                </div>            
+            <div class="breakdown-matrix-grid">                                
+                <div class="matrix-box" id="wbsPanelMatrix">                                        
+                    <h4>📋 Work Breakdown Structure &amp; Budgeted Labor Hours</h4>                                        
+                    <ul class="matrix-list" id="wbsContentList">                                                
+                        <li style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</li>                                        
+                    </ul>                                
+                </div>                                
+                <div class="matrix-box" id="materialsPanelMatrix">                                        
+                    <h4>📦 Required Materials Matrix Allocation &amp; Warehouse Picking Sheet</h4>                                        
+                    <ul class="matrix-list" id="materialsContentList">                                                
+                        <li style="color:#94a3b8; font-style:italic;">No materials allocated.</li>                                        
+                    </ul>                                
+                </div>                        
             </div>
 
             <div class="revenue-breakdown-card">
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                
-                <div class="breakdown-row">                    
-                    <div>Gross Catalog Line Items Subtotal:</div>                    
-                    <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                
-                </div>                
-                <div class="breakdown-row">                    
-                    <div>Travel &amp; Commute Mileage Surcharge (Distance Fund):</div>                    
-                    <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                
-                </div>                
-                <div class="breakdown-row">                    
-                    <div>Indirect Operational Overhead Buffer (12.0%):</div>                    
-                    <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                
-                </div>                
-                <div class="breakdown-row">                    
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                
+                <div class="breakdown-row">                                        
+                    <div>Gross Catalog Line Items Subtotal:</div>                                        
+                    <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
+                </div>                                
+                <div class="breakdown-row">                                        
+                    <div>Travel &amp; Commute Mileage Surcharge (Distance Fund):</div>                                        
+                    <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
+                </div>                                
+                <div class="breakdown-row">                                        
+                    <div>Indirect Operational Overhead Buffer (12.0%):</div>                                        
+                    <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
+                </div>                                
+                <div class="breakdown-row">                                        
                     <div>Regulatory Logistics &amp; Consumables Expense (5.0%):</div>                    
-                    <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                
-                </div>                
-                <div class="breakdown-row" style="background: #f0fdf4;">                    
-                    <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                    
-                    <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                
-                </div>                
-                <div class="breakdown-row">                    
-                    <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                    
-                    <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                
-                </div>                
-                <div class="breakdown-row grand-prime">                    
-                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                    
-                    <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                
-                </div>            
+                    <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
+                </div>                                
+                <div class="breakdown-row" style="background: #f0fdf4;">                                        
+                    <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                        
+                    <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
+                </div>                                
+                <div class="breakdown-row">                                        
+                    <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                        
+                    <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
+                </div>                                
+                <div class="breakdown-row grand-prime">                                        
+                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                        
+                    <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
+                </div>                        
             </div>
 
-            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                
-                <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                
-                <div class="grid-2" style="margin-bottom: 10px;">                    
-                    <div>                        
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor)</span>                        
-                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                    
-                    </div>                    
-                    <div>                        
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                        
-                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                    
+            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
+                <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
+                <div class="grid-2" style="margin-bottom: 10px;">                                        
+                    <div>                                                
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor)</span>                                                
+                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                        
+                    </div>                                        
+                    <div>                                                
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                
+                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                        
                     </div>                
                 </div>                
                 <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">                    
@@ -293,11 +293,11 @@
                     <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                
                 </div>            
             </div>            
-            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile &amp; Generate Work Order ➔</button>        
-        </div>    
+            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile &amp; Generate Work Order ➔</button>                
+        </div>        
     </div>
 
-    <div class="fixed-bottom-nav-bar"></div>    
+    <div class="fixed-bottom-nav-bar"></div>        
     <script src="navbar.js"></script>
 
     <script>
@@ -598,7 +598,7 @@
 
                 if (spec.wbs) {
                     spec.wbs.forEach(function(task) {
-                        aggregatedWBSLines.push(`<li><span>🔹 ${task}</span> <span class="matrix-badge">⏳ Takeoff Qty: $${rowLaborPayout.toFixed(2)}</span></li>`);
+                        aggregatedWBSLines.push(`<li><span>🔹 ${task}</span> <span class="matrix-badge">⏳ QTO Pay Budget: $${rowLaborPayout.toFixed(2)}</span></li>`);
                     });
                 }
                 if (spec.mats) {
@@ -714,7 +714,7 @@
             document.getElementById('materialsContentList').innerHTML = aggregatedMaterialLines.join("");
 
             document.getElementById('lbl_base_subtotal').innerText = "$" + grossCatalogSubtotal.toFixed(2);
-            document.getElementById('lbl_travel_surcharge').innerText = "+$" + mileageSurchargeFee.toFixed(2);
+            document.getElementById('travel_surcharge').innerText = "+$" + mileageSurchargeFee.toFixed(2);
             document.getElementById('lbl_indirect_overhead').innerText = "+$" + computedOverhead.toFixed(2);
             document.getElementById('lbl_business_expense').innerText = "+$" + computedExpenses.toFixed(2);
             document.getElementById('lbl_margin_buffer').innerText = "+$" + computedMarginBuffer.toFixed(2);
