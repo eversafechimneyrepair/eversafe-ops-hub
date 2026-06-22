@@ -69,13 +69,7 @@
         .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #475569; }
         .breakdown-row.grand-prime { border-bottom: none; padding-top: 15px; margin-top: 5px; }
         .total-banner { font-size: 28px; font-weight: 900; color: #16a34a; }
-        .breakdown-matrix-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
-        @media (max-width: 768px) { .breakdown-matrix-grid { grid-template-columns: 1fr; } }
-        .matrix-box { background: #fdfdfd; border: 1px solid #cbd5e1; border-radius: 6px; padding: 15px; }
-        .matrix-box h4 { font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 4px; margin-bottom: 8px; letter-spacing: 0.5px; }
-        .matrix-list { list-style: none; font-size: 12.5px; color: #334155; text-align: left; padding-top:4px; }
-        .matrix-list li { padding: 5px 0; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-        .matrix-badge { font-size: 10px; font-weight: bold; background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; }
+        
         .btn-action { width: 100%; max-width: 360px; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 25px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed !important; box-shadow: none !important; }
         
@@ -253,21 +247,6 @@
             <div id="gatekeeperCodeViolationTray" class="gatekeeper-panel"></div>            
             <div id="localityLicensingGatekeeperTray" class="licensing-panel"></div>            
             <div id="dependencyAlertTray" class="dependency-alert-box" style="display:none;"></div>
-            
-            <div class="breakdown-matrix-grid">                                
-                <div class="matrix-box" id="wbsPanelMatrix">                                        
-                    <h4>📋 Work Breakdown Structure &amp; Budgeted Labor Hours</h4>                                        
-                    <ul class="matrix-list" id="wbsContentList">                                                
-                        <li style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</li>                                        
-                    </ul>                                
-                </div>                                
-                <div class="matrix-box" id="materialsPanelMatrix">                                        
-                    <h4>📦 Required Materials Matrix Allocation &amp; Warehouse Picking Sheet</h4>                                        
-                    <ul class="matrix-list" id="materialsContentList">                                                
-                        <li style="color:#94a3b8; font-style:italic;">No materials allocated.</li>                                        
-                    </ul>                                
-                </div>                        
-            </div>
 
             <div class="revenue-breakdown-card">                
                 <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                
@@ -383,7 +362,6 @@
 
             "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Anti-Puddling Chase Top Cover Pan (per sq ft)", OH_LUCAS: 48.00, OH_WOOD: 48.00, OH_MID_DIST: 48.00, OH_EXTENDED: 48.00, MI_MONROE_CORE: 54.00, MI_MONROE_OUTER: 54.00, MI_WASHTENAW_MID: 62.00, MI_EXTENDED: 62.00, dynamic: true, defQty: 6, unit: "sq ft", matCost: 15.00, labRate: 55.00, labHours: 0.25, wbs: ["Pop off rusted tracking sheet covers", "Anchor custom cross-bent stainless pans over top chase framing"], mats: ["Custom cross-bent 24-gauge stainless steel chase top pans"] },
 
-            // 💎 NEW STRUCTURAL COMPONENTS & PROTECTIVE MATERIALS ENTRIES ADDED BELOW
             "COMP_CROWN_PRECAST":   { cat: "COMPONENTS", label: "Precast Concrete Engineered Chimney Crown Slab Installation", OH_LUCAS: 495.00, OH_WOOD: 495.00, OH_MID_DIST: 495.00, OH_EXTENDED: 495.00, MI_MONROE_CORE: 525.00, MI_MONROE_OUTER: 525.00, MI_WASHTENAW_MID: 575.00, MI_EXTENDED: 575.00, dynamic: false, matCost: 145.00, labRate: 55.00, labHours: 2.5, wbs: ["Dismantle compromised old crown materials and wire-brush clean structural base surfaces", "Lay uniform layer of structural high-bond layout mortar as an engineered leveling pad", "Hoist, level, and precisely anchor the industrial precast concrete crown slab plumb over flue lines", "Seal internal chimney flue tile projections with premium polymer expansion shields"], mats: ["Premium architectural-grade precast concrete crown unit core", "High-bond structural masonry mortar setup compound packs", "Industrial grade weatherproofing high-temp silicone sealant tubes"] },
             "COMP_CAP_SINGLE":      { cat: "COMPONENTS", label: "Standard Single-Flue Stainless Steel Protective Chimney Cap", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 195.00, MI_MONROE_OUTER: 195.00, MI_WASHTENAW_MID: 215.00, MI_EXTENDED: 215.00, dynamic: false, matCost: 45.00, labRate: 55.00, labHours: 0.75, wbs: ["Inspect and prep tile terminal projection contact lines to guarantee flush mounting boundaries", "Position single-flue bracket base framework squarely over tile extension edge fields", "Lock down stainless steel compression anchoring hex screws securely against chimney tile structure"], mats: ["Premium heavy-gauge single-flue stainless steel protective chimney cap assembly", "Stainless steel mechanical attachment clamping hex fasteners package"] },
             "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", OH_LUCAS: 375.00, OH_WOOD: 375.00, OH_MID_DIST: 375.00, OH_EXTENDED: 375.00, MI_MONROE_CORE: 415.00, MI_MONROE_OUTER: 415.00, MI_WASHTENAW_MID: 475.00, MI_EXTENDED: 475.00, dynamic: false, matCost: 165.00, labRate: 55.00, labHours: 1.5, wbs: ["Drill tap anchor sleeve screws directly into concrete pads", "Apply silicone seal tracking beads underneath corner tracks"], mats: ["Custom engineered top-mount stainless steel multi-flue caps", "Tapcon structural anchoring masonry screws bundle"] },
@@ -584,7 +562,6 @@
             else if (elevationStories === "3") { heightElevationLaborScalar = 1.35; elevationLabelDisplay = "3+ Story Extreme Roof"; }
 
             var tbody = document.getElementById('bidTableBody');
-            
             var grossCatalogSubtotal = 0;
             
             var internalSumMaterialCosts = 0;
@@ -593,14 +570,10 @@
             var internalSumLeoPartnerCut = 0;
             var internalSumEverSafeRetained = 0;
 
-            var aggregatedWBSLines = [];
-            var aggregatedMaterialLines = [];
-
             var hasLinerActive = false;
             var hasPrerequisiteActive = false;
             var hasBlanketWrapActive = false;
             var hasStructuralWorkActive = false;
-            
             var activeCodeInfractions = [];
 
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
@@ -622,8 +595,6 @@
                 document.getElementById('gatekeeperCodeViolationTray').style.display = "none";
                 document.getElementById('localityLicensingGatekeeperTray').style.display = "none";
                 document.getElementById('masterSubmitProceedBtn').disabled = false;
-                document.getElementById('wbsContentList').innerHTML = '<li style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</li>';
-                document.getElementById('materialsContentList').innerHTML = '<li style="color:#94a3b8; font-style:italic;">No materials allocated.</li>';
                 calculateProfitThermometer(0, 0);
                 return;
             }
@@ -669,7 +640,6 @@
 
                 if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
                     rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
-                    
                     var rowNetProfitPool = rowCalculatedTotal - rowMatCost - rowHelperPayout;
                     if (rowNetProfitPool < 0) rowNetProfitPool = 0; 
                     
@@ -754,32 +724,9 @@
                 
                 var labelWithQty = spec.dynamic ? `${displayLabel} (Qty: ${item.qty} ${spec.unit})` : displayLabel;
                 GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
-
-                if (spec.wbs) {
-                    aggregatedWBSLines.push(`<li style="background:#f1f5f9; font-weight:800; color:var(--primary-light); padding:8px 10px; border-radius:4px; margin-top:8px;">🛠️ ${displayLabel} <span class="matrix-badge" style="background:var(--accent); color:white; font-size:11px;">⏳ Total: ${rowHours.toFixed(1)} hrs</span></li>`);
-                    spec.wbs.forEach(function(task) {
-                        aggregatedWBSLines.push(`<li style="padding-left: 18px; font-size: 12px; color: #475569; border-bottom: none; padding-top: 3px; padding-bottom: 3px;">🔹 ${task}</li>`);
-                    });
-                }
-                
-                if (spec.mats) {
-                    aggregatedMaterialLines.push(`<li style="background:#f0fdf4; font-weight:800; color:#166534; padding:8px 10px; border-radius:4px; margin-top:8px;">📦 ${displayLabel} <span class="matrix-badge" style="background:#059669; color:white; font-size:11px;">Total Cost: $${rowMatCost.toFixed(2)}</span></li>`);
-                    spec.mats.forEach(function(mat, mIdx) {
-                        var scalingText = (spec.dynamic && mIdx === 0) ? ` <span style="color:#b45309; font-weight:bold;">(${item.qty} ${spec.unit})</span>` : '';
-                        var displayMatName = mat;
-                        if (spec.cat === "RELINING") displayMatName = mat.replace("6-Inch", flueSize + "-Inch");
-                        if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = mat.replace("brick", chimneyMaterial.toLowerCase() + " structures");
-                        
-                        aggregatedMaterialLines.push(`<li style="padding-left: 18px; font-size: 12px; color: #475569; border-bottom: none; padding-top: 3px; padding-bottom: 3px;">▪️ ${displayMatName}${scalingText}</li>`);
-                    });
-                }
             });
 
             tbody.innerHTML = htmlConstructionBuffer;
-
-            if (elevationStories === "3" && hasStructuralWorkActive) {
-                aggregatedWBSLines.unshift(`<li><span style="color:var(--danger); font-weight:700;">⚠️ MANDATORY RIGGING OPERATION:</span> <span style="color:#1e40af; font-weight:600;">Erect MIOSHA-compliant structural safety fall-protection harnesses &amp; vertical anchor systems before ascending roof lines.</span></li>`);
-            }
 
             if (chimneyMaterial === "PREFAB" && flueSize === "10" && hasLinerActive) {
                 activeCodeInfractions.push(`❌ <b>NFPA 211 Safety Violation:</b> 10-Inch industrial diameter flue configurations exceed the maximum internal footprint clearances allowed for combustibles inside standard pre-fabricated siding chase hulls.`);
@@ -874,9 +821,6 @@
             var absoluteGrandTotal = taxableSubtotal + computedTax;
             
             GLOBAL_GRAND_TOTAL = absoluteGrandTotal;
-
-            document.getElementById('wbsContentList').innerHTML = aggregatedWBSLines.length > 0 ? aggregatedWBSLines.join("") : '<li><span style="color:#94a3b8; font-style:italic;">No tasks compiled in active scope.</span></li>';
-            document.getElementById('materialsContentList').innerHTML = aggregatedMaterialLines.length > 0 ? aggregatedMaterialLines.join("") : '<li><span style="color:#94a3b8; font-style:italic;">No materials allocated.</span></li>';
 
             document.getElementById('lbl_base_subtotal').innerText = "$" + grossCatalogSubtotal.toFixed(2);
             document.getElementById('lbl_travel_surcharge').innerText = "+$" + mileageSurchargeFee.toFixed(2);
