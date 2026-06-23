@@ -43,8 +43,9 @@
 
         .grid-3 { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 12px; margin-bottom: 15px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .grid-matrix { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 0; }
-        @media (max-width: 1000px) { .grid-matrix { grid-template-columns: 1fr 1fr; gap: 8px; } }
+        /* Adjusted to 6 columns to fit the new design dropdown */
+        .grid-matrix { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 0; }
+        @media (max-width: 1000px) { .grid-matrix { grid-template-columns: 1fr 1fr 1fr; gap: 8px; } }
         @media (max-width: 600px) { .grid-3, .grid-2, .grid-matrix { grid-template-columns: 1fr; gap: 8px; } }
 
         .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
@@ -177,6 +178,15 @@
                             <option value="1" selected>1 Story (Base)</option>
                             <option value="2">2 Stories (+15% Labor Buffer)</option>
                             <option value="3">3+ Stories [+35% Labor Buffer]</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span style="font-size:10px; font-weight:bold; color:#6b21a8; text-transform:uppercase;">Design Complexity</span>
+                        <select id="architecturalDesignSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
+                            <option value="STANDARD" selected>Standard Layout</option>
+                            <option value="SOLDIER">Soldier Band Courses (+20%)</option>
+                            <option value="CORBELED">Corbeled Step-Out Top (+35%)</option>
+                            <option value="TAPERED">Tapered Wide Base (+40%)</option>
                         </select>
                     </div>
                 </div>
@@ -608,6 +618,7 @@
             var chimneyMaterial = document.getElementById('chimneyTypeSelector').value;
             var propertyEra = document.getElementById('propertyAgeSelector').value;
             var elevationStories = document.getElementById('workingElevationSelector').value;
+            var architecturalDesign = document.getElementById('architecturalDesignSelector').value; // NEW SELECTOR
             var laborPayoutModel = document.getElementById('laborPayoutModelSelector').value;
 
             var mileageSurchargeFee = TRAVEL_SURCHARGES[zone] || 0.00;
@@ -632,6 +643,13 @@
             var elevationLabelDisplay = "Low Elevation";
             if (elevationStories === "2") { heightElevationLaborScalar = 1.15; elevationLabelDisplay = "2-Story Roof"; }
             else if (elevationStories === "3") { heightElevationLaborScalar = 1.35; elevationLabelDisplay = "3+ Story Extreme Roof"; }
+
+            // 🏛️ NEW: DESIGN COMPLEXITY SCALAR
+            var designComplexityScalar = 1.0;
+            var designLabelDisplay = "";
+            if (architecturalDesign === "SOLDIER") { designComplexityScalar = 1.20; designLabelDisplay = "Soldier Band Courses"; }
+            else if (architecturalDesign === "CORBELED") { designComplexityScalar = 1.35; designLabelDisplay = "Corbeled Step-Out Top"; }
+            else if (architecturalDesign === "TAPERED") { designComplexityScalar = 1.40; designLabelDisplay = "Tapered Wide Base"; }
 
             var tbody = document.getElementById('bidTableBody');
             var grossCatalogSubtotal = 0;
@@ -695,6 +713,9 @@
                 var currentItemDiameterScalar = (spec.cat === "RELINING" || spec.cat === "COMPONENTS" || spec.cat === "MASONRY" || spec.cat === "PREFAB_CHASE") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "COMPONENTS" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
                 
+                // ISOLATED COMPLEXITY MULTIPLIER (Only affects masonry categories)
+                var currentItemDesignScalar = (spec.cat === "MASONRY") ? designComplexityScalar : 1.0;
+                
                 var currentItemFlueFootprintScalar = 1.0;
                 if (spec.cat === "MASONRY" || item.key.includes("CROWN") || item.key.includes("CHASE")) {
                     currentItemFlueFootprintScalar = 1.0 + (flueQty - 1) * 0.25; 
@@ -707,12 +728,12 @@
 
                 var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL" || item.key === "DIAG_VIDEO_L2" || item.key === "INSP_NFPA_LEVEL_2" || item.key === "COMP_CAP_SINGLE") ? flueQty : 1;
 
-                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar * environmentalPriceScalar * currentItemFlueFootprintScalar);
+                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar * environmentalPriceScalar * currentItemFlueFootprintScalar * currentItemDesignScalar);
                 var rowCalculatedTotal = appliedUnitRate * item.qty * currentItemFlueMultiplier;
                 grossCatalogSubtotal += rowCalculatedTotal;
 
-                var rowMatCost = spec.matCost * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * currentItemFlueMultiplier * currentItemFlueFootprintScalar;
-                var rowHours   = spec.labHours * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * (currentItemFlueMultiplier * 0.85) * eraLaborScalar * heightElevationLaborScalar * currentItemFlueFootprintScalar;
+                var rowMatCost = spec.matCost * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * currentItemFlueMultiplier * currentItemFlueFootprintScalar * currentItemDesignScalar;
+                var rowHours   = spec.labHours * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * (currentItemFlueMultiplier * 0.85) * eraLaborScalar * heightElevationLaborScalar * currentItemFlueFootprintScalar * currentItemDesignScalar;
                 
                 var rowTotalLaborPool = 0;   
                 var rowHelperPayout = 0;
@@ -765,6 +786,11 @@
                 if (propertyEra !== "MODERN" || elevationStories !== "1") displayLabel += " [Scope: " + eraLabelDisplay + " / " + elevationLabelDisplay + "]";
                 if (flueQty > 1 && (spec.cat === "MASONRY" || item.key.includes("CROWN"))) displayLabel += " [x" + flueQty + " Flues System Footprint Package]";
                 if (currentItemFlueMultiplier > 1 && item.key === "COMP_CAP_SINGLE") displayLabel += " [x" + currentItemFlueMultiplier + " Separate Terminal Caps Allocated]";
+                
+                // NEW: Append Design Complexity Label
+                if (spec.cat === "MASONRY" && architecturalDesign !== "STANDARD") {
+                    displayLabel += " [" + designLabelDisplay + " Applied]";
+                }
 
                 var splitPayoutDisplayHtml = (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
                     '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
