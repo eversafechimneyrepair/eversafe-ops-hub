@@ -63,8 +63,6 @@
         .licensing-panel ul { list-style: none; margin-top: 8px; padding-left: 2px; }
         .licensing-panel ul li { padding: 4px 0; font-weight: 600; color: #4c1d95; display: flex; align-items: center; gap: 6px; }
 
-        .dependency-alert-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 12px 16px; margin-top: -5px; margin-bottom: 15px; font-size: 13px; font-weight: 500; color: #1e40af; display: flex; justify-content: space-between; align-items: center; }
-        .btn-quick-add { background: #2563eb; color: white; border: none; padding: 5px 12px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
         .revenue-breakdown-card { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 20px; margin-top: 20px; }
         .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #475569; }
         .breakdown-row.grand-prime { border-bottom: none; padding-top: 15px; margin-top: 5px; }
@@ -81,7 +79,6 @@
         @media(max-width: 768px) { .inline-breakdown-card { grid-template-columns: 1fr; gap: 10px; } }
         .inline-breakdown-title { font-size: 10px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9; letter-spacing: 0.5px; }
         
-        /* 💎 FIXED INLINE TEXT WRAPPING CSS */
         .inline-list { list-style: none; padding: 0; margin: 0; font-size: 12px; color: #475569; line-height: 1.45; text-align: left; }
         .inline-list li { margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px; }
         .bullet-icon { flex-shrink: 0; display: inline-block; width: 14px; text-align: center; }
@@ -842,15 +839,6 @@
             } else {
                 infractionPanel.style.display = "none";
                 masterSubmitBtn.disabled = false;
-            }
-
-            var alertTray = document.getElementById('dependencyAlertTray');
-            if (hasLinerActive && !hasPrerequisiteActive && activeCodeInfractions.length === 0) {
-                alertTray.innerHTML = '<span>⚠️ <b>Reline Prerequisite Suggestion:</b> Flue liners typically require an operational sweep or clay tile knockout run.</span>' +
-                                      '<button class="btn-quick-add" onclick="executeDirectCartAddition(\'LINE_TILE_REMOVAL\')">➕ Quick-Add Demo Knockout</button>';
-                alertTray.style.display = "flex";
-            } else {
-                alertTray.style.display = "none";
             }
 
             var baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
