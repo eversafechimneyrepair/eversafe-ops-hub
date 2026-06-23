@@ -63,6 +63,8 @@
         .licensing-panel ul { list-style: none; margin-top: 8px; padding-left: 2px; }
         .licensing-panel ul li { padding: 4px 0; font-weight: 600; color: #4c1d95; display: flex; align-items: center; gap: 6px; }
 
+        .dependency-alert-box { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 12px 16px; margin-top: -5px; margin-bottom: 15px; font-size: 13px; font-weight: 500; color: #1e40af; display: flex; justify-content: space-between; align-items: center; }
+        .btn-quick-add { background: #2563eb; color: white; border: none; padding: 5px 12px; font-size: 11px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
         .revenue-breakdown-card { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 20px; margin-top: 20px; }
         .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #475569; }
         .breakdown-row.grand-prime { border-bottom: none; padding-top: 15px; margin-top: 5px; }
@@ -78,9 +80,12 @@
         .inline-breakdown-card { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.02); margin-top: -2px; }
         @media(max-width: 768px) { .inline-breakdown-card { grid-template-columns: 1fr; gap: 10px; } }
         .inline-breakdown-title { font-size: 10px; font-weight: 800; text-transform: uppercase; display: block; margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f1f5f9; letter-spacing: 0.5px; }
+        
+        /* 💎 FIXED INLINE TEXT WRAPPING CSS */
         .inline-list { list-style: none; padding: 0; margin: 0; font-size: 12px; color: #475569; line-height: 1.45; text-align: left; }
-        .inline-list li { margin-bottom: 4px; display: flex; align-items: flex-start; gap: 6px; }
-        .inline-list li span { flex-shrink: 0; }
+        .inline-list li { margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px; }
+        .bullet-icon { flex-shrink: 0; display: inline-block; width: 14px; text-align: center; }
+        .bullet-text { flex-grow: 1; word-break: break-word; hyphens: auto; }
     </style>
 </head>
 <body>
@@ -397,7 +402,7 @@
             "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Anti-Puddling Chase Top Cover Pan (per sq ft)", OH_LUCAS: 48.00, OH_WOOD: 48.00, OH_MID_DIST: 48.00, OH_EXTENDED: 48.00, MI_MONROE_CORE: 54.00, MI_MONROE_OUTER: 54.00, MI_WASHTENAW_MID: 62.00, MI_EXTENDED: 62.00, dynamic: true, defQty: 6, unit: "sq ft", matCost: 15.00, labRate: 55.00, labHours: 0.25, wbs: ["Pop off rusted tracking sheet covers", "Anchor custom cross-bent stainless pans over top chase framing"], mats: ["Custom cross-bent 24-gauge stainless steel chase top pans"] },
             "CHASE_COPPER_PAN":     { cat: "PREFAB_CHASE", label: "Custom Heavy-Gauge Copper Chase Top Cover Pan (per sq ft)", OH_LUCAS: 105.00, OH_WOOD: 105.00, OH_MID_DIST: 105.00, OH_EXTENDED: 105.00, MI_MONROE_CORE: 115.00, MI_MONROE_OUTER: 115.00, MI_WASHTENAW_MID: 135.00, MI_EXTENDED: 135.00, dynamic: true, defQty: 6, unit: "sq ft", matCost: 45.00, labRate: 55.00, labHours: 0.35, wbs: ["Remove rusted galvanized tracking covers", "Install custom cross-bent heavy-gauge copper architectural pan", "Seal storm collars and flue penetrations with copper-compatible geocel"], mats: ["Custom cross-bent architectural copper chase pan stock"] },
 
-            "COMP_CROWN_PRECAST":   { cat: "COMPONENTS", label: "Precast Concrete Engineered Chimney Crown Slab Installation", OH_LUCAS: 495.00, OH_WOOD: 495.00, OH_MID_DIST: 495.00, OH_EXTENDED: 495.00, MI_MONROE_CORE: 525.00, MI_MONROE_OUTER: 525.00, MI_WASHTENAW_MID: 575.00, MI_EXTENDED: 575.00, dynamic: false, matCost: 145.00, labRate: 55.00, labHours: 2.5, wbs: ["Dismantle compromised old crown materials and wire-brush clean structural base surfaces", "Lay uniform layer of structural high-bond layout mortar as an engineered leveling pad", "Hoist, level, and precisely anchor the industrial precast concrete crown slab plumb over flue lines", "Seal internal chimney flue tile projections with premium polymer expansion shields"], mats: ["Premium architectural-grade precast concrete crown unit core", "High-bond structural masonry mortar setup compound packs", "Industrial grade weatherproofing high-temp silicone sealant tubes"] },
+            "COMP_CROWN_PRECAST":   { cat: "COMPONENTS", label: "Precast Concrete Engineered Chimney Crown Slab (per sq ft)", OH_LUCAS: 75.00, OH_WOOD: 75.00, OH_MID_DIST: 75.00, OH_EXTENDED: 75.00, MI_MONROE_CORE: 85.00, MI_MONROE_OUTER: 85.00, MI_WASHTENAW_MID: 95.00, MI_EXTENDED: 95.00, dynamic: true, defQty: 8, unit: "sq ft", matCost: 22.00, labRate: 55.00, labHours: 0.35, wbs: ["Dismantle compromised old crown materials and wire-brush clean structural base surfaces", "Lay uniform layer of structural high-bond layout mortar as an engineered leveling pad", "Hoist, level, and precisely anchor the industrial precast concrete crown slab plumb over flue lines", "Seal internal chimney flue tile projections with premium polymer expansion shields"], mats: ["Premium architectural-grade precast concrete crown unit core", "High-bond structural masonry mortar setup compound packs", "Industrial grade weatherproofing high-temp silicone sealant tubes"] },
             "COMP_CAP_SINGLE":      { cat: "COMPONENTS", label: "Standard Single-Flue Stainless Steel Protective Chimney Cap", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 195.00, MI_MONROE_OUTER: 195.00, MI_WASHTENAW_MID: 215.00, MI_EXTENDED: 215.00, dynamic: false, matCost: 45.00, labRate: 55.00, labHours: 0.75, wbs: ["Inspect and prep tile terminal projection contact lines to guarantee flush mounting boundaries", "Position single-flue bracket base framework squarely over tile extension edge fields", "Lock down stainless steel compression anchoring hex screws securely against chimney tile structure"], mats: ["Premium heavy-gauge single-flue stainless steel protective chimney cap assembly", "Stainless steel mechanical attachment clamping hex fasteners package"] },
             "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", OH_LUCAS: 375.00, OH_WOOD: 375.00, OH_MID_DIST: 375.00, OH_EXTENDED: 375.00, MI_MONROE_CORE: 415.00, MI_MONROE_OUTER: 415.00, MI_WASHTENAW_MID: 475.00, MI_EXTENDED: 475.00, dynamic: false, matCost: 165.00, labRate: 55.00, labHours: 1.5, wbs: ["Drill tap anchor sleeve screws directly into concrete pads", "Apply silicone seal tracking beads underneath corner tracks"], mats: ["Custom engineered top-mount stainless steel multi-flue caps", "Tapcon structural anchoring masonry screws bundle"] },
             "COMP_TOP_DAMPER":      { cat: "COMPONENTS", label: "Energy-Saving Top-Mount Sealing Damper System", OH_LUCAS: 395.00, OH_WOOD: 395.00, OH_MID_DIST: 395.00, OH_EXTENDED: 395.00, MI_MONROE_CORE: 425.00, MI_MONROE_OUTER: 425.00, MI_WASHTENAW_MID: 475.00, MI_EXTENDED: 475.00, dynamic: false, matCost: 165.00, labRate: 55.00, labHours: 1.5, wbs: ["Remove rusted or seized baseline throat damper hardware", "Bed lock-top damper assembly into silicone sealant at top of flue tile", "Drop stainless steel control cable down flue and anchor bracket inside firebox"], mats: ["Lock-Top or Lyemance top-sealing damper unit", "Stainless steel control cable and mounting bracket", "High-temp silicone sealant"] },
@@ -664,7 +669,7 @@
                 document.getElementById('localityLicensingGatekeeperTray').style.display = "none";
                 document.getElementById('masterSubmitProceedBtn').disabled = false;
                 
-                document.getElementById('smartRecommendationsTray').innerHTML = ""; // Clear tips
+                document.getElementById('smartRecommendationsTray').innerHTML = ""; 
                 calculateProfitThermometer(0, 0);
                 return;
             }
@@ -771,10 +776,10 @@
                 var inlineWbsElements = "";
                 if (spec.wbs) {
                     spec.wbs.forEach(function(taskText) {
-                        inlineWbsElements += '<li><span>🔹</span><span>' + taskText + '</span></li>';
+                        inlineWbsElements += '<li><span class="bullet-icon">🔹</span><span class="bullet-text">' + taskText + '</span></li>';
                     });
                 } else {
-                    inlineWbsElements = '<li><span>🔹</span><span>Generic structural implementation run performed.</span></li>';
+                    inlineWbsElements = '<li><span class="bullet-icon">🔹</span><span class="bullet-text">Generic structural implementation run performed.</span></li>';
                 }
 
                 var inlineMatElements = "";
@@ -784,10 +789,10 @@
                         var displayMatName = matText;
                         if (spec.cat === "RELINING") displayMatName = matText.replace("6-Inch", flueSize + "-Inch");
                         if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = matText.replace("brick", chimneyMaterial.toLowerCase() + " structures");
-                        inlineMatElements += '<li><span>▪️</span><span>' + displayMatName + scalingText + '</span></li>';
+                        inlineMatElements += '<li><span class="bullet-icon">▪️</span><span class="bullet-text">' + displayMatName + scalingText + '</span></li>';
                     });
                 } else {
-                    inlineMatElements = '<li><span>▪️</span><span>No isolated picking warehouse raw items assigned.</span></li>';
+                    inlineMatElements = '<li><span class="bullet-icon">▪️</span><span class="bullet-text">No isolated picking warehouse raw items assigned.</span></li>';
                 }
 
                 htmlConstructionBuffer += '<tr style="border-bottom:none;">' +
@@ -837,6 +842,15 @@
             } else {
                 infractionPanel.style.display = "none";
                 masterSubmitBtn.disabled = false;
+            }
+
+            var alertTray = document.getElementById('dependencyAlertTray');
+            if (hasLinerActive && !hasPrerequisiteActive && activeCodeInfractions.length === 0) {
+                alertTray.innerHTML = '<span>⚠️ <b>Reline Prerequisite Suggestion:</b> Flue liners typically require an operational sweep or clay tile knockout run.</span>' +
+                                      '<button class="btn-quick-add" onclick="executeDirectCartAddition(\'LINE_TILE_REMOVAL\')">➕ Quick-Add Demo Knockout</button>';
+                alertTray.style.display = "flex";
+            } else {
+                alertTray.style.display = "none";
             }
 
             var baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
@@ -917,7 +931,6 @@
                 calculateProfitThermometer(taxableSubtotal, absoluteInternalCompanyCost);
             }
 
-            // 🚀 TRIGGER THE SMART RECOMMENDATION ENGINE
             evaluateSmartRecommendations();
         }
 
