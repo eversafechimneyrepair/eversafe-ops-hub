@@ -43,7 +43,6 @@
 
         .grid-3 { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 12px; margin-bottom: 15px; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        /* Adjusted to 6 columns to fit the new design dropdown */
         .grid-matrix { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 0; }
         @media (max-width: 1000px) { .grid-matrix { grid-template-columns: 1fr 1fr 1fr; gap: 8px; } }
         @media (max-width: 600px) { .grid-3, .grid-2, .grid-matrix { grid-template-columns: 1fr; gap: 8px; } }
@@ -183,10 +182,13 @@
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#6b21a8; text-transform:uppercase;">Design Complexity</span>
                         <select id="architecturalDesignSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
-                            <option value="STANDARD" selected>Standard Layout</option>
+                            <option value="STANDARD" selected>Standard Layout (1.0x)</option>
                             <option value="SOLDIER">Soldier Band Courses (+20%)</option>
+                            <option value="DENTIL">Dentil / Dog-Tooth Banding (+25%)</option>
                             <option value="CORBELED">Corbeled Step-Out Top (+35%)</option>
                             <option value="TAPERED">Tapered Wide Base (+40%)</option>
+                            <option value="PILASTER">Vertical Pilasters / Ribs (+45%)</option>
+                            <option value="TUDOR">Tudor Spiral / Twisted Stack (+100%)</option>
                         </select>
                     </div>
                 </div>
@@ -618,7 +620,7 @@
             var chimneyMaterial = document.getElementById('chimneyTypeSelector').value;
             var propertyEra = document.getElementById('propertyAgeSelector').value;
             var elevationStories = document.getElementById('workingElevationSelector').value;
-            var architecturalDesign = document.getElementById('architecturalDesignSelector').value; // NEW SELECTOR
+            var architecturalDesign = document.getElementById('architecturalDesignSelector').value;
             var laborPayoutModel = document.getElementById('laborPayoutModelSelector').value;
 
             var mileageSurchargeFee = TRAVEL_SURCHARGES[zone] || 0.00;
@@ -644,12 +646,15 @@
             if (elevationStories === "2") { heightElevationLaborScalar = 1.15; elevationLabelDisplay = "2-Story Roof"; }
             else if (elevationStories === "3") { heightElevationLaborScalar = 1.35; elevationLabelDisplay = "3+ Story Extreme Roof"; }
 
-            // 🏛️ NEW: DESIGN COMPLEXITY SCALAR
+            // 🏛️ DESIGN COMPLEXITY SCALAR
             var designComplexityScalar = 1.0;
             var designLabelDisplay = "";
             if (architecturalDesign === "SOLDIER") { designComplexityScalar = 1.20; designLabelDisplay = "Soldier Band Courses"; }
+            else if (architecturalDesign === "DENTIL") { designComplexityScalar = 1.25; designLabelDisplay = "Dentil / Dog-Tooth Banding"; }
             else if (architecturalDesign === "CORBELED") { designComplexityScalar = 1.35; designLabelDisplay = "Corbeled Step-Out Top"; }
             else if (architecturalDesign === "TAPERED") { designComplexityScalar = 1.40; designLabelDisplay = "Tapered Wide Base"; }
+            else if (architecturalDesign === "PILASTER") { designComplexityScalar = 1.45; designLabelDisplay = "Vertical Pilasters / Ribbing"; }
+            else if (architecturalDesign === "TUDOR") { designComplexityScalar = 2.00; designLabelDisplay = "Tudor Spiral Stack"; }
 
             var tbody = document.getElementById('bidTableBody');
             var grossCatalogSubtotal = 0;
@@ -713,7 +718,6 @@
                 var currentItemDiameterScalar = (spec.cat === "RELINING" || spec.cat === "COMPONENTS" || spec.cat === "MASONRY" || spec.cat === "PREFAB_CHASE") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "COMPONENTS" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
                 
-                // ISOLATED COMPLEXITY MULTIPLIER (Only affects masonry categories)
                 var currentItemDesignScalar = (spec.cat === "MASONRY") ? designComplexityScalar : 1.0;
                 
                 var currentItemFlueFootprintScalar = 1.0;
@@ -787,7 +791,6 @@
                 if (flueQty > 1 && (spec.cat === "MASONRY" || item.key.includes("CROWN"))) displayLabel += " [x" + flueQty + " Flues System Footprint Package]";
                 if (currentItemFlueMultiplier > 1 && item.key === "COMP_CAP_SINGLE") displayLabel += " [x" + currentItemFlueMultiplier + " Separate Terminal Caps Allocated]";
                 
-                // NEW: Append Design Complexity Label
                 if (spec.cat === "MASONRY" && architecturalDesign !== "STANDARD") {
                     displayLabel += " [" + designLabelDisplay + " Applied]";
                 }
