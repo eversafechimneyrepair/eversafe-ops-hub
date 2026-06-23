@@ -442,7 +442,7 @@
             Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
                 var entry = COMPLETE_PRICE_BOOK[key];
                 if (selectedCategory === "ALL" || entry.cat === selectedCategory) {
-                    itemSelector.innerHTML += `<option value="${key}">${entry.label}</option>`;
+                    itemSelector.innerHTML += '<option value="' + key + '">' + entry.label + '</option>';
                 }
             });
             if (selectedCategory !== "ALL") { document.getElementById('itemSearchFilter').value = ""; }
@@ -467,14 +467,13 @@
                 var entry = COMPLETE_PRICE_BOOK[key];
                 var labelMatches = entry.label.toLowerCase().includes(inputStr) || entry.cat.toLowerCase().includes(inputStr);
                 if (labelMatches) {
-                    itemSelector.innerHTML += `<option value="${key}">${entry.label}</option>`;
+                    itemSelector.innerHTML += '<option value="' + key + '">' + entry.label + '</option>';
                     optionsFoundCount++;
                 }
             });
-            if (optionsFoundCount === 0) { itemSelector.innerHTML += `<option value="">❌ No matches found for "${document.getElementById('itemSearchFilter').value}"</option>`; }
+            if (optionsFoundCount === 0) { itemSelector.innerHTML += '<option value="">❌ No matches found</option>'; }
         }
 
-        // 🛡️ SECURITY VAULT Overhaul - Protects loading cycle from variable type mismatches
         function importSilentFlagsFromDiagnosticMaps() {
             try {
                 var flagsStr = localStorage.getItem('current_wo_price_book_items');
@@ -500,14 +499,14 @@
                     }
                 });
             } catch (err) {
-                console.log("Flag cache exception handled safely: " + err.toString());
+                console.log("Flag cache exception handled safely.");
                 ACTIVE_RUNNING_ESTIMATE = [];
             }
         }
 
         function injectItemFromCatalogSelection() {
             var itemKey = document.getElementById('catalogItemSelector').value;
-            if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) { alert("Selection Note: Please pick a verified scope item from the options list before clicking inject."); return; }
+            if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) { alert("Selection Note: Please pick a verified scope item."); return; }
             
             var blueprint = COMPLETE_PRICE_BOOK[itemKey];
             ACTIVE_RUNNING_ESTIMATE.push({ 
@@ -621,28 +620,33 @@
                 if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS" || spec.cat === "COMPONENTS") hasStructuralWorkActive = true;
                 
                 if (chimneyMaterial === "PREFAB" && (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING")) {
-                    activeCodeInfractions.push(`❌ <b>Structural Mismatch Error:</b> You have assigned a Masonry or Concrete repair line item (<b>${spec.label}</b>), but the chimney infrastructure is set to a Pre-Fab Siding Chase Box.`);
+                    activeCodeInfractions.push("❌ <b>Structural Mismatch Error:</b> You have assigned a Masonry or Concrete repair line item (<b>" + spec.label + "</b>), but the chimney infrastructure is set to a Pre-Fab Siding Chase Box.");
                 }
                 if (chimneyMaterial === "PREFAB" && item.key === "RMV_STACK_DOWN") {
-                    activeCodeInfractions.push(`❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>${spec.label}</b>), but the structural type is set to a Pre-Fab Siding Chase Box.`);
+                    activeCodeInfractions.push("❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>" + spec.label + "</b>), but the structural type is set to a Pre-Fab Siding Chase Box.");
                 }
 
-                var currentItemDiameterScalar = (spec.cat === "RELINING") ? diameterScalar : 1.0;
+                var currentItemDiameterScalar = (spec.cat === "RELINING" || spec.cat === "COMPONENTS" || spec.cat === "MASONRY" || spec.cat === "PREFAB_CHASE") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "COMPONENTS" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
                 
+                var currentItemFlueFootprintScalar = 1.0;
+                if (spec.cat === "MASONRY" || item.key.includes("CROWN") || item.key.includes("CHASE")) {
+                    currentItemFlueFootprintScalar = 1.0 + (flueQty - 1) * 0.25; 
+                }
+
                 var environmentalPriceScalar = 1.0;
                 if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "COMPONENTS" || spec.cat === "REMOVALS") {
                     environmentalPriceScalar = eraLaborScalar * heightElevationLaborScalar;
                 }
 
-                var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL" || item.key === "DIAG_VIDEO_L2" || item.key === "INSP_NFPA_LEVEL_2") ? flueQty : 1;
+                var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL" || item.key === "DIAG_VIDEO_L2" || item.key === "INSP_NFPA_LEVEL_2" || item.key === "COMP_CAP_SINGLE") ? flueQty : 1;
 
-                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar * environmentalPriceScalar);
+                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar * environmentalPriceScalar * currentItemFlueFootprintScalar);
                 var rowCalculatedTotal = appliedUnitRate * item.qty * currentItemFlueMultiplier;
                 grossCatalogSubtotal += rowCalculatedTotal;
 
-                var rowMatCost = spec.matCost * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * currentItemFlueMultiplier;
-                var rowHours   = spec.labHours * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * (currentItemFlueMultiplier * 0.85) * eraLaborScalar * heightElevationLaborScalar;
+                var rowMatCost = spec.matCost * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * currentItemFlueMultiplier * currentItemFlueFootprintScalar;
+                var rowHours   = spec.labHours * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * (currentItemFlueMultiplier * 0.85) * eraLaborScalar * heightElevationLaborScalar * currentItemFlueFootprintScalar;
                 
                 var rowTotalLaborPool = 0;   
                 var rowHelperPayout = 0;
@@ -693,13 +697,13 @@
                 if (spec.cat === "RELINING") displayLabel = flueSize + "-Inch " + spec.label;
                 if (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") displayLabel = spec.label + " (" + chimneyTypeLabelDisplay + ")";
                 if (propertyEra !== "MODERN" || elevationStories !== "1") displayLabel += " [Scope: " + eraLabelDisplay + " / " + elevationLabelDisplay + "]";
-                if (currentItemFlueMultiplier > 1) displayLabel += " [x" + currentItemFlueMultiplier + " Flues Active]";
+                if (flueQty > 1 && (spec.cat === "MASONRY" || item.key.includes("CROWN"))) displayLabel += " [x" + flueQty + " Flues System Footprint Package]";
+                if (currentItemFlueMultiplier > 1 && item.key === "COMP_CAP_SINGLE") displayLabel += " [x" + currentItemFlueMultiplier + " Separate Terminal Caps Allocated]";
 
                 var splitPayoutDisplayHtml = (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
                     '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
                     '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-size:10px; font-weight:400; color:#64748b; display:block;">(' + rowHours.toFixed(1) + ' hrs)</span></div>';
 
-                // 💎 FLAT RE-CONCATENATION: Completely replaces dangerous nested backticks with safe string builders
                 var inlineWbsElements = "";
                 if (spec.wbs) {
                     spec.wbs.forEach(function(taskText) {
@@ -722,31 +726,29 @@
                     inlineMatElements = '<li><span>▪️</span><span>No isolated picking warehouse raw items assigned.</span></li>';
                 }
 
-                htmlConstructionBuffer += `
-                    <tr style="border-bottom:none;">
-                        <td style="font-weight: 700; font-size:13px; color: var(--primary); vertical-align: top; padding-top:14px;">${displayLabel}</td>
-                        <td style="text-align: center; vertical-align: top; padding-top:14px;">${variableInputHtml}</td>
-                        <td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:14px;">${splitPayoutDisplayHtml}</td>
-                        <td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$${rowMatCost.toFixed(2)}</td>
-                        <td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$${(rowMatCost + rowTotalLaborPool).toFixed(2)}</td>
-                        <td style="text-align: right; vertical-align: top; padding-top:10px;">${rateInputHtml}</td>
-                        <td style="text-align: center; vertical-align: top; padding-top:12px;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(${idx})">X</button></td>
-                    </tr>
-                    <tr>
-                        <td colspan="7" style="padding: 0 10px 14px 10px; border-top:none; background:#ffffff;">
-                            <div class="inline-breakdown-card">
-                                <div>
-                                    <span class="inline-breakdown-title" style="color:var(--primary-light);">📋 Work Breakdown Structure (⏳ ${rowHours.toFixed(1)} Labor Hours)</span>
-                                    <ul class="inline-list">${inlineWbsElements}</ul>
-                                </div>
-                                <div>
-                                    <span class="inline-breakdown-title" style="color:#166534;">📦 Warehouse Picking Sheets</span>
-                                    <ul class="inline-list">${inlineMatElements}</ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                htmlConstructionBuffer += '<tr style="border-bottom:none;">' +
+                    '<td style="font-weight: 700; font-size:13px; color: var(--primary); vertical-align: top; padding-top:14px;">' + displayLabel + '</td>' +
+                    '<td style="text-align: center; vertical-align: top; padding-top:14px;">' + variableInputHtml + '</td>' +
+                    '<td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:14px;">' + splitPayoutDisplayHtml + '</td>' +
+                    '<td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$' + rowMatCost.toFixed(2) + '</td>' +
+                    '<td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$' + (rowMatCost + rowTotalLaborPool).toFixed(2) + '</td>' +
+                    '<td style="text-align: right; vertical-align: top; padding-top:10px;">' + rateInputHtml + '</td>' +
+                    '<td style="text-align: center; vertical-align: top; padding-top:12px;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(' + idx + ')">X</button></td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td colspan="7" style="padding: 0 10px 14px 10px; border-top:none; background:#ffffff;">' +
+                        '<div class="inline-breakdown-card">' +
+                            '<div>' +
+                                '<span class="inline-breakdown-title" style="color:var(--primary-light);">📋 Work Breakdown Structure (⏳ ' + rowHours.toFixed(1) + ' Labor Hours)</span>' +
+                                '<ul class="inline-list">' + inlineWbsElements + '</ul>' +
+                            '</div>' +
+                            '<div>' +
+                                '<span class="inline-breakdown-title" style="color:#166534;">📦 Warehouse Picking Sheets</span>' +
+                                '<ul class="inline-list">' + inlineMatElements + '</ul>' +
+                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                    '</tr>';
                 
                 var labelWithQty = spec.dynamic ? displayLabel + " (Qty: " + item.qty + " " + spec.unit + ")" : displayLabel;
                 GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
@@ -755,10 +757,10 @@
             tbody.innerHTML = htmlConstructionBuffer;
 
             if (chimneyMaterial === "PREFAB" && flueSize === "10" && hasLinerActive) {
-                activeCodeInfractions.push(`❌ <b>NFPA 211 Safety Violation:</b> 10-Inch industrial diameter flue configurations exceed the maximum internal footprint clearances allowed for combustibles inside standard pre-fabricated siding chase hulls.`);
+                activeCodeInfractions.push("❌ <b>NFPA 211 Safety Violation:</b> 10-Inch industrial diameter flue configurations exceed the maximum internal footprint clearances allowed for combustibles inside standard pre-fabricated siding chase hulls.");
             }
             if (propertyEra === "HISTORIC" && hasLinerActive && !hasBlanketWrapActive) {
-                activeCodeInfractions.push(`❌ <b>NFPA 211 Historic Code Violation:</b> Pre-1940 / 1800s chimneys lack internal clay flue tile liners. Relining a historical masonry shaft without a 1/2-Inch Ceramic Thermal Blanket Wrap (<b>LINE_INSUL_BLANKET</b>) creates an extreme fire risk.`);
+                activeCodeInfractions.push("❌ <b>NFPA 211 Historic Code Violation:</b> Pre-1940 / 1800s chimneys lack internal clay flue tile liners. Relining a historical masonry shaft without a 1/2-Inch Ceramic Thermal Blanket Wrap (<b>LINE_INSUL_BLANKET</b>) creates an extreme fire risk.");
             }
 
             var infractionPanel = document.getElementById('gatekeeperCodeViolationTray');
@@ -775,8 +777,8 @@
 
             var alertTray = document.getElementById('dependencyAlertTray');
             if (hasLinerActive && !hasPrerequisiteActive && activeCodeInfractions.length === 0) {
-                alertTray.innerHTML = `<span>⚠️ <b>Reline Prerequisite Suggestion:</b> Flue liners typically require an operational sweep or clay tile knockout run.</span>
-                                       <button class="btn-quick-add" onclick="executeDirectCartAddition('LINE_TILE_REMOVAL')">➕ Quick-Add Demo Knockout</button>`;
+                alertTray.innerHTML = '<span>⚠️ <b>Reline Prerequisite Suggestion:</b> Flue liners typically require an operational sweep or clay tile knockout run.</span>' +
+                                      '<button class="btn-quick-add" onclick="executeDirectCartAddition(\'LINE_TILE_REMOVAL\')">➕ Quick-Add Demo Knockout</button>';
                 alertTray.style.display = "flex";
             } else {
                 alertTray.style.display = "none";
@@ -794,30 +796,21 @@
             if (ACTIVE_RUNNING_ESTIMATE.length > 0) {
                 if (zone === "OH_LUCAS") {
                     taxAuthorityLabel = "Lucas County, OH Tax Authority (7.75%):";
-                    licensingPanel.innerHTML = `
-                        <h4>⚖️ County Regulatory Matrix: Lucas County, OH (Toledo Framework)</h4>
-                        <ul>
-                            <li>City of Toledo Residential Building Permit ${hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[REQUIRED FOR REPAIRS]</span>' : '[Exempt]'}</li>
-                            <li>Toledo Division of Building Inspection Specialty Contractor Registration</li>
-                        </ul>`;
+                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Lucas County, OH (Toledo Framework)</h4><ul>' +
+                        '<li>City of Toledo Residential Building Permit ' + (hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[REQUIRED FOR REPAIRS]</span>' : '[Exempt]') + '</li>' +
+                        '<li>Toledo Division of Building Inspection Specialty Contractor Registration</li></ul>';
                     licensingPanel.style.display = "block";
                 } 
                 else if (zone === "OH_WOOD") {
                     taxAuthorityLabel = "Wood County, OH Tax Authority (6.75%):";
-                    licensingPanel.innerHTML = `
-                        <h4>⚖️ County Regulatory Matrix: Wood County, OH (Perrysburg / BG Framework)</h4>
-                        <ul>
-                            <li>Wood County Planning &amp; Building Inspection Mechanical/Structural Permit ${hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[MANDATORY REGISTRATION ACTIVE]</span>' : '[Exempt]'}</li>
-                        </ul>`;
+                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Wood County, OH (Perrysburg / BG Framework)</h4><ul>' +
+                        '<li>Wood County Planning &amp; Building Inspection Mechanical/Structural Permit ' + (hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[MANDATORY REGISTRATION ACTIVE]</span>' : '[Exempt]') + '</li></ul>';
                     licensingPanel.style.display = "block";
                 }
                 else if (zone === "OH_MID_DIST") {
                     taxAuthorityLabel = "Northwest OH District Tax Authority (7.25%):";
-                    licensingPanel.innerHTML = `
-                        <h4>⚖️ County Regulatory Matrix: Fulton / Henry / Ottawa / Sandusky Counties, OH</h4>
-                        <ul>
-                            <li>Local Municipal Inspection Filing Safety Sheets (Fremont/Sandusky Local Codes)</li>
-                        </ul>`;
+                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Fulton / Henry / Ottawa / Sandusky Counties, OH</h4><ul>' +
+                        '<li>Local Municipal Inspection Filing Safety Sheets (Fremont/Sandusky Local Codes)</li></ul>';
                     licensingPanel.style.display = "block";
                 }
                 else {
@@ -826,16 +819,13 @@
                     var needsMichiganLARA = taxableSubtotalVal >= 600 && hasStructuralWorkActive;
                     
                     var customMILog = zone === "MI_WASHTENAW_MID" || zone === "MI_EXTENDED" ? 
-                        `<li>Washtenaw Mechanical Venting Code Permit ${hasLinerActive ? '<span style="color:var(--danger); font-weight:900;">[MANDATORY PERMIT DISPATCH]</span>' : '[Exempt]'}</li>` :
-                        `<li>Monroe Municipal Mechanical Inspection Request Line</li>`;
+                        '<li>Washtenaw Mechanical Venting Code Permit ' + (hasLinerActive ? '<span style="color:var(--danger); font-weight:900;">[MANDATORY PERMIT DISPATCH]</span>' : '[Exempt]') + '</li>' :
+                        '<li>Monroe Municipal Mechanical Inspection Request Line</li>';
 
-                    licensingPanel.innerHTML = `
-                        <h4>⚖️ State Regulatory Matrix: Michigan Department of Licensing and Regulatory Affairs (LARA)</h4>
-                        <p style="font-size:12px; color:#6b21a8; font-weight:500;">Under MI Article 24 Public Act 299, any residential repair exceeding $600 requires valid contractor authentication.</p>
-                        <ul>
-                            <li>Michigan LARA Residential Builder or M&amp;A License ${needsMichiganLARA ? '<span style="color:var(--danger); font-weight:900;">[STATUTORY COMPLIANCE REQUIRED]</span>' : '[Exempt]'}</li>
-                            ${customMILog}
-                        </ul>`;
+                    licensingPanel.innerHTML = '<h4>⚖️ State Regulatory Matrix: Michigan Department of Licensing and Regulatory Affairs (LARA)</h4>' +
+                        '<p style="font-size:12px; color:#6b21a8; font-weight:500;">Under MI Article 24 Public Act 299, any residential repair exceeding $600 requires valid contractor authentication.</p><ul>' +
+                        '<li>Michigan LARA Residential Builder or M&amp;A License ' + (needsMichiganLARA ? '<span style="color:var(--danger); font-weight:900;">[STATUTORY COMPLIANCE REQUIRED]</span>' : '[Exempt]') + '</li>' +
+                        customMILog + '</ul>';
                     licensingPanel.style.display = "block";
                 }
             } else {
