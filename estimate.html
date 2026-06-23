@@ -187,8 +187,8 @@
                             <option value="DENTIL">Dentil / Dog-Tooth Banding (+25%)</option>
                             <option value="CORBELED">Corbeled Step-Out Top (+35%)</option>
                             <option value="TAPERED">Tapered Wide Base (+40%)</option>
-                            <option value="PILASTER">Vertical Pilasters / Ribs (+45%)</option>
-                            <option value="TUDOR">Tudor Spiral / Twisted Stack (+100%)</option>
+                            <option value="PILASTER">Vertical Pilasters / Ribbing (+45%)</option>
+                            <option value="TUDOR">Tudor Spiral Stack (+100%)</option>
                         </select>
                     </div>
                 </div>
@@ -266,7 +266,7 @@
                         <tr>                            
                             <th style="width: 35%;">Task Scope / Production Parameter</th>                            
                             <th style="width: 13%; text-align: center;">Takeoff Qty</th>                            
-                            <th style="width: 15%; text-align: center;">Labor Payout Split</th>                            
+                            <th style="width: 15%; text-align: left; padding-left:15px;">Labor Routing / Payout</th>                            
                             <th style="width: 11%; text-align: center;">Mat Cost</th>                            
                             <th style="width: 11%; text-align: center;">True Expense</th>                            
                             <th style="width: 11%; text-align: right;">UnitPrice [Ovr]</th>                            
@@ -334,6 +334,10 @@
                     <div class="partner-row">
                         <span>Leo's Subcontractor Cut (60% Net)</span>
                         <span id="leoNetPartnerTotal">$0.00</span>
+                    </div>
+                    <div class="partner-row" id="subContractorRow" style="display:none; color: #7e22ce;">
+                        <span>Subcontractor Escrow Budget</span>
+                        <span id="subNetPartnerTotal">$0.00</span>
                     </div>
                     <div class="partner-row ever-safe">
                         <span>EverSafe Retained Margin (40% Net)</span>
@@ -571,7 +575,8 @@
                             id: "FLAG_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
                             key: lookupTarget, 
                             qty: blueprint.dynamic ? blueprint.defQty : 1, 
-                            rateOverride: null 
+                            rateOverride: null,
+                            assignee: "LEO" // NEW: Default to in-house crew
                         });
                     }
                 });
@@ -590,7 +595,8 @@
                 id: "ITEM_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
                 key: itemKey, 
                 qty: blueprint.dynamic ? blueprint.defQty : 1, 
-                rateOverride: null 
+                rateOverride: null,
+                assignee: "LEO" // NEW: Default to in-house crew
             });
 
             document.getElementById('itemSearchFilter').value = "";
@@ -603,8 +609,15 @@
                 id: "QUICK_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
                 key: itemKey, 
                 qty: blueprint.dynamic ? blueprint.defQty : 1, 
-                rateOverride: null 
+                rateOverride: null,
+                assignee: "LEO" // NEW: Default to in-house crew
             });
+            recalculateMasterLedger();
+        }
+
+        // NEW: Function to handle switching labor between Leo and a Sub
+        function updateRowAssignee(idxTarget, newValue) {
+            ACTIVE_RUNNING_ESTIMATE[idxTarget].assignee = newValue;
             recalculateMasterLedger();
         }
 
@@ -664,6 +677,8 @@
             
             var internalSumLeoPartnerCut = 0;
             var internalSumEverSafeRetained = 0;
+            var internalSumSubcontractorCut = 0; // NEW: The Subcontractor Escrow Bucket
+
             var hasLinerActive = false;
             var hasPrerequisiteActive = false;
             var hasBlanketWrapActive = false;
@@ -742,41 +757,51 @@
                 var rowTotalLaborPool = 0;   
                 var rowHelperPayout = 0;
                 var rowLeoNetPayout = 0;
+                var rowSubPayout = 0; // NEW
                 var rowEverSafeRetained = 0;
 
                 var chosenHelperPct = parseFloat(document.getElementById('helperLaborValueInput').value) || 0;
+                var isSub = (item.assignee === "SUB"); // Check if row is assigned to a subcontractor
 
                 if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
-                    rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
+                    rowHelperPayout = isSub ? 0 : (rowCalculatedTotal * (chosenHelperPct / 100)); // Sub doesn't use Leo's helper
                     var rowNetProfitPool = rowCalculatedTotal - rowMatCost - rowHelperPayout;
                     if (rowNetProfitPool < 0) rowNetProfitPool = 0; 
                     
-                    rowLeoNetPayout = rowNetProfitPool * 0.60;
-                    rowEverSafeRetained = rowNetProfitPool * 0.40;
-                    
-                    rowTotalLaborPool = rowHelperPayout + rowLeoNetPayout; 
-                    internalSumLeoPartnerCut += rowLeoNetPayout;
+                    if (isSub) {
+                        rowSubPayout = rowNetProfitPool * 0.60;
+                        rowEverSafeRetained = rowNetProfitPool * 0.40;
+                        internalSumSubcontractorCut += rowSubPayout;
+                    } else {
+                        rowLeoNetPayout = rowNetProfitPool * 0.60;
+                        rowEverSafeRetained = rowNetProfitPool * 0.40;
+                        internalSumLeoPartnerCut += rowLeoNetPayout;
+                    }
                     internalSumEverSafeRetained += rowEverSafeRetained;
                 } 
                 else if (laborPayoutModel === "HOURLY_BURDENED") {                    
                     rowTotalLaborPool = (rowHours * spec.labRate) * 1.25; 
-                    rowLeoNetPayout = rowTotalLaborPool;
+                    if (isSub) { rowSubPayout = rowTotalLaborPool; internalSumSubcontractorCut += rowSubPayout; }
+                    else { rowLeoNetPayout = rowTotalLaborPool; internalSumLeoPartnerCut += rowLeoNetPayout; }
                 } else if (laborPayoutModel === "PIECE_RATE_20") {                    
                     rowTotalLaborPool = rowCalculatedTotal * 0.20;
-                    rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
-                    rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
+                    rowHelperPayout = isSub ? 0 : (rowCalculatedTotal * (chosenHelperPct / 100));
+                    if (isSub) { rowSubPayout = rowTotalLaborPool - rowHelperPayout; internalSumSubcontractorCut += rowSubPayout; }
+                    else { rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout; internalSumLeoPartnerCut += rowLeoNetPayout; }
                 } else if (laborPayoutModel === "SUBCONTRACTOR_30") {                    
                     rowTotalLaborPool = rowCalculatedTotal * 0.30;
-                    rowLeoNetPayout = rowTotalLaborPool;
+                    if (isSub) { rowSubPayout = rowTotalLaborPool; internalSumSubcontractorCut += rowSubPayout; }
+                    else { rowLeoNetPayout = rowTotalLaborPool; internalSumLeoPartnerCut += rowLeoNetPayout; }
                 } else if (laborPayoutModel === "CUSTOM_PERCENT") {
                     var customRatePct = parseFloat(document.getElementById('customLaborValueInput').value) || 0;
                     rowTotalLaborPool = rowCalculatedTotal * (customRatePct / 100);
-                    rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
-                    rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
+                    rowHelperPayout = isSub ? 0 : (rowCalculatedTotal * (chosenHelperPct / 100));
+                    if (isSub) { rowSubPayout = rowTotalLaborPool - rowHelperPayout; internalSumSubcontractorCut += rowSubPayout; }
+                    else { rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout; internalSumLeoPartnerCut += rowLeoNetPayout; }
                 }
 
                 internalSumMaterialCosts += rowMatCost;
-                internalSumLaborBurdens += rowTotalLaborPool;
+                internalSumLaborBurdens += (rowLeoNetPayout + rowSubPayout + rowHelperPayout); // Ensure true expense is captured
 
                 var variableInputHtml = spec.dynamic ? 
                     '<input type="number" class="dimension-input" value="' + item.qty + '" min="1" onchange="modifyQuantityIndexTarget(' + idx + ', this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">' + spec.unit + '</span>' : 
@@ -795,9 +820,21 @@
                     displayLabel += " [" + designLabelDisplay + " Applied]";
                 }
 
-                var splitPayoutDisplayHtml = (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
-                    '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
-                    '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-size:10px; font-weight:400; color:#64748b; display:block;">(' + rowHours.toFixed(1) + ' hrs)</span></div>';
+                // 🚀 NEW: Dynamic Line-Item Routing Dropdown
+                var assigneeSelectHtml = '<select onchange="updateRowAssignee(' + idx + ', this.value)" style="width:100%; font-size:10px; padding:4px; margin-top:0; margin-bottom:6px; font-weight:bold; border-radius:4px; border:1px solid #cbd5e1; background:' + (isSub ? '#f3e8ff' : '#f8fafc') + '; color:' + (isSub ? '#7e22ce' : '#0f172a') + ';">' +
+                    '<option value="LEO" ' + (!isSub ? 'selected' : '') + '>👷 Leo (In-House)</option>' +
+                    '<option value="SUB" ' + (isSub ? 'selected' : '') + '>🚐 Sub (Outsourced)</option>' +
+                '</select>';
+
+                var splitPayoutDisplayHtml = assigneeSelectHtml;
+                
+                if (isSub) {
+                    splitPayoutDisplayHtml += '<div style="font-size:12px; font-weight:900; color:#7e22ce;">$' + rowSubPayout.toFixed(2) + ' <span style="font-weight:600; color:#94a3b8;">Sub Escrow</span></div>';
+                } else {
+                    splitPayoutDisplayHtml += (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
+                        '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
+                        '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-size:10px; font-weight:400; color:#64748b; display:block;">(' + rowHours.toFixed(1) + ' hrs)</span></div>';
+                }
 
                 var inlineWbsElements = "";
                 if (spec.wbs) {
@@ -824,7 +861,7 @@
                 htmlConstructionBuffer += '<tr style="border-bottom:none;">' +
                     '<td style="font-weight: 700; font-size:13px; color: var(--primary); vertical-align: top; padding-top:14px;">' + displayLabel + '</td>' +
                     '<td style="text-align: center; vertical-align: top; padding-top:14px;">' + variableInputHtml + '</td>' +
-                    '<td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:14px;">' + splitPayoutDisplayHtml + '</td>' +
+                    '<td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:10px;">' + splitPayoutDisplayHtml + '</td>' +
                     '<td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$' + rowMatCost.toFixed(2) + '</td>' +
                     '<td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$' + (rowMatCost + rowTotalLaborPool).toFixed(2) + '</td>' +
                     '<td style="text-align: right; vertical-align: top; padding-top:10px;">' + rateInputHtml + '</td>' +
@@ -941,6 +978,16 @@
                 document.getElementById('partnerSplitDashboard').style.display = "block";
                 
                 document.getElementById('leoNetPartnerTotal').innerText = "$" + internalSumLeoPartnerCut.toFixed(2);
+                
+                // NEW: Reveal the Subcontractor tracking row if any item is subbed out
+                var subRow = document.getElementById('subContractorRow');
+                if (internalSumSubcontractorCut > 0) {
+                    document.getElementById('subNetPartnerTotal').innerText = "$" + internalSumSubcontractorCut.toFixed(2);
+                    subRow.style.display = "flex";
+                } else {
+                    subRow.style.display = "none";
+                }
+
                 document.getElementById('everSafeNetPartnerTotal').innerText = "$" + internalSumEverSafeRetained.toFixed(2);
             } else {
                 document.getElementById('partnerSplitDashboard').style.display = "none";
