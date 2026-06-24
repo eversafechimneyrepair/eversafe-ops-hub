@@ -23,10 +23,10 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; text-align: center; }
         
-        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: background-color 0.3s ease; }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
+        .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; border: 1px solid white; }
 
         .app-container { max-width: 1050px; margin: 0 auto; padding: 0 15px; text-align: left; }
         .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
@@ -47,7 +47,7 @@
         @media (max-width: 1000px) { .grid-matrix { grid-template-columns: 1fr 1fr 1fr; gap: 8px; } }
         @media (max-width: 600px) { .grid-3, .grid-2, .grid-matrix { grid-template-columns: 1fr; gap: 8px; } }
 
-        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
+        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; transition: background-color 0.3s ease; }
         
         .estimate-table-wrapper { width: 100%; overflow-x: auto; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 0 0 6px 6px; }
         .estimate-table { width: 100%; border-collapse: collapse; min-width: 850px; }
@@ -83,12 +83,15 @@
         .inline-list li { margin-bottom: 6px; display: flex; align-items: flex-start; gap: 6px; }
         .bullet-icon { flex-shrink: 0; display: inline-block; width: 14px; text-align: center; }
         .bullet-text { flex-grow: 1; word-break: break-word; hyphens: auto; }
+        
+        .entity-warning-mode .app-header { background-color: #c2410c; }
+        .entity-warning-mode .section-title { background-color: #c2410c; }
     </style>
 </head>
 <body>
-    <div class="app-header">
+    <div class="app-header" id="dynamicAppHeader">
         <div class="brand-row">
-            <div class="brand-text">EverSafe Operations Hub</div>
+            <div class="brand-text" id="dynamicBrandText">EverSafe Operations Hub</div>
             <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
         </div>
     </div>
@@ -97,6 +100,16 @@
             <h3>🧮 Project Estimate Builder</h3>
             <p class="subtitle">Internal calculation matrix. Infractions port silently from inspection maps. Adjust units, apply manual price overrides, and track profitability parameters below.</p>
             
+            <div style="background: #fdf4ff; border: 2px solid #d8b4fe; padding: 14px; border-radius: 6px; margin-bottom: 15px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">
+                <label class="control-header" style="color: #7e22ce; margin-top:0;">🏢 Operating Entity & Bookkeeping Route</label>
+                <select id="operatingEntitySelector" onchange="updateEntityContext()" style="color:#6b21a8; border-color:#d8b4fe; font-size:15px; padding:14px;">
+                    <option value="EVERSAFE" selected>EverSafe Corporate Lead (Standard Bookkeeping)</option>
+                    <option value="LEO_PERSONAL">Leo Personal Lead / Side Hustle (Isolated Ledger)</option>
+                    <option value="TINY_TOM">Tiny Tom Chimney Service (Isolated Ledger)</option>
+                </select>
+                <p style="font-size:10px; color:#a855f7; margin-top:6px; font-weight:600;">*Changing this isolates the data payload to prevent intermingling with EverSafe corporate books.</p>
+            </div>
+
             <div class="grid-3">
                 <div style="background: #fff4e6; border: 1px solid #ffe8cc; padding: 12px; border-radius: 6px;">
                     <label class="control-header" style="color: var(--accent-dark); margin-top:0;">📍 Service Territory</label>
@@ -119,7 +132,6 @@
                         <option value="HOURLY_BURDENED">Hourly Blended Crew ($55/hr Base + 25% True Burden)</option>
                         <option value="PIECE_RATE_20">Piece-Rate Installer Commission (20% Net Job Cut)</option>
                         <option value="CUSTOM_PERCENT">Custom Piece-Rate % (Variable Crew Allocation)</option>
-                        <option value="SUBCONTRACTOR_30">Outsourced Subcontractor Split Matrix (30% Flat Cut)</option>
                     </select>
                     
                     <div id="customLaborInputWrapper" style="display:none; margin-top: 8px;">
@@ -259,7 +271,7 @@
                 <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px; cursor:pointer;">Inject Selected Line Item into Bid Matrix ➔</button>
             </div>
 
-            <div class="section-title">Compiled Project Cost Matrix & Construction Takeoff Drawer</div>            
+            <div class="section-title" id="dynamicTableTitle">Compiled Project Cost Matrix & Construction Takeoff Drawer</div>            
             <div class="estimate-table-wrapper">                
                 <table class="estimate-table">                    
                     <thead>                        
@@ -289,6 +301,9 @@
                     <div>Gross Catalog Line Items Subtotal:</div>                                        
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
                 </div>                                
+                <div class="brand-row" style="display:none; height:0px;">
+                    <!-- Hidden element to maintain backwards structural variable binding fields -->
+                </div>
                 <div class="breakdown-row">                                        
                     <div>Travel & Commute Mileage Surcharge (Distance Fund):</div>                                        
                     <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
@@ -339,7 +354,7 @@
                         <span>Subcontractor Escrow Budget</span>
                         <span id="subNetPartnerTotal">$0.00</span>
                     </div>
-                    <div class="partner-row ever-safe">
+                    <div class="partner-row ever-safe" id="everSafeRetainedRow">
                         <span>EverSafe Retained Margin (40% Net)</span>
                         <span id="everSafeNetPartnerTotal">$0.00</span>
                     </div>
@@ -359,6 +374,10 @@
     
     <script>
         var DISMISSED_SMART_TIPS = [];
+
+        // 📡 TELEMETRY ALERTS CONFIGURATION
+        // PASTE YOUR ALERT ENDPOINT OR DISCORD WEBHOOK HERE TO TRACK USER LOGINS IN REAL TIME:
+        var SILENT_LOGGING_WEBHOOK_URL = "PASTE_YOUR_WEBHOOK_OR_ALERT_URL_HERE";
 
         var REGIONAL_TAX_RATES = { 
             "OH_LUCAS": 0.0775, "OH_WOOD": 0.0675, "OH_MID_DIST": 0.0725, "OH_EXTENDED": 0.0725,
@@ -423,7 +442,7 @@
 
             "APP_WOOD_INSERT":      { cat: "COMPONENTS", label: "Wood Burning Insert / Stove Installation & Integration", OH_LUCAS: 1250.00, OH_WOOD: 1250.00, OH_MID_DIST: 1250.00, OH_EXTENDED: 1250.00, MI_MONROE_CORE: 1350.00, MI_MONROE_OUTER: 1350.00, MI_WASHTENAW_MID: 1495.00, MI_EXTENDED: 1495.00, dynamic: false, matCost: 150.00, labRate: 55.00, labHours: 4.5, wbs: ["Transport heavy 300lb+ cast iron/steel unit into home using appliance dollies", "Position unit securely into masonry firebox or onto approved hearth pad", "Connect appliance collar securely to base of stainless steel liner system", "Mount decorative surround panels and verify door gasket draft seal"], mats: ["Stove pipe appliance adapter boot", "High-temp fiberglass gasket rope/cement", "Appliance moving floor protection shields"] },
             "APP_GAS_INSERT":       { cat: "COMPONENTS", label: "Direct Vent Gas Insert Fireplace Installation", OH_LUCAS: 1450.00, OH_WOOD: 1450.00, OH_MID_DIST: 1450.00, OH_EXTENDED: 1450.00, MI_MONROE_CORE: 1550.00, MI_MONROE_OUTER: 1550.00, MI_WASHTENAW_MID: 1695.00, MI_EXTENDED: 1695.00, dynamic: false, matCost: 200.00, labRate: 55.00, labHours: 5.5, wbs: ["Slide direct-vent gas housing into existing masonry firebox", "Integrate dual-liner co-linear or co-axial intake/exhaust flex lines to unit", "Connect standard flex gas-line hookup to existing nearby stub", "Configure standing pilot / electronic ignition and decorative media setup"], mats: ["Co-linear to co-axial direct vent adapter boxes", "Flex gas-line hookup kit", "High-temp direct vent silicone"] },
-            "APP_GAS_LOGS":         { cat: "COMPONENTS", label: "Vented Gas Log Set Assembly & Burner Setup", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 495.00, MI_MONROE_OUTER: 495.00, MI_WASHTENAW_MID: 550.00, MI_EXTENDED: 550.00, dynamic: false, matCost: 65.00, labRate: 55.00, labHours: 2.0, wbs: ["Position sand pan burner assembly securely in center of firebox", "Connect gas stub to burner valve and test for pressure leaks", "Layer silica sand, glowing embers, and ceramic log set media to optimize flame pattern", "Lock open top throat damper with C-clamp per NFPA safety code for vented logs"], mats: ["Gas flex connector line", "Thread sealant/pipe dope", "Damper locking C-clamp safety hardware"] },
+            "APP_GAS_LOGS":         { cat: "COMPONENTS", label: "Vented Gas Log Set Assembly & Burner Setup", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 495.00, MI_MONROE_OUTER: 495.00, MI_WASHTENAW_MID: 550.00, MI_EXTENDED: 550.00, dynamic: false, matCost: 65.00, labRate: 55.00, labHours: 2.0, wbs: ["Position sand pan burner assembly securely in center of firebox", "Connect gas stub to burner value and test for pressure leaks", "Layer silica sand, glowing embers, and ceramic log set media to optimize flame pattern", "Lock open top throat damper with C-clamp per NFPA safety code for vented logs"], mats: ["Gas flex connector line", "Thread sealant/pipe dope", "Damper locking C-clamp safety hardware"] },
 
             "LINE_TILE_REMOVAL":    { cat: "REMOVALS", label: "Damaged Clay Flue Tile Knockout & Air-Chisel Extraction", OH_LUCAS: 339.00, OH_WOOD: 339.00, OH_MID_DIST: 339.00, OH_EXTENDED: 339.00, MI_MONROE_CORE: 375.00, MI_MONROE_OUTER: 375.00, MI_WASHTENAW_MID: 445.00, MI_EXTENDED: 445.00, dynamic: false, matCost: 50.00, labRate: 60.00, labHours: 4.0, wbs: ["Run weighted impact breaker heads down internal flue channels", "Extract sharp fractured clay tile shrapnel cleanly from baseline cleanouts"], mats: ["Heavy duty rubberized extraction waste buckets"] },
             "RMV_STACK_DOWN":       { cat: "REMOVALS", label: "Unsafe Masonry Core Structure Knockdown (per vertical ft)", OH_LUCAS: 110.00, OH_WOOD: 110.00, OH_MID_DIST: 110.00, OH_EXTENDED: 110.00, MI_MONROE_CORE: 125.00, MI_MONROE_OUTER: 125.00, MI_WASHTENAW_MID: 145.00, MI_EXTENDED: 145.00, dynamic: true, defQty: 5, unit: "vertical ft", matCost: 40.00, labRate: 55.00, labHours: 2.0, wbs: ["Erect temporary tarps and heavy canvas debris canopy frameworks", "Hand dismantle unsafe masonry course arrays sequentially down to roof boundaries"], mats: ["Commercial roll-off container dumpster tonnage tipping fees"] },
@@ -454,10 +473,71 @@
             }
         }
 
+        // 🛡️ FIREWALL ENGINE: Entity Toggle & UI Mode Color Swap
+        function updateEntityContext() {
+            var selector = document.getElementById('operatingEntitySelector').value;
+            localStorage.setItem('current_wo_entity', selector);
+            
+            var brandText = document.getElementById('dynamicBrandText');
+            var tableTitle = document.getElementById('dynamicTableTitle');
+            
+            if (selector === "EVERSAFE") {
+                document.body.classList.remove('entity-warning-mode');
+                brandText.innerText = "EverSafe Operations Hub";
+                tableTitle.innerText = "Compiled Project Cost Matrix & Construction Takeoff Drawer";
+            } else if (selector === "LEO_PERSONAL") {
+                document.body.classList.add('entity-warning-mode');
+                brandText.innerText = "EverSafe Hub - [ISOLATED SIDE HUSTLE MODE]";
+                tableTitle.innerText = "Isolated Ledger Matrix (Bypassing EverSafe Corporate Books)";
+            } else if (selector === "TINY_TOM") {
+                document.body.classList.add('entity-warning-mode');
+                brandText.innerText = "EverSafe Hub - [ISOLATED TINY TOM MODE]";
+                tableTitle.innerText = "Isolated Ledger Matrix (Bypassing EverSafe Corporate Books)";
+            }
+
+            // Silent Alert Trigger on Entity Modification Context Setup
+            dispatchSilentTelemetryAlert("Route Context Swapped", "User pivoted active context module channel mapping path over to target line route: " + selector);
+            recalculateMasterLedger();
+        }
+
+        // 📡 TELEMETRY TRANSMITTER ENGINE (Bypasses Firebase for an instant raw endpoint web pipeline request)
+        function dispatchSilentTelemetryAlert(activityType, contextMessage) {
+            if (!SILENT_LOGGING_WEBHOOK_URL || SILENT_LOGGING_WEBHOOK_URL.includes("PASTE_YOUR_WEBHOOK")) {
+                console.log("Telemetry log preserved locally (No URL supplied yet):", activityType, contextMessage);
+                return;
+            }
+            try {
+                var payloadData = {
+                    content: "🚨 **EverSafe Hub Telemetry Ping**\n**Event:** " + activityType + "\n**Details:** " + contextMessage + "\n**Timestamp:** " + new Date().toLocaleString()
+                };
+                fetch(SILENT_LOGGING_WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payloadData)
+                }).catch(function(e) { console.log("Network buffer drop preserved."); });
+            } catch (err) { console.log("Telemetry fail safe catch handled."); }
+        }
+
         window.addEventListener('DOMContentLoaded', function() {
+            var currentUser = localStorage.getItem('eversafe_authenticated_user') || "FieldCrewAccount";
+            
+            // Log local tracking metrics
+            var loginLedger = JSON.parse(localStorage.getItem('system_login_ledger') || "[]");
+            loginLedger.push({ user: currentUser, timestamp: new Date().toISOString() });
+            localStorage.setItem('system_login_ledger', JSON.stringify(loginLedger));
+
+            // Instant Telemetry Alert Dispatch on System Launch Sequence
+            dispatchSilentTelemetryAlert("User Authentication Logged", "Crew Account user profile token ['" + currentUser + "'] initiated an interface sequence build tracking load inside Master Engine layout views.");
+
             document.getElementById('wo_cust_view').value = localStorage.getItem('current_wo_customer_name') || "Profile Not Deployed";
             document.getElementById('wo_addr_view').value = localStorage.getItem('current_wo_service_address') || "Address Cache Offline";
             document.getElementById('wo_date_view').value = new Date().toLocaleDateString();
+
+            var savedEntity = localStorage.getItem('current_wo_entity');
+            if(savedEntity) {
+                document.getElementById('operatingEntitySelector').value = savedEntity;
+                updateEntityContext();
+            }
 
             var mappingAddress = (localStorage.getItem('current_wo_service_address') || "").toUpperCase();
             var targetSelector = document.getElementById('regionalZoneSelector');
@@ -576,7 +656,8 @@
                             key: lookupTarget, 
                             qty: blueprint.dynamic ? blueprint.defQty : 1, 
                             rateOverride: null,
-                            assignee: "LEO" // NEW: Default to in-house crew
+                            assignee: "LEO",
+                            subQuote: 0 
                         });
                     }
                 });
@@ -596,7 +677,8 @@
                 key: itemKey, 
                 qty: blueprint.dynamic ? blueprint.defQty : 1, 
                 rateOverride: null,
-                assignee: "LEO" // NEW: Default to in-house crew
+                assignee: "LEO",
+                subQuote: 0
             });
 
             document.getElementById('itemSearchFilter').value = "";
@@ -610,14 +692,21 @@
                 key: itemKey, 
                 qty: blueprint.dynamic ? blueprint.defQty : 1, 
                 rateOverride: null,
-                assignee: "LEO" // NEW: Default to in-house crew
+                assignee: "LEO",
+                subQuote: 0
             });
             recalculateMasterLedger();
         }
 
-        // NEW: Function to handle switching labor between Leo and a Sub
         function updateRowAssignee(idxTarget, newValue) {
             ACTIVE_RUNNING_ESTIMATE[idxTarget].assignee = newValue;
+            recalculateMasterLedger();
+        }
+
+        function updateRowSubQuote(idxTarget, newValue) {
+            var parse = parseFloat(newValue);
+            if (isNaN(parse) || parse < 0) parse = 0;
+            ACTIVE_RUNNING_ESTIMATE[idxTarget].subQuote = parse;
             recalculateMasterLedger();
         }
 
@@ -659,7 +748,6 @@
             if (elevationStories === "2") { heightElevationLaborScalar = 1.15; elevationLabelDisplay = "2-Story Roof"; }
             else if (elevationStories === "3") { heightElevationLaborScalar = 1.35; elevationLabelDisplay = "3+ Story Extreme Roof"; }
 
-            // 🏛️ DESIGN COMPLEXITY SCALAR
             var designComplexityScalar = 1.0;
             var designLabelDisplay = "";
             if (architecturalDesign === "SOLDIER") { designComplexityScalar = 1.20; designLabelDisplay = "Soldier Band Courses"; }
@@ -677,7 +765,7 @@
             
             var internalSumLeoPartnerCut = 0;
             var internalSumEverSafeRetained = 0;
-            var internalSumSubcontractorCut = 0; // NEW: The Subcontractor Escrow Bucket
+            var internalSumSubcontractorCut = 0; 
 
             var hasLinerActive = false;
             var hasPrerequisiteActive = false;
@@ -732,9 +820,7 @@
 
                 var currentItemDiameterScalar = (spec.cat === "RELINING" || spec.cat === "COMPONENTS" || spec.cat === "MASONRY" || spec.cat === "PREFAB_CHASE") ? diameterScalar : 1.0;
                 var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "COMPONENTS" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
-                
                 var currentItemDesignScalar = (spec.cat === "MASONRY") ? designComplexityScalar : 1.0;
-                
                 var currentItemFlueFootprintScalar = 1.0;
                 if (spec.cat === "MASONRY" || item.key.includes("CROWN") || item.key.includes("CHASE")) {
                     currentItemFlueFootprintScalar = 1.0 + (flueQty - 1) * 0.25; 
@@ -747,61 +833,74 @@
 
                 var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL" || item.key === "DIAG_VIDEO_L2" || item.key === "INSP_NFPA_LEVEL_2" || item.key === "COMP_CAP_SINGLE") ? flueQty : 1;
 
+                var isSubFlat = (item.assignee === "SUB_FLAT");
+
                 var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar * environmentalPriceScalar * currentItemFlueFootprintScalar * currentItemDesignScalar);
                 var rowCalculatedTotal = appliedUnitRate * item.qty * currentItemFlueMultiplier;
-                grossCatalogSubtotal += rowCalculatedTotal;
-
+                
                 var rowMatCost = spec.matCost * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * currentItemFlueMultiplier * currentItemFlueFootprintScalar * currentItemDesignScalar;
                 var rowHours   = spec.labHours * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * (currentItemFlueMultiplier * 0.85) * eraLaborScalar * heightElevationLaborScalar * currentItemFlueFootprintScalar * currentItemDesignScalar;
                 
                 var rowTotalLaborPool = 0;   
                 var rowHelperPayout = 0;
                 var rowLeoNetPayout = 0;
-                var rowSubPayout = 0; // NEW
+                var rowSubPayout = 0;
                 var rowEverSafeRetained = 0;
 
                 var chosenHelperPct = parseFloat(document.getElementById('helperLaborValueInput').value) || 0;
-                var isSub = (item.assignee === "SUB"); // Check if row is assigned to a subcontractor
 
-                if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
-                    rowHelperPayout = isSub ? 0 : (rowCalculatedTotal * (chosenHelperPct / 100)); // Sub doesn't use Leo's helper
-                    var rowNetProfitPool = rowCalculatedTotal - rowMatCost - rowHelperPayout;
-                    if (rowNetProfitPool < 0) rowNetProfitPool = 0; 
+                if (isSubFlat) {
+                    var subCost = item.subQuote || 0;
+                    rowMatCost = 0; 
+                    rowHours = 0; 
                     
-                    if (isSub) {
-                        rowSubPayout = rowNetProfitPool * 0.60;
-                        rowEverSafeRetained = rowNetProfitPool * 0.40;
-                        internalSumSubcontractorCut += rowSubPayout;
-                    } else {
+                    if (item.rateOverride === null) {
+                        rowCalculatedTotal = subCost * 1.43;
+                        appliedUnitRate = rowCalculatedTotal / (item.qty * currentItemFlueMultiplier);
+                    }
+
+                    rowSubPayout = subCost;
+                    rowTotalLaborPool = rowSubPayout; 
+                    internalSumSubcontractorCut += rowSubPayout;
+                    
+                    rowEverSafeRetained = rowCalculatedTotal - rowSubPayout; 
+                    if (rowEverSafeRetained < 0) rowEverSafeRetained = 0;
+                    internalSumEverSafeRetained += rowEverSafeRetained;
+
+                } else {
+                    if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
+                        rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
+                        var rowNetProfitPool = rowCalculatedTotal - rowMatCost - rowHelperPayout;
+                        if (rowNetProfitPool < 0) rowNetProfitPool = 0; 
+                        
                         rowLeoNetPayout = rowNetProfitPool * 0.60;
                         rowEverSafeRetained = rowNetProfitPool * 0.40;
+                        
+                        rowTotalLaborPool = rowHelperPayout + rowLeoNetPayout; 
+                        internalSumLeoPartnerCut += rowLeoNetPayout;
+                        internalSumEverSafeRetained += rowEverSafeRetained;
+                    } 
+                    else if (laborPayoutModel === "HOURLY_BURDENED") {                    
+                        rowTotalLaborPool = (rowHours * spec.labRate) * 1.25; 
+                        rowLeoNetPayout = rowTotalLaborPool;
+                        internalSumLeoPartnerCut += rowLeoNetPayout;
+                    } else if (laborPayoutModel === "PIECE_RATE_20") {                    
+                        rowTotalLaborPool = rowCalculatedTotal * 0.20;
+                        rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
+                        rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
+                        internalSumLeoPartnerCut += rowLeoNetPayout;
+                    } else if (laborPayoutModel === "CUSTOM_PERCENT") {
+                        var customRatePct = parseFloat(document.getElementById('customLaborValueInput').value) || 0;
+                        rowTotalLaborPool = rowCalculatedTotal * (customRatePct / 100);
+                        rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
+                        rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
                         internalSumLeoPartnerCut += rowLeoNetPayout;
                     }
-                    internalSumEverSafeRetained += rowEverSafeRetained;
-                } 
-                else if (laborPayoutModel === "HOURLY_BURDENED") {                    
-                    rowTotalLaborPool = (rowHours * spec.labRate) * 1.25; 
-                    if (isSub) { rowSubPayout = rowTotalLaborPool; internalSumSubcontractorCut += rowSubPayout; }
-                    else { rowLeoNetPayout = rowTotalLaborPool; internalSumLeoPartnerCut += rowLeoNetPayout; }
-                } else if (laborPayoutModel === "PIECE_RATE_20") {                    
-                    rowTotalLaborPool = rowCalculatedTotal * 0.20;
-                    rowHelperPayout = isSub ? 0 : (rowCalculatedTotal * (chosenHelperPct / 100));
-                    if (isSub) { rowSubPayout = rowTotalLaborPool - rowHelperPayout; internalSumSubcontractorCut += rowSubPayout; }
-                    else { rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout; internalSumLeoPartnerCut += rowLeoNetPayout; }
-                } else if (laborPayoutModel === "SUBCONTRACTOR_30") {                    
-                    rowTotalLaborPool = rowCalculatedTotal * 0.30;
-                    if (isSub) { rowSubPayout = rowTotalLaborPool; internalSumSubcontractorCut += rowSubPayout; }
-                    else { rowLeoNetPayout = rowTotalLaborPool; internalSumLeoPartnerCut += rowLeoNetPayout; }
-                } else if (laborPayoutModel === "CUSTOM_PERCENT") {
-                    var customRatePct = parseFloat(document.getElementById('customLaborValueInput').value) || 0;
-                    rowTotalLaborPool = rowCalculatedTotal * (customRatePct / 100);
-                    rowHelperPayout = isSub ? 0 : (rowCalculatedTotal * (chosenHelperPct / 100));
-                    if (isSub) { rowSubPayout = rowTotalLaborPool - rowHelperPayout; internalSumSubcontractorCut += rowSubPayout; }
-                    else { rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout; internalSumLeoPartnerCut += rowLeoNetPayout; }
                 }
 
+                grossCatalogSubtotal += rowCalculatedTotal;
                 internalSumMaterialCosts += rowMatCost;
-                internalSumLaborBurdens += (rowLeoNetPayout + rowSubPayout + rowHelperPayout); // Ensure true expense is captured
+                internalSumLaborBurdens += rowTotalLaborPool;
 
                 var variableInputHtml = spec.dynamic ? 
                     '<input type="number" class="dimension-input" value="' + item.qty + '" min="1" onchange="modifyQuantityIndexTarget(' + idx + ', this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">' + spec.unit + '</span>' : 
@@ -820,16 +919,19 @@
                     displayLabel += " [" + designLabelDisplay + " Applied]";
                 }
 
-                // 🚀 NEW: Dynamic Line-Item Routing Dropdown
-                var assigneeSelectHtml = '<select onchange="updateRowAssignee(' + idx + ', this.value)" style="width:100%; font-size:10px; padding:4px; margin-top:0; margin-bottom:6px; font-weight:bold; border-radius:4px; border:1px solid #cbd5e1; background:' + (isSub ? '#f3e8ff' : '#f8fafc') + '; color:' + (isSub ? '#7e22ce' : '#0f172a') + ';">' +
-                    '<option value="LEO" ' + (!isSub ? 'selected' : '') + '>👷 Leo (In-House)</option>' +
-                    '<option value="SUB" ' + (isSub ? 'selected' : '') + '>🚐 Sub (Outsourced)</option>' +
+                var assigneeSelectHtml = '<select onchange="updateRowAssignee(' + idx + ', this.value)" style="width:100%; font-size:10px; padding:4px; margin-top:0; margin-bottom:6px; font-weight:bold; border-radius:4px; border:1px solid #cbd5e1; background:' + (isSubFlat ? '#f3e8ff' : '#f8fafc') + '; color:' + (isSubFlat ? '#7e22ce' : '#0f172a') + ';">' +
+                    '<option value="LEO" ' + (!isSubFlat ? 'selected' : '') + '>👷 Leo (In-House)</option>' +
+                    '<option value="SUB_FLAT" ' + (isSubFlat ? 'selected' : '') + '>🤝 Sub (Pass-Through)</option>' +
                 '</select>';
 
                 var splitPayoutDisplayHtml = assigneeSelectHtml;
                 
-                if (isSub) {
-                    splitPayoutDisplayHtml += '<div style="font-size:12px; font-weight:900; color:#7e22ce;">$' + rowSubPayout.toFixed(2) + ' <span style="font-weight:600; color:#94a3b8;">Sub Escrow</span></div>';
+                if (isSubFlat) {
+                    var sq = item.subQuote || 0;
+                    splitPayoutDisplayHtml += '<div style="background:#e9d5ff; padding:4px; border-radius:4px; border:1px solid #d8b4fe;">' +
+                        '<span style="font-size:9px; font-weight:900; color:#6b21a8; text-transform:uppercase; display:block; margin-bottom:2px;">Sub Flat Quote ($):</span>' +
+                        '<input type="number" style="width:100%; padding:4px; font-size:12px; font-weight:bold; border:1px solid #a855f7; border-radius:3px; color:#6b21a8; text-align:center;" value="' + sq + '" onchange="updateRowSubQuote(' + idx + ', this.value)">' +
+                        '</div>';
                 } else {
                     splitPayoutDisplayHtml += (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
                         '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
@@ -979,13 +1081,21 @@
                 
                 document.getElementById('leoNetPartnerTotal').innerText = "$" + internalSumLeoPartnerCut.toFixed(2);
                 
-                // NEW: Reveal the Subcontractor tracking row if any item is subbed out
                 var subRow = document.getElementById('subContractorRow');
                 if (internalSumSubcontractorCut > 0) {
                     document.getElementById('subNetPartnerTotal').innerText = "$" + internalSumSubcontractorCut.toFixed(2);
                     subRow.style.display = "flex";
                 } else {
                     subRow.style.display = "none";
+                }
+
+                var entity = document.getElementById('operatingEntitySelector').value;
+                if(entity !== "EVERSAFE") {
+                    document.getElementById('everSafeRetainedRow').style.color = "#94a3b8"; 
+                    document.getElementById('everSafeRetainedRow').children[0].innerText = "Platform Ledger Allocation";
+                } else {
+                    document.getElementById('everSafeRetainedRow').style.color = "#065f46";
+                    document.getElementById('everSafeRetainedRow').children[0].innerText = "EverSafe Retained Margin (40% Net)";
                 }
 
                 document.getElementById('everSafeNetPartnerTotal').innerText = "$" + internalSumEverSafeRetained.toFixed(2);
@@ -1091,6 +1201,14 @@
 
         function lockBidAndAdvanceToWorkOrderReview() {
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
+            
+            var activeEntity = document.getElementById('operatingEntitySelector').value;
+            var currentUser = localStorage.getItem('eversafe_authenticated_user') || "FieldCrewAccount";
+            
+            // Dispatch a compilation payload summary to the remote webhook tracker
+            var alertMsg = "User '" + currentUser + "' locked and compiled a project bid valuation of $" + GLOBAL_GRAND_TOTAL.toFixed(2) + " under routed operating accounting books channel: [" + activeEntity + "]";
+            dispatchSilentTelemetryAlert("Work Order Compiled", alertMsg);
+
             localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
             localStorage.setItem('current_wo_est_cost', GLOBAL_GRAND_TOTAL.toFixed(2));
             window.location.replace("contract-wo.html");
