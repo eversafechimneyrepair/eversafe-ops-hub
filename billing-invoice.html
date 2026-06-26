@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Universal Merchant Billing</title>
+    <title>EverSafe Hub - Stripe Settlement Matrix</title>
     
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
     <link rel="apple-touch-icon" href="app-icon.jpg">
     <link rel="manifest" href="manifest.json">
-    
-    <script src="https://web.squarecdn.com/v1/square.js"></script>
     
     <style>
         :root { 
@@ -44,7 +42,7 @@
 
         .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 22px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; }
         
-        #sq-card-element { margin: 15px auto; max-width: 440px; min-height: 80px; padding: 14px; border: 2px dashed var(--accent); background: #ffffff; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .stripe-automation-panel { margin: 15px auto; padding: 16px; border: 2px dashed #3b82f6; background: #f0f9ff; border-radius: 6px; color: #1e3a8a; }
         
         .signature-grid { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
         .signature-wrapper { text-align: center; margin-top: 10px; width: 100%; max-width: 380px; flex: 1; min-width: 260px; }
@@ -67,7 +65,7 @@
 
     <div class="app-header">
         <div class="brand-row">
-            <div class="brand-text">Secure Settlement Node</div>
+            <div class="brand-text">Secure Settlement Node (Stripe Engine)</div>
             <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
         </div>
     </div>
@@ -87,17 +85,17 @@
 
             <div class="grid-2" style="margin-top:15px;">
                 <div class="form-group">
-                    <label>Payment Channel:</label>
-                    <select id="inv_payment" onchange="toggleSquareDisplayFields()">
-                        <option value="CARD_ON_SITE" selected>Credit Card (Secure Web Entry)</option>
+                    <label>Payment Mode Routing:</label>
+                    <select id="inv_payment" onchange="toggleAutomationInterfaceTray()">
+                        <option value="STRIPE_DIGITAL" selected>Stripe Invoice (Text-to-Pay / Apple Pay Link)</option>
                         <option value="CASH_CHECK">Direct Cash / Check Collected</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Realtime Status:</label>
                     <select id="inv_status" style="color: var(--accent); font-weight: bold;">
-                        <option value="PENDING_COLLECTION" style="color: var(--danger);">⏳ Awaiting Field Payment</option>
-                        <option value="PAID_SETTLED" style="color: var(--success);" selected>✅ Paid / Settled Ledger</option>
+                        <option value="PENDING_COLLECTION" style="color: var(--danger);" selected>⏳ Awaiting Link Checkout</option>
+                        <option value="PAID_SETTLED" style="color: var(--success);">✅ Paid / Settled Ledger</option>
                         <option value="NET_30_ACCOUNT" style="color: var(--primary);">🏢 Corporate Account (Net 30)</option>
                     </select>
                 </div>
@@ -108,11 +106,11 @@
                 <div class="form-group"><label>Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;"></div>
             </div>
 
-            <!-- Square Web SDK Element -->
-            <div id="squareFormWrapper" style="display:block; margin-top:20px; padding:15px; background:#f8fafc; border:1px dashed var(--border); border-radius:6px;">
-                <p style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:8px; text-align:center; color: var(--primary);">🔒 Secure Credit Card Terminal</p>
-                <div id="sq-card-element"></div>
-                <input type="text" id="manualRefInput" placeholder="Optional: Type Manual Verification Hash Key" style="margin-top:10px; display:none;">
+            <div id="stripeAutomationWrapper" class="stripe-automation-panel">
+                <p style="font-size:12px; font-weight:bold; text-transform:uppercase; margin-bottom:6px; text-align:center;">⚡ HighLevel CRM Link Dispatch Active</p>
+                <p style="font-size:12.5px; line-height:1.4; text-align:center; margin:0;">
+                    Submitting this form triggers a background webhook. The customer will immediately receive an interactive text message and email housing an Apple Pay & Google Pay ready link.
+                </p>
             </div>
 
             <div class="signature-grid">
@@ -128,10 +126,9 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-action" style="background:var(--success);" id="chargeCardBtn" onclick="processSecureNativePayment()">🔒 Finalize Ledger &amp; Charge Card</button>
-            <button type="button" class="btn-action" style="background:#2563eb; margin-top: 10px;" id="tapToPayBtn" onclick="processSquareAppMobileIntent()">📲 Alternatively: Tap to Pay via Square POS</button>
+            <button type="button" class="btn-action" style="background:var(--success);" id="submitInvoiceBtn" onclick="processSecureInvoiceSubmission()">🚀 Compile Matrix & Dispatch Ledger</button>
 
-            <div id="invoiceStatusLine" class="status-msg" style="color: var(--primary); margin-top: 15px; font-size: 12px;">System online. Ready for execution.</div>
+            <div id="invoiceStatusLine" class="status-msg" style="color: var(--primary); margin-top: 15px; font-size: 12px;">System online (Stripe Module). Ready for execution.</div>
         </div>
     </div>
 
@@ -140,9 +137,7 @@
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
-        var SQUARE_APP_ID = "sq0idp-fqkdBa3JdRp-jbMeD9CYEw";
-        var SQUARE_LOC_ID = "LS2898MVN1702";
-        var SQ_CARD_INSTANCE = null; var CANVAS_MAP = {};
+        var CANVAS_MAP = {};
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
 
         window.addEventListener('DOMContentLoaded', function() {
@@ -159,11 +154,7 @@
 
             runTotalsCalc();
             initializeUniversalPointerCanvasPads();
-            mountSecureSquareSDKForm();
-            toggleSquareDisplayFields(); 
-            
-            evaluateHardwareProfileUX();
-            checkForActiveSquareReturnPayloads();
+            toggleAutomationInterfaceTray(); 
         });
 
         function runTotalsCalc() {
@@ -172,47 +163,22 @@
             localStorage.setItem('current_wo_est_cost', v.toFixed(2));
         }
 
-        function toggleSquareDisplayFields() {
+        function toggleAutomationInterfaceTray() {
             var m = document.getElementById('inv_payment').value;
             var statusField = document.getElementById('inv_status');
-            var squareForm = document.getElementById('squareFormWrapper');
-            var chargeBtn = document.getElementById('chargeCardBtn');
-            var tapBtn = document.getElementById('tapToPayBtn');
+            var automationPanel = document.getElementById('stripeAutomationWrapper');
+            var submitBtn = document.getElementById('submitInvoiceBtn');
             
-            if (m === "CARD_ON_SITE") {
-                squareForm.style.display = "block";
+            if (m === "STRIPE_DIGITAL") {
+                automationPanel.style.display = "block";
                 statusField.value = "PENDING_COLLECTION";
-                chargeBtn.innerText = "🔒 Finalize Ledger & Charge Card";
-                tapBtn.style.display = "block";
+                submitBtn.innerText = "🚀 Compile Matrix & Dispatch Ledger";
+                submitBtn.style.background = "#2563eb";
             } else {
-                squareForm.style.display = "none";
+                automationPanel.style.display = "none";
                 statusField.value = "PAID_SETTLED";
-                chargeBtn.innerText = "✅ Record Payment to Ledger";
-                tapBtn.style.display = "none";
-            }
-        }
-
-        function evaluateHardwareProfileUX() {
-            var userAgent = navigator.userAgent || navigator.vendor;
-            var isAndroid = /android/i.test(userAgent);
-            var isIOS = /iPad|iPhone|iPod/.test(userAgent) && !window.MSStream;
-            
-            if (!isAndroid && !isIOS) {
-                var mobileBtn = document.getElementById('tapToPayBtn');
-                mobileBtn.innerHTML = "💻 Tap to Pay POS (Mobile Only)";
-                mobileBtn.style.background = "#64748b";
-                mobileBtn.disabled = true;
-            }
-        }
-
-        async function mountSecureSquareSDKForm() {
-            try {
-                const payments = Square.payments(SQUARE_APP_ID, SQUARE_LOC_ID);
-                const card = await payments.card();
-                await card.attach('#sq-card-element');
-                SQ_CARD_INSTANCE = card;
-            } catch(e) { 
-                document.getElementById('sq-card-element').innerHTML = "<p style='color:#64748b;font-size:12px;font-weight:bold;'>Square SDK failed to load. Check network connection.</p>"; 
+                submitBtn.innerText = "✅ Record Cash / Check to Ledger";
+                submitBtn.style.background = "var(--success)";
             }
         }
 
@@ -273,93 +239,24 @@
             if(c.toDataURL() === b.toDataURL()) return "EMPTY"; return c.toDataURL("image/png");
         }
 
-        async function processSecureNativePayment() {
-            var btn = document.getElementById('chargeCardBtn');
+        async function processSecureInvoiceSubmission() {
+            var btn = document.getElementById('submitInvoiceBtn');
             var paymentMethod = document.getElementById('inv_payment').value;
             var statusLine = document.getElementById('invoiceStatusLine');
 
             btn.disabled = true; 
-            btn.innerText = "🔒 Processing...";
-            
-            // If Cash or Check, skip Square and just record to ledger
-            if (paymentMethod === "CASH_CHECK") {
-                uploadInvoiceToOfficeSheet("CASH_OR_MANUAL_ENTRY");
-                return;
-            }
-
-            // Otherwise, we process the live Web Card Charge
-            if(!SQ_CARD_INSTANCE) {
-                alert("Payment Form not loaded. Refresh the page or check your connection."); 
-                btn.disabled = false; btn.innerText = "🔒 Finalize Ledger & Charge Card"; 
-                return; 
-            }
-
-            statusLine.innerHTML = "⏳ Communicating with Square Servers...";
+            statusLine.innerHTML = "⏳ Finalizing entry datasets...";
             statusLine.style.color = "var(--primary)";
 
-            try {
-                // Generate secure token from typed card details
-                const result = await SQ_CARD_INSTANCE.tokenize();
-                if(result.status === 'OK') { 
-                    // Send Token to Apps Script to ACTUALLY CHARGE the card
-                    await processLiveChargeViaBackend(result.token);
-                } else { 
-                    throw new Error(result.errors[0].message); 
-                }
-            } catch(err) { 
-                alert("Card Error: " + err.message); 
-                btn.disabled = false; 
-                btn.innerText = "🔒 Finalize Ledger & Charge Card"; 
-                statusLine.innerHTML = "❌ Payment Declined/Error. Please try again.";
-                statusLine.style.color = "var(--danger)";
-            }
-        }
-
-        // Send Token to Google Apps Script to pull funds
-        async function processLiveChargeViaBackend(squareToken) {
-            var statusLine = document.getElementById('invoiceStatusLine');
-            var btn = document.getElementById('chargeCardBtn');
-            var finalLedgerVal = parseFloat(document.getElementById('inv_final_total').value) || 0;
-            var customerName = document.getElementById('inv_cust').value || "Customer";
-
-            statusLine.innerHTML = "🔒 Authorizing Card & Processing Charge...";
-
-            var payload = {
-                route: "processWebPayment",
-                sourceToken: squareToken,
-                amount: finalLedgerVal,
-                customerName: customerName
-            };
-
-            try {
-                let response = await fetch(GOOGLE_API_GATEWAY_URL, { 
-                    method: "POST", 
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(payload)
-                });
-                let result = await response.json();
-
-                if (result.success) {
-                    statusLine.innerHTML = "✅ Charge Approved! Finalizing Ledger...";
-                    statusLine.style.color = "var(--success)";
-                    document.getElementById('inv_status').value = "PAID_SETTLED";
-                    // If approved, send transaction ID to the Ledger
-                    uploadInvoiceToOfficeSheet(result.transactionId);
-                } else {
-                    alert("Square Processing Error: " + result.error);
-                    statusLine.innerHTML = "❌ Card Declined: " + result.error;
-                    statusLine.style.color = "var(--danger)";
-                    btn.disabled = false;
-                    btn.innerText = "🔒 Finalize Ledger & Charge Card";
-                }
-            } catch(e) {
-                alert("API Gateway Error: Could not reach payment server.");
-                btn.disabled = false;
-                btn.innerText = "🔒 Finalize Ledger & Charge Card";
-            }
+            var hashKeyType = (paymentMethod === "STRIPE_DIGITAL") ? "STRIPE_TEXT_DISPATCH" : "MANUAL_FIELD_ENTRY";
+            
+            // Execute centralized ledger spreadsheet upload
+            await uploadInvoiceToOfficeSheet(hashKeyType);
         }
 
         async function uploadInvoiceToOfficeSheet(tokenStr) {
+            var statusLine = document.getElementById('invoiceStatusLine');
+            var btn = document.getElementById('submitInvoiceBtn');
             var tSig = extractCanvasBase64DataStringUrl('inv_tech_sig');
             var cSig = extractCanvasBase64DataStringUrl('inv_client_sig');
 
@@ -385,14 +282,20 @@
             ];
             
             try {
-                // Fire and forget to the sheet logging route
+                statusLine.innerHTML = "🔒 Synchronizing ledger across office engines...";
+                
                 await fetch(GOOGLE_API_GATEWAY_URL, { 
                     method: "POST", 
                     mode: "no-cors", 
                     body: JSON.stringify({ route: "recordFieldData", sheetName: "Invoices", payload: payload })
                 });
-                alert("Payment successful! Ledger finalized and sent to office workbook.");
+
+                statusLine.innerHTML = "✅ Ledger recorded successfully!";
+                statusLine.style.color = "var(--success)";
                 
+                alert("Ledger finalized! System data passed cleanly to office workbooks.");
+                
+                // Clear local tracking states safely
                 var sessionKeys = [
                     'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
                     'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier',
@@ -405,83 +308,9 @@
                 
                 window.location.replace("jobs.html");
             } catch(e) {
-                alert("Critical API Transmission Exception. Retrying secondary ledger hooks...");
-            }
-        }
-
-        // Native Mobile Square App Integration
-        function processSquareAppMobileIntent() {
-            var total = document.getElementById('inv_final_total').value || "0.00";
-            var cents = Math.round(parseFloat(total) * 100); 
-            
-            if(isNaN(cents) || cents <= 0) {
-                alert("Square Runtime Error: Valuation total must be greater than zero.");
-                return;
-            }
-            
-            var customerName = document.getElementById('inv_cust').value || "Customer";
-            var callbackUrl = "https://eversafechimneyrepair.github.io/eversafe-ops-hub/billing-invoice.html";
-            
-            var userAgent = navigator.userAgent || navigator.vendor;
-            var isAndroid = /android/i.test(userAgent);
-
-            var targetDeepLink = "";
-
-            if (isAndroid) {
-                targetDeepLink = "intent:#Intent;" +
-                    "action=com.squareup.pos.action.CHARGE;" +
-                    "package=com.squareup;" +
-                    "S.com.squareup.pos.WEB_CALLBACK_URI=" + encodeURIComponent(callbackUrl) + ";" +
-                    "S.com.squareup.pos.CLIENT_ID=" + SQUARE_APP_ID + ";" +
-                    "S.com.squareup.pos.LOCATION_ID=" + SQUARE_LOC_ID + ";" +
-                    "S.com.squareup.pos.API_VERSION=v2.0;" +
-                    "i.com.squareup.pos.TOTAL_AMOUNT=" + cents + ";" +
-                    "S.com.squareup.pos.CURRENCY_CODE=USD;" +
-                    "S.com.squareup.pos.TENDER_TYPES=com.squareup.pos.TENDER_CARD,com.squareup.pos.TENDER_CARD_ON_FILE,com.squareup.pos.TENDER_CASH,com.squareup.pos.TENDER_OTHER;" +
-                    "S.com.squareup.pos.NOTE=" + encodeURIComponent("EverSafe Run: " + customerName) + ";" +
-                    "S.browser_fallback_url=" + encodeURIComponent(callbackUrl) + ";" +
-                    "end";
-            } else {
-                var iosDataPayload = {
-                    "amount_money": { "amount": cents, "currency_code": "USD" },
-                    "options": { "supported_tender_types": ["CREDIT_CARD", "CARD_ON_FILE", "CASH"], "auto_return": true },
-                    "client_id": SQUARE_APP_ID,
-                    "location_id": SQUARE_LOC_ID,
-                    "callback_url": callbackUrl,
-                    "notes": "EverSafe Run: " + customerName,
-                    "version": "1.3"
-                };
-                targetDeepLink = "square-commerce-v1://payment/create?data=" + encodeURIComponent(JSON.stringify(iosDataPayload));
-            }
-
-            var virtualAnchor = document.createElement("a");
-            virtualAnchor.setAttribute("href", targetDeepLink);
-            virtualAnchor.style.display = "none";
-            document.body.appendChild(virtualAnchor);
-            virtualAnchor.click();
-            
-            setTimeout(function() { document.body.removeChild(virtualAnchor); }, 100);
-        }
-
-        // Return trip from Mobile Square App
-        function checkForActiveSquareReturnPayloads() {
-            var urlParams = new URLSearchParams(window.location.search);
-            var statusLine = document.getElementById('invoiceStatusLine');
-            
-            if (urlParams.has('data')) {
-                try {
-                    var responseData = JSON.parse(decodeURIComponent(urlParams.get('data')));
-                    if (responseData.status === 'ok' || responseData.status === 'success') {
-                        var transId = responseData.client_transaction_id || responseData.transaction_id || "SQUARE_POS_CHARGED";
-                        document.getElementById('inv_status').value = "PAID_SETTLED";
-                        statusLine.innerHTML = "✅ Mobile POS Approved! Finalizing...";
-                        statusLine.style.color = "var(--success)";
-                        uploadInvoiceToOfficeSheet(transId);
-                    } 
-                    else if (responseData.status === 'error' || responseData.error_code) {
-                        alert("Square Hardware Processing Error: " + (responseData.error_code || "Declined"));
-                    }
-                } catch (err) { console.error(err); }
+                alert("API Gateway Error: Could not verify connection framework.");
+                btn.disabled = false;
+                btn.innerText = "🚀 Compile Matrix & Dispatch Ledger";
             }
         }
 
