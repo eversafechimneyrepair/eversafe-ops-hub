@@ -140,7 +140,6 @@
     <script src="navbar.js"></script>
 
     <script>
-        // 🚨 LIVE V9.1 API URL PRE-LOADED 🚨
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         var DRIVER_NAME = localStorage.getItem('eversafe_authenticated_user') || "Leo";
         var jobCounter = 1;
@@ -185,15 +184,15 @@
             document.getElementById('wuEmail').value = '';
         }
 
-        // --- UPGRADED: SECURES LEAD IN GOOGLE SHEET AND CREATES HIGHLEVEL CONTACT INSTANTLY ---
+        // --- UPGRADED: SECURES LEAD IN SPREADSHEET AND CREATES CRM CONTACT NATIVELY ---
         async function generateLocalDispatch() {
             var name = document.getElementById('wuName').value.trim();
             var address = document.getElementById('wuAddress').value.trim();
             var phone = document.getElementById('wuPhone').value.trim() || "No Phone Provided";
             var email = document.getElementById('wuEmail').value.trim() || "No Email Provided";
 
-            // 🚀 LIVE ZAPIER CATCH-HOOK NODE (LEAD INGESTION PHASE)
-            var ZAPIER_LEAD_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/28071510/42wtzgp/";
+            // 🚀 LIVE HIGHLEVEL WORKFLOW INBOUND WEBHOOK NODE
+            var HIGHLEVEL_LEAD_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/gj5q3kXOQ5xmlx2PQbFn/webhook-trigger/1ff5745a-605f-46f2-a862-91677bc3a223";
 
             if (!name || !address) { alert("Name and Address are required to generate a lead."); return; }
             
@@ -202,7 +201,7 @@
             confirmBtn.innerHTML = "⏳ Syncing Ledger & CRM...";
             confirmBtn.disabled = true;
 
-            // 📦 PIPELINE DISPATCH 1: Sync Central Central Google Sheet Ledger Matrix Node
+            // 📦 PUSH 1: Update Google Sheets
             try {
                 let googleResponse = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
@@ -211,13 +210,13 @@
                         route: "recordFieldData",
                         sheetName: "Dispatches",
                         payload: [
-                            "Immediate Walk-Up",  // Target Arrival Time (Col B)
-                            DRIVER_NAME,          // Tech Logged In (Col C)
-                            name,                 // Customer Name (Col D)
-                            address,              // Job Site Location Address (Col E)
-                            phone,                // Phone Number (Col F)
-                            "",                   // Arrival Check (Col G)
-                            "OPEN"                // Job Route Check (Col H)
+                            "Immediate Walk-Up",  
+                            DRIVER_NAME,          
+                            name,                 
+                            address,              
+                            phone,                
+                            "",                   
+                            "OPEN"                
                         ]
                     })
                 });
@@ -227,9 +226,9 @@
                     throw new Error("Google Ledger sync failed: " + googleResult.error);
                 }
 
-                // 📦 PIPELINE DISPATCH 2: Direct Push to Zapier Lead Ingestion (Instant CRM Creation)
+                // 📦 PUSH 2: Update HighLevel Natively & Instantly (No Zapier Needed)
                 try {
-                    await fetch(ZAPIER_LEAD_WEBHOOK_URL, {
+                    await fetch(HIGHLEVEL_LEAD_WEBHOOK_URL, {
                         method: "POST",
                         mode: "no-cors", 
                         headers: { "Content-Type": "application/json" },
@@ -245,7 +244,6 @@
                     console.error("Instant Lead CRM sync error bypassed:", webhookErr);
                 }
 
-                // EXECUTE DYNAMIC RENDER INTERFACES
                 closeWalkUpModal();
                 var manifestDisplay = document.getElementById('manifestContainer');
                 if(manifestDisplay.innerHTML.includes("Awaiting dispatch lookup")) { manifestDisplay.innerHTML = ""; }
