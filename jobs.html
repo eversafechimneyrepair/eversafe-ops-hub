@@ -74,7 +74,6 @@
 </head>
 <body>
 
-    <!-- SECURE MASTER ACCESS CONTROL SYSTEM -->
     <script>
         if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
             window.location.replace("index.html");
@@ -92,7 +91,6 @@
         <h3>Daily Field Work Orders</h3>
         <p class="subtitle">Pull scheduled jobs from the master ledger or instantly generate a walk-up field lead.</p>
 
-        <!-- 🔁 ACTIVE SESSION PURGE UTILITY CARD -->
         <div class="dispatch-card" style="border: 1px dashed var(--danger); background: #fff1f2; text-align: center; margin-bottom: 25px;">
             <span style="font-size: 11px; font-weight: 800; color: var(--danger); text-transform: uppercase; letter-spacing: 0.5px;">System Data Management</span>
             <div style="font-size: 14px; font-weight: bold; margin: 4px 0 10px 0; color: var(--primary);">Active Field Session Cache Engaged</div>
@@ -101,20 +99,17 @@
             </button>
         </div>
 
-        <!-- COMMAND CONTROLS -->
         <div class="search-flex-group">
             <input type="text" id="jobSearchInput" class="search-input" placeholder="Type name, address, or tech...">
             <button type="button" class="btn-action" onclick="fetchDispatchFromLedger()">Search</button>
         </div>
         <button type="button" class="btn-secondary" onclick="openWalkUpModal()">➕ Generate Walk-Up Lead</button>
 
-        <!-- DYNAMIC DISPATCH BOARD -->
         <div id="manifestContainer">
             <div class="center-status-line">Awaiting dispatch lookup or new lead generation.</div>
         </div>
     </div>
 
-    <!-- WALK-UP LEAD MODAL -->
     <div id="walkUpModal" class="modal-overlay">
         <div class="modal-content">
             <h3 style="text-align:left;">Generate Field Lead</h3>
@@ -190,22 +185,26 @@
             document.getElementById('wuEmail').value = '';
         }
 
-        // --- UPGRADED: INSTANTLY SECURES LEAD IN GOOGLE SHEET SPREADSHEET MATRIX ---
+        // --- UPGRADED: INSTANTLY SECURES LEAD IN GOOGLE SHEET AND FIRES HIGHLEVEL WORKFLOW ---
         async function generateLocalDispatch() {
             var name = document.getElementById('wuName').value.trim();
             var address = document.getElementById('wuAddress').value.trim();
             var phone = document.getElementById('wuPhone').value.trim() || "No Phone Provided";
             var email = document.getElementById('wuEmail').value.trim() || "No Email Provided";
 
+            // 🚀 LIVE ZAPIER CATCH-HOOK NODE
+            var ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/28071510/42fi7xz/";
+
             if (!name || !address) { alert("Name and Address are required to generate a lead."); return; }
             
             var confirmBtn = document.getElementById('btnConfirmLead');
             var originalText = confirmBtn.innerHTML;
-            confirmBtn.innerHTML = "⏳ Syncing Ledger...";
+            confirmBtn.innerHTML = "⏳ Syncing Ledger & CRM...";
             confirmBtn.disabled = true;
 
+            // 📦 PIPELINE DISPATCH 1: Sync Central Google Sheet Matrix Node
             try {
-                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                let googleResponse = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
                     headers: { "Content-Type": "text/plain" },
                     body: JSON.stringify({
@@ -222,20 +221,42 @@
                         ]
                     })
                 });
-                let result = await response.json();
+                let googleResult = await googleResponse.json();
 
-                if (result.success) {
-                    closeWalkUpModal();
-                    var manifestDisplay = document.getElementById('manifestContainer');
-                    if(manifestDisplay.innerHTML.includes("Awaiting dispatch lookup")) { manifestDisplay.innerHTML = ""; }
-
-                    var notes = `Time: Immediate Walk-Up | Route: OPEN | Tech: ${DRIVER_NAME}`;
-                    renderDispatchCard(name, address, phone, email, notes, "0.00");
-                } else {
-                    alert("Database Sync Error: " + result.error);
+                if (!googleResult.success) {
+                    throw new Error("Google Ledger sync failed: " + googleResult.error);
                 }
+
+                // 📦 PIPELINE DISPATCH 2: Direct Push to Zapier (Bypasses 15-Minute Polling Timer)
+                try {
+                    await fetch(ZAPIER_WEBHOOK_URL, {
+                        method: "POST",
+                        mode: "no-cors", 
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            customerName: name,
+                            serviceAddress: address,
+                            customerPhone: phone,
+                            customerEmail: email,
+                            techName: DRIVER_NAME,
+                            arrivalTime: "Immediate Walk-Up",
+                            routeStatus: "OPEN"
+                        })
+                    });
+                } catch (webhookErr) {
+                    console.error("Instant CRM Webhook sync error bypassed:", webhookErr);
+                }
+
+                // EXECUTE DYNAMIC RENDER INTERFACES
+                closeWalkUpModal();
+                var manifestDisplay = document.getElementById('manifestContainer');
+                if(manifestDisplay.innerHTML.includes("Awaiting dispatch lookup")) { manifestDisplay.innerHTML = ""; }
+
+                var notes = `Time: Immediate Walk-Up | Route: OPEN | Tech: ${DRIVER_NAME}`;
+                renderDispatchCard(name, address, phone, email, notes, "0.00");
+
             } catch (err) {
-                alert("Network Error: Failed to write walk-up lead to central spreadsheet.");
+                alert("Database Sync Error: " + err.message);
             } finally {
                 confirmBtn.innerHTML = originalText;
                 confirmBtn.disabled = false;
@@ -256,7 +277,6 @@
                     <div class="job-meta">📝 <span id="scope_${idSuffix}">${scope || ""}</span></div>
                     <div style="display:none;" id="cost_${idSuffix}">${cost || "0.00"}</div>
                     
-                    <!-- COMMS & TRACKING ROW -->
                     <div class="card-actions-grid">
                         <button type="button" class="btn-utility btn-sms-trigger" onclick="triggerClientTransitNotification('${idSuffix}')">
                             💬 Notify On My Way
@@ -266,7 +286,6 @@
                         </button>
                     </div>
 
-                    <!-- WORKFLOW & CLOSEOUT ROW -->
                     <div class="card-routing-grid" style="margin-top:8px;">
                         <button class="btn-route primary" onclick="routeToWorkflow('${idSuffix}', 'proposals.html')">📊 Build Estimate</button>
                         <button type="button" class="btn-utility" style="background: var(--success-dark);" id="btn_complete_${idSuffix}" onclick="updateJobStatus('${idSuffix}', 'COMPLETED')">
