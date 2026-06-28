@@ -156,7 +156,33 @@
             });
         }
 
+        // ✅ FIXED: AUTO-COMPILING ENGINE GRABS THE LINE ITEMS AND STORES THEM FOR THE INVOICE PAGE
         function advanceToClientSignatureCanvas() {
+            try {
+                var compiledScopeText = "";
+                var container = document.getElementById('clientScopeContainer');
+                var listItems = container.getElementsByTagName('li');
+
+                if (listItems.length > 0) {
+                    var itemsList = [];
+                    for (var i = 0; i < listItems.length; i++) {
+                        // Strip out icon formatting and price metadata tags for clean textual data
+                        var cleanLineText = listItems[i].innerText.replace('🔹', '').replace('Itemized', '').trim();
+                        itemsList.push("- " + cleanLineText);
+                    }
+                    compiledScopeText = itemsList.join("\n");
+                } else {
+                    compiledScopeText = "Standard Sweeping & Stabilization Maintenance Package.";
+                }
+
+                // Explicitly sync the compiled string directly into the core invoice data block
+                localStorage.setItem('current_wo_work_scope', compiledScopeText);
+                
+            } catch (err) {
+                console.error("Error auto-compiling estimate scope string: ", err);
+            }
+
+            // Direct routing sequence pass-through
             window.location.replace("signatures.html");
         }
 
