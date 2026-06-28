@@ -250,7 +250,6 @@
 
             var hashKeyType = (paymentMethod === "STRIPE_DIGITAL") ? "STRIPE_TEXT_DISPATCH" : "MANUAL_FIELD_ENTRY";
             
-            // Execute centralized ledger spreadsheet upload
             await uploadInvoiceToOfficeSheet(hashKeyType);
         }
 
@@ -265,63 +264,52 @@
             var siteAddress = document.getElementById('inv_addr').value.trim();
             var finalizedScope = document.getElementById('inv_scope').value.trim();
             var finalLedgerVal = parseFloat(document.getElementById('inv_final_total').value) || 0;
+            var paymentMethod = document.getElementById('inv_payment').value;
+            var currentStatus = document.getElementById('inv_status').value;
             
             var highTicketLimit = 1500.00;
             var triggerHighTicketAlert = (finalLedgerVal >= highTicketLimit) ? "TRUE" : "FALSE";
 
-            var payload = [
-                customerName, 
-                new Date().toLocaleDateString(), 
-                siteAddress, 
-                finalizedScope, 
-                document.getElementById('inv_subtotal').value, 
-                finalLedgerVal.toFixed(2), 
-                document.getElementById('inv_payment').value, 
-                document.getElementById('inv_status').value, 
-                CURRENT_USER, 
-                billingEmail, 
-                tokenStr, 
-                tSig, 
-                cSig,
-                triggerHighTicketAlert 
-            ];
-            
+            btn.disabled = true;
+
             try {
-                statusLine.innerHTML = "🔒 Synchronizing ledger across office engines...";
+                statusLine.innerHTML = "🔒 Compiling Matrix & Generating Payment Links...";
                 
-                // 1. Sync Central Office Sheet Node
-                await fetch(GOOGLE_API_GATEWAY_URL, { 
+                // 🚀 ONE SINGLE PUSH: Hand it all to Google Apps Script
+                let googleResponse = await fetch(GOOGLE_API_GATEWAY_URL, { 
                     method: "POST", 
-                    mode: "no-cors", 
-                    body: JSON.stringify({ route: "recordFieldData", sheetName: "Invoices", payload: payload })
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({ 
+                        route: "generateInvoiceDispatch", // NEW ROUTE FOR BACKEND
+                        payload: {
+                            customerName: customerName,
+                            date: new Date().toLocaleDateString(),
+                            siteAddress: siteAddress,
+                            workScope: finalizedScope,
+                            subtotal: document.getElementById('inv_subtotal').value,
+                            total: finalLedgerVal.toFixed(2),
+                            paymentMethod: paymentMethod,
+                            status: currentStatus,
+                            techName: CURRENT_USER,
+                            billingEmail: billingEmail,
+                            token: tokenStr,
+                            techSignature: tSig,
+                            clientSignature: cSig,
+                            highTicket: triggerHighTicketAlert
+                        }
+                    })
                 });
 
-                // 2. Direct Push to Zapier Instant Catch Node if Payment Mode is Stripe
-                if (document.getElementById('inv_payment').value === "STRIPE_DIGITAL") {
-                    try {
-                        var ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/28071510/42fi7xz/";
-                        await fetch(ZAPIER_WEBHOOK_URL, {
-                            method: "POST",
-                            mode: "no-cors",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                customerName: customerName,
-                                customerEmail: billingEmail,
-                                serviceAddress: siteAddress,
-                                invoiceScopeOfWork: finalizedScope,
-                                invoiceAmountDue: finalLedgerVal.toFixed(2),
-                                triggerTag: "send-invoice"
-                            })
-                        });
-                    } catch (webhookErr) {
-                        console.error("CRM Automation dispatch error bypassed:", webhookErr);
-                    }
+                let googleResult = await googleResponse.json();
+
+                if (!googleResult.success) {
+                    throw new Error("Ledger Sync Failed: " + googleResult.error);
                 }
 
-                statusLine.innerHTML = "✅ Ledger recorded successfully!";
+                statusLine.innerHTML = "✅ Ledger recorded and Invoice Dispatched!";
                 statusLine.style.color = "var(--success)";
                 
-                alert("Ledger finalized! System data passed cleanly to office workbooks.");
+                alert("Ledger finalized! Customer has been texted the secure checkout link.");
                 
                 // Clear local tracking states safely
                 var sessionKeys = [
@@ -336,7 +324,7 @@
                 
                 window.location.replace("jobs.html");
             } catch(e) {
-                alert("API Gateway Error: Could not verify connection framework.");
+                alert("API Gateway Error: " + e.message);
                 btn.disabled = false;
                 btn.innerText = "🚀 Compile Matrix & Dispatch Ledger";
             }
