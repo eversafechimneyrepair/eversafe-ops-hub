@@ -201,7 +201,7 @@
             confirmBtn.innerHTML = "⏳ Syncing Ledger & CRM...";
             confirmBtn.disabled = true;
 
-            // 📦 PUSH 1: Update Google Sheets
+            // 📦 PUSH 1: Update Google Sheets (Dispatches Matrix Node)
             try {
                 let googleResponse = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
@@ -226,11 +226,10 @@
                     throw new Error("Google Ledger sync failed: " + googleResult.error);
                 }
 
-                // 📦 PUSH 2: Update HighLevel Natively & Instantly (No Zapier Needed)
+                // 📦 PUSH 2: Direct HighLevel Transmission (No Cors Bypassed For Clear Processing)
                 try {
                     await fetch(HIGHLEVEL_LEAD_WEBHOOK_URL, {
                         method: "POST",
-                        mode: "no-cors", 
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             customerName: name,
