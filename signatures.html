@@ -116,7 +116,6 @@
             });
         });
 
-        // Modular Canvas Setup for multiple pads
         function setupCanvas(canvasId) {
             var canvas = document.getElementById(canvasId);
             resizeCanvas(canvasId);
@@ -162,7 +161,6 @@
             var ctx = canvas.getContext('2d');
             var rect = canvas.parentNode.getBoundingClientRect();
             
-            // Save existing image data before resizing so it doesn't wipe
             var data = canvas.toDataURL();
             
             canvas.width = rect.width; 
@@ -172,7 +170,6 @@
             ctx.lineJoin = 'round';
             ctx.strokeStyle = '#0f172a';
 
-            // Restore image data
             var img = new Image();
             img.src = data;
             img.onload = function() { ctx.drawImage(img, 0, 0); };
@@ -212,15 +209,14 @@
             var techBase64 = document.getElementById('techCanvas').toDataURL('image/png');
             var cleanFilename = "Sig_" + custName.replace(/[^a-z0-9]/gi, '_') + "_" + Date.now() + ".png";
 
-            // Save to local storage for the invoice page to access if needed
             localStorage.setItem('final_client_signature', clientBase64);
             localStorage.setItem('final_tech_signature', techBase64);
             localStorage.setItem('current_wo_status', 'EXECUTED');
 
             var payload = {
                 route: "updateWorkOrderSignature",
-                base64Data: clientBase64, // Client Signature (Kept for backward compatibility with your Apps Script)
-                techBase64Data: techBase64, // New EverSafe Rep Signature 
+                base64Data: clientBase64, 
+                techBase64Data: techBase64, 
                 filename: cleanFilename,
                 customerName: custName,
                 customerEmail: localStorage.getItem('current_wo_customer_email') || "No Email Provided",
@@ -241,6 +237,7 @@
                 if (result.success) {
                     statusDiv.innerHTML = "✅ Contract Finalized! Hardlocked PDF emailed to client and archived to Drive.";
                     statusDiv.style.color = "var(--success-dark)";
+                    // 🎯 ROUTING SYNTAX RE-ALIGNED TO YOUR SPECIFIC BILLING FILE:
                     setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
                 } else {
                     statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
@@ -249,6 +246,7 @@
             } catch(e) {
                 statusDiv.innerHTML = "⚠️ Ledger Synced (Offline Storage Pipeline Tripped). Proceeding...";
                 statusDiv.style.color = "var(--accent-dark)";
+                // 🎯 ROUTING SYNTAX RE-ALIGNED TO YOUR SPECIFIC BILLING FILE HERE AS WELL:
                 setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
             }
         }
