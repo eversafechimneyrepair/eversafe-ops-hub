@@ -114,7 +114,6 @@
             <label class="section-title">3. Modular Safety &amp; Material Upgrades</label>
             <div class="addon-grid">
                 
-                <!-- 🧪 NEW SYSTEM ELEMENT: TITANIUM 316TI STABILIZED LINER BLOCK -->
                 <div class="addon-row" id="row_addon_ti" onclick="toggleModularUpgradeOption('ti')">
                     <div class="addon-info">
                         <div class="addon-name">Premium 316Ti 'Titanium' Alloy Upgrade</div>
@@ -125,7 +124,6 @@
                     <div class="switch-rail"><div class="switch-button"></div></div>
                 </div>
 
-                <!-- 🧱 NEW SYSTEM ELEMENT: PRECAST CONCRETE CROWN SLAB SLIDER -->
                 <div class="addon-row" id="row_addon_precast" onclick="toggleModularUpgradeOption('precast')">
                     <div class="addon-info">
                         <div class="addon-name">Precast Concrete Engineered Crown Slab</div>
@@ -136,7 +134,6 @@
                     <div class="switch-rail"><div class="switch-button"></div></div>
                 </div>
 
-                <!-- 💎 NEW SYSTEM ELEMENT: SINGLE-FLUE STAINLESS CAP SLIDER -->
                 <div class="addon-row" id="row_addon_singlecap" onclick="toggleModularUpgradeOption('singlecap')">
                     <div class="addon-info">
                         <div class="addon-name">Standard Single-Flue Stainless Protective Cap</div>
@@ -204,7 +201,6 @@
             reline: "Premium relining engineering overhaul sequence executed. Removed obsolete internal flue tile partitions, dropped down a custom UL-Listed smooth-wall stainless steel insulation liner profile core, and structurally sealed connection terminals."
         };
 
-        // 📡 MASTER SYSTEM MATRIX ARRAY REGISTER REGISTERED HERE
         var SYSTEM_ADDON_REGISTRY = ['ti', 'precast', 'singlecap', 'cap', 'crown', 'flash'];
 
         window.addEventListener('DOMContentLoaded', function() {
@@ -217,7 +213,6 @@
             if(savedCost) { document.getElementById('base_price_field').value = parseFloat(savedCost); }
             if(savedScope) { document.getElementById('base_scope_textarea').value = savedScope; }
             
-            // Re-hydrate choice parameters smoothly from memory vault lines
             SYSTEM_ADDON_REGISTRY.forEach(function(id) {
                 if(localStorage.getItem('addon_state_' + id) === 'true') {
                     var row = document.getElementById('row_addon_' + id);
@@ -280,6 +275,7 @@
             document.getElementById('invoice_grand_total_display').innerText = '$' + runningTotal.toFixed(2);
         }
 
+        // ✅ SEAMLESS COMPILATION: CLEARS DOWNWARD TRACKING STATE MAPPED DATA TO AVOID PRICE LEAKAGE
         function serializeCustomEstimatePayloadAndAdvance() {
             var basePrice = parseFloat(document.getElementById('base_price_field').value) || 0;
             var rawScopeText = document.getElementById('base_scope_textarea').value.trim();
@@ -290,11 +286,21 @@
             var finalizedRunningCost = basePrice;
             var compiledScopePayload = rawScopeText;
             
+            // Explicit array itemization container to let intermediate review layouts display cleanly without explicit unit pricing attachment strings
+            var cleanItemizedArray = [];
+            cleanItemizedArray.push({ label: "Core Mechanical Operations: Base Site Project", price: basePrice.toFixed(2) });
+
             SYSTEM_ADDON_REGISTRY.forEach(function(id) {
                 var box = document.getElementById('chk_addon_' + id);
                 if(box && box.checked) {
-                    finalizedRunningCost += parseFloat(box.getAttribute('data-price')) || 0;
-                    compiledScopePayload += "\n\n" + box.getAttribute('data-label');
+                    var addOnPrice = parseFloat(box.getAttribute('data-price')) || 0;
+                    var addOnLabel = box.getAttribute('data-label');
+                    
+                    finalizedRunningCost += addOnPrice;
+                    compiledScopePayload += "\n\n" + addOnLabel;
+                    
+                    // Push structured item tracking safely 
+                    cleanItemizedArray.push({ label: addOnLabel, price: addOnPrice.toFixed(2) });
                 }
             });
             
@@ -307,6 +313,9 @@
             
             localStorage.setItem('cached_inv_subtotal', finalizedRunningCost.toFixed(2));
             localStorage.setItem('cached_inv_scope', compiledScopePayload);
+
+            // Clear any conflicting itemized JSON arrays to force review panels to fallback exclusively on our custom unpriced plain text layout sequence
+            localStorage.removeItem('current_wo_itemized_json');
 
             window.location.replace('contract-wo.html');
         }
