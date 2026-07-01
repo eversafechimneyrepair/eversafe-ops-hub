@@ -326,11 +326,15 @@
             }
         }
 
-        /* ✅ REPAIRED FUNCTION: Phone metadata now safely bundles throughout your data layers */
+        /* ✅ REPAIRED PRODUCTION FUNCTION: Strips emojis and punctuation, passing pure digits to localStorage */
         function routeToWorkflow(idSuffix, targetPage) {
             var name = document.getElementById('name_' + idSuffix).innerText;
             var addr = document.getElementById('addr_' + idSuffix).innerText;
-            var phone = document.getElementById('phone_' + idSuffix).innerText; 
+            
+            // Regex replaces all non-digits (\D) with blank space to sanitize string input
+            var rawPhone = document.getElementById('phone_' + idSuffix).innerText;
+            var phone = rawPhone.replace(/\D/g, ''); 
+
             var email = document.getElementById('email_' + idSuffix).innerText;
             var scope = document.getElementById('scope_' + idSuffix).innerText;
             var cost = document.getElementById('cost_' + idSuffix).innerText;
