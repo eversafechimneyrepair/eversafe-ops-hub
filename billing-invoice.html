@@ -56,6 +56,21 @@
         .btn-action:disabled { background: #cbd5e1 !important; color: #94a3b8 !important; cursor: not-allowed; box-shadow: none; }
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
         .status-msg { margin-top: 20px; font-weight: bold; font-size: 13px; color: #475569; min-height: 20px; text-align: center; }
+
+        /* Integrated Printing Terms Styles */
+        .printable-contract-terms { margin-top: 35px; padding-top: 20px; border-top: 2px solid var(--primary); }
+        .print-terms-title { font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-top: 14px; margin-bottom: 6px; letter-spacing: 0.5px; }
+        .print-terms-list { list-style-type: none; padding-left: 0; margin-bottom: 12px; }
+        .print-terms-list li { font-size: 11px; color: #334155; line-height: 1.5; margin-bottom: 6px; text-align: justify; }
+
+        @media print {
+            body { padding-top: 0; padding-bottom: 0; background: white; }
+            .app-header, .fixed-bottom-nav-bar, .btn-action, .btn-clear, .stripe-automation-panel, select, .grid-2 label, .grid-3 label { display: none !important; }
+            .app-card { border: none; box-shadow: none; padding: 0; }
+            .printable-contract-terms { display: block !important; page-break-inside: avoid; }
+            input, textarea { border: none !important; background: transparent !important; resize: none; text-align: left !important; padding: 4px 0 !important; }
+            .section-title { background: #64748b !important; color: white !important; margin-top: 15px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
     </style>
 </head>
 <body>
@@ -85,7 +100,7 @@
             <div class="form-group" style="margin-bottom:12px;"><label>Billing Address:</label><input type="text" id="inv_addr"></div>
 
             <div class="section-title">Settled Scope &amp; Line Items</div>
-            <textarea id="inv_scope" rows="3"></textarea>
+            <textarea id="inv_scope" rows="4"></textarea>
 
             <div class="grid-2" style="margin-top:15px;">
                 <div class="form-group">
@@ -105,9 +120,23 @@
                 </div>
             </div>
 
-            <div class="grid-2" style="background:#f1f5f9; padding:15px; border-radius:6px; margin-top:15px;">
-                <div class="form-group"><label>Subtotal Balance Due ($):</label><input type="number" id="inv_subtotal" value="0.00" step="0.01" oninput="runTotalsCalc()"></div>
-                <div class="form-group"><label>Final Settled Ledger Value ($):</label><input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;"></div>
+            <div class="grid-3" style="background:#f1f5f9; padding:15px; border-radius:6px; margin-top:15px; align-items: center;">
+                <div class="form-group">
+                    <label>Payment Designation Type:</label>
+                    <select id="inv_allocation_type" onchange="runTotalsCalc()" style="font-weight: bold; color: var(--primary);">
+                        <option value="FULL_BALANCE" selected>Complete Project Total (100%)</option>
+                        <option value="MILESTONE_DEPOSIT">Scheduling / Material Deposit</option>
+                        <option value="PROGRESS_DRAW">Progress / Milestone Payment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Subtotal Amount Due ($):</label>
+                    <input type="number" id="inv_subtotal" value="0.00" step="0.01" oninput="handleManualOverrideAmount()">
+                </div>
+                <div class="form-group">
+                    <label>Final Settled Ledger Value ($):</label>
+                    <input type="number" id="inv_final_total" value="0.00" readonly style="color:var(--success); font-weight:bold; background:#fff;">
+                </div>
             </div>
 
             <div id="stripeAutomationWrapper" class="stripe-automation-panel">
@@ -130,7 +159,35 @@
                 </div>
             </div>
 
-            <button type="button" class="btn-action" style="background:var(--success);" id="submitInvoiceBtn" onclick="processSecureInvoiceSubmission()">🚀 Compile Matrix & Dispatch Ledger</button>
+            <div class="printable-contract-terms">
+                <div class="print-terms-title">💵 Deposit &amp; Milestone Structure</div>
+                <ul class="print-terms-list">
+                    <li><strong>Standard Repair Projects (Under $1,500):</strong> A 10% scheduling deposit is required to lock in your project date, with the remaining balance due immediately upon completion.</li>
+                    <li><strong>Major Structural Projects (Over $1,500):</strong> A 50% material mobilization deposit is required prior to scheduling. The remaining 50% balance is due immediately upon on-site project completion.</li>
+                    <li><strong>Custom Material Orders:</strong> Any non-standard custom fabricated chase tops, liners, or specialized masonry elements require a 100% upfront material payment. This deposit is non-refundable once custom manufacturing begins.</li>
+                </ul>
+
+                <div class="print-terms-title">⚖️ Terms &amp; Conditions</div>
+                <ul class="print-terms-list">
+                    <li><strong>Scope of Work:</strong> EverSafe Chimney Repair will perform the itemized services listed in this document in accordance with National Fire Protection Association (NFPA 211) safety standards. Any deviations require a signed change order before work proceeds.</li>
+                    <li><strong>On-Site Preparedness:</strong> The homeowner agrees to provide technicians with clear access to the chimney footprint, fireplace hearth, and roof structure. Please move any fragile personal property out of the immediate work area prior to our arrival.</li>
+                    <li><strong>Hidden &amp; Unforeseen Conditions:</strong> EverSafe Chimney Repair is not liable for the discovery or accidental acceleration of pre-existing internal degradation, cracked clay flue tiles hidden by creosote, collapsed internal corbeling, or structural framing defects behind finished walls.</li>
+                    <li><strong>Property &amp; Material Limitations:</strong> Our technicians take the utmost care to protect your property. However, EverSafe Chimney Repair is not responsible for minor cosmetic scuffing, unavoidable fracturing of old or brittle roof shingles adjacent to the workspace, or masonry cracks resulting from subsequent foundation settling, seismic activity, or thermal shock.</li>
+                    <li><strong>Notice of Cancellation:</strong> You, the buyer, have the right to cancel this transaction at any time prior to midnight of the third business day after the date of this transaction. By requesting immediate, non-emergency scheduling or urgent safety mitigations, you explicitly waive this 3-day window to allow materials and crews to deploy.</li>
+                    <li><strong>Media Release:</strong> The homeowner grants permission to capture photo/video assets of the workspace for quality compliance and marketing. No personal identifying information or street numbers will ever be shared.</li>
+                    <li><strong>Payment Terms:</strong> The remaining milestone balance is due in full immediately upon completion. We accept cash, check, or secure mobile transactions right from our technician's tablet. A late fee of 1.5% per month will apply to any balances left unpaid past 7 days.</li>
+                </ul>
+
+                <div class="print-terms-title">🛡️ Warranty Policy</div>
+                <ul class="print-terms-list">
+                    <li><strong>Mortar &amp; Brickwork:</strong> Includes a 2-year craftsmanship warranty covering structural soundness, joint integrity, and repointing stability under normal environmental exposure. <em>(Does not cover damage caused by settling foundations, lightning strikes, or pre-existing internal structural shifting).</em></li>
+                    <li><strong>Continuous Relining Systems:</strong> Includes a lifetime material warranty against structural decay, provided the flue is professionally swept and inspected annually.</li>
+                    <li><strong>Cement Crown Pours:</strong> Warranted for 5 years against deep structural cracking or water penetration. <em>(Does not cover minor superficial hairline curing checks).</em></li>
+                    <li><strong>Flashing Elements:</strong> Warranted for 3 years against wind-driven leaks or material separation under standard weather conditions.</li>
+                </ul>
+            </div>
+
+            <button type="button" class="btn-action" style="background:var(--success);" id="submitInvoiceBtn" onclick="processSecureInvoiceSubmission()">🚀 Compile Matrix &amp; Dispatch Ledger</button>
 
             <div id="invoiceStatusLine" class="status-msg" style="color: var(--primary); margin-top: 15px; font-size: 12px;">System online (Stripe Module). Ready for execution.</div>
         </div>
@@ -143,6 +200,7 @@
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         var CANVAS_MAP = {};
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
+        var ORIGINAL_PROJECT_ESTIMATE_MAX = parseFloat(localStorage.getItem('current_wo_est_cost')) || 0;
 
         window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
@@ -150,16 +208,14 @@
             document.getElementById('inv_phone').value = localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('cached_wo_phone') || "";
             document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || localStorage.getItem('cached_wo_addr') || "";
             
-            // ✅ EXPANDED COMPATIBILITY FALLBACKS TO LOAD SCOPE WORK FROM THE ESTIMATE STAGE
             document.getElementById('inv_scope').value = 
                 localStorage.getItem('current_wo_work_scope') || 
                 localStorage.getItem('estimate_scope') || 
                 localStorage.getItem('detailedScope') || 
                 localStorage.getItem('cached_inv_scope') || "";
                 
-            document.getElementById('inv_subtotal').value = localStorage.getItem('current_wo_est_cost') || localStorage.getItem('cached_inv_subtotal') || "0.00";
+            document.getElementById('inv_subtotal').value = ORIGINAL_PROJECT_ESTIMATE_MAX.toFixed(2);
             
-            // Auto-save typing variations instantly
             document.getElementById('inv_cust').addEventListener('input', function() { localStorage.setItem('current_wo_customer_name', this.value); });
             document.getElementById('inv_phone').addEventListener('input', function() { localStorage.setItem('current_wo_customer_phone', this.value); });
             document.getElementById('inv_email').addEventListener('input', function() { localStorage.setItem('current_wo_customer_email', this.value); });
@@ -172,9 +228,55 @@
         });
 
         function runTotalsCalc() {
-            var v = parseFloat(document.getElementById('inv_subtotal').value) || 0;
-            document.getElementById('inv_final_total').value = v.toFixed(2);
-            localStorage.setItem('current_wo_est_cost', v.toFixed(2));
+            var allocationMode = document.getElementById('inv_allocation_type').value;
+            var subtotalField = document.getElementById('inv_subtotal');
+            var scopeField = document.getElementById('inv_scope');
+            
+            if (ORIGINAL_PROJECT_ESTIMATE_MAX === 0) {
+                ORIGINAL_PROJECT_ESTIMATE_MAX = parseFloat(localStorage.getItem('current_wo_est_cost')) || 0;
+            }
+
+            var targetValue = ORIGINAL_PROJECT_ESTIMATE_MAX;
+            var baselineScopeText = localStorage.getItem('current_wo_work_scope') || localStorage.getItem('estimate_scope') || "";
+
+            // Remove any old system injection tags to keep text wraps clean
+            baselineScopeText = baselineScopeText.replace(/^\[.*?\]\n?/g, '');
+
+            if (allocationMode === "FULL_BALANCE") {
+                subtotalField.readOnly = false;
+                targetValue = ORIGINAL_PROJECT_ESTIMATE_MAX;
+                scopeField.value = "[FINAL BALANCE COLLECTION]\n" + baselineScopeText;
+                
+            } else if (allocationMode === "MILESTONE_DEPOSIT") {
+                subtotalField.readOnly = true;
+                if (ORIGINAL_PROJECT_ESTIMATE_MAX >= 1500.00) {
+                    targetValue = ORIGINAL_PROJECT_ESTIMATE_MAX * 0.50;
+                    scopeField.value = `[INITIAL 50% MOBILIZATION DEPOSIT - Project Total: $${ORIGINAL_PROJECT_ESTIMATE_MAX.toFixed(2)}]\n` + baselineScopeText;
+                } else {
+                    targetValue = ORIGINAL_PROJECT_ESTIMATE_MAX * 0.10;
+                    scopeField.value = `[INITIAL 10% SCHEDULING DEPOSIT - Project Total: $${ORIGINAL_PROJECT_ESTIMATE_MAX.toFixed(2)}]\n` + baselineScopeText;
+                }
+                
+            } else if (allocationMode === "PROGRESS_DRAW") {
+                subtotalField.readOnly = false;
+                targetValue = parseFloat(subtotalField.value) || 0;
+                scopeField.value = `[PROGRESS MILESTONE DRAW - Remaining Unsettled Ledger Variances Apply]\n` + baselineScopeText;
+            }
+
+            subtotalField.value = targetValue.toFixed(2);
+            document.getElementById('inv_final_total').value = targetValue.toFixed(2);
+        }
+
+        function handleManualOverrideAmount() {
+            var allocationMode = document.getElementById('inv_allocation_type').value;
+            var subtotalInputVal = parseFloat(document.getElementById('inv_subtotal').value) || 0;
+            
+            document.getElementById('inv_final_total').value = subtotalInputVal.toFixed(2);
+            
+            if (allocationMode === "FULL_BALANCE") {
+                ORIGINAL_PROJECT_ESTIMATE_MAX = subtotalInputVal;
+                localStorage.setItem('current_wo_est_cost', subtotalInputVal.toFixed(2));
+            }
         }
 
         function toggleAutomationInterfaceTray() {
@@ -290,7 +392,6 @@
             try {
                 statusLine.innerHTML = "🔒 Compiling Matrix & Generating Payment Links...";
                 
-                // 🚀 ONE SINGLE PUSH: Hand it all to Google Apps Script
                 let googleResponse = await fetch(GOOGLE_API_GATEWAY_URL, { 
                     method: "POST", 
                     headers: { "Content-Type": "text/plain" },
@@ -298,7 +399,7 @@
                         route: "generateInvoiceDispatch",
                         payload: {
                             customerName: customerName,
-                            customerPhone: customerPhone, // ✅ ADDED TO PAYLOAD CONTAINER
+                            customerPhone: customerPhone,
                             date: new Date().toLocaleDateString(),
                             siteAddress: siteAddress,
                             workScope: finalizedScope,
@@ -327,7 +428,6 @@
                 
                 alert("Ledger finalized! Customer has been texted the secure checkout link.");
                 
-                // Clear local tracking states safely
                 var sessionKeys = [
                     'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_customer_phone', 'current_wo_service_address',
                     'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier', 'estimate_scope', 'detailedScope',
