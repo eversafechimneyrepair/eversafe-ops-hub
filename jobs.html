@@ -184,14 +184,12 @@
             document.getElementById('wuEmail').value = '';
         }
 
-        // --- UPGRADED: SECURES LEAD IN SPREADSHEET AND CREATES CRM CONTACT NATIVELY ---
         async function generateLocalDispatch() {
             var name = document.getElementById('wuName').value.trim();
             var address = document.getElementById('wuAddress').value.trim();
             var phone = document.getElementById('wuPhone').value.trim() || "No Phone Provided";
             var email = document.getElementById('wuEmail').value.trim() || "No Email Provided";
 
-            // 🚀 LIVE HIGHLEVEL WORKFLOW INBOUND WEBHOOK NODE
             var HIGHLEVEL_LEAD_WEBHOOK_URL = "https://services.leadconnectorhq.com/hooks/gj5q3kXOQ5xmlx2PQbFn/webhook-trigger/1ff5745a-605f-46f2-a862-91677bc3a223";
 
             if (!name || !address) { alert("Name and Address are required to generate a lead."); return; }
@@ -201,7 +199,6 @@
             confirmBtn.innerHTML = "⏳ Syncing Ledger & CRM...";
             confirmBtn.disabled = true;
 
-            // 📦 PUSH 1: Update Google Sheets (Dispatches Matrix Node)
             try {
                 let googleResponse = await fetch(GOOGLE_API_GATEWAY_URL, {
                     method: "POST",
@@ -226,7 +223,6 @@
                     throw new Error("Google Ledger sync failed: " + googleResult.error);
                 }
 
-                // 📦 PUSH 2: Direct HighLevel Transmission (No Cors Bypassed For Clear Processing)
                 try {
                     await fetch(HIGHLEVEL_LEAD_WEBHOOK_URL, {
                         method: "POST",
@@ -330,9 +326,11 @@
             }
         }
 
+        /* ✅ REPAIRED FUNCTION: Phone metadata now safely bundles throughout your data layers */
         function routeToWorkflow(idSuffix, targetPage) {
             var name = document.getElementById('name_' + idSuffix).innerText;
             var addr = document.getElementById('addr_' + idSuffix).innerText;
+            var phone = document.getElementById('phone_' + idSuffix).innerText; 
             var email = document.getElementById('email_' + idSuffix).innerText;
             var scope = document.getElementById('scope_' + idSuffix).innerText;
             var cost = document.getElementById('cost_' + idSuffix).innerText;
@@ -341,12 +339,14 @@
             localStorage.removeItem('current_wo_itemized_json');
 
             localStorage.setItem('current_wo_customer_name', name);
+            localStorage.setItem('current_wo_customer_phone', phone); 
             localStorage.setItem('current_wo_customer_email', email === "No Email" ? "" : email);
             localStorage.setItem('current_wo_service_address', addr);
             localStorage.setItem('current_wo_work_scope', scope);
             localStorage.setItem('current_wo_est_cost', cost);
             
             localStorage.setItem('cached_wo_cust', name);
+            localStorage.setItem('cached_wo_phone', phone); 
             localStorage.setItem('cached_wo_email', email === "No Email" ? "" : email);
             localStorage.setItem('cached_wo_addr', addr);
             localStorage.setItem('cached_inv_scope', scope);
@@ -357,10 +357,10 @@
 
         function clearActiveJobSession() {
             var trackingKeys = [
-                'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_service_address',
+                'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_customer_phone', 'current_wo_service_address',
                 'current_wo_work_scope', 'current_wo_est_cost', 'current_wo_selected_tier',
                 'current_wo_price_book_items', 'current_wo_itemized_json', 'current_wo_slideshow_data',
-                'cached_wo_cust', 'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
+                'cached_wo_cust', 'cached_wo_email', 'cached_wo_phone', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
                 'current_l2_n1', 'current_l2_n2', 'current_l2_n3', 'current_l2_n4', 'current_l2_n5', 
                 'current_l2_n6', 'current_l2_n7', 'current_l2_n8', 'current_l2_summary', 'current_l2_client_initials'
             ];
