@@ -326,12 +326,10 @@
             }
         }
 
-        /* ✅ REPAIRED PRODUCTION FUNCTION: Strips emojis and punctuation, passing pure digits to localStorage */
         function routeToWorkflow(idSuffix, targetPage) {
             var name = document.getElementById('name_' + idSuffix).innerText;
             var addr = document.getElementById('addr_' + idSuffix).innerText;
             
-            // Regex replaces all non-digits (\D) with blank space to sanitize string input
             var rawPhone = document.getElementById('phone_' + idSuffix).innerText;
             var phone = rawPhone.replace(/\D/g, ''); 
 
@@ -356,7 +354,7 @@
             localStorage.setItem('cached_inv_scope', scope);
             localStorage.setItem('cached_inv_subtotal', cost);
 
-            window.location.href = estimate.html;
+            window.location.href = "estimate.html";
         }
 
         function clearActiveJobSession() {
