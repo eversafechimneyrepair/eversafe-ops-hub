@@ -48,10 +48,16 @@
         .price-summary-banner { background: #f0fdf4; border: 2px dashed var(--success); border-radius: 6px; padding: 18px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
         .total-amount-txt { font-size: 28px; font-weight: 900; color: #166534; }
 
-        .legal-frame-box { background: #f1f5f9; border: 1px solid var(--border); padding: 18px; font-size: 12px; color: #334155; line-height: 1.6; border-radius: 6px; max-height: 180px; overflow-y: auto; margin-top: 15px; text-align: justify; }
+        /* Document Contract Layout Formatting Style Classes */
+        .contract-block { font-size: 13px; color: #475569; line-height: 1.6; margin: 15px 0 25px 0; }
+        .contract-block p { margin-bottom: 12px; }
+        .contract-block ul { padding-left: 20px; margin-bottom: 16px; }
+        .contract-block li { margin-bottom: 8px; text-align: justify; }
+        .contract-divider { border: 0; border-top: 1px dashed var(--border); margin: 20px 0; }
 
         .btn-action { width: 100%; max-width: 380px; background: var(--success); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 30px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
         .btn-action:hover { background: #16a34a; }
+        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
 </head>
 <body>
@@ -89,16 +95,51 @@
 
             <div class="price-summary-banner">
                 <div>
-                    <span style="font-size:11px; font-weight:bold; color:#166534; text-transform:uppercase; letter-spacing:0.5px;">Final Proposal Binding Total</span>
-                    <div style="font-size:12.5px; color:#15803d; font-weight:500; margin-top:2px;">All-inclusive structural service valuation</div>
+                    <span style="font-size:11px; font-weight:bold; color:#166534; text-transform:uppercase; letter-spacing:0.5px;">Final Approved Investment</span>
+                    <div style="font-size:12.5px; color:#15803d; font-weight:500; margin-top:2px;">All-inclusive project total for parts, labor, and services rendered</div>
                 </div>
                 <div class="total-amount-txt" id="finalPriceText">$0.00</div>
             </div>
 
-            <div class="section-title">Terms &amp; Structural Directives Agreement</div>
-            <div class="legal-frame-box">
-                By selecting the authorization gateway command below, the client explicitly verifies that the itemized tasks summarized in the operations matrix represent the full intended project parameters. EverSafe Chimney Repair is granted formal authorization to deploy structural technicians and materials to perform services according to active NFPA 211 mitigation compliance protocols. All continuous relining installations, cement crown pours, and flashing elements carry full commercial warrantees validated immediately upon completion of final closeout parameters. Payment obligations are due directly upon onsite project signoff and closeout via secure merchant field terminal collection loops.
+            <div class="section-title">💵 Deposit &amp; Milestone Structure</div>
+            <div class="contract-block">
+                <p>To schedule your project and secure the necessary raw materials, EverSafe Chimney Repair utilizes the following standard deposit framework:</p>
+                <ul>
+                    <li><strong>Standard Repair Projects (Under $1,500):</strong> A 10% scheduling deposit is required to lock in your project date, with the remaining balance due immediately upon completion.</li>
+                    <li><strong>Major Structural Projects (Over $1,500):</strong> A 50% material mobilization deposit is required prior to scheduling. The remaining 50% balance is due immediately upon on-site project completion.</li>
+                    <li><strong>Custom Material Orders:</strong> Any non-standard custom fabricated chase tops, liners, or specialized masonry elements require a 100% upfront material payment. This deposit is non-refundable once custom manufacturing begins.</li>
+                </ul>
             </div>
+
+            <div class="section-title">⚖️ Terms &amp; Conditions</div>
+            <div class="contract-block">
+                <ul>
+                    <li><strong>Scope of Work:</strong> EverSafe Chimney Repair will perform the itemized services listed in this document in accordance with National Fire Protection Association (NFPA 211) safety standards. Any deviations, unforeseen structural complications, or additional repairs discovered during construction will require a signed change order before work proceeds.</li>
+                    <li><strong>On-Site Preparedness:</strong> The homeowner agrees to provide technicians with clear access to the chimney footprint, fireplace hearth, and roof structure. Please move any fragile personal property out of the immediate work area prior to our arrival.</li>
+                    <li><strong>Hidden &amp; Unforeseen Conditions:</strong> Chimney structures contain concealed internal areas that cannot be fully inspected prior to structural teardown or cleaning. EverSafe Chimney Repair is not liable for the discovery or accidental acceleration of pre-existing internal degradation, cracked clay flue tiles hidden by creosote, collapsed internal corbeling, or structural framing defects behind finished walls that violate historic building codes.</li>
+                    <li><strong>Property &amp; Material Limitations:</strong> Our technicians take the utmost care to protect your property. However, EverSafe Chimney Repair is not responsible for minor cosmetic scuffing, unavoidable fracturing of old or brittle roof shingles adjacent to the workspace, or masonry cracks resulting from subsequent foundation settling, seismic activity, or thermal shock from improper appliance operation.</li>
+                    <li><strong>Notice of Cancellation:</strong> You, the buyer, have the right to cancel this transaction at any time prior to midnight of the third business day after the date of this transaction. By requesting immediate, non-emergency scheduling or urgent safety mitigations, you explicitly waive this 3-day window to allow materials and crews to deploy.</li>
+                    <li><strong>Media Release:</strong> The homeowner grants permission to capture photo/video assets of the workspace for quality compliance and marketing. No personal identifying information or street numbers will ever be shared.</li>
+                    <li><strong>Payment Terms:</strong> The remaining milestone balance is due in full immediately upon completion of the listed project parameters. We accept cash, check, or secure mobile transactions right from our technician's tablet. A late fee of 1.5% per month will apply to any balances left unpaid past 7 days.</li>
+                </ul>
+            </div>
+
+            <div class="section-title">🛡️ Warranty Policy</div>
+            <div class="contract-block">
+                <p>We take pride in our craftsmanship. EverSafe Chimney Repair provides the following specific warranties upon project closeout and full payment settlement:</p>
+                <ul>
+                    <li><strong>Mortar &amp; Brickwork:</strong> Includes a 2-year craftsmanship warranty covering structural soundness, joint integrity, and repointing stability under normal environmental exposure. <em>(Does not cover damage caused by settling foundations, lightning strikes, or pre-existing internal structural shifting).</em></li>
+                    <li><strong>Continuous Relining Systems:</strong> Includes a lifetime material warranty against structural decay, provided the flue is professionally swept and inspected annually.</li>
+                    <li><strong>Cement Crown Pours:</strong> Warranted for 5 years against deep structural cracking or water penetration. <em>(Does not cover minor superficial hairline curing checks).</em></li>
+                    <li><strong>Flashing Elements:</strong> Warranted for 3 years against wind-driven leaks or material separation under standard weather conditions.</li>
+                </ul>
+            </div>
+
+            <div class="contract-divider"></div>
+            
+            <p style="font-size: 13px; color: #64748b; line-height: 1.5; text-align: center; font-weight: 500;">
+                By tapping the authorization button below, you verify that you are the property owner (or authorized agent), agree to the deposit schedules, terms, conditions, and warranty structures outlined above, and grant EverSafe Chimney Repair permission to begin the project.
+            </p>
 
             <button type="button" class="btn-action" onclick="advanceToClientSignatureCanvas()">Accept Terms &amp; Proceed to Signatures ➔</button>
 
@@ -120,7 +161,6 @@
             renderClientFacingScopeList();
         });
 
-        // ✅ FIXED: REMOVED ALL UNIT PRICE RENDERERS FROM INJECTED LIST HTML
         function renderClientFacingScopeList() {
             var container = document.getElementById('clientScopeContainer');
             container.innerHTML = "";
@@ -145,7 +185,6 @@
             var simpleLines = rawTextScope.split('\n');
             simpleLines.forEach(function(line) {
                 if(line.trim()) {
-                    // Strip off trailing price indicators if text fields happen to contain them
                     var cleanLine = line.replace('- ', '').split('$')[0].trim();
                     if (cleanLine) {
                         container.innerHTML += `
