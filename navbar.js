@@ -1,6 +1,6 @@
 /**
  * EverSafe Operations Hub - Universal Slider Navigation Router
- * Version: 8.5.1 Production Complete (Sanitized)
+ * Version: 8.6.1 Production Complete (File Paths Preserved)
  * Engineering Focus: Fluid Mobile Elastic Scroll with Even Desktop Distribution Overrides
  */
 window.addEventListener('DOMContentLoaded', function() {
@@ -34,7 +34,7 @@ window.addEventListener('DOMContentLoaded', function() {
                 'white-space: nowrap !important;' +
                 '-webkit-overflow-scrolling: touch !important; ' +
                 'scrollbar-width: none !important; ' +
-            '}' +
+                '}' +
             '.nav-tabs-scroll::-webkit-scrollbar { ' +
                 'display: none !important; ' +
                 'width: 0 !important;' +
@@ -103,12 +103,11 @@ window.addEventListener('DOMContentLoaded', function() {
     var currentPath = window.location.pathname;
     var currentFile = currentPath.substring(currentPath.lastIndexOf('/') + 1) || "index.html";
 
-    // 4. UNIFIED 10-NODE PIPELINE MATRIX MAP
+    // 4. UNIFIED 9-NODE PIPELINE MATRIX MAP (Proposals Cut / Original Filenames Restored)
     var tabs = [
         { link: "jobs.html", icon: "💼", label: "Jobs" },
         { link: "inspection-l1.html", icon: "📑", label: "L1 Map" },
         { link: "inspection-l2.html", icon: "📋", label: "L2 Map" },
-        { link: "proposals.html", icon: "📊", label: "Options" },
         { link: "estimate.html", icon: "🧮", label: "Estimate" },   
         { link: "contract-wo.html", icon: "📜", label: "Contract" },  
         { link: "signatures.html", icon: "✍️", label: "Sign" },
