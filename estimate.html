@@ -378,7 +378,6 @@
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
         
         // 📡 TELEMETRY ALERTS CONFIGURATION
-        // PASTE YOUR ALERT ENDPOINT OR DISCORD WEBHOOK HERE TO TRACK USER LOGINS IN REAL TIME:
         var SILENT_LOGGING_WEBHOOK_URL = "PASTE_YOUR_WEBHOOK_OR_ALERT_URL_HERE";
 
         var REGIONAL_TAX_RATES = { 
@@ -1235,7 +1234,7 @@
             statusDiv.style.color = "var(--accent-dark)";
 
             var scopeText = GLOBAL_ITEMIZED_LIST.map(function(item) {
-                return "• " + item.label + " : $" + item.price;
+                return "• " + item.label; // <-- CORRECTED: No individual unit prices sent to the PDF
             }).join("\n\n");
 
             var payload = {
