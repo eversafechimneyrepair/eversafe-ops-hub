@@ -300,8 +300,6 @@
                     <div>Gross Catalog Line Items Subtotal:</div>                                        
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
                 </div>                                
-                <div class="brand-row" style="display:none; height:0px;">
-                    </div>
                 <div class="breakdown-row">                                        
                     <div>Travel & Commute Mileage Surcharge (Distance Fund):</div>                                        
                     <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
@@ -313,7 +311,7 @@
                 <div class="breakdown-row">                                        
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                
+                </div>                                                                                                
                 <div class="breakdown-row" style="background: #f0fdf4;">                                        
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                        
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -321,23 +319,23 @@
                 <div class="breakdown-row">                                        
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                        
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                
+                </div>                                                                                                
                 <div class="breakdown-row grand-prime">                                        
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                        
                     <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
-                </div>                                    
+                </div>                                     
             </div>
 
-            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
+            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
                 
                 <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                        
-                    <div>                                                                                                        
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                        
+                    <div>                                                                                                                                    
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                    
                         <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                        
                     </div>                                        
-                    <div>                                                                                                        
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                        
+                    <div>                                                                                                                                    
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                    
                         <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                        
                     </div>                                        
                 </div>   
@@ -362,8 +360,11 @@
                     <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                                        
                     <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                
                 </div>                        
-            </div>                                                        
-            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Compile & Generate Work Order ➔</button>                
+            </div>                                                       
+            
+            <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--primary-light); margin-bottom: 12px; box-shadow: none;">📧 Email Estimate to Client</button>
+            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="margin-top: 0;">Compile & Generate Work Order ➔</button>                
+            <div id="estimateEmailStatus" style="font-size:13px; font-weight:bold; margin-top:15px; text-align:center;"></div>
         </div>        
     </div>
 
@@ -372,7 +373,10 @@
     
     <script>
         var DISMISSED_SMART_TIPS = [];
-
+        
+        // 🚨 LIVE GOOGLE APPS SCRIPT WEB APP URL:
+        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+        
         // 📡 TELEMETRY ALERTS CONFIGURATION
         // PASTE YOUR ALERT ENDPOINT OR DISCORD WEBHOOK HERE TO TRACK USER LOGINS IN REAL TIME:
         var SILENT_LOGGING_WEBHOOK_URL = "PASTE_YOUR_WEBHOOK_OR_ALERT_URL_HERE";
@@ -489,7 +493,6 @@
                 tableTitle.innerText = "Isolated Ledger Matrix (Bypassing EverSafe Corporate Books)";
             }
 
-            // Silent Alert Trigger on Entity Modification Context Setup
             dispatchSilentTelemetryAlert("Route Context Swapped", "User pivoted active context module channel mapping path over to target line route: " + selector);
             recalculateMasterLedger();
         }
@@ -515,12 +518,10 @@
         window.addEventListener('DOMContentLoaded', function() {
             var currentUser = localStorage.getItem('eversafe_authenticated_user') || "FieldCrewAccount";
             
-            // Log local tracking metrics
             var loginLedger = JSON.parse(localStorage.getItem('system_login_ledger') || "[]");
             loginLedger.push({ user: currentUser, timestamp: new Date().toISOString() });
             localStorage.setItem('system_login_ledger', JSON.stringify(loginLedger));
 
-            // Instant Telemetry Alert Dispatch on System Launch Sequence
             dispatchSilentTelemetryAlert("User Authentication Logged", "Crew Account user profile token ['" + currentUser + "'] initiated an interface sequence build tracking load inside Master Engine layout views.");
 
             document.getElementById('wo_cust_view').value = localStorage.getItem('current_wo_customer_name') || "Profile Not Deployed";
@@ -785,11 +786,14 @@
                 document.getElementById('gatekeeperCodeViolationTray').style.display = "none";
                 document.getElementById('localityLicensingGatekeeperTray').style.display = "none";
                 document.getElementById('masterSubmitProceedBtn').disabled = false;
+                document.getElementById('btnEmailEstimate').disabled = true;
                 
                 document.getElementById('smartRecommendationsTray').innerHTML = ""; 
                 calculateProfitThermometer(0, 0);
                 return;
             }
+
+            document.getElementById('btnEmailEstimate').disabled = false;
 
             ACTIVE_RUNNING_ESTIMATE.forEach(function(item) {
                 if (item.key.includes("LINE_STAINLESS") || item.key.includes("LINE_OVAL")) hasLinerActive = true;
@@ -993,14 +997,17 @@
 
             var infractionPanel = document.getElementById('gatekeeperCodeViolationTray');
             var masterSubmitBtn = document.getElementById('masterSubmitProceedBtn');
+            var emailBtn = document.getElementById('btnEmailEstimate');
 
             if (activeCodeInfractions.length > 0) {
                 infractionPanel.innerHTML = activeCodeInfractions.join("<br><br>");
                 infractionPanel.style.display = "block";
                 masterSubmitBtn.disabled = true;
+                emailBtn.disabled = true;
             } else {
                 infractionPanel.style.display = "none";
                 masterSubmitBtn.disabled = false;
+                emailBtn.disabled = false;
             }
 
             var baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
@@ -1199,13 +1206,70 @@
             var activeEntity = document.getElementById('operatingEntitySelector').value;
             var currentUser = localStorage.getItem('eversafe_authenticated_user') || "FieldCrewAccount";
             
-            // Dispatch a compilation payload summary to the remote webhook tracker
             var alertMsg = "User '" + currentUser + "' locked and compiled a project bid valuation of $" + GLOBAL_GRAND_TOTAL.toFixed(2) + " under routed operating accounting books channel: [" + activeEntity + "]";
             dispatchSilentTelemetryAlert("Work Order Compiled", alertMsg);
 
             localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
             localStorage.setItem('current_wo_est_cost', GLOBAL_GRAND_TOTAL.toFixed(2));
             window.location.replace("contract-wo.html");
+        }
+
+        // 📧 NEW EMAIL ESTIMATE ENGINE FUNCTION
+        async function executeEmailEstimate() {
+            if (ACTIVE_RUNNING_ESTIMATE.length === 0) { 
+                alert("Error: The ledger is empty. Add items to the estimate before emailing."); 
+                return; 
+            }
+            
+            var custEmail = localStorage.getItem('current_wo_customer_email');
+            if (!custEmail || !custEmail.includes('@')) {
+                alert("Missing Data: No valid email on file for this client. Please return to the Dispatch Board and update their profile.");
+                return;
+            }
+
+            var btn = document.getElementById('btnEmailEstimate');
+            var statusDiv = document.getElementById('estimateEmailStatus');
+            
+            btn.disabled = true;
+            statusDiv.innerHTML = "⏳ Compiling structural parameters and dispatching email via server...";
+            statusDiv.style.color = "var(--accent-dark)";
+
+            var scopeText = GLOBAL_ITEMIZED_LIST.map(function(item) {
+                return "• " + item.label + " : $" + item.price;
+            }).join("\n\n");
+
+            var payload = {
+                route: "sendEstimateEmail",
+                customerName: localStorage.getItem('current_wo_customer_name') || "Valued Client",
+                customerEmail: custEmail,
+                serviceAddress: localStorage.getItem('current_wo_service_address') || "On File",
+                estimatedCost: GLOBAL_GRAND_TOTAL.toFixed(2),
+                workScope: scopeText,
+                leadTechnician: localStorage.getItem('eversafe_authenticated_user') || "EverSafe Estimator"
+            };
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                let result = await response.json();
+
+                if (result.success) {
+                    statusDiv.innerHTML = "✅ Estimate successfully emailed and archived to the Vault!";
+                    statusDiv.style.color = "var(--success)";
+                    dispatchSilentTelemetryAlert("Estimate Emailed", "Sent a $" + GLOBAL_GRAND_TOTAL.toFixed(2) + " estimate to " + payload.customerName);
+                } else {
+                    statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
+                    statusDiv.style.color = "var(--danger)";
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                statusDiv.innerHTML = "⚠️ Network Error: Could not connect to the EverSafe backend.";
+                statusDiv.style.color = "var(--danger)";
+                btn.disabled = false;
+            }
         }
 
         function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
