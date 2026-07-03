@@ -142,7 +142,13 @@
                 By tapping the authorization button below, you verify that you are the property owner (or authorized agent), agree to the deposit schedules, terms, conditions, and warranty structures outlined above, and grant EverSafe Chimney Repair LLC permission to execute the project via our digital interface.
             </p>
 
-            <button type="button" class="btn-action" onclick="advanceToClientSignatureCanvas()">Accept Terms &amp; Proceed to Signatures ➔</button>
+            <!-- 🟢 PRIMARY IN-PERSON TRACK BUTTON -->
+            <button type="button" class="btn-action" id="btnLocalSign" onclick="advanceToClientSignatureCanvas()">Accept Terms &amp; Proceed to Signatures ➔</button>
+
+            <!-- ⚡ OPERATIONAL BAIL-OUT BUTTON FOR REMOTE DELIVERIES -->
+            <button type="button" class="btn-action" id="btnRemoteSignText" style="background: var(--accent); margin-top: 12px; box-shadow: 0 4px 12px rgba(242,140,40,0.2);" onclick="executeRemoteSignDispatch()">⚡ Text Remote Signing Link to Client</button>
+
+            <div id="estimateEmailStatus" style="font-size:13px; font-weight:bold; margin-top:15px; text-align:center;"></div>
 
         </div>
     </div>
@@ -151,6 +157,9 @@
     <script src="navbar.js"></script>
 
     <script>
+        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+        var DRIVER_NAME = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
+
         window.addEventListener('DOMContentLoaded', function() {
             var name = localStorage.getItem('current_wo_customer_name') || "Customer Profile Bypassed";
             document.getElementById('clientAddressText').innerText = localStorage.getItem('current_wo_service_address') || "Address Specification Offline";
@@ -198,32 +207,108 @@
             });
         }
 
+        function getCompiledScopeText() {
+            var compiledScopeText = "";
+            var container = document.getElementById('clientScopeContainer');
+            var listItems = container.getElementsByTagName('li');
+
+            if (listItems.length > 0) {
+                var itemsList = [];
+                for (var i = 0; i < listItems.length; i++) {
+                    var cleanLineText = listItems[i].innerText.replace('🔹', '').trim();
+                    if (cleanLineText) {
+                        itemsList.push("• " + cleanLineText);
+                    }
+                }
+                compiledScopeText = itemsList.join("\n\n");
+            } else {
+                compiledScopeText = "Standard Sweeping & Stabilization Maintenance Package.";
+            }
+            return compiledScopeText;
+        }
+
         function advanceToClientSignatureCanvas() {
             try {
-                var compiledScopeText = "";
-                var container = document.getElementById('clientScopeContainer');
-                var listItems = container.getElementsByTagName('li');
-
-                if (listItems.length > 0) {
-                    var itemsList = [];
-                    for (var i = 0; i < listItems.length; i++) {
-                        var cleanLineText = listItems[i].innerText.replace('🔹', '').trim();
-                        if (cleanLineText) {
-                            itemsList.push("- " + cleanLineText);
-                        }
-                    }
-                    compiledScopeText = itemsList.join("\n");
-                } else {
-                    compiledScopeText = "Standard Sweeping & Stabilization Maintenance Package.";
-                }
-
+                var compiledScopeText = getCompiledScopeText();
                 localStorage.setItem('current_wo_work_scope', compiledScopeText);
-                
             } catch (err) {
                 console.error("Error auto-compiling estimate scope string: ", err);
             }
-
             window.location.replace("signatures.html");
+        }
+
+        async function executeRemoteSignDispatch() {
+            var remoteBtn = document.getElementById('btnRemoteSignText');
+            var localBtn = document.getElementById('btnLocalSign');
+            var statusDiv = document.getElementById('estimateEmailStatus');
+            var originalText = remoteBtn.innerHTML;
+
+            var compiledScope = getCompiledScopeText();
+            localStorage.setItem('current_wo_work_scope', compiledScope);
+
+            var name = localStorage.getItem('current_wo_customer_name') || "Valued Client";
+            var addr = localStorage.getItem('current_wo_service_address') || "On File";
+            var cost = localStorage.getItem('current_wo_est_cost') || "0.00";
+            var email = localStorage.getItem('current_wo_customer_email') || "";
+
+            if (!email || email.trim() === "" || !email.includes("@")) {
+                var manualEmailInput = prompt("An email address record is required to dispatch the secure signing portal link. Please input customer email address:", "client@email.com");
+                if (!manualEmailInput || !manualEmailInput.includes("@")) { 
+                    alert("Action Aborted: A valid email format is required to dispatch the document link."); 
+                    return; 
+                }
+                email = manualEmailInput.trim();
+                localStorage.setItem('current_wo_customer_email', email);
+            }
+
+            remoteBtn.innerHTML = "⏳ Generating File & Firing CRM Link...";
+            remoteBtn.disabled = true;
+            localBtn.style.display = "none";
+            statusDiv.innerHTML = "⏳ Compiling matrix configurations and pushing data frames down-pipeline...";
+            statusDiv.style.color = "var(--accent-dark)";
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({
+                        route: "sendEstimateEmail",
+                        customerName: name,
+                        customerEmail: email,
+                        serviceAddress: addr,
+                        estimatedCost: cost,
+                        workScope: compiledScope,
+                        leadTechnician: DRIVER_NAME
+                    })
+                });
+                let result = await response.json();
+
+                if (result.success) {
+                    statusDiv.innerHTML = "✅ Remote signing link successfully texted and emailed to client!";
+                    statusDiv.style.color = "var(--success)";
+                    remoteBtn.innerHTML = "✔️ Dispatched Safely!";
+                    remoteBtn.style.background = "var(--success)";
+                    setTimeout(function() {
+                        localStorage.removeItem('current_wo_price_book_items');
+                        localStorage.removeItem('current_wo_itemized_json');
+                        window.location.replace("jobs.html");
+                    }, 2500);
+                } else {
+                    alert("Gateway Matrix Error: " + result.error);
+                    statusDiv.innerHTML = "❌ Failed: " + result.error;
+                    statusDiv.style.color = "var(--danger)";
+                    remoteBtn.innerHTML = originalText;
+                    remoteBtn.disabled = false;
+                    localBtn.style.display = "block";
+                }
+            } catch (err) {
+                alert("API Gateway Timeout: Failed to connect to server arrays.");
+                statusDiv.innerHTML = "❌ Network Disconnect Event Handled.";
+                statusDiv.style.color = "var(--danger)";
+                remoteBtn.innerHTML = originalText;
+                remoteBtn.disabled = false;
+                localBtn.style.display = "block";
+            }
         }
 
         function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
