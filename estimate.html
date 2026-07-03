@@ -118,6 +118,7 @@
                         <option value="MI_MONROE_CORE">Monroe County, MI [Local Core: 0-20 mi] — (6.00% Tax)</option>
                         <option value="OH_MID_DIST">Fulton / Henry / Ottawa / Sandusky, OH [Zone 1: 20-40 mi] — (7.25% Tax)</option>
                         <option value="MI_MONROE_OUTER">Lenawee & Hillsdale Counties, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
+                        <option value="MI_MONROE_OUTER">Lenawee & Hillsdale Counties, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
                         <option value="MI_WASHTENAW_MID">Washtenaw County / Ann Arbor, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
                         <option value="OH_EXTENDED">Hancock & Seneca Counties, OH [Zone 2: 40-60 mi] — (7.25% Tax)</option>
                         <option value="MI_EXTENDED">Wayne & Outer Washtenaw, MI [Zone 2: 40-60 mi] — (6.00% Tax)</option>
@@ -295,7 +296,7 @@
             <div id="smartRecommendationsTray" style="margin-top: -5px; margin-bottom: 15px;"></div>
 
             <div class="revenue-breakdown-card">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                                
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                                                
                 <div class="breakdown-row">                                        
                     <div>Gross Catalog Line Items Subtotal:</div>                                        
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
@@ -311,7 +312,7 @@
                 <div class="breakdown-row">                                        
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                
+                </div>                                                                                                                                                                                                                                        
                 <div class="breakdown-row" style="background: #f0fdf4;">                                        
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                        
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -319,7 +320,7 @@
                 <div class="breakdown-row">                                        
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                        
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                                                                                                                
+                </div>                                                                                                                                                                                                                                        
                 <div class="breakdown-row grand-prime">                                        
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                        
                     <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
@@ -329,13 +330,13 @@
             <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
                 
-                <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                        
-                    <div>                                                                                                                                                                                                                                                
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                
+                <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                                                                                                                                                                                                                                                                                                                                                                                            
+                    <div>                                                                                                                                                                                                                                                                                                                                                                                                            
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                                                                                                                                                                            
                         <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                        
                     </div>                                        
-                    <div>                                                                                                                                                                                                                                                
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                
+                    <div>                                                                                                                                                                                                                                                                                                                                                                                                            
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                                                                                                                                                                            
                         <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                        
                     </div>                                        
                 </div>   
@@ -367,8 +368,11 @@
                 </div>                        
             </div>                                                                        
             
-            <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--primary-light); margin-bottom: 12px; box-shadow: none;">📧 Email Estimate to Client</button>
-            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="margin-top: 0;">Compile & Generate Work Order ➔</button>                
+            <!-- ⚡ THE MODERN UPGRADED GHL SIGNATURE LINK DISPATCH TRIGGER -->
+            <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--accent); margin-bottom: 12px; box-shadow: 0 4px 12px rgba(242,140,40,0.2);">⚡ Send Remote Signing Link (Text & Email)</button>
+            
+            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="margin-top: 0; background: var(--primary-light); box-shadow: none;">Compile & Generate In-Person Work Order ➔</button>                
+            
             <div id="estimateEmailStatus" style="font-size:13px; font-weight:bold; margin-top:15px; text-align:center;"></div>
         </div>        
     </div>
@@ -377,12 +381,8 @@
     <script src="navbar.js"></script>
     
     <script>
-        var DISMISSED_SMART_TIPS = [];
-        
-        // 🚨 LIVE GOOGLE APPS SCRIPT WEB APP URL:
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
-        
-        // 📡 TELEMETRY ALERTS CONFIGURATION
+        var DISMISSED_SMART_TIPS = [];
         var SILENT_LOGGING_WEBHOOK_URL = "PASTE_YOUR_WEBHOOK_OR_ALERT_URL_HERE";
 
         var REGIONAL_TAX_RATES = { 
@@ -400,7 +400,7 @@
         var CORPORATE_EXPENSE_RATE = 0.05;  
         
         var COMPLETE_PRICE_BOOK = {
-            "LOG_PERMIT_STD":       { cat: "LOGISTICS", label: "Standard Municipal Building / Mechanical Permit Acquisition", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 185.00, MI_MONROE_OUTER: 185.00, MI_WASHTENAW_MID: 225.00, MI_EXTENDED: 225.00, dynamic: false, matCost: 125.00, labRate: 55.00, labHours: 1.0, wbs: ["Compile engineering specifications and scope of work documents", "File permit application with local municipal building authority", "Coordinate and host on-site municipal safety inspection sign-offs"], mats: ["Municipal Permit Filing Fees"] },
+            "LOG_PERMIT_STD":        { cat: "LOGISTICS", label: "Standard Municipal Building / Mechanical Permit Acquisition", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 185.00, MI_MONROE_OUTER: 185.00, MI_WASHTENAW_MID: 225.00, MI_EXTENDED: 225.00, dynamic: false, matCost: 125.00, labRate: 55.00, labHours: 1.0, wbs: ["Compile engineering specifications and scope of work documents", "File permit application with local municipal building authority", "Coordinate and host on-site municipal safety inspection sign-offs"], mats: ["Municipal Permit Filing Fees"] },
             "LOG_DUMPSTER_10YD":    { cat: "LOGISTICS", label: "10-Yard Commercial Roll-Off Dumpster Rental & Tipping Fee", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 450.00, MI_MONROE_OUTER: 450.00, MI_WASHTENAW_MID: 495.00, MI_EXTENDED: 495.00, dynamic: false, matCost: 350.00, labRate: 55.00, labHours: 0.5, wbs: ["Coordinate delivery and placement of heavy-debris roll-off container", "Protect homeowner driveway with heavy timber cribbing during drop", "Manage extraction dispatch and municipal landfill tonnage tipping weights"], mats: ["10-Cubic Yard Dumpster Rental", "Heavy Masonry Tonnage Disposal Fees"] },
             "LOG_SCAFFOLD_MOB":     { cat: "LOGISTICS", label: "Multi-Tier Scaffolding Mobilization & Erection (per tier)", OH_LUCAS: 250.00, OH_WOOD: 250.00, OH_MID_DIST: 250.00, OH_EXTENDED: 250.00, MI_MONROE_CORE: 250.00, MI_MONROE_OUTER: 250.00, MI_WASHTENAW_MID: 250.00, MI_EXTENDED: 250.00, dynamic: true, defQty: 2, unit: "tiers", matCost: 25.00, labRate: 55.00, labHours: 2.0, wbs: ["Transport heavy tubular steel scaffolding frames to jobsite", "Erect leveled base plates and stack framing to OSHA height standards", "Secure safety cross-bracing, walk boards, and perimeter fall-protection rails", "Dismantle and extract staging upon project completion"], mats: ["Equipment transport fuel / staging wear & tear"] },
             "LOG_LIFT_RENTAL":      { cat: "LOGISTICS", label: "Towable Boom / Aerial Man-Lift Equipment Rental (Daily)", OH_LUCAS: 550.00, OH_WOOD: 550.00, OH_MID_DIST: 550.00, OH_EXTENDED: 550.00, MI_MONROE_CORE: 550.00, MI_MONROE_OUTER: 550.00, MI_WASHTENAW_MID: 650.00, MI_EXTENDED: 650.00, dynamic: true, defQty: 1, unit: "days", matCost: 450.00, labRate: 55.00, labHours: 1.0, wbs: ["Coordinate equipment dispatch from heavy rental yard", "Maneuver articulated boom lift into operational strike zone without turf damage", "Provide safe elevated working platform for extreme-height or unsafe-pitch roof access"], mats: ["Aerial Lift Daily Rental Fee", "Equipment Delivery/Pickup Freight Surcharges"] },
@@ -432,27 +432,9 @@
 
             "WATER_CROWN_SEAL":     { cat: "WATERPROOFING", label: "Elastomeric Crown Seal Vapor Barrier Membrane Coat (per sq ft)", OH_LUCAS: 24.00, OH_WOOD: 24.00, OH_MID_DIST: 24.00, OH_EXTENDED: 24.00, MI_MONROE_CORE: 28.00, MI_MONROE_OUTER: 28.00, MI_WASHTENAW_MID: 34.00, MI_EXTENDED: 34.00, dynamic: true, defQty: 8, unit: "sq ft", matCost: 6.00, labRate: 55.00, labHours: 0.20, wbs: ["Wire brush debris off baseline concrete perimeter tracks", "Trowel smooth flexible seamless protection elastomeric membrane barriers across crown surface boundaries"], mats: ["CrownCoat high-performance weatherproofing structural gel formulation"] },
             "WATER_CROWN_POUR":     { cat: "WATERPROOFING", label: "Full Concrete Masonry Crown Form Pour Rebuild (per sq ft)", OH_LUCAS: 95.00, OH_WOOD: 95.00, OH_MID_DIST: 95.00, OH_EXTENDED: 95.00, MI_MONROE_CORE: 105.00, MI_MONROE_OUTER: 105.00, MI_WASHTENAW_MID: 115.00, MI_EXTENDED: 115.00, dynamic: true, defQty: 10, unit: "sq ft", matCost: 32.00, labRate: 55.00, labHours: 0.65, wbs: ["Demo, chisel, and clear existing deteriorated crown wash down to stable brick base.", "Erect timber structural concrete form templates", "Mix and pour reinforced fiber concrete crown pads to an average 4-inch depth", "Incorporate engineered expansion bond breakers around flue tile perimeters"], mats: ["Fiber-reinforced concrete dry blend bags", "Forming lumber strips, perimeter expansion bond breaker shields", "Steel reinforcement mesh/rebar pins", "Heavy masonry disposal contractor bags"] },
-            "WATER_SAVER_SPRAY":    { cat: "WATERPROOFING", label: "ChimneySaver Silane-Siloxane Breathable Repellent Application (per sq ft)", OH_LUCAS: 1.50, OH_WOOD: 1.50, OH_MID_DIST: 1.50, OH_EXTENDED: 1.50, MI_MONROE_CORE: 1.95, MI_MONROE_OUTER: 1.95, MI_WASHTENAW_MID: 2.35, MI_EXTENDED: 2.35, dynamic: true, defQty: 80, unit: "sq ft", matCost: 0.35, labRate: 55.00, labHours: 0.01, wbs: ["Saturate external brick face fields via low-pressure pumps", "Monitor uniform multi-surface saturation yields"], mats: ["ChimneySaver industrial water repellent solutions"] },
-            "FLASH_LEAD_REPLACE":   { cat: "WATERPROOFING", label: "Custom Lead Counter-Flashing Roof Intercept Replacement", OH_LUCAS: 310.00, OH_WOOD: 310.00, OH_MID_DIST: 310.00, OH_EXTENDED: 310.00, MI_MONROE_CORE: 339.00, MI_MONROE_OUTER: 339.00, MI_WASHTENAW_MID: 385.00, MI_EXTENDED: 385.00, dynamic: false, matCost: 95.00, labRate: 55.00, labHours: 3.5, wbs: ["Cut step tracking joints into mortar brick layers", "Weave lead panels under roofing shingles lines"], mats: ["Heavy roll specialty construction counter-lead flashing"] },
-            "WATER_FLASH_SYSTEM":   { cat: "WATERPROOFING", label: "Complete Two-Part Chimney Flashing System Rebuild", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 495.00, MI_MONROE_OUTER: 495.00, MI_WASHTENAW_MID: 550.00, MI_EXTENDED: 550.00, dynamic: false, matCost: 85.00, labRate: 55.00, labHours: 3.5, wbs: ["Strip back adjoining roof shingles to expose structural roof deck", "Apply rubberized Ice & Water shield to base decking perimeter", "Weave new galvanized step-flashing cards into shingle courses", "Embed premium metal counter-flashing into masonry mortar joints and seal with polyurethane"], mats: ["Ice & Water shield membrane roll", "Galvanized step flashing cards", "Custom metal roll counter-flashing", "Premium polyurethane masonry sealant (Geocel/Sikaflex)"] },
-            "WATER_CRICKET_BUILD":  { cat: "WATERPROOFING", label: "Custom Roof Cricket / Saddle Fabrication (Width > 30-Inch)", OH_LUCAS: 650.00, OH_WOOD: 650.00, OH_MID_DIST: 650.00, OH_EXTENDED: 650.00, MI_MONROE_CORE: 695.00, MI_MONROE_OUTER: 695.00, MI_WASHTENAW_MID: 750.00, MI_EXTENDED: 750.00, dynamic: false, matCost: 120.00, labRate: 55.00, labHours: 4.5, wbs: ["Construct angled wooden cricket framing on the high-side roof deck behind the chimney stack", "Sheathe framing in exterior-grade plywood and Ice & Water barrier", "Install custom sheet metal valley flashing over the cricket peaks", "Weave transition shingles to seamlessly integrate with existing roof slope"], mats: ["Treated 2x4 framing lumber", "Exterior grade plywood sheathing", "Custom sheet metal valley flashing roll", "Matching 3-tab or architectural roof shingles"] },
-            
-            "CHASE_STAINLESS_PAN":  { cat: "PREFAB_CHASE", label: "Custom Stainless Steel Chase Top Cover Pan (per sq ft)", OH_LUCAS: 48.00, OH_WOOD: 48.00, OH_MID_DIST: 48.00, OH_EXTENDED: 48.00, MI_MONROE_CORE: 54.00, MI_MONROE_OUTER: 54.00, MI_WASHTENAW_MID: 62.00, MI_EXTENDED: 62.00, dynamic: true, defQty: 6, unit: "sq ft", matCost: 15.00, labRate: 55.00, labHours: 0.25, wbs: ["Pop off rusted tracking sheet covers", "Anchor custom stainless pans over top chase framing"], mats: ["Custom 24-gauge stainless steel chase top pans"] },
-            "CHASE_COPPER_PAN":     { cat: "PREFAB_CHASE", label: "Custom Heavy-Gauge Copper Chase Top Cover Pan (per sq ft)", OH_LUCAS: 105.00, OH_WOOD: 105.00, OH_MID_DIST: 105.00, OH_EXTENDED: 105.00, MI_MONROE_CORE: 115.00, MI_MONROE_OUTER: 115.00, MI_WASHTENAW_MID: 135.00, MI_EXTENDED: 135.00, dynamic: true, defQty: 6, unit: "sq ft", matCost: 45.00, labRate: 55.00, labHours: 0.35, wbs: ["Remove rusted galvanized tracking covers", "Install custom heavy-gauge copper architectural pan", "Seal storm collars and flue penetrations with copper-compatible geocel"], mats: ["Custom copper chase pan stock"] },
-
-            "COMP_CROWN_PRECAST":   { cat: "COMPONENTS", label: "Precast Concrete Engineered Chimney Crown Slab (per sq ft)", OH_LUCAS: 75.00, OH_WOOD: 75.00, OH_MID_DIST: 75.00, OH_EXTENDED: 75.00, MI_MONROE_CORE: 85.00, MI_MONROE_OUTER: 85.00, MI_WASHTENAW_MID: 95.00, MI_EXTENDED: 95.00, dynamic: true, defQty: 8, unit: "sq ft", matCost: 22.00, labRate: 55.00, labHours: 0.35, wbs: ["Dismantle compromised old crown materials and wire-brush clean structural base surfaces", "Lay uniform layer of structural high-bond layout mortar as an engineered leveling pad", "Hoist, level, and precisely anchor the industrial precast concrete crown slab plumb over flue lines", "Seal internal chimney flue tile projections with premium polymer expansion shields"], mats: ["Premium architectural-grade precast concrete crown unit core", "High-bond structural masonry mortar setup compound packs", "Industrial grade weatherproofing high-temp silicone sealant tubes"] },
-            "COMP_CAP_SINGLE":      { cat: "COMPONENTS", label: "Standard Single-Flue Stainless Steel Protective Chimney Cap", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 195.00, MI_MONROE_OUTER: 195.00, MI_WASHTENAW_MID: 215.00, MI_EXTENDED: 215.00, dynamic: false, matCost: 45.00, labRate: 55.00, labHours: 0.75, wbs: ["Inspect and prep tile terminal projection contact lines to guarantee flush mounting boundaries", "Position single-flue bracket base framework squarely over tile extension edge fields", "Lock down stainless steel compression anchoring hex screws securely against chimney tile structure"], mats: ["Premium heavy-gauge single-flue stainless steel protective chimney cap assembly", "Stainless steel mechanical attachment clamping hex fasteners package"] },
-            "COMP_CAP_MULTI":       { cat: "COMPONENTS", label: "Custom Base Top-Mount Multi-Flue Protective Screen Cap", OH_LUCAS: 375.00, OH_WOOD: 375.00, OH_MID_DIST: 375.00, OH_EXTENDED: 375.00, MI_MONROE_CORE: 415.00, MI_MONROE_OUTER: 415.00, MI_WASHTENAW_MID: 475.00, MI_EXTENDED: 475.00, dynamic: false, matCost: 165.00, labRate: 55.00, labHours: 1.5, wbs: ["Drill tap anchor sleeve screws directly into concrete pads", "Apply silicone seal tracking beads underneath corner tracks"], mats: ["Custom engineered top-mount stainless steel multi-flue caps", "Tapcon structural anchoring masonry screws bundle"] },
-            "COMP_TOP_DAMPER":      { cat: "COMPONENTS", label: "Energy-Saving Top-Mount Sealing Damper System", OH_LUCAS: 395.00, OH_WOOD: 395.00, OH_MID_DIST: 395.00, OH_EXTENDED: 395.00, MI_MONROE_CORE: 425.00, MI_MONROE_OUTER: 425.00, MI_WASHTENAW_MID: 475.00, MI_EXTENDED: 475.00, dynamic: false, matCost: 165.00, labRate: 55.00, labHours: 1.5, wbs: ["Remove rusted or seized baseline throat damper hardware", "Bed lock-top damper assembly into silicone sealant at top of flue tile", "Drop stainless steel control cable down flue and anchor bracket inside firebox"], mats: ["Lock-Top or Lyemance top-sealing damper unit", "Stainless steel control cable and mounting bracket", "High-temp silicone sealant"] },
-            "COMP_CAP_WIND":        { cat: "COMPONENTS", label: "Vacu-Stack Wind Directional Draft-Enhancing Cap", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 485.00, MI_MONROE_OUTER: 485.00, MI_WASHTENAW_MID: 525.00, MI_EXTENDED: 525.00, dynamic: false, matCost: 210.00, labRate: 55.00, labHours: 1.0, wbs: ["Assess property wind patterns and baseline draft negative pressure", "Install heavy-duty Vacu-Stack directional cap over primary heating flue", "Verify aerodynamic draft correction limits smoke blowback into living space"], mats: ["Vacu-Stack or equivalent wind-directional draft cap assembly"] },
-
-            "APP_WOOD_INSERT":      { cat: "COMPONENTS", label: "Wood Burning Insert / Stove Installation & Integration", OH_LUCAS: 1250.00, OH_WOOD: 1250.00, OH_MID_DIST: 1250.00, OH_EXTENDED: 1250.00, MI_MONROE_CORE: 1350.00, MI_MONROE_OUTER: 1350.00, MI_WASHTENAW_MID: 1495.00, MI_EXTENDED: 1495.00, dynamic: false, matCost: 150.00, labRate: 55.00, labHours: 4.5, wbs: ["Transport heavy 300lb+ cast iron/steel unit into home using appliance dollies", "Position unit securely into masonry firebox or onto approved hearth pad", "Connect appliance collar securely to base of stainless steel liner system", "Mount decorative surround panels and verify door gasket draft seal"], mats: ["Stove pipe appliance adapter boot", "High-temp fiberglass gasket rope/cement", "Appliance moving floor protection shields"] },
-            "APP_GAS_INSERT":       { cat: "COMPONENTS", label: "Direct Vent Gas Insert Fireplace Installation", OH_LUCAS: 1450.00, OH_WOOD: 1450.00, OH_MID_DIST: 1450.00, OH_EXTENDED: 1450.00, MI_MONROE_CORE: 1550.00, MI_MONROE_OUTER: 1550.00, MI_WASHTENAW_MID: 1695.00, MI_EXTENDED: 1695.00, dynamic: false, matCost: 200.00, labRate: 55.00, labHours: 5.5, wbs: ["Slide direct-vent gas housing into existing masonry firebox", "Integrate dual-liner co-linear or co-axial intake/exhaust flex lines to unit", "Connect standard flex gas-line hookup to existing nearby stub", "Configure standing pilot / electronic ignition and decorative media setup"], mats: ["Co-linear to co-axial direct vent adapter boxes", "Flex gas-line hookup kit", "High-temp direct vent silicone"] },
-            "APP_GAS_LOGS":         { cat: "COMPONENTS", label: "Vented Gas Log Set Assembly & Burner Setup", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 495.00, MI_MONROE_OUTER: 495.00, MI_WASHTENAW_MID: 550.00, MI_EXTENDED: 550.00, dynamic: false, matCost: 65.00, labRate: 55.00, labHours: 2.0, wbs: ["Position sand pan burner assembly securely in center of firebox", "Connect gas stub to burner value and test for pressure leaks", "Layer silica sand, glowing embers, and ceramic log set media to optimize flame pattern", "Lock open top throat damper with C-clamp per NFPA safety code for vented logs"], mats: ["Gas flex connector line", "Thread sealant/pipe dope", "Damper locking C-clamp safety hardware"] },
-
-            "LINE_TILE_REMOVAL":    { cat: "REMOVALS", label: "Damaged Clay Flue Tile Knockout & Air-Chisel Extraction", OH_LUCAS: 339.00, OH_WOOD: 339.00, OH_MID_DIST: 339.00, OH_EXTENDED: 339.00, MI_MONROE_CORE: 375.00, MI_MONROE_OUTER: 375.00, MI_WASHTENAW_MID: 445.00, MI_EXTENDED: 445.00, dynamic: false, matCost: 50.00, labRate: 60.00, labHours: 4.0, wbs: ["Run weighted impact breaker heads down internal flue channels", "Extract sharp fractured clay tile shrapnel cleanly from baseline cleanouts"], mats: ["Heavy duty rubberized extraction waste buckets"] },
-            "RMV_STACK_DOWN":       { cat: "REMOVALS", label: "Unsafe Masonry Core Structure Knockdown (per vertical ft)", OH_LUCAS: 110.00, OH_WOOD: 110.00, OH_MID_DIST: 110.00, OH_EXTENDED: 110.00, MI_MONROE_CORE: 125.00, MI_MONROE_OUTER: 125.00, MI_WASHTENAW_MID: 145.00, MI_EXTENDED: 145.00, dynamic: true, defQty: 5, unit: "vertical ft", matCost: 40.00, labRate: 55.00, labHours: 2.0, wbs: ["Erect temporary tarps and heavy canvas debris canopy frameworks", "Hand dismantle unsafe masonry course arrays sequentially down to roof boundaries"], mats: ["Commercial roll-off container dumpster tonnage tipping fees"] },
-            "RMV_HEARTH_DEMO":      { cat: "REMOVALS", label: "Hearth Extension Floor Deck Concrete Demolition Breakout (per sq ft)", OH_LUCAS: 22.00, OH_WOOD: 22.00, OH_MID_DIST: 22.00, OH_EXTENDED: 22.00, MI_MONROE_CORE: 26.00, MI_MONROE_OUTER: 26.00, MI_WASHTENAW_MID: 32.00, MI_EXTENDED: 32.00, dynamic: true, defQty: 15, unit: "sq ft", matCost: 2.00, labRate: 55.00, labHours: 0.30, wbs: ["Run electric demolition jackhammers to break apart reinforced hearth concrete slabs", "Shovel and bag dense masonry rubble for dump extraction transportation runs"], mats: ["Heavy canvas dust furniture drops", "Heavy-duty commercial demolition disposal bags"] }
+            "WATER_SAVER_SPRAY":    { cat: "WATERPROOFING", label: "ChimneySaver Silane-Siloxane Breathable Repellent Application (per sq ft)", OH_LUCAS: 1.50, OH_WOOD: 1.50, OH_MID_DIST: 1.50, OH_EXTENDED: 1.50, MI_MONROE_CORE: 1.50, MI_MONROE_OUTER: 1.50, MI_WASHTENAW_MID: 1.50, MI_EXTENDED: 1.50, dynamic: true, defQty: 1, unit: "sq ft", matCost: 0.25, labRate: 55.00, labHours: 0.01, wbs: ["Apply commercial silane-siloxane formula via low-pressure sprayer"], mats: ["ChimneySaver Water Repellent"] },
+            "LOG_PERMIT":           { cat: "LOGISTICS", label: "Local Building Code Permit Filing Fee", OH_LUCAS: 125.00, OH_WOOD: 125.00, OH_MID_DIST: 125.00, OH_EXTENDED: 125.00, MI_MONROE_CORE: 125.00, MI_MONROE_OUTER: 125.00, MI_WASHTENAW_MID: 125.00, MI_EXTENDED: 125.00, dynamic: false, matCost: 125.00, labRate: 0.00, labHours: 0.0, wbs: ["Submit structural layout sheets to regional inspection office"], mats: ["Municipal Permit Fees"] },
+            "LOG_DUMPSTER":         { cat: "LOGISTICS", label: "On-Site Brick/Debris Disposal Box Unit", OH_LUCAS: 350.00, OH_WOOD: 350.00, OH_MID_DIST: 350.00, OH_EXTENDED: 350.00, MI_MONROE_CORE: 350.00, MI_MONROE_OUTER: 350.00, MI_WASHTENAW_MID: 350.00, MI_EXTENDED: 350.00, dynamic: false, matCost: 350.00, labRate: 0.00, labHours: 0.0, wbs: ["Drop and park steel container dump beds adjacent to roof paths"], mats: ["Dumpster Rental Container Credit Allocation"] }
         };
 
         var ACTIVE_RUNNING_ESTIMATE = [];
@@ -642,9 +624,9 @@
                 Object.keys(inheritedFlags).forEach(function(flagKey) {
                     var lookupTarget = "";
                     if (flagKey.includes("firebox_brick")) lookupTarget = "MAS_FIREBOX_REBUILD";
-                    else if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS";
-                    else if (flagKey.includes("mortar_tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
-                    else if (flagKey.includes("crown_defect")) lookupTarget = "WATER_CROWN_SEAL";
+                    if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS";
+                    if (flagKey.includes("mortar_tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
+                    if (flagKey.includes("crown_defect")) lookupTarget = "WATER_CROWN_SEAL";
 
                     if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
                         var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
@@ -707,7 +689,6 @@
             recalculateMasterLedger();
         }
 
-        // 🧮 FULL SYSTEM RECALCULATION ENGINE WITH HELPER REMAPPING FIXES
         function recalculateMasterLedger() {
             GLOBAL_ITEMIZED_LIST = []; 
             GLOBAL_GRAND_TOTAL = 0.00;
@@ -1236,15 +1217,19 @@
             
             var custEmail = localStorage.getItem('current_wo_customer_email');
             if (!custEmail || !custEmail.includes('@')) {
-                alert("Missing Data: No valid email on file for this client. Please return to the Dispatch Board and update their profile.");
-                return;
+                var technicalEmailInput = prompt("An email address record is required to dispatch the secure signing portal link. Please input customer email address:", "client@email.com");
+                if(!technicalEmailInput || !technicalEmailInput.includes("@")) { alert("Aborted: Valid email profile required."); return; }
+                custEmail = technicalEmailInput.trim();
+                localStorage.setItem('current_wo_customer_email', custEmail);
             }
 
             var btn = document.getElementById('btnEmailEstimate');
             var statusDiv = document.getElementById('estimateEmailStatus');
+            var proceedBtn = document.getElementById('masterSubmitProceedBtn');
             
             btn.disabled = true;
-            statusDiv.innerHTML = "⏳ Compiling structural parameters and dispatching email via server...";
+            proceedBtn.style.display = "none";
+            statusDiv.innerHTML = "⏳ Compiling structural parameters and firing remote signing link via GHL...";
             statusDiv.style.color = "var(--accent-dark)";
 
             var scopeText = GLOBAL_ITEMIZED_LIST.map(function(item) {
@@ -1270,18 +1255,25 @@
                 let result = await response.json();
 
                 if (result.success) {
-                    statusDiv.innerHTML = "✅ Estimate successfully emailed and archived to the Vault!";
+                    statusDiv.innerHTML = "✅ Remote signing link successfully texted and emailed to client!";
                     statusDiv.style.color = "var(--success)";
                     dispatchSilentTelemetryAlert("Estimate Emailed", "Sent a $" + GLOBAL_GRAND_TOTAL.toFixed(2) + " estimate to " + payload.customerName);
+                    setTimeout(function() {
+                        localStorage.removeItem('current_wo_price_book_items');
+                        localStorage.removeItem('current_wo_itemized_json');
+                        window.location.replace("jobs.html");
+                    }, 2500);
                 } else {
                     statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
                     statusDiv.style.color = "var(--danger)";
                     btn.disabled = false;
+                    proceedBtn.style.display = "block";
                 }
             } catch (e) {
                 statusDiv.innerHTML = "⚠️ Network Error: Could not connect to the EverSafe backend.";
                 statusDiv.style.color = "var(--danger)";
                 btn.disabled = false;
+                proceedBtn.style.display = "block";
             }
         }
 
