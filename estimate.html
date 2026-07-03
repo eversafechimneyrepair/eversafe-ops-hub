@@ -295,7 +295,7 @@
             <div id="smartRecommendationsTray" style="margin-top: -5px; margin-bottom: 15px;"></div>
 
             <div class="revenue-breakdown-card">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                                
                 <div class="breakdown-row">                                        
                     <div>Gross Catalog Line Items Subtotal:</div>                                        
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
@@ -311,7 +311,7 @@
                 <div class="breakdown-row">                                        
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                
+                </div>                                                                                                                                                                                
                 <div class="breakdown-row" style="background: #f0fdf4;">                                        
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                        
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -319,7 +319,7 @@
                 <div class="breakdown-row">                                        
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                        
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                                
+                </div>                                                                                                                                                                                
                 <div class="breakdown-row grand-prime">                                        
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                        
                     <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
@@ -330,28 +330,33 @@
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
                 
                 <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                        
-                    <div>                                                                                                                                    
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                    
+                    <div>                                                                                                                                                                                                                                                
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                
                         <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                        
                     </div>                                        
-                    <div>                                                                                                                                    
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                    
+                    <div>                                                                                                                                                                                                                                                
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                
                         <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                        
                     </div>                                        
                 </div>   
                 
+                <!-- 📥 REVISED & ADVANCED PARTNER REVENUE TRACKING DRAWER -->
                 <div id="partnerSplitDashboard" class="partner-telemetry-box" style="display:none;">
-                    <span style="font-size:10px; font-weight:900; color:#a21caf; text-transform:uppercase; display:block; margin-bottom:8px; border-bottom:1px solid #fbcfe8; padding-bottom:4px;">Joint Venture Payout Breakdown (Post-Materials/Helper)</span>
+                    <span id="dynamicDashboardTitle" style="font-size:10px; font-weight:900; color:#a21caf; text-transform:uppercase; display:block; margin-bottom:8px; border-bottom:1px solid #fbcfe8; padding-bottom:4px;">Project Labor & Commission Payout Breakdown</span>
                     <div class="partner-row">
-                        <span>Leo's Subcontractor Cut (60% Net)</span>
+                        <span>Leo's Net Cut / Share:</span>
                         <span id="leoNetPartnerTotal">$0.00</span>
                     </div>
+                    <div class="partner-row" id="helperRow" style="color: #c2410c;">
+                        <span>Helper Share Allocation:</span>
+                        <span id="helperPartnerTotal">$0.00</span>
+                    </div>
                     <div class="partner-row" id="subContractorRow" style="display:none; color: #7e22ce;">
-                        <span>Subcontractor Escrow Budget</span>
+                        <span>Subcontractor Escrow Budget:</span>
                         <span id="subNetPartnerTotal">$0.00</span>
                     </div>
                     <div class="partner-row ever-safe" id="everSafeRetainedRow">
-                        <span>EverSafe Retained Margin (40% Net)</span>
+                        <span>EverSafe Retained Margin:</span>
                         <span id="everSafeNetPartnerTotal">$0.00</span>
                     </div>
                 </div>
@@ -360,7 +365,7 @@
                     <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                                        
                     <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                
                 </div>                        
-            </div>                                                       
+            </div>                                                                        
             
             <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--primary-light); margin-bottom: 12px; box-shadow: none;">📧 Email Estimate to Client</button>
             <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="margin-top: 0;">Compile & Generate Work Order ➔</button>                
@@ -474,7 +479,6 @@
             }
         }
 
-        // 🛡️ FIREWALL ENGINE: Entity Toggle & UI Mode Color Swap
         function updateEntityContext() {
             var selector = document.getElementById('operatingEntitySelector').value;
             localStorage.setItem('current_wo_entity', selector);
@@ -496,7 +500,6 @@
             recalculateMasterLedger();
         }
 
-        // 📡 TELEMETRY TRANSMITTER ENGINE (Bypasses Firebase for an instant raw endpoint web pipeline request)
         function dispatchSilentTelemetryAlert(activityType, contextMessage) {
             if (!SILENT_LOGGING_WEBHOOK_URL || SILENT_LOGGING_WEBHOOK_URL.includes("PASTE_YOUR_WEBHOOK")) {
                 console.log("Telemetry log preserved locally (No URL supplied yet):", activityType, contextMessage);
@@ -704,6 +707,7 @@
             recalculateMasterLedger();
         }
 
+        // 🧮 FULL SYSTEM RECALCULATION ENGINE WITH HELPER REMAPPING FIXES
         function recalculateMasterLedger() {
             GLOBAL_ITEMIZED_LIST = []; 
             GLOBAL_GRAND_TOTAL = 0.00;
@@ -758,6 +762,7 @@
             var internalSumLaborBurdens = 0;
             
             var internalSumLeoPartnerCut = 0;
+            var internalSumHelperPayout = 0;
             var internalSumEverSafeRetained = 0;
             var internalSumSubcontractorCut = 0; 
 
@@ -875,23 +880,26 @@
                         
                         rowTotalLaborPool = rowHelperPayout + rowLeoNetPayout; 
                         internalSumLeoPartnerCut += rowLeoNetPayout;
+                        internalSumHelperPayout += rowHelperPayout;
                         internalSumEverSafeRetained += rowEverSafeRetained;
                     } 
-                    else if (laborPayoutModel === "HOURLY_BURDENED") {                   
+                    else if (laborPayoutModel === "HOURLY_BURDENED") {                    
                         rowTotalLaborPool = (rowHours * spec.labRate) * 1.25; 
                         rowLeoNetPayout = rowTotalLaborPool;
                         internalSumLeoPartnerCut += rowLeoNetPayout;
-                    } else if (laborPayoutModel === "PIECE_RATE_20") {                   
+                    } else if (laborPayoutModel === "PIECE_RATE_20") {                    
                         rowTotalLaborPool = rowCalculatedTotal * 0.20;
                         rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
                         rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
                         internalSumLeoPartnerCut += rowLeoNetPayout;
+                        internalSumHelperPayout += rowHelperPayout;
                     } else if (laborPayoutModel === "CUSTOM_PERCENT") {
                         var customRatePct = parseFloat(document.getElementById('customLaborValueInput').value) || 0;
                         rowTotalLaborPool = rowCalculatedTotal * (customRatePct / 100);
                         rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
                         rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
                         internalSumLeoPartnerCut += rowLeoNetPayout;
+                        internalSumHelperPayout += rowHelperPayout;
                     }
                 }
 
@@ -932,7 +940,7 @@
                 } else {
                     splitPayoutDisplayHtml += (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
                         '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
-                        '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-size:10px; font-weight:400; color:#64748b; display:block;">(' + rowHours.toFixed(1) + ' hrs)</span></div>';
+                        '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div>';
                 }
 
                 var inlineWbsElements = "";
@@ -1075,11 +1083,12 @@
             var absoluteInternalCompanyCost = internalSumMaterialCosts + internalSumLaborBurdens + (mileageSurchargeFee * 0.45);
             document.getElementById('internalJobCostInput').value = absoluteInternalCompanyCost.toFixed(2);
             
-            if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
+            if (laborPayoutModel === "PARTNER_SPLIT_60_40" || laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT") {
                 document.getElementById('standardTelemetryGrid').style.display = "none";
                 document.getElementById('partnerSplitDashboard').style.display = "block";
                 
                 document.getElementById('leoNetPartnerTotal').innerText = "$" + internalSumLeoPartnerCut.toFixed(2);
+                document.getElementById('helperPartnerTotal').innerText = "$" + internalSumHelperPayout.toFixed(2);
                 
                 var subRow = document.getElementById('subContractorRow');
                 if (internalSumSubcontractorCut > 0) {
@@ -1090,21 +1099,27 @@
                 }
 
                 var entity = document.getElementById('operatingEntitySelector').value;
-                if(entity !== "EVERSAFE") {
-                    document.getElementById('everSafeRetainedRow').style.color = "#94a3b8"; 
-                    document.getElementById('everSafeRetainedRow').children[0].innerText = "Platform Ledger Allocation";
+                if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
+                    document.getElementById('everSafeRetainedRow').style.display = "flex";
+                    document.getElementById('dynamicDashboardTitle').innerText = "Joint Venture Payout Breakdown (Post-Materials)";
+                    if(entity !== "EVERSAFE") {
+                        document.getElementById('everSafeRetainedRow').style.color = "#94a3b8"; 
+                        document.getElementById('everSafeRetainedRow').children[0].innerText = "Platform Ledger Allocation:";
+                    } else {
+                        document.getElementById('everSafeRetainedRow').style.color = "#065f46";
+                        document.getElementById('everSafeRetainedRow').children[0].innerText = "EverSafe Retained Margin (40% Net):";
+                    }
+                    document.getElementById('everSafeNetPartnerTotal').innerText = "$" + internalSumEverSafeRetained.toFixed(2);
                 } else {
-                    document.getElementById('everSafeRetainedRow').style.color = "#065f46";
-                    document.getElementById('everSafeRetainedRow').children[0].innerText = "EverSafe Retained Margin (40% Net)";
+                    document.getElementById('dynamicDashboardTitle').innerText = "Field Labor & Commission Share Breakdown";
+                    document.getElementById('everSafeRetainedRow').style.display = "none";
                 }
-
-                document.getElementById('everSafeNetPartnerTotal').innerText = "$" + internalSumEverSafeRetained.toFixed(2);
             } else {
                 document.getElementById('partnerSplitDashboard').style.display = "none";
                 document.getElementById('standardTelemetryGrid').style.display = "grid";
-                calculateProfitThermometer(taxableSubtotal, absoluteInternalCompanyCost);
             }
 
+            calculateProfitThermometer(taxableSubtotal, absoluteInternalCompanyCost);
             evaluateSmartRecommendations();
         }
 
@@ -1213,7 +1228,6 @@
             window.location.replace("contract-wo.html");
         }
 
-        // 📧 NEW EMAIL ESTIMATE ENGINE FUNCTION
         async function executeEmailEstimate() {
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) { 
                 alert("Error: The ledger is empty. Add items to the estimate before emailing."); 
@@ -1234,7 +1248,7 @@
             statusDiv.style.color = "var(--accent-dark)";
 
             var scopeText = GLOBAL_ITEMIZED_LIST.map(function(item) {
-                return "• " + item.label; // <-- CORRECTED: No individual unit prices sent to the PDF
+                return "• " + item.label;
             }).join("\n\n");
 
             var payload = {
