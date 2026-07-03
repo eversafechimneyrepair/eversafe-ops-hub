@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EverSafe Chimney Repair LLC - Secure Project Authorization</title>
+    
+    <style>
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --success: #22c55e; 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding: 20px 10px; color: #0f172a; }
+        
+        .brand-header { text-align: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid var(--accent); }
+        .brand-header h1 { font-size: 24px; text-transform: uppercase; letter-spacing: 1px; color: var(--primary); margin-bottom: 4px; }
+        .brand-header p { font-size: 11px; color: #475569; text-transform: uppercase; font-weight: bold; }
+
+        .app-container { max-width: 700px; margin: 0 auto; }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        
+        .meta-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-bottom: 20px; font-size: 13.5px; line-height: 1.6; }
+        .meta-line { display: flex; justify-content: space-between; margin-bottom: 4px; }
+        .meta-line strong { color: #475569; text-transform: uppercase; font-size: 11px; }
+
+        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 25px; border-radius: 4px; letter-spacing: 0.5px; }
+        
+        .scope-display { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 15px; margin-top: 10px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; color: #1e293b; font-weight: 500; }
+
+        .price-summary-banner { background: #f0fdf4; border: 2px dashed var(--success); border-radius: 6px; padding: 18px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .total-amount-txt { font-size: 26px; font-weight: 900; color: #166534; }
+
+        .contract-block { font-size: 13px; color: #475569; line-height: 1.6; margin: 15px 0 25px 0; }
+        .contract-block p { margin-bottom: 12px; text-align: justify; }
+        .contract-block ul { padding-left: 20px; margin-bottom: 16px; }
+        .contract-block li { margin-bottom: 8px; text-align: justify; }
+
+        .signature-section { margin: 25px 0; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid var(--border); }
+        .signature-title { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .canvas-frame { background: #ffffff; border: 2px dashed #94a3b8; border-radius: 6px; position: relative; cursor: crosshair; touch-action: none; height: 160px; width: 100%; overflow: hidden; }
+        canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        
+        .btn-clear { background: #e2e8f0; color: #475569; font-weight: bold; padding: 6px 12px; border: none; border-radius: 4px; text-transform: uppercase; font-size: 10px; cursor: pointer; }
+        
+        .btn-submit { width: 100%; background: var(--success); color: white; font-weight: bold; padding: 18px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 14px; cursor: pointer; box-shadow: 0 4px 12px rgba(34,197,94,0.2); text-align: center; display: block; }
+        .btn-submit:disabled { background: #cbd5e1!important; color: #94a3b8!important; cursor: not-allowed; box-shadow: none; }
+        
+        .status-msg { margin-top: 20px; text-align: center; font-weight: bold; font-size: 13px; color: #475569; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="brand-header">
+            <h1>EverSafe Chimney Repair LLC</h1>
+            <p>Official Project Authorization &amp; Service Agreement</p>
+        </div>
+
+        <div class="app-card">
+            <div class="meta-box">
+                <div class="meta-line"><strong>Authorized Client:</strong> <span id="clientNameText" style="font-weight:700;">Loading...</span></div>
+                <div class="meta-line"><strong>Service Location:</strong> <span id="clientAddressText">Loading...</span></div>
+                <div class="meta-line"><strong>Agreement Date:</strong> <span id="documentDateText">--/--/----</span></div>
+            </div>
+
+            <div class="section-title">Proposed Scope of Operations</div>
+            <div class="scope-display" id="scopeDisplayBox">Loading project details...</div>
+
+            <div class="price-summary-banner">
+                <div>
+                    <span style="font-size:11px; font-weight:bold; color:#166534; text-transform:uppercase; letter-spacing:0.5px;">Final Net Investment</span>
+                    <div style="font-size:12px; color:#15803d; font-weight:500; margin-top:2px;">All-inclusive total for parts, labor, and building clearances</div>
+                </div>
+                <div class="total-amount-txt" id="finalPriceText">$0.00</div>
+            </div>
+
+            <div class="section-title">💵 Deposit &amp; Milestone Structure</div>
+            <div class="contract-block">
+                <p>To finalize scheduling coordinates and deploy raw workflow materials, the following frameworks apply:</p>
+                <ul>
+                    <li><strong>Maintenance, Sweeps &amp; Minor Repairs (Under $1,500):</strong> A 10% scheduling deposit reserves your date on our active service grid. The remaining project balance is due immediately upon on-site completion of the itemized services.</li>
+                    <li><strong>Major Structural Masonry, Relining &amp; Appliance Installations (Over $1,500):</strong> A 50% material mobilization deposit is required prior to project scheduling and logistical layout commitments. The remaining 50% structural balance is due immediately upon installation completion and final site cleanup.</li>
+                    <li><strong>Custom Fabrications &amp; Specialized Special Orders:</strong> Any custom-engineered components (including but not limited to heavy-gauge stainless steel chase pan systems, custom decorative shrouds, custom ovalized lining profiles, or specialty heating appliances) require 100% upfront payment for the material component. Once design profiles are committed to production or manufacturer fulfillment, the material component is non-refundable.</li>
+                </ul>
+            </div>
+
+            <div class="section-title">⚖️ Terms &amp; Conditions</div>
+            <div class="contract-block">
+                <ul>
+                    <li><strong>Scope of Work:</strong> EverSafe Chimney Repair LLC will perform all itemized repair services and/or install specified custom components in accordance with National Fire Protection Association (NFPA 211) building compliance guidelines, the International Residential Code (IRC), and specific manufacturer engineering parameters.</li>
+                    <li><strong>Concealed, Historic &amp; Unforeseen Substructure Conditions:</strong> Venting systems, internal flue paths, structural masonry columns, hearth enclosures, and chase structures contain completely hidden internal components. System cleaning, structural teardown, or removal of pre-existing components (such as old pans, rusted dampers, or damaged flue tiles) may reveal deep pre-existing defects. EverSafe Chimney Repair LLC is not liable for the discovery or accidental escalation of pre-existing internal degradation, cracked clay flue tiles previously masked by creosote/soot, collapsed internal brick corbeling, hidden wood rot beneath siding or exterior panels, or historical framing violations behind finished drywall. If safety structural hazards or code violations are uncovered during execution, work will immediately pause until a revised structural change order is authorized by the homeowner.</li>
+                    <li><strong>Custom Manufacturing Limitations:</strong> Dimensions and technical blueprints for custom fabrications or specialty order appliances are permanently logged at the time of deposit commitment. Once fulfillment orders are processed or steel is cut, specifications cannot be modified, and order cancellations are prohibited.</li>
+                    <li><strong>Environmental Curing &amp; Weather Interventions:</strong> Professional waterproofing membranes, structural concrete crowns, engineered refractory mortars, high-temp silicone bonds, and external flashing sealants require precise thermal and moisture conditions to cure correctly. For safety and long-term installation integrity, project schedules will adjust based on active regional precipitation, extreme wind, or sub-freezing weather systems.</li>
+                    <li><strong>Notice of Cancellation:</strong> The buyer maintains the legal right to cancel this transaction at any time prior to midnight of the third business day following agreement signature. Requesting urgent scheduling or authorizing immediate custom fabrication deployment constitutes an explicit waiver of this 3-day holding window.</li>
+                    <li><strong>Workspace Logistics &amp; Site Safety:</strong> The homeowner agrees to provide technicians with unobstructed access to the fireplace hearth, attic pathways, roof structures, or exterior footprints. Technicians take extensive safety precautions to protect interior floors and property; however, the homeowner is responsible for removing fragile decorations, valuable assets, or unsecured furniture adjacent to the active maintenance footprint. EverSafe Chimney Repair LLC is not liable for unavoidable minor cosmetic scuffing or the fracturing of old, weathered, or brittle roof shingles directly adjacent to the ladder access or structural workspace.</li>
+                    <li><strong>Media &amp; Asset Release:</strong> The homeowner grants permission to capture high-resolution photo/video assets of the workspace for corporate quality control, warranty verification logging, and marketing materials. No private identifying personal details or street numbers will ever be published.</li>
+                    <li><strong>Payment Terms &amp; Compliance:</strong> Outstanding milestone balances are due in full immediately upon physical execution of the listed services. Late performance assessments of 1.5% per month will apply to any account balances left unpaid past 7 business days. Upon client signature, electronic approval, or payment of a scheduling deposit, this document transitions from an estimate into a binding contract governed by the laws of the State of Ohio, with all disputes mediated in Lucas County.</li>
+                </ul>
+            </div>
+
+            <div class="section-title">🛡️ Warranty Policy</div>
+            <div class="contract-block">
+                <p>EverSafe Chimney Repair LLC provides the following parameters upon project closeout and full final payment settlement:</p>
+                <ul>
+                    <li><strong>Premium Relining &amp; Structural Metal Components:</strong> High-grade stainless steel flue liners, custom chase pans, termination caps, and custom shrouds carry a Lifetime Material Warranty against rust-through, structural oxidation holes, or catastrophic atmospheric degradation under standard operational usage.</li>
+                    <li><strong>Masonry Restorations &amp; Weather Seals:</strong> Structural brickwork reconstructions, tuckpointing mortar joint repairs, flashing structural weaves, and poured concrete crowns carry a 5-Year Craftsmanship and Weather-Seal Warranty. This covers structural joint stability and protection against direct water penetration. <em>(Does not cover superficial hairline curing checks, masonry fractures caused by foundation settling, lightning strikes, thermal shock from over-firing, or leaks stemming from adjacent unworked roofing or siding surfaces).</em></li>
+                    <li><strong>Mechanical Controls &amp; Heating Appliances:</strong> Manufactured mechanical systems, including lock-top dampers, fireplace gas logs, wood-burning stove units, and blowers, carry direct manufacturer product warranties. EverSafe Chimney Repair LLC provides a 1-Year Craftsmanship Warranty on the physical installation alignment of these components.</li>
+                    <li><strong>Warranty Maintenance Condition:</strong> To preserve active warranty protections, all systems must undergo an annual inspection and standard maintenance sweep executed by a certified professional. This ensures the structural footprint is kept clear of corrosive creosote accumulation or environmental damage.</li>
+                </ul>
+            </div>
+
+            <p style="font-size: 12px; color: #64748b; line-height: 1.5; text-align: center; font-weight: 500; margin-bottom: 20px;">
+                By signing the interactive touchpad below, you verify that you are the legal property owner (or authorized agent), accept the milestone deposit frameworks, and authorize EverSafe Chimney Repair LLC to execute the structural scope detailed above.
+            </p>
+
+            <div class="signature-section">
+                <div class="signature-title">
+                    <span>Authorized Property Owner Signature</span>
+                    <button type="button" class="btn-clear" onclick="flushCanvas()">Clear</button>
+                </div>
+                <div class="canvas-frame">
+                    <canvas id="clientCanvas"></canvas>
+                </div>
+            </div>
+            
+            <button type="button" class="btn-submit" id="submitSigBtn" onclick="submitRemoteSignature()">Securely Authorize Agreement ✔️</button>
+            <div id="statusLine" class="status-msg">Awaiting secure authorization signature trace...</div>
+        </div>
+    </div>
+
+    <script>
+        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+        var isDrawingActive = false;
+        var canvas, ctx;
+
+        // PARSE THE INCOMING GOHIGHLEVEL URL DATA
+        var urlParams = new URLSearchParams(window.location.search);
+        var clientName = urlParams.get('name') || "Valued Client";
+        var clientEmail = urlParams.get('email') || "";
+        var serviceAddress = urlParams.get('address') || "On File";
+        var estimatedCost = urlParams.get('cost') || "0.00";
+        var workScope = urlParams.get('scope') || "Standard Core Maintenance Parameter Allocation.";
+        var techName = urlParams.get('tech') || "EverSafe Desk Operations";
+
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('clientNameText').innerText = clientName;
+            document.getElementById('clientAddressText').innerText = serviceAddress;
+            document.getElementById('documentDateText').innerText = new Date().toLocaleDateString();
+            document.getElementById('finalPriceText').innerText = "$" + parseFloat(estimatedCost).toFixed(2);
+            document.getElementById('scopeDisplayBox').innerText = workScope;
+
+            initializeCanvas();
+        });
+
+        function initializeCanvas() {
+            canvas = document.getElementById('clientCanvas');
+            var rect = canvas.parentNode.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = 160;
+            
+            ctx = canvas.getContext('2d');
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#0f172a';
+
+            function getCoordinates(e) {
+                var r = canvas.getBoundingClientRect();
+                return { x: e.clientX - r.left, y: e.clientY - r.top };
+            }
+
+            canvas.addEventListener('pointerdown', function(e) {
+                isDrawingActive = true;
+                ctx.beginPath();
+                var coords = getCoordinates(e);
+                ctx.moveTo(coords.x, coords.y);
+                canvas.setPointerCapture(e.pointerId);
+                e.preventDefault();
+            });
+
+            canvas.addEventListener('pointermove', function(e) {
+                if (!isDrawingActive) return;
+                e.preventDefault();
+                var coords = getCoordinates(e);
+                ctx.lineTo(coords.x, coords.y);
+                ctx.stroke();
+            });
+
+            function stopDrawing(e) {
+                if (isDrawingActive) {
+                    isDrawingActive = false;
+                    canvas.releasePointerCapture(e.pointerId);
+                }
+            }
+            canvas.addEventListener('pointerup', stopDrawing);
+            canvas.addEventListener('pointercancel', stopDrawing);
+        }
+
+        function flushCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+
+        function isCanvasBlank() {
+            var blank = document.createElement('canvas');
+            blank.width = canvas.width; blank.height = canvas.height;
+            return canvas.toDataURL() === blank.toDataURL();
+        }
+
+        async function submitRemoteSignature() {
+            var btn = document.getElementById('submitSigBtn');
+            var statusDiv = document.getElementById('statusLine');
+
+            if (isCanvasBlank()) {
+                alert("Signature Check: Please sign the pad using your finger or stylus to authorize this agreement.");
+                return;
+            }
+
+            btn.disabled = true;
+            statusDiv.innerHTML = "⏳ Compiling signature datasets and locking ledger contract...";
+            statusDiv.style.color = "var(--primary)";
+
+            var clientBase64 = canvas.toDataURL('image/png');
+            var cleanFilename = "RemoteSig_" + clientName.replace(/[^a-z0-9]/gi, '_') + "_" + Date.now() + ".png";
+
+            var payload = {
+                route: "updateWorkOrderSignature",
+                base64Data: clientBase64, 
+                techBase64Data: "REMOTE_AUTHORIZED_VIA_PORTAL", 
+                filename: cleanFilename,
+                customerName: clientName,
+                customerEmail: clientEmail,
+                serviceAddress: serviceAddress,
+                estimatedCost: estimatedCost,
+                workScope: workScope,
+                leadTechnician: techName
+            };
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                let result = await response.json();
+
+                if (result.success) {
+                    statusDiv.innerHTML = "🎉 Agreement Authorized! A copy of your finalized document has been generated and emailed directly to you.";
+                    statusDiv.style.color = "var(--success)";
+                    btn.style.display = "none";
+                } else {
+                    statusDiv.innerHTML = "❌ Submission Interrupted: " + result.error;
+                    btn.disabled = false;
+                }
+            } catch(e) {
+                statusDiv.innerHTML = "❌ System Interrupted: Network response timed out. Please try again.";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
