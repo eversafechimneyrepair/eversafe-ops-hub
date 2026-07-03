@@ -68,7 +68,7 @@
     <div class="app-container">
         <div class="app-card">
             <h3>Secure Contract Execution</h3>
-            <p>Signatures commit structural parameters and pricing layers to the office ledger and trigger automated compliance PDF generation.</p>
+            <p>Signing below locks in the project details and pricing layout, logs the approval to the office database, and automatically generates the final contract PDF.</p>
             
             <div class="signature-section">
                 <div class="signature-title">
@@ -93,7 +93,7 @@
             <button type="button" class="btn-submit" id="submitSigBtn" onclick="transmitSignaturesAndCompilePDF()">Finalize &amp; Compile Contract ✔️</button>
             <button type="button" class="btn-back" onclick="window.location.replace('contract-wo.html')">⬅️ Back to Contract Review</button>
             
-            <div id="sigStatusLine" class="status-msg">Awaiting verification trace input...</div>
+            <div id="sigStatusLine" class="status-msg">Ready for signature input.</div>
         </div>
     </div>
 
@@ -195,14 +195,14 @@
             var custName = localStorage.getItem('current_wo_customer_name');
 
             if (isCanvasBlank('clientCanvas') || isCanvasBlank('techCanvas')) {
-                alert("Validation Exception: Both the Homeowner and the EverSafe Representative must sign the pad to execute this contract.");
+                alert("Validation Notice: Both the Homeowner and the EverSafe Representative must sign the pad to execute this agreement.");
                 return;
             }
 
-            if (!custName) { alert("Execution Error: No active customer selection detected in local memory."); return; }
+            if (!custName) { alert("Error: No active customer data found in local tablet memory."); return; }
 
             btn.disabled = true;
-            statusDiv.innerHTML = "⏳ Compiling structural parameters and building cryptographic contract PDF...";
+            statusDiv.innerHTML = "⏳ Finalizing project details and building the contract PDF...";
             statusDiv.style.color = "var(--primary)";
 
             var clientBase64 = document.getElementById('clientCanvas').toDataURL('image/png');
@@ -235,18 +235,16 @@
                 let result = await response.json();
 
                 if (result.success) {
-                    statusDiv.innerHTML = "✅ Contract Finalized! Hardlocked PDF emailed to client and archived to Drive.";
+                    statusDiv.innerHTML = "✅ Contract Finalized! PDF copy emailed to the client and saved to Drive.";
                     statusDiv.style.color = "var(--success-dark)";
-                    // 🎯 ROUTING SYNTAX RE-ALIGNED TO YOUR SPECIFIC BILLING FILE:
                     setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
                 } else {
                     statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
                     btn.disabled = false;
                 }
             } catch(e) {
-                statusDiv.innerHTML = "⚠️ Ledger Synced (Offline Storage Pipeline Tripped). Proceeding...";
+                statusDiv.innerHTML = "⚠️ Ledger Saved (Network delay creating PDF). Proceeding to invoice...";
                 statusDiv.style.color = "var(--accent-dark)";
-                // 🎯 ROUTING SYNTAX RE-ALIGNED TO YOUR SPECIFIC BILLING FILE HERE AS WELL:
                 setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
             }
         }
