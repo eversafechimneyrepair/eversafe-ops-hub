@@ -52,22 +52,26 @@
 </head>
 <body>
 
+    <!-- 🧠 HYBRID GATEKEEPER ROUTER: Allows parameter links to bypass tech authentication screens -->
     <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
-            window.location.replace("index.html");
+        const urlCheckParams = new URLSearchParams(window.location.search);
+        if (!urlCheckParams.has('name') || !urlCheckParams.has('cost')) {
+            if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+                window.location.replace("index.html");
+            }
         }
     </script>
 
     <div class="app-header">
         <div class="brand-row">
-            <div class="brand-text">EverSafe Operations Hub</div>
+            <div class="brand-text" id="headerBrandTitle">EverSafe Operations Hub</div>
             <button type="button" class="logout-pill-btn" onclick="executeFieldCrewLogout()">Logout</button>
         </div>
     </div>
 
     <div class="app-container">
         <div class="app-card">
-            <h3>Secure Contract Execution</h3>
+            <h3 id="panelPrimaryHeading">Secure Contract Execution</h3>
             <p>Signing below locks in the project details and pricing layout, logs the approval to the office database, and automatically generates the final contract PDF.</p>
             
             <div class="signature-section">
@@ -80,7 +84,8 @@
                 </div>
             </div>
 
-            <div class="signature-section">
+            <!-- 👷 ANCHORED ID ATTACHED FOR DYNAMIC DISMISSIBILITY RUNS -->
+            <div class="signature-section" id="techSigSection">
                 <div class="signature-title">
                     <span>2. EverSafe Representative</span>
                     <button type="button" class="btn-clear" onclick="flushCanvas('techCanvas')">Clear</button>
@@ -102,13 +107,62 @@
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbzoSNXWLdMSN2PcMM-QfkmXiZQaO00YD1r_eNdfZ45EMjL48DtX8H_2turxhb_nPLteMA/exec";
+        var IS_REMOTE_PORTAL_MODE = false;
         
         window.addEventListener('DOMContentLoaded', function() {
-            var custName = localStorage.getItem('current_wo_customer_name');
-            if(custName) document.getElementById('clientNameDisplay').innerText = custName;
+            var urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.has('name') && urlParams.has('cost')) {
+                // 🔓 ENGAGE EXTERNAL CUSTOMER ROUTING TUNNELS
+                IS_REMOTE_PORTAL_MODE = true;
+                
+                var custName = urlParams.get('name');
+                var custEmail = urlParams.get('email') || "";
+                var serviceAddr = urlParams.get('address') || "";
+                var estCost = urlParams.get('cost') || "0.00";
+                var workScope = urlParams.get('scope') || "";
+                var leadTech = urlParams.get('tech') || "Field Crew Rep";
+
+                document.getElementById('clientNameDisplay').innerText = custName;
+                document.getElementById('headerBrandTitle').innerText = "EverSafe Secure Client Portal";
+                document.getElementById('panelPrimaryHeading').innerText = "Authorize Your Service Order";
+                
+                // Set descriptive context styling for homeowner clarity
+                var descriptionParagraph = document.querySelector('.app-card p');
+                if (descriptionParagraph) {
+                    descriptionParagraph.innerHTML = "Please review your proposed chimney service profile specifications. Record your signature signature inside the field canvas panel underneath to legally authorize your work order deployment.";
+                }
+
+                // Cleanly isolate tech parameters out of client view profiles
+                if (document.getElementById('techSigSection')) {
+                    document.getElementById('techSigSection').style.display = 'none';
+                }
+                var logoutBtn = document.querySelector('.logout-pill-btn');
+                if (logoutBtn) logoutBtn.style.display = 'none';
+                var backBtn = document.querySelector('.btn-back');
+                if (backBtn) backBtn.style.display = 'none';
+                var navBarElement = document.querySelector('.fixed-bottom-nav-bar');
+                if (navBarElement) navBarElement.style.display = 'none';
+
+                // Cache dynamic URL vectors into local state registers
+                localStorage.setItem('remote_customer_name', custName);
+                localStorage.setItem('remote_customer_email', custEmail);
+                localStorage.setItem('remote_service_address', serviceAddr);
+                localStorage.setItem('remote_estimated_cost', estCost);
+                localStorage.setItem('remote_work_scope', workScope);
+                localStorage.setItem('remote_lead_technician', leadTech);
+                
+            } else {
+                // 👷 STANDARD INTERNAL RUN SYSTEM LOGIC (Tablet Mode)
+                IS_REMOTE_PORTAL_MODE = false;
+                var custName = localStorage.getItem('current_wo_customer_name');
+                if(custName) document.getElementById('clientNameDisplay').innerText = custName;
+            }
 
             setupCanvas('clientCanvas');
-            setupCanvas('techCanvas');
+            if (!IS_REMOTE_PORTAL_MODE) {
+                setupCanvas('techCanvas');
+            }
             
             window.addEventListener('resize', function() {
                 resizeCanvas('clientCanvas');
@@ -158,6 +212,8 @@
 
         function resizeCanvas(canvasId) {
             var canvas = document.getElementById(canvasId);
+            if (!canvas || canvas.offsetParent === null) return; // Safely drop calculation matrix passes if panel hidden
+            
             var ctx = canvas.getContext('2d');
             var rect = canvas.parentNode.getBoundingClientRect();
             
@@ -183,6 +239,8 @@
 
         function isCanvasBlank(canvasId) {
             var canvas = document.getElementById(canvasId);
+            if (!canvas || canvas.offsetParent === null) return false; // Hidden pads run trace bypasses bypass validation triggers
+            
             var blank = document.createElement('canvas');
             blank.width = canvas.width; 
             blank.height = canvas.height;
@@ -192,26 +250,53 @@
         async function transmitSignaturesAndCompilePDF() {
             var btn = document.getElementById('submitSigBtn');
             var statusDiv = document.getElementById('sigStatusLine');
-            var custName = localStorage.getItem('current_wo_customer_name');
+            
+            var custName, custEmail, serviceAddr, estCost, workScope, leadTech, techBase64;
 
-            if (isCanvasBlank('clientCanvas') || isCanvasBlank('techCanvas')) {
-                alert("Validation Notice: Both the Homeowner and the EverSafe Representative must sign the pad to execute this agreement.");
-                return;
+            // INTERCEPT CORRESPONDING CACHE ATTRIBUTES BASED ON MODE
+            if (IS_REMOTE_PORTAL_MODE) {
+                if (isCanvasBlank('clientCanvas')) {
+                    alert("Validation Notice: Please input your signature in the space provided to authorize this agreement.");
+                    return;
+                }
+                custName = localStorage.getItem('remote_customer_name');
+                custEmail = localStorage.getItem('remote_customer_email') || "No Email Provided";
+                serviceAddr = localStorage.getItem('remote_service_address') || "On File";
+                estCost = localStorage.getItem('remote_estimated_cost') || "0.00";
+                workScope = localStorage.getItem('remote_work_scope') || "Standard Core Maintenance Runs Executed.";
+                leadTech = localStorage.getItem('remote_lead_technician') || "Field Crew Rep";
+                
+                // ⚡ FORCE REMOTE PORTAL FLAG MAP INSIDE CORE ARRAYS
+                techBase64 = "REMOTE_AUTHORIZED_VIA_PORTAL";
+            } else {
+                if (isCanvasBlank('clientCanvas') || isCanvasBlank('techCanvas')) {
+                    alert("Validation Notice: Both the Homeowner and the EverSafe Representative must sign the pad to execute this agreement.");
+                    return;
+                }
+                custName = localStorage.getItem('current_wo_customer_name');
+                custEmail = localStorage.getItem('current_wo_customer_email') || "No Email Provided";
+                serviceAddr = localStorage.getItem('current_wo_service_address') || "On File";
+                estCost = localStorage.getItem('current_wo_est_cost') || "0.00";
+                workScope = localStorage.getItem('current_wo_work_scope') || "Standard Core Maintenance Runs Executed.";
+                leadTech = localStorage.getItem('eversafe_authenticated_user') || "Field Crew";
+                
+                techBase64 = document.getElementById('techCanvas').toDataURL('image/png');
             }
 
-            if (!custName) { alert("Error: No active customer data found in local tablet memory."); return; }
+            if (!custName) { alert("Error: Active operational profile framework maps have been lost."); return; }
 
             btn.disabled = true;
             statusDiv.innerHTML = "⏳ Finalizing project details and building the contract PDF...";
             statusDiv.style.color = "var(--primary)";
 
             var clientBase64 = document.getElementById('clientCanvas').toDataURL('image/png');
-            var techBase64 = document.getElementById('techCanvas').toDataURL('image/png');
             var cleanFilename = "Sig_" + custName.replace(/[^a-z0-9]/gi, '_') + "_" + Date.now() + ".png";
 
-            localStorage.setItem('final_client_signature', clientBase64);
-            localStorage.setItem('final_tech_signature', techBase64);
-            localStorage.setItem('current_wo_status', 'EXECUTED');
+            if (!IS_REMOTE_PORTAL_MODE) {
+                localStorage.setItem('final_client_signature', clientBase64);
+                localStorage.setItem('final_tech_signature', techBase64);
+                localStorage.setItem('current_wo_status', 'EXECUTED');
+            }
 
             var payload = {
                 route: "updateWorkOrderSignature",
@@ -219,11 +304,11 @@
                 techBase64Data: techBase64, 
                 filename: cleanFilename,
                 customerName: custName,
-                customerEmail: localStorage.getItem('current_wo_customer_email') || "No Email Provided",
-                serviceAddress: localStorage.getItem('current_wo_service_address') || "On File",
-                estimatedCost: localStorage.getItem('current_wo_est_cost') || "0.00",
-                workScope: localStorage.getItem('current_wo_work_scope') || "Standard Core Maintenance Runs Executed.",
-                leadTechnician: localStorage.getItem('eversafe_authenticated_user') || "Field Crew"
+                customerEmail: custEmail,
+                serviceAddress: serviceAddr,
+                estimatedCost: estCost,
+                workScope: workScope,
+                leadTechnician: leadTech
             };
 
             try {
@@ -235,17 +320,38 @@
                 let result = await response.json();
 
                 if (result.success) {
-                    statusDiv.innerHTML = "✅ Contract Finalized! PDF copy emailed to the client and saved to Drive.";
-                    statusDiv.style.color = "var(--success-dark)";
-                    setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
+                    if (IS_REMOTE_PORTAL_MODE) {
+                        statusDiv.innerHTML = "✅ Authorization Logged Perfectly!";
+                        statusDiv.style.color = "var(--success-dark)";
+                        
+                        // Hydrate UI context with a clean thank-you interface layout
+                        document.querySelector('.app-card').innerHTML = `
+                            <div style="text-align:center; padding: 20px 10px;">
+                                <h2 style="color:var(--success-dark); text-transform:uppercase; font-size:22px; margin-bottom:12px;">✔️ Proposal Authorized!</h2>
+                                <p style="color:#334155; font-size:14px; line-height:1.6; margin-bottom:0; font-weight:500;">
+                                    Thank you, <b>${custName}</b>. Your signed agreement parameters have been officially authorized and compiled. A clean reference copy of your contract PDF document has been transmitted to <b>${custEmail}</b>.
+                                </p>
+                            </div>
+                        `;
+                    } else {
+                        statusDiv.innerHTML = "✅ Contract Finalized! PDF copy emailed to the client and saved to Drive.";
+                        statusDiv.style.color = "var(--success-dark)";
+                        setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
+                    }
                 } else {
                     statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
                     btn.disabled = false;
                 }
             } catch(e) {
-                statusDiv.innerHTML = "⚠️ Ledger Saved (Network delay creating PDF). Proceeding to invoice...";
-                statusDiv.style.color = "var(--accent-dark)";
-                setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
+                if (IS_REMOTE_PORTAL_MODE) {
+                    statusDiv.innerHTML = "❌ Network core transmission interrupt. Check link and retry.";
+                    statusDiv.style.color = "var(--danger)";
+                    btn.disabled = false;
+                } else {
+                    statusDiv.innerHTML = "⚠️ Ledger Saved (Network delay creating PDF). Proceeding to invoice...";
+                    statusDiv.style.color = "var(--accent-dark)";
+                    setTimeout(function() { window.location.replace("billing-invoice.html"); }, 1500);
+                }
             }
         }
         
