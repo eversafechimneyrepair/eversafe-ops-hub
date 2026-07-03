@@ -258,6 +258,9 @@
             var idSuffix = 'dyn' + jobCounter++;
             var container = document.getElementById('manifestContainer');
 
+            var defaultScopeInput = scope.includes("Time:") ? "Physical Cleaning Sweep - Utility Furnace Gas/Oil Flue Pathway" : scope;
+            var defaultCostInput = cost === "0.00" ? "184.52" : cost;
+
             var html = `
                 <div class="dispatch-card active-run" id="card_${idSuffix}">
                     <div class="job-time">⏰ Field Lead Active</div>
@@ -283,9 +286,100 @@
                             ✅ Mark Complete
                         </button>
                     </div>
+
+                    <!-- 🚀 INTEGRATED QUICK REMOTE WORK ORDER SLIDE-DRAWER -->
+                    <button type="button" class="btn-utility" style="background: var(--accent); width:100%; margin-top:8px;" id="btn_toggle_remote_${idSuffix}" onclick="toggleRemoteSignTray('${idSuffix}')">
+                        ⚡ Quick Remote Sign Text
+                    </button>
+
+                    <div id="remote_tray_${idSuffix}" style="display:none; margin-top:10px; background:#f1f5f9; padding:12px; border:1px solid var(--border); border-radius:6px;">
+                        <div style="font-size:11px; font-weight:bold; color:var(--primary); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Fast Track Blueprint</div>
+                        
+                        <div style="margin-bottom:6px;">
+                            <label style="display:block; font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Investment Cost ($):</label>
+                            <input type="number" id="input_cost_${idSuffix}" value="${defaultCostInput}" style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:13px; font-weight:bold;">
+                        </div>
+
+                        <div>
+                            <label style="display:block; font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Scope of Work:</label>
+                            <textarea id="input_scope_${idSuffix}" style="width:100%; padding:6px; border:1px solid var(--border); border-radius:4px; font-size:12px; height:54px; font-family:sans-serif;">${defaultScopeInput}</textarea>
+                        </div>
+
+                        <button type="button" class="btn-utility" id="btn_dispatch_remote_${idSuffix}" style="background:var(--primary); width:100%; margin-top:10px;" onclick="executeInlineRemoteSign('${idSuffix}')">
+                            Blast Link to Client Phone 🚀
+                        </button>
+                    </div>
                 </div>
             `;
             container.insertAdjacentHTML('afterbegin', html);
+        }
+
+        function toggleRemoteSignTray(idSuffix) {
+            var tray = document.getElementById('remote_tray_' + idSuffix);
+            var btn = document.getElementById('btn_toggle_remote_' + idSuffix);
+            if (tray.style.display === "none") {
+                tray.style.display = "block";
+                btn.innerHTML = "❌ Close Request Panel";
+                btn.style.background = "#475569";
+            } else {
+                tray.style.display = "none";
+                btn.innerHTML = "⚡ Quick Remote Sign Text";
+                btn.style.background = "var(--accent)";
+            }
+        }
+
+        async function executeInlineRemoteSign(idSuffix) {
+            var name = document.getElementById('name_' + idSuffix).innerText.split('(')[0].trim();
+            var addr = document.getElementById('addr_' + idSuffix).innerText;
+            var email = document.getElementById('email_' + idSuffix).innerText;
+            var cost = document.getElementById('input_cost_' + idSuffix).value.trim();
+            var scope = document.getElementById('input_scope_' + idSuffix).value.trim();
+            
+            var dispatchBtn = document.getElementById('btn_dispatch_remote_' + idSuffix);
+            var originalText = dispatchBtn.innerHTML;
+            
+            if(!cost || !scope) { alert("Please input a valid price valuation and scope structure."); return; }
+            
+            if(email === "No Email" || email.trim() === "") {
+                var technicalEmailInput = prompt("A client email signature record is required down-pipeline. Please provide the customer email address:", "client@email.com");
+                if(!technicalEmailInput || !technicalEmailInput.includes("@")) { alert("Aborted: Valid email required."); return; }
+                email = technicalEmailInput;
+                document.getElementById('email_' + idSuffix).innerText = email;
+            }
+
+            dispatchBtn.innerHTML = "⏳ Dispatching to Gateway Matrix...";
+            dispatchBtn.disabled = true;
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify({
+                        route: "sendEstimateEmail",
+                        customerName: name,
+                        customerEmail: email,
+                        serviceAddress: addr,
+                        estimatedCost: cost,
+                        workScope: scope,
+                        leadTechnician: DRIVER_NAME
+                    })
+                });
+                let result = await response.json();
+
+                if (result.success) {
+                    dispatchBtn.innerHTML = "✔️ Core Dispatched & Link Fired!";
+                    dispatchBtn.style.background = "var(--success-dark)";
+                    setTimeout(function() { toggleRemoteSignTray(idSuffix); }, 1500);
+                } else {
+                    alert("Gateway Refusal: " + result.error);
+                    dispatchBtn.innerHTML = originalText;
+                    dispatchBtn.disabled = false;
+                }
+            } catch (err) {
+                alert("Network Core Timeout. Check server connections.");
+                dispatchBtn.innerHTML = originalText;
+                dispatchBtn.disabled = false;
+            }
         }
 
         async function updateJobStatus(idSuffix, statusType) {
