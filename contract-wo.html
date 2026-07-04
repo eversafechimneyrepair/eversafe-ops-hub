@@ -251,6 +251,7 @@
             var cost = localStorage.getItem('current_wo_est_cost') || "0.00";
             var email = localStorage.getItem('current_wo_customer_email') || "";
 
+            // 📧 FAIL-SAFE EMAIL CHECK
             if (!email || email.trim() === "" || !email.includes("@")) {
                 var manualEmailInput = prompt("An email address record is required to dispatch the secure signing portal link. Please input customer email address:", "client@email.com");
                 if (!manualEmailInput || !manualEmailInput.includes("@")) { 
@@ -259,6 +260,18 @@
                 }
                 email = manualEmailInput.trim();
                 localStorage.setItem('current_wo_customer_email', email);
+            }
+
+            // 📱 FAIL-SAFE PHONE CHECK (VITAL FIX)
+            var phone = localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('current_wo_phone') || "";
+            if (!phone || phone.trim() === "") {
+                var manualPhoneInput = prompt("A mobile phone number is required to text the secure signing portal link. Please input customer mobile number:", "4195171888");
+                if (!manualPhoneInput || manualPhoneInput.trim() === "") { 
+                    alert("Action Aborted: A valid mobile number is required to send the text message."); 
+                    return; 
+                }
+                phone = manualPhoneInput.replace(/[^0-9]/g, '').trim(); 
+                localStorage.setItem('current_wo_customer_phone', phone);
             }
 
             remoteBtn.innerHTML = "⏳ Generating File & Firing CRM Link...";
@@ -275,8 +288,7 @@
                         route: "sendEstimateEmail",
                         customerName: name,
                         customerEmail: email,
-                        // 🔥 FIXED: Direct walk-ups now securely pass phone metadata directly out of local cache arrays
-                        customerPhone: localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('current_wo_phone') || "",
+                        customerPhone: phone, // 🔥 Fully protected phone payload
                         serviceAddress: addr,
                         estimatedCost: cost,
                         workScope: compiledScope,
