@@ -275,6 +275,8 @@
                         route: "sendEstimateEmail",
                         customerName: name,
                         customerEmail: email,
+                        // 🔥 FIXED: Direct walk-ups now securely pass phone metadata directly out of local cache arrays
+                        customerPhone: localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('current_wo_phone') || "",
                         serviceAddress: addr,
                         estimatedCost: cost,
                         workScope: compiledScope,
