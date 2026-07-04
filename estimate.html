@@ -1240,6 +1240,8 @@
                 route: "sendEstimateEmail",
                 customerName: localStorage.getItem('current_wo_customer_name') || "Valued Client",
                 customerEmail: custEmail,
+                // 🔥 FIXED: Packages the phone number directly from localStorage or a local variable
+                customerPhone: localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('current_wo_phone') || (typeof custPhone !== 'undefined' ? custPhone : ""), 
                 serviceAddress: localStorage.getItem('current_wo_service_address') || "On File",
                 estimatedCost: GLOBAL_GRAND_TOTAL.toFixed(2),
                 workScope: scopeText,
