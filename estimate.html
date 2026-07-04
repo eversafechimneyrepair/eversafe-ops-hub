@@ -118,7 +118,6 @@
                         <option value="MI_MONROE_CORE">Monroe County, MI [Local Core: 0-20 mi] — (6.00% Tax)</option>
                         <option value="OH_MID_DIST">Fulton / Henry / Ottawa / Sandusky, OH [Zone 1: 20-40 mi] — (7.25% Tax)</option>
                         <option value="MI_MONROE_OUTER">Lenawee & Hillsdale Counties, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
-                        <option value="MI_MONROE_OUTER">Lenawee & Hillsdale Counties, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
                         <option value="MI_WASHTENAW_MID">Washtenaw County / Ann Arbor, MI [Zone 1: 20-40 mi] — (6.00% Tax)</option>
                         <option value="OH_EXTENDED">Hancock & Seneca Counties, OH [Zone 2: 40-60 mi] — (7.25% Tax)</option>
                         <option value="MI_EXTENDED">Wayne & Outer Washtenaw, MI [Zone 2: 40-60 mi] — (6.00% Tax)</option>
@@ -227,7 +226,7 @@
                         height="100%" 
                         style="border:0;" 
                         loading="lazy" 
-                        allowfullscreen 
+                        allowfullscreen="true" 
                         src="about:blank">
                     </iframe>
                 </div>
@@ -296,33 +295,33 @@
             <div id="smartRecommendationsTray" style="margin-top: -5px; margin-bottom: 15px;"></div>
 
             <div class="revenue-breakdown-card">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                                                
-                <div class="breakdown-row">                                        
-                    <div>Gross Catalog Line Items Subtotal:</div>                                        
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                                                                                
+                <div class="breakdown-row">                                            
+                    <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
                 </div>                                
-                <div class="breakdown-row">                                        
-                    <div>Travel & Commute Mileage Surcharge (Distance Fund):</div>                                        
+                <div class="breakdown-row">                                            
+                    <div>Travel & Commute Mileage Surcharge (Distance Fund):</div>                                            
                     <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
                 </div>                                
-                <div class="breakdown-row">                                        
-                    <div>Indirect Operational Overhead Buffer (12.0%):</div>                                        
+                <div class="breakdown-row">                                            
+                    <div>Indirect Operational Overhead Buffer (12.0%):</div>                                            
                     <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
                 </div>                                
-                <div class="breakdown-row">                                        
+                <div class="breakdown-row">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                        
-                <div class="breakdown-row" style="background: #f0fdf4;">                                        
-                    <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                        
+                </div>                                                                                                                                                                                                                                                                                                              
+                <div class="breakdown-row" style="background: #f0fdf4;">                                            
+                    <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
                 </div>                                
-                <div class="breakdown-row">                                        
-                    <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                        
+                <div class="breakdown-row">                                            
+                    <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                            
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                        
-                <div class="breakdown-row grand-prime">                                        
-                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                        
+                </div>                                                                                                                                                                                                                                                                                                              
+                <div class="breakdown-row grand-prime">                                            
+                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                            
                     <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
                 </div>                                     
             </div>
@@ -330,15 +329,15 @@
             <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
                 
-                <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                                                                                                                                                                                                                                                                                                                                                                                            
-                    <div>                                                                                                                                                                                                                                                                                                                                                                                                            
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                                                                                                                                                                            
-                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                        
-                    </div>                                        
-                    <div>                                                                                                                                                                                                                                                                                                                                                                                                            
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                                                                                                                                                                            
-                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                        
-                    </div>                                        
+                <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                                
+                    </div>                                                
+                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                                
+                    </div>                                                
                 </div>   
                 
                 <!-- 📥 REVISED & ADVANCED PARTNER REVENUE TRACKING DRAWER -->
@@ -362,11 +361,11 @@
                     </div>
                 </div>
 
-                <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">                                        
-                    <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                                        
-                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                
-                </div>                        
-            </div>                                                                        
+                <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">                                                
+                    <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                                                
+                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                        
+                </div>                                
+            </div>                                                                                                
             
             <!-- ⚡ THE MODERN UPGRADED GHL SIGNATURE LINK DISPATCH TRIGGER -->
             <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--accent); margin-bottom: 12px; box-shadow: 0 4px 12px rgba(242,140,40,0.2);">⚡ Send Remote Signing Link (Text & Email)</button>
@@ -1240,7 +1239,6 @@
                 route: "sendEstimateEmail",
                 customerName: localStorage.getItem('current_wo_customer_name') || "Valued Client",
                 customerEmail: custEmail,
-                // 🔥 FIXED: Packages the phone number directly from localStorage or a local variable
                 customerPhone: localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('current_wo_phone') || (typeof custPhone !== 'undefined' ? custPhone : ""), 
                 serviceAddress: localStorage.getItem('current_wo_service_address') || "On File",
                 estimatedCost: GLOBAL_GRAND_TOTAL.toFixed(2),
