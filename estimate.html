@@ -307,28 +307,42 @@
             
             <div id="smartRecommendationsTray" style="margin-top: -5px; margin-bottom: 15px;"></div>
 
-            <div class="revenue-breakdown-card">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Corporate Financial Protection Review</span>                                                                                                                                                                                                                                                                                                                
+            <div style="background: #e0f2fe; border: 1px solid #bfdbfe; padding: 14px; border-radius: 6px; margin-top: 25px;">
+                <label style="font-weight: 800; color: #1e40af; font-size: 13px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                    <input type="checkbox" id="retailModeToggle" onchange="recalculateMasterLedger()" checked style="width: 20px; height: 20px; margin: 0; cursor: pointer;">
+                    Retail Presentation Mode (Hide Office Costs & Overheads)
+                </label>
+                <p style="font-size: 11.5px; color: #3b82f6; margin-top: 6px; margin-left: 28px;">When checked, the final bid total strictly equals the Gross Catalog Items + Tax. Corporate overheads, expenses, and margins are completely hidden and removed from the compounding total.</p>
+            </div>
+
+            <div class="revenue-breakdown-card" style="margin-top: 15px;">                
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                
                 <div class="breakdown-row">                                            
                     <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
                 </div>                                
                 <div class="breakdown-row">                                            
-                    <div>Travel & Commute Mileage Surcharge (Distance Fund):</div>                                            
+                    <div>Travel & Commute Mileage Surcharge:</div>                                            
                     <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
                 </div>                                
-                <div class="breakdown-row">                                            
+                <div class="breakdown-row" id="row_overhead">                                            
                     <div>Indirect Operational Overhead Buffer (12.0%):</div>                                            
                     <div id="lbl_indirect_overhead" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
                 </div>                                
-                <div class="breakdown-row">                                            
+                <div class="breakdown-row" id="row_expense">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
                 </div>                                                                                                                                                                                                                                                                                                                                                                                                    
-                <div class="breakdown-row" style="background: #f0fdf4;">                                            
+                <div class="breakdown-row" id="row_margin" style="background: #f0fdf4; margin-top: 4px;">                                            
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
-                </div>                                
+                </div> 
+                
+                <div class="breakdown-row" style="background: #f8fafc; border-top: 1px dashed #cbd5e1; margin-top: 8px; padding-top: 12px;">
+                    <div style="font-weight: bold; color: #475569;">Override Tax Rate (%) if needed:</div>
+                    <div><input type="number" id="manualTaxOverride" placeholder="Auto" oninput="recalculateMasterLedger()" style="width: 80px; padding: 6px; font-weight: bold; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px;"></div>
+                </div>
+
                 <div class="breakdown-row">                                            
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                            
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
@@ -414,6 +428,8 @@
             "LOG_DUMPSTER_10YD":    { cat: "LOGISTICS", label: "10-Yard Commercial Roll-Off Dumpster Rental & Tipping Fee", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 450.00, MI_MONROE_OUTER: 450.00, MI_WASHTENAW_MID: 495.00, MI_EXTENDED: 495.00, dynamic: false, matCost: 350.00, labRate: 55.00, labHours: 0.5, wbs: ["Coordinate delivery and placement of heavy-debris roll-off container", "Protect homeowner driveway with heavy timber cribbing during drop", "Manage extraction dispatch and municipal landfill tonnage tipping weights"], mats: ["10-Cubic Yard Dumpster Rental", "Heavy Masonry Tonnage Disposal Fees"] },
             "LOG_SCAFFOLD_MOB":     { cat: "LOGISTICS", label: "Multi-Tier Scaffolding Mobilization & Erection (per tier)", OH_LUCAS: 250.00, OH_WOOD: 250.00, OH_MID_DIST: 250.00, OH_EXTENDED: 250.00, MI_MONROE_CORE: 250.00, MI_MONROE_OUTER: 250.00, MI_WASHTENAW_MID: 250.00, MI_EXTENDED: 250.00, dynamic: true, defQty: 2, unit: "tiers", matCost: 25.00, labRate: 55.00, labHours: 2.0, wbs: ["Transport heavy tubular steel scaffolding frames to jobsite", "Erect leveled base plates and stack framing to OSHA height standards", "Secure safety cross-bracing, walk boards, and perimeter fall-protection rails", "Dismantle and extract staging upon project completion"], mats: ["Equipment transport fuel / staging wear & tear"] },
             "LOG_LIFT_RENTAL":      { cat: "LOGISTICS", label: "Towable Boom / Aerial Man-Lift Equipment Rental (Daily)", OH_LUCAS: 550.00, OH_WOOD: 550.00, OH_MID_DIST: 550.00, OH_EXTENDED: 550.00, MI_MONROE_CORE: 550.00, MI_MONROE_OUTER: 550.00, MI_WASHTENAW_MID: 650.00, MI_EXTENDED: 650.00, dynamic: true, defQty: 1, unit: "days", matCost: 450.00, labRate: 55.00, labHours: 1.0, wbs: ["Coordinate equipment dispatch from heavy rental yard", "Maneuver articulated boom lift into operational strike zone without turf damage", "Provide safe elevated working platform for extreme-height or unsafe-pitch roof access"], mats: ["Aerial Lift Daily Rental Fee", "Equipment Delivery/Pickup Freight Surcharges"] },
+            "LOG_DISPATCH":         { cat: "LOGISTICS", label: "Standard Technician Dispatch & Service Call Fee", OH_LUCAS: 119.00, OH_WOOD: 119.00, OH_MID_DIST: 119.00, OH_EXTENDED: 119.00, MI_MONROE_CORE: 119.00, MI_MONROE_OUTER: 119.00, MI_WASHTENAW_MID: 119.00, MI_EXTENDED: 119.00, dynamic: false, matCost: 15.00, labRate: 55.00, labHours: 1.0, wbs: ["Dispatch certified technician to property location", "Perform initial visual assessment of homeowner concern", "Provide baseline recommendations and preliminary estimate"], mats: ["Vehicle dispatch and routing fuel allocation"] },
+            "LOG_DISPATCH_CREDIT":  { cat: "LOGISTICS", label: "Diagnostic Fee Refund (Credited Toward Repair)", OH_LUCAS: -119.00, OH_WOOD: -119.00, OH_MID_DIST: -119.00, OH_EXTENDED: -119.00, MI_MONROE_CORE: -119.00, MI_MONROE_OUTER: -119.00, MI_WASHTENAW_MID: -119.00, MI_EXTENDED: -119.00, dynamic: false, matCost: 0.00, labRate: 0.00, labHours: 0.0, wbs: ["Courtesy credit of initial dispatch/diagnostic fee applied directly toward approved repair scope"], mats: ["Administrative Credit Only"] },
             
             "INSP_NFPA_LEVEL_1":    { cat: "MAINTENANCE", label: "NFPA 211 Level 1 Visual Inspection & Clearance Evaluation", OH_LUCAS: 79.00, OH_WOOD: 79.00, OH_MID_DIST: 79.00, OH_EXTENDED: 79.00, MI_MONROE_CORE: 89.00, MI_MONROE_OUTER: 89.00, MI_WASHTENAW_MID: 99.00, MI_EXTENDED: 99.00, dynamic: false, matCost: 2.00, labRate: 55.00, labHours: 0.75, wbs: ["Examine accessible structural components", "Verify baseline structural clearances", "Verify chimney soot density accumulation layers"], mats: ["Digital administrative inspection checklist token"] },
             "INSP_NFPA_LEVEL_2":    { cat: "MAINTENANCE", label: "NFPA 211 Level 2 Comprehensive Safety Inspection (Real Estate/Transfer)", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 195.00, MI_MONROE_OUTER: 195.00, MI_WASHTENAW_MID: 215.00, MI_EXTENDED: 215.00, dynamic: false, matCost: 10.00, labRate: 55.00, labHours: 1.75, wbs: ["Examine dynamic crawlspace/attic clearances", "Audit complete internal flue layout connectivity matrices", "Document safety system draft defects"], mats: ["L2 structural report filing token validation"] },
@@ -938,7 +954,7 @@
                     '<input type="number" class="dimension-input" value="' + item.qty + '" min="1" onchange="modifyQuantityIndexTarget(' + idx + ', this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">' + spec.unit + '</span>' : 
                     '<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed</span>';
 
-                var rateInputHtml = '<span style="font-size:11px; color:#475569; font-weight:bold; margin-right:2px;">$</span><input type="number" class="override-price-input" value="' + appliedUnitRate.toFixed(2) + '" step="0.01" min="0" onchange="modifyUnitPriceOverrideTarget(' + idx + ', this.value)">';
+                var rateInputHtml = '<span style="font-size:11px; color:#475569; font-weight:bold; margin-right:2px;">$</span><input type="number" class="override-price-input" value="' + appliedUnitRate.toFixed(2) + '" step="0.01" onchange="modifyUnitPriceOverrideTarget(' + idx + ', this.value)">';
 
                 var displayLabel = spec.label;
                 if (spec.cat === "RELINING") displayLabel = flueSizeLabel + " " + spec.label;
@@ -1036,7 +1052,7 @@
                 activeCodeInfractions.push("❌ <b>NFPA 211 Structural Code Defect:</b> Historic framing lacks baseline clearance safety spacing layers. Deploying custom stainless liners into an unlined pre-1940 internal void missing a Ceramic Thermal Blanket Wrap (<b>LINE_INSUL_BLANKET</b>) creates structural hazard threats.");
             }
             if (hasItem("LINE_ALUM") && (hasItem("APP_WOOD") || hasItem("SWEEP_WOOD") || hasItem("SWEEP_PELLET"))) {
-                activeCodeInfractions.push("❌ <b>NFPA 211 Code Violation:</b> Aluminum chimney liners are only rated for standard-efficiency gas utility appliances (furnaces/water heaters). You cannot run solid fuel (wood/pellets) or high-efficiency condensing gas through an aluminum core.");
+                activeCodeInfractions.push("❌ <b>NFPA 211 Code Violation:</b> Aluminum chimney liners are only rated for standard-efficiency gas utility appliances (furnaces/water heaters). You cannot run solid fuel through an aluminum core.");
             }
 
             var infractionPanel = document.getElementById('gatekeeperCodeViolationTray');
@@ -1054,10 +1070,20 @@
                 emailBtn.disabled = false;
             }
 
+            // 🟢 UPDATED LOGIC: Retail Presentation Mode Processing
+            var isRetailMode = document.getElementById('retailModeToggle').checked;
+            var taxOverrideInput = document.getElementById('manualTaxOverride').value;
+
             var baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
-            var computedOverhead = baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE;
-            var computedExpenses = baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE;
-            var computedMarginBuffer = baseSubtotalWithTravel * (marginPctInput / 100);
+            
+            var computedOverhead = isRetailMode ? 0 : (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE);
+            var computedExpenses = isRetailMode ? 0 : (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE);
+            var computedMarginBuffer = isRetailMode ? 0 : (baseSubtotalWithTravel * (marginPctInput / 100));
+            
+            // Toggle visibility of the corporate rows
+            document.getElementById('row_overhead').style.display = isRetailMode ? "none" : "flex";
+            document.getElementById('row_expense').style.display = isRetailMode ? "none" : "flex";
+            document.getElementById('row_margin').style.display = isRetailMode ? "none" : "flex";
             
             var zoneTaxRate = REGIONAL_TAX_RATES[zone] || 0.06;
             var licensingPanel = document.getElementById('localityLicensingGatekeeperTray');
@@ -1085,8 +1111,10 @@
                 }
                 else {
                     taxAuthorityLabel = zone === "MI_WASHTENAW_MID" || zone === "MI_EXTENDED" ? "Washtenaw County, MI State Tax (6.00%):" : "Monroe & Lenawee, MI State Tax (6.00%):";
-                    var taxableSubtotalVal = baseSubtotalWithTravel + computedOverhead + computedExpenses + computedMarginBuffer;
-                    var needsMichiganLARA = taxableSubtotalVal >= 600 && hasStructuralWorkActive;
+                    
+                    // We must calculate LARA on the TRUE cost, even if Retail mode is hiding the overhead
+                    var trueSubtotalForLara = baseSubtotalWithTravel + (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE) + (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE) + (baseSubtotalWithTravel * (marginPctInput / 100));
+                    var needsMichiganLARA = trueSubtotalForLara >= 600 && hasStructuralWorkActive;
                     
                     var customMILog = zone === "MI_WASHTENAW_MID" || zone === "MI_EXTENDED" ? 
                         '<li>Washtenaw Mechanical Venting Code Permit ' + (hasLinerActive ? '<span style="color:var(--danger); font-weight:900;">[MANDATORY PERMIT DISPATCH]</span>' : '[Exempt]') + '</li>' :
@@ -1100,6 +1128,12 @@
                 }
             } else {
                 licensingPanel.style.display = "none";
+            }
+
+            // 🟢 UPDATED LOGIC: Tax Override Processing
+            if (taxOverrideInput !== "" && !isNaN(taxOverrideInput)) {
+                zoneTaxRate = parseFloat(taxOverrideInput) / 100;
+                taxAuthorityLabel = "Custom Manual Tax Override (" + taxOverrideInput + "%):";
             }
 
             var taxableSubtotal = baseSubtotalWithTravel + computedOverhead + computedExpenses + computedMarginBuffer;
@@ -1156,7 +1190,10 @@
                 document.getElementById('standardTelemetryGrid').style.display = "grid";
             }
 
-            calculateProfitThermometer(taxableSubtotal, absoluteInternalCompanyCost);
+            // We pass the TRUE subtotal (unaffected by the retail toggle) to the profit thermometer so you always see accurate backend profitability.
+            var trueSubtotal = baseSubtotalWithTravel + (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE) + (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE) + (baseSubtotalWithTravel * (marginPctInput / 100));
+            calculateProfitThermometer(trueSubtotal, absoluteInternalCompanyCost);
+            
             evaluateSmartRecommendations();
         }
 
@@ -1242,7 +1279,7 @@
 
         function modifyUnitPriceOverrideTarget(idxTarget, newPriceVal) {
             var parse = parseFloat(newPriceVal);
-            if (isNaN(parse) || parse < 0) parse = 0;
+            if (isNaN(parse) || parse < 0) parse = 0; // Allow it to be manipulated to $0.00
             ACTIVE_RUNNING_ESTIMATE[idxTarget].rateOverride = parse;
             recalculateMasterLedger();
         }
