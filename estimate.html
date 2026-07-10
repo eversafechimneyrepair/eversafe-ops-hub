@@ -307,6 +307,7 @@
             
             <div id="smartRecommendationsTray" style="margin-top: -5px; margin-bottom: 15px;"></div>
 
+            <!-- RETAIL MODE TOGGLE -->
             <div style="background: #e0f2fe; border: 1px solid #bfdbfe; padding: 14px; border-radius: 6px; margin-top: 25px;">
                 <label style="font-weight: 800; color: #1e40af; font-size: 13px; display: flex; align-items: center; gap: 8px; cursor: pointer;">
                     <input type="checkbox" id="retailModeToggle" onchange="recalculateMasterLedger()" checked style="width: 20px; height: 20px; margin: 0; cursor: pointer;">
@@ -315,6 +316,7 @@
                 <p style="font-size: 11.5px; color: #3b82f6; margin-top: 6px; margin-left: 28px;">When checked, the final bid total strictly equals the Gross Catalog Items + Tax. Corporate overheads, expenses, and margins are completely hidden and removed from the compounding total.</p>
             </div>
 
+            <!-- REVENUE BREAKDOWN CARD -->
             <div class="revenue-breakdown-card" style="margin-top: 15px;">                
                 <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                
                 <div class="breakdown-row">                                            
@@ -338,12 +340,24 @@
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
                 </div> 
                 
-                <div class="breakdown-row" style="background: #f8fafc; border-top: 1px dashed #cbd5e1; margin-top: 8px; padding-top: 12px;">
+                <!-- NEW TAX OVERRIDE BOX -->
+                <div class="breakdown-row" style="background: #f8fafc; border-top: 1px dashed #cbd5e1; margin-top: 8px; padding-top: 12px; padding-bottom: 8px;">
                     <div style="font-weight: bold; color: #475569;">Override Tax Rate (%) if needed:</div>
                     <div><input type="number" id="manualTaxOverride" placeholder="Auto" oninput="recalculateMasterLedger()" style="width: 80px; padding: 6px; font-weight: bold; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px;"></div>
                 </div>
 
-                <div class="breakdown-row">                                            
+                <!-- NEW CASH DISCOUNT TOGGLE -->
+                <div class="breakdown-row" style="background: #fffbeb; padding-top: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                    <div style="font-weight: bold; color: #b45309;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="cashDiscountToggle" onchange="recalculateMasterLedger()" style="width: 18px; height: 18px; margin: 0; cursor: pointer;">
+                            Apply 3% Cash / Check Discount
+                        </label>
+                    </div>
+                    <div id="lbl_cash_discount" style="font-weight:900; color:#dc2626;">-$0.00</div>
+                </div>
+
+                <div class="breakdown-row" style="padding-top: 12px;">                                            
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                            
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
                 </div>                                                                                                                                                                                                                                                                                                                                                                                                    
@@ -825,6 +839,7 @@
                 document.getElementById('lbl_tax_title').innerText = "Sales Tax Authority Sourcing Matrix:";
                 document.getElementById('lbl_calculated_tax').innerText = "+$0.00";
                 document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
+                document.getElementById('lbl_cash_discount').innerText = "-$0.00";
                 document.getElementById('internalJobCostInput').value = "0.00";
                 
                 document.getElementById('partnerSplitDashboard').style.display = "none";
@@ -1070,7 +1085,6 @@
                 emailBtn.disabled = false;
             }
 
-            // 🟢 UPDATED LOGIC: Retail Presentation Mode Processing
             var isRetailMode = document.getElementById('retailModeToggle').checked;
             var taxOverrideInput = document.getElementById('manualTaxOverride').value;
 
@@ -1080,7 +1094,6 @@
             var computedExpenses = isRetailMode ? 0 : (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE);
             var computedMarginBuffer = isRetailMode ? 0 : (baseSubtotalWithTravel * (marginPctInput / 100));
             
-            // Toggle visibility of the corporate rows
             document.getElementById('row_overhead').style.display = isRetailMode ? "none" : "flex";
             document.getElementById('row_expense').style.display = isRetailMode ? "none" : "flex";
             document.getElementById('row_margin').style.display = isRetailMode ? "none" : "flex";
@@ -1112,7 +1125,6 @@
                 else {
                     taxAuthorityLabel = zone === "MI_WASHTENAW_MID" || zone === "MI_EXTENDED" ? "Washtenaw County, MI State Tax (6.00%):" : "Monroe & Lenawee, MI State Tax (6.00%):";
                     
-                    // We must calculate LARA on the TRUE cost, even if Retail mode is hiding the overhead
                     var trueSubtotalForLara = baseSubtotalWithTravel + (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE) + (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE) + (baseSubtotalWithTravel * (marginPctInput / 100));
                     var needsMichiganLARA = trueSubtotalForLara >= 600 && hasStructuralWorkActive;
                     
@@ -1130,13 +1142,22 @@
                 licensingPanel.style.display = "none";
             }
 
-            // 🟢 UPDATED LOGIC: Tax Override Processing
             if (taxOverrideInput !== "" && !isNaN(taxOverrideInput)) {
                 zoneTaxRate = parseFloat(taxOverrideInput) / 100;
                 taxAuthorityLabel = "Custom Manual Tax Override (" + taxOverrideInput + "%):";
             }
 
             var taxableSubtotal = baseSubtotalWithTravel + computedOverhead + computedExpenses + computedMarginBuffer;
+
+            // 🟢 NEW LOGIC: Cash Discount Calculation
+            var cashDiscountAmount = 0;
+            var isCashDiscount = document.getElementById('cashDiscountToggle').checked;
+            
+            if (isCashDiscount) {
+                cashDiscountAmount = taxableSubtotal * 0.03;
+                taxableSubtotal = taxableSubtotal - cashDiscountAmount;
+            }
+
             var computedTax = taxableSubtotal * zoneTaxRate;
             var absoluteGrandTotal = taxableSubtotal + computedTax;
             
@@ -1147,6 +1168,7 @@
             document.getElementById('lbl_indirect_overhead').innerText = "+$" + computedOverhead.toFixed(2);
             document.getElementById('lbl_business_expense').innerText = "+$" + computedExpenses.toFixed(2);
             document.getElementById('lbl_margin_buffer').innerText = "+$" + computedMarginBuffer.toFixed(2);
+            document.getElementById('lbl_cash_discount').innerText = isCashDiscount ? "-$" + cashDiscountAmount.toFixed(2) : "-$0.00";
             document.getElementById('lbl_tax_title').innerText = taxAuthorityLabel;
             document.getElementById('lbl_calculated_tax').innerText = "+$" + computedTax.toFixed(2);
             document.getElementById('bidLiveTotalDisplay').innerText = "$" + absoluteGrandTotal.toFixed(2);
@@ -1190,11 +1212,14 @@
                 document.getElementById('standardTelemetryGrid').style.display = "grid";
             }
 
-            // We pass the TRUE subtotal (unaffected by the retail toggle) to the profit thermometer so you always see accurate backend profitability.
             var trueSubtotal = baseSubtotalWithTravel + (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE) + (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE) + (baseSubtotalWithTravel * (marginPctInput / 100));
             calculateProfitThermometer(trueSubtotal, absoluteInternalCompanyCost);
             
             evaluateSmartRecommendations();
+
+            if (isCashDiscount) {
+                GLOBAL_ITEMIZED_LIST.push({ label: "Courtesy 3% Cash / Check Processing Discount", price: "-" + cashDiscountAmount.toFixed(2) });
+            }
         }
 
         function evaluateSmartRecommendations() {
