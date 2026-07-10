@@ -1149,6 +1149,12 @@
                         '<li>Local Municipal Inspection Filing Safety Sheets (Fremont/Sandusky Local Codes)</li></ul>';
                     licensingPanel.style.display = "block";
                 }
+                else if (zone === "OH_EXTENDED") {
+                    taxAuthorityLabel = "Hancock & Seneca Counties Tax Authority (7.25%):";
+                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Hancock & Seneca Counties, OH</h4><ul>' +
+                        '<li>Standard Municipal Building Permit ' + (hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[REQUIRED FOR REPAIRS]</span>' : '[Exempt]') + '</li></ul>';
+                    licensingPanel.style.display = "block";
+                }
                 else {
                     taxAuthorityLabel = zone === "MI_WASHTENAW_MID" || zone === "MI_EXTENDED" ? "Washtenaw County, MI State Tax (6.00%):" : "Monroe & Lenawee, MI State Tax (6.00%):";
                     
