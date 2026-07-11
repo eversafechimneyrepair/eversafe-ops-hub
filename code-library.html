@@ -23,6 +23,7 @@
             --sms-blue: #007aff;
             --chimney-red: #b91c1c;
             --masonry-gray: #475569;
+            --defect-orange: #ea580c;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
@@ -47,6 +48,7 @@
         .spec-table td { padding: 10px 4px; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
         .spec-table tr:last-child td { border-bottom: none; }
         .spec-value { font-weight: 700; color: var(--primary); display: block; margin-top: 2px; }
+        .defect-flag { color: var(--danger); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-top: 4px; display: inline-block; background: #fef2f2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fee2e2; }
 
         /* Bottom Nav */
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
@@ -74,13 +76,88 @@
 
     <div class="app-container">
         <h3>Master Trade Spec Library</h3>
-        <p class="subtitle">Comprehensive field limits for masonry, chimney venting, and roof access safety.</p>
+        <p class="subtitle">Comprehensive field limits for masonry, chimney venting, inspections, and defect thresholds.</p>
 
-        <div class="section-divider">Chimney & Hearth Codes</div>
+        <div class="section-divider">Inspection & Defect Limits</div>
 
-        <!-- Scope 1: Chimney NFPA 211 -->
+        <!-- Scope 1: Defect Thresholds (NFPA 211) -->
+        <div class="scope-card" style="border-top-color: var(--defect-orange);">
+            <div class="scope-title">🚫 Defect Limits & Repair Triggers</div>
+            <table class="spec-table">
+                <tr>
+                    <td>Creosote Buildup<br><span style="font-size: 11px; color: #64748b;">Sweeping requirement</span></td>
+                    <td><span class="spec-value">Level 1/2 Sweep if > 1/8" thick</span><span class="defect-flag">Fails if Stage 3 (Glaze) present</span></td>
+                </tr>
+                <tr>
+                    <td>Flue Liner Integrity<br><span style="font-size: 11px; color: #64748b;">Terra cotta tile defects</span></td>
+                    <td><span class="spec-value">Zero tolerance for cracks/splits</span><span class="spec-value">Joint gaps must not exceed 1/8"</span><span class="defect-flag">Fails if ANY tile is cracked</span></td>
+                </tr>
+                <tr>
+                    <td>Mortar Deterioration<br><span style="font-size: 11px; color: #64748b;">Crowns and brick joints</span></td>
+                    <td><span class="spec-value">Joints recessed > 1/4" require tuckpointing</span><span class="defect-flag">Fails if loose brick/water entry</span></td>
+                </tr>
+                <tr>
+                    <td>Draft Requirements<br><span style="font-size: 11px; color: #64748b;">Negative pressure</span></td>
+                    <td><span class="spec-value">Appliance must draft within 3 mins</span><span class="defect-flag">Fails on continued spillage</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section-divider">Masonry & Venting Codes</div>
+
+        <!-- Scope 2: Venting & Flues -->
+        <div class="scope-card" style="border-top-color: var(--sms-blue);">
+            <div class="scope-title">💨 Venting, Flues & Clearances</div>
+            <table class="spec-table">
+                <tr>
+                    <td>Class A Chimney (Solid Fuel)<br><span style="font-size: 11px; color: #64748b;">Factory-built stainless</span></td>
+                    <td><span class="spec-value">Min 2" clearance to combustibles</span><span style="font-size: 10px; color: #94a3b8;">Must use attic insulation shields</span></td>
+                </tr>
+                <tr>
+                    <td>Type B-Vent (Gas)<br><span style="font-size: 11px; color: #64748b;">Double-wall natural gas/propane</span></td>
+                    <td><span class="spec-value">Min 1" clearance to combustibles</span><span style="font-size: 10px; color: #94a3b8;">Not rated for solid wood burning</span></td>
+                </tr>
+                <tr>
+                    <td>Pellet Vent (Type L / PL)<br><span style="font-size: 11px; color: #64748b;">Positive pressure venting</span></td>
+                    <td><span class="spec-value">Min 1" to 3" clearance (Check Mfr)</span><span style="font-size: 10px; color: #94a3b8;">Joints must be sealed with high-temp RTV</span></td>
+                </tr>
+                <tr>
+                    <td>Horizontal Connector Pitch<br><span style="font-size: 11px; color: #64748b;">Stove pipes to vertical flue</span></td>
+                    <td><span class="spec-value">Must rise min 1/4" per horizontal foot</span><span style="font-size: 10px; color: #94a3b8;">Max length = 50% of total chimney height</span></td>
+                </tr>
+                <tr>
+                    <td>Flue Sizing Limits<br><span style="font-size: 11px; color: #64748b;">Cross-sectional area vs opening</span></td>
+                    <td><span class="spec-value">Square/Rect: 1/10th of firebox opening</span><span class="spec-value">Round Flue: 1/12th of firebox opening</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 3: Mortar & Masonry -->
+        <div class="scope-card" style="border-top-color: var(--masonry-gray);">
+            <div class="scope-title">🧱 Mortar & Masonry (ASTM/IRC)</div>
+            <table class="spec-table">
+                <tr>
+                    <td>ASTM C270 Mortar Types<br><span style="font-size: 11px; color: #64748b;">Selection by application</span></td>
+                    <td><span class="spec-value">Type N: Standard exterior above-grade</span><span class="spec-value">Type S: High wind, structural, below-grade</span></td>
+                </tr>
+                <tr>
+                    <td>Refractory Mortar (ASTM C199)<br><span style="font-size: 11px; color: #64748b;">Fireboxes and clay flues</span></td>
+                    <td><span class="spec-value">Must use Non-Water Soluble type</span><span class="spec-value">Max joint thickness: 1/8" to 1/4"</span></td>
+                </tr>
+                <tr>
+                    <td>Chimney Footings<br><span style="font-size: 11px; color: #64748b;">Load bearing requirements</span></td>
+                    <td><span class="spec-value">Min 12" thick solid concrete</span><span class="spec-value">Must extend 6" beyond walls (all sides)</span><span class="spec-value">Must sit below frost line</span></td>
+                </tr>
+                <tr>
+                    <td>Corbeling Limits<br><span style="font-size: 11px; color: #64748b;">Projecting masonry elements</span></td>
+                    <td><span class="spec-value">Max 1/2 of block/brick height per step</span><span class="spec-value">Max total projection ≤ 1/2 wall thickness</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 4: Chimney Heights & Hearths -->
         <div class="scope-card" style="border-top-color: var(--chimney-red);">
-            <div class="scope-title">🧱 NFPA 211 & Flue Standards</div>
+            <div class="scope-title">🏠 Clearances & Hearth Specs</div>
             <table class="spec-table">
                 <tr>
                     <td>The "3-2-10" Rule<br><span style="font-size: 11px; color: #64748b;">Chimney Termination Height</span></td>
@@ -98,37 +175,10 @@
                     <td>Hearth Extension: Large<br><span style="font-size: 11px; color: #64748b;">Firebox Opening ≥ 6 sq. ft.</span></td>
                     <td><span class="spec-value">Min 20" to the front</span><span class="spec-value">Min 12" to each side</span></td>
                 </tr>
-                <tr>
-                    <td>Flue Sizing Limits<br><span style="font-size: 11px; color: #64748b;">Cross-sectional area vs opening</span></td>
-                    <td><span class="spec-value">Square/Rect Flue: 1/10th of opening</span><span class="spec-value">Round Flue: 1/12th of opening</span></td>
-                </tr>
             </table>
         </div>
 
-        <!-- Scope 2: Masonry & Foundations -->
-        <div class="scope-card" style="border-top-color: var(--masonry-gray);">
-            <div class="scope-title">🏗️ Masonry & Foundations (IRC)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>Chimney Footings<br><span style="font-size: 11px; color: #64748b;">Load bearing requirements</span></td>
-                    <td><span class="spec-value">Min 12" Thick solid concrete</span><span class="spec-value">Extends 6" beyond walls (all sides)</span><span class="spec-value">Must sit below frost line</span></td>
-                </tr>
-                <tr>
-                    <td>Firebox Construction<br><span style="font-size: 11px; color: #64748b;">Wall thickness</span></td>
-                    <td><span class="spec-value">Min 8" overall solid masonry</span><span class="spec-value">Min 2" internal firebrick lining</span></td>
-                </tr>
-                <tr>
-                    <td>Smoke Chamber Walls<br><span style="font-size: 11px; color: #64748b;">Transition to flue</span></td>
-                    <td><span class="spec-value">Max 45° angle of inclination</span><span class="spec-value">Parged smooth with refractory mortar</span></td>
-                </tr>
-                <tr>
-                    <td>Corbeling Limits<br><span style="font-size: 11px; color: #64748b;">Projecting masonry elements</span></td>
-                    <td><span class="spec-value">Max 1/2 of block/brick height per step</span><span class="spec-value">Max overall projection ≤ 1/2 wall thickness</span></td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 3: Roof Flashing -->
+        <!-- Scope 5: Roof Flashing -->
         <div class="scope-card" style="border-top-color: var(--accent);">
             <div class="scope-title">💧 Roof Flashing & Weathering</div>
             <table class="spec-table">
@@ -142,33 +192,14 @@
                 </tr>
                 <tr>
                     <td>Counter Flashing<br><span style="font-size: 11px; color: #64748b;">Masonry cut-in depth</span></td>
-                    <td><span class="spec-value">Embedment: Min 1" deep</span><span class="spec-value">Must be set in mortar joint (no surface caulking only)</span></td>
+                    <td><span class="spec-value">Embedment: Min 1" deep into joint</span><span class="defect-flag">Fails if purely surface-caulked</span></td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 4: Gas Venting & Appliances -->
-        <div class="scope-card" style="border-top-color: var(--sms-blue);">
-            <div class="scope-title">🔥 Gas Appliances & Venting (IFGC)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>B-Vent Clearances<br><span style="font-size: 11px; color: #64748b;">Double-wall gas vents</span></td>
-                    <td><span class="spec-value">Min 1" clearance to combustibles</span><span style="font-size: 10px; color: #94a3b8;">Must use factory firestop at ceiling penetrations</span></td>
-                </tr>
-                <tr>
-                    <td>Direct Vent Systems<br><span style="font-size: 11px; color: #64748b;">Coaxial venting</span></td>
-                    <td><span class="spec-value">Clearances strictly per manufacturer</span><span style="font-size: 10px; color: #94a3b8;">(Generally 1" to 2" top clearance, 1" sides/bottom)</span></td>
-                </tr>
-                <tr>
-                    <td>CSST Gas Line Grounding<br><span style="font-size: 11px; color: #64748b;">Corrugated Stainless Steel Tubing</span></td>
-                    <td><span class="spec-value">Requires direct electrical bonding</span><span class="spec-value">Min 6 AWG copper ground wire</span></td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 5: Safety & OSHA -->
+        <!-- Scope 6: OSHA Safety -->
         <div class="scope-card" style="border-top-color: var(--danger);">
-            <div class="scope-title">🦺 Roof Safety & Scaffolding (OSHA)</div>
+            <div class="scope-title">🦺 Roof Safety (OSHA)</div>
             <table class="spec-table">
                 <tr>
                     <td>Fall Protection<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span></td>
@@ -177,10 +208,6 @@
                 <tr>
                     <td>Ladder Extensions<br><span style="font-size: 11px; color: #64748b;">Roof access protocols</span></td>
                     <td><span class="spec-value">Must extend 3 ft above landing</span><span class="spec-value">Base distance = 1/4 of working length (4:1 rule)</span></td>
-                </tr>
-                <tr>
-                    <td>Scaffolding Limits<br><span style="font-size: 11px; color: #64748b;">Platform compliance</span></td>
-                    <td><span class="spec-value">Fully planked platforms (no gaps > 1")</span><span class="spec-value">Toe-boards required if > 10 ft high</span></td>
                 </tr>
             </table>
         </div>
