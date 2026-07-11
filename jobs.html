@@ -60,6 +60,17 @@
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
         .center-status-line { text-align: center; font-size: 13px; color: #64748b; margin-top: 10px; font-weight: bold; text-transform: uppercase; }
 
+        /* Code Matrix Styles */
+        .matrix-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); text-align: left; }
+        .matrix-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .matrix-title { font-size: 14px; font-weight: bold; color: var(--primary); text-transform: uppercase; }
+        .matrix-link { font-size: 11px; color: var(--sms-blue); text-decoration: none; font-weight: bold; background: #f0f7ff; padding: 4px 8px; border-radius: 4px; }
+        .code-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        .code-table th { background: var(--bg); color: #64748b; font-weight: bold; padding: 8px; border-bottom: 2px solid var(--border); text-transform: uppercase; }
+        .code-table td { padding: 8px; border-bottom: 1px solid var(--border); color: #475569; }
+        .code-table tr:last-child td { border-bottom: none; }
+        .code-table strong { color: var(--primary); display: block; margin-bottom: 2px; font-size: 12px; }
+
         /* Modal Styles */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 200; justify-content: center; align-items: center; padding: 15px; }
         .modal-content { background: white; padding: 25px; border-radius: 8px; width: 100%; max-width: 400px; text-align: left; }
@@ -97,6 +108,40 @@
             <button type="button" class="btn-utility" style="background: var(--danger); max-width: 260px; margin: 0 auto; color: white;" onclick="clearActiveJobSession()">
                 🔄 Clear Active Job &amp; Reset Forms
             </button>
+        </div>
+
+        <!-- Quick Reference Code Matrix -->
+        <div class="matrix-card">
+            <div class="matrix-header">
+                <div class="matrix-title">📘 Compliance Matrix</div>
+                <a href="code-library.html" class="matrix-link">Full Library →</a>
+            </div>
+            <table class="code-table">
+                <thead>
+                    <tr>
+                        <th>Scope & Codes</th>
+                        <th>Field Application</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Structural</strong>IBC, IRC</td>
+                        <td>Framing, concrete pads, anchoring</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Electrical & Power</strong>NEC (NFPA 70)</td>
+                        <td>Generators, low-voltage wiring</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fire & Egress</strong>IFC, NFPA 101</td>
+                        <td>Door hardware, fire wall penetrations</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Security & Ballistics</strong>UL 752, ASTM</td>
+                        <td>Ballistic boards, security screens</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
 
         <div class="search-flex-group">
