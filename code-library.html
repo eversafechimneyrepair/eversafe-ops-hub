@@ -24,6 +24,7 @@
             --chimney-red: #b91c1c;
             --masonry-gray: #475569;
             --defect-orange: #ea580c;
+            --liner-silver: #94a3b8;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
@@ -49,6 +50,7 @@
         .spec-table tr:last-child td { border-bottom: none; }
         .spec-value { font-weight: 700; color: var(--primary); display: block; margin-top: 2px; }
         .defect-flag { color: var(--danger); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-top: 4px; display: inline-block; background: #fef2f2; padding: 2px 6px; border-radius: 4px; border: 1px solid #fee2e2; }
+        .info-flag { color: var(--sms-blue); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-top: 4px; display: inline-block; background: #f0f9ff; padding: 2px 6px; border-radius: 4px; border: 1px solid #bae6fd; }
 
         /* Bottom Nav */
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
@@ -78,52 +80,61 @@
         <h3>Master Trade Spec Library</h3>
         <p class="subtitle">Comprehensive field limits for masonry, chimney venting, inspections, and defect thresholds.</p>
 
-        <div class="section-divider">Inspection & Defect Limits</div>
+        <div class="section-divider">NFPA 211 Inspection Protocols</div>
 
-        <!-- Scope 1: Defect Thresholds (NFPA 211) -->
+        <!-- Scope 1: Level 1, 2, 3 Triggers -->
+        <div class="scope-card" style="border-top-color: var(--accent);">
+            <div class="scope-title">🔍 Inspection Levels & Triggers</div>
+            <table class="spec-table">
+                <tr>
+                    <td>Level 1 Inspection<br><span style="font-size: 11px; color: #64748b;">Readily accessible areas</span></td>
+                    <td><span class="spec-value">Routine annual maintenance</span><span class="spec-value">Same appliance, same fuel</span><span style="font-size: 10px; color: #94a3b8;">No special tools required</span></td>
+                </tr>
+                <tr>
+                    <td>Level 2 Inspection<br><span style="font-size: 11px; color: #64748b;">Accessible + Camera Scan</span></td>
+                    <td><span class="spec-value">Sale/Transfer of property</span><span class="spec-value">Post-chimney fire or seismic event</span><span class="spec-value">Changing fuel type or relining</span><span class="info-flag">Mandatory camera scan</span></td>
+                </tr>
+                <tr>
+                    <td>Level 3 Inspection<br><span style="font-size: 11px; color: #64748b;">Concealed areas</span></td>
+                    <td><span class="spec-value">Suspected concealed defect</span><span style="font-size: 10px; color: #94a3b8;">Requires destructive demolition to access</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section-divider">Defects & Flue Maintenance</div>
+
+        <!-- Scope 2: Defect Thresholds (NFPA 211) -->
         <div class="scope-card" style="border-top-color: var(--defect-orange);">
-            <div class="scope-title">🚫 Defect Limits & Repair Triggers</div>
+            <div class="scope-title">🚫 Defect Limits & Failure Criteria</div>
             <table class="spec-table">
                 <tr>
                     <td>Creosote Buildup<br><span style="font-size: 11px; color: #64748b;">Sweeping requirement</span></td>
-                    <td><span class="spec-value">Level 1/2 Sweep if > 1/8" thick</span><span class="defect-flag">Fails if Stage 3 (Glaze) present</span></td>
+                    <td><span class="spec-value">Level 1/2 Sweep if > 1/8" thick</span><span class="defect-flag">Fails if Stage 3 (Glaze) is present</span></td>
                 </tr>
                 <tr>
                     <td>Flue Liner Integrity<br><span style="font-size: 11px; color: #64748b;">Terra cotta tile defects</span></td>
                     <td><span class="spec-value">Zero tolerance for cracks/splits</span><span class="spec-value">Joint gaps must not exceed 1/8"</span><span class="defect-flag">Fails if ANY tile is cracked</span></td>
                 </tr>
                 <tr>
-                    <td>Mortar Deterioration<br><span style="font-size: 11px; color: #64748b;">Crowns and brick joints</span></td>
-                    <td><span class="spec-value">Joints recessed > 1/4" require tuckpointing</span><span class="defect-flag">Fails if loose brick/water entry</span></td>
-                </tr>
-                <tr>
                     <td>Draft Requirements<br><span style="font-size: 11px; color: #64748b;">Negative pressure</span></td>
-                    <td><span class="spec-value">Appliance must draft within 3 mins</span><span class="defect-flag">Fails on continued spillage</span></td>
+                    <td><span class="spec-value">Appliance must draft within 3 mins</span><span class="defect-flag">Fails on continued spillage / smoke rollback</span></td>
                 </tr>
             </table>
         </div>
 
-        <div class="section-divider">Masonry & Venting Codes</div>
+        <div class="section-divider">Relining & Terminations</div>
 
-        <!-- Scope 2: Venting & Flues -->
-        <div class="scope-card" style="border-top-color: var(--sms-blue);">
-            <div class="scope-title">💨 Venting, Flues & Clearances</div>
+        <!-- Scope 3: UL 1777 Relining -->
+        <div class="scope-card" style="border-top-color: var(--liner-silver);">
+            <div class="scope-title">🛡️ UL 1777 Stainless Steel Relining</div>
             <table class="spec-table">
                 <tr>
-                    <td>Class A Chimney (Solid Fuel)<br><span style="font-size: 11px; color: #64748b;">Factory-built stainless</span></td>
-                    <td><span class="spec-value">Min 2" clearance to combustibles</span><span style="font-size: 10px; color: #94a3b8;">Must use attic insulation shields</span></td>
+                    <td>Alloy Selection<br><span style="font-size: 11px; color: #64748b;">Matches fuel type</span></td>
+                    <td><span class="spec-value">316Ti / 316L: Wood, Coal, Pellet, Oil</span><span class="spec-value">AL29-4C: High-Efficiency Gas/Oil ONLY</span><span class="defect-flag">Never use 304 for solid fuel</span></td>
                 </tr>
                 <tr>
-                    <td>Type B-Vent (Gas)<br><span style="font-size: 11px; color: #64748b;">Double-wall natural gas/propane</span></td>
-                    <td><span class="spec-value">Min 1" clearance to combustibles</span><span style="font-size: 10px; color: #94a3b8;">Not rated for solid wood burning</span></td>
-                </tr>
-                <tr>
-                    <td>Pellet Vent (Type L / PL)<br><span style="font-size: 11px; color: #64748b;">Positive pressure venting</span></td>
-                    <td><span class="spec-value">Min 1" to 3" clearance (Check Mfr)</span><span style="font-size: 10px; color: #94a3b8;">Joints must be sealed with high-temp RTV</span></td>
-                </tr>
-                <tr>
-                    <td>Horizontal Connector Pitch<br><span style="font-size: 11px; color: #64748b;">Stove pipes to vertical flue</span></td>
-                    <td><span class="spec-value">Must rise min 1/4" per horizontal foot</span><span style="font-size: 10px; color: #94a3b8;">Max length = 50% of total chimney height</span></td>
+                    <td>Liner Insulation<br><span style="font-size: 11px; color: #64748b;">Required for UL listing</span></td>
+                    <td><span class="spec-value">1/2" Foil-Faced Wrap (Min) OR</span><span class="spec-value">Pour-down mix (Thermix/Everguard)</span><span class="info-flag">Must insulate if zero clearance to combustibles</span></td>
                 </tr>
                 <tr>
                     <td>Flue Sizing Limits<br><span style="font-size: 11px; color: #64748b;">Cross-sectional area vs opening</span></td>
@@ -132,32 +143,9 @@
             </table>
         </div>
 
-        <!-- Scope 3: Mortar & Masonry -->
-        <div class="scope-card" style="border-top-color: var(--masonry-gray);">
-            <div class="scope-title">🧱 Mortar & Masonry (ASTM/IRC)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>ASTM C270 Mortar Types<br><span style="font-size: 11px; color: #64748b;">Selection by application</span></td>
-                    <td><span class="spec-value">Type N: Standard exterior above-grade</span><span class="spec-value">Type S: High wind, structural, below-grade</span></td>
-                </tr>
-                <tr>
-                    <td>Refractory Mortar (ASTM C199)<br><span style="font-size: 11px; color: #64748b;">Fireboxes and clay flues</span></td>
-                    <td><span class="spec-value">Must use Non-Water Soluble type</span><span class="spec-value">Max joint thickness: 1/8" to 1/4"</span></td>
-                </tr>
-                <tr>
-                    <td>Chimney Footings<br><span style="font-size: 11px; color: #64748b;">Load bearing requirements</span></td>
-                    <td><span class="spec-value">Min 12" thick solid concrete</span><span class="spec-value">Must extend 6" beyond walls (all sides)</span><span class="spec-value">Must sit below frost line</span></td>
-                </tr>
-                <tr>
-                    <td>Corbeling Limits<br><span style="font-size: 11px; color: #64748b;">Projecting masonry elements</span></td>
-                    <td><span class="spec-value">Max 1/2 of block/brick height per step</span><span class="spec-value">Max total projection ≤ 1/2 wall thickness</span></td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 4: Chimney Heights & Hearths -->
+        <!-- Scope 4: Chimney Heights & Terminations -->
         <div class="scope-card" style="border-top-color: var(--chimney-red);">
-            <div class="scope-title">🏠 Clearances & Hearth Specs</div>
+            <div class="scope-title">🏠 Clearances & Terminations</div>
             <table class="spec-table">
                 <tr>
                     <td>The "3-2-10" Rule<br><span style="font-size: 11px; color: #64748b;">Chimney Termination Height</span></td>
@@ -166,6 +154,31 @@
                 <tr>
                     <td>Clearance to Combustibles<br><span style="font-size: 11px; color: #64748b;">Masonry Chimneys</span></td>
                     <td><span class="spec-value">Min 2" (Interior Chimneys)</span><span class="spec-value">Min 1" (Exterior Chimneys)</span></td>
+                </tr>
+                <tr>
+                    <td>Cap & Spark Arrestor<br><span style="font-size: 11px; color: #64748b;">Mesh and lid limits</span></td>
+                    <td><span class="spec-value">Mesh spacing: 1/2" to 5/8" max</span><span class="spec-value">Lid clearance: Min 4" to 8" above flue</span><span class="defect-flag">Fails if mesh restricts draft</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section-divider">Masonry & Hearths</div>
+
+        <!-- Scope 5: Masonry & Crowns -->
+        <div class="scope-card" style="border-top-color: var(--masonry-gray);">
+            <div class="scope-title">🧱 Masonry, Crowns & Hearths</div>
+            <table class="spec-table">
+                <tr>
+                    <td>Chimney Crown (Cast/Poured)<br><span style="font-size: 11px; color: #64748b;">Top seal protection (IRC)</span></td>
+                    <td><span class="spec-value">Min 2" thickness at thinnest edge</span><span class="spec-value">Min 2" overhang past brick w/ drip edge</span><span class="info-flag">Must have bond break around flue</span></td>
+                </tr>
+                <tr>
+                    <td>ASTM C270 Mortar Types<br><span style="font-size: 11px; color: #64748b;">Selection by application</span></td>
+                    <td><span class="spec-value">Type N: Standard exterior above-grade</span><span class="spec-value">Type S: High wind, structural, below-grade</span></td>
+                </tr>
+                <tr>
+                    <td>Refractory Mortar (ASTM C199)<br><span style="font-size: 11px; color: #64748b;">Fireboxes and clay flues</span></td>
+                    <td><span class="spec-value">Must use Non-Water Soluble type</span><span class="spec-value">Max joint thickness: 1/8" to 1/4"</span></td>
                 </tr>
                 <tr>
                     <td>Hearth Extension: Small<br><span style="font-size: 11px; color: #64748b;">Firebox Opening < 6 sq. ft.</span></td>
@@ -178,36 +191,27 @@
             </table>
         </div>
 
-        <!-- Scope 5: Roof Flashing -->
-        <div class="scope-card" style="border-top-color: var(--accent);">
-            <div class="scope-title">💧 Roof Flashing & Weathering</div>
+        <div class="section-divider">Safety & Weatherproofing</div>
+
+        <!-- Scope 6: Flashing & Roof Safety -->
+        <div class="scope-card" style="border-top-color: var(--sms-blue);">
+            <div class="scope-title">💧 Flashing & Fall Protection</div>
             <table class="spec-table">
                 <tr>
                     <td>Cricket / Saddle Rules<br><span style="font-size: 11px; color: #64748b;">Diverting water behind chimney</span></td>
                     <td><span class="spec-value">Required if chimney is > 30" wide</span><span style="font-size: 10px; color: #94a3b8;">(Measured parallel to the roof ridge)</span></td>
                 </tr>
                 <tr>
-                    <td>Step Flashing<br><span style="font-size: 11px; color: #64748b;">Under shingle tie-ins</span></td>
-                    <td><span class="spec-value">Min 4" run up the chimney wall</span><span class="spec-value">Min 4" resting on the roof deck</span></td>
-                </tr>
-                <tr>
                     <td>Counter Flashing<br><span style="font-size: 11px; color: #64748b;">Masonry cut-in depth</span></td>
                     <td><span class="spec-value">Embedment: Min 1" deep into joint</span><span class="defect-flag">Fails if purely surface-caulked</span></td>
                 </tr>
-            </table>
-        </div>
-
-        <!-- Scope 6: OSHA Safety -->
-        <div class="scope-card" style="border-top-color: var(--danger);">
-            <div class="scope-title">🦺 Roof Safety (OSHA)</div>
-            <table class="spec-table">
                 <tr>
-                    <td>Fall Protection<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span></td>
+                    <td>Fall Protection (OSHA)<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span></td>
                     <td><span class="spec-value">Any work at or above 6 feet</span><span style="font-size: 10px; color: #94a3b8;">(Requires guardrails, safety nets, or PFAS)</span></td>
                 </tr>
                 <tr>
                     <td>Ladder Extensions<br><span style="font-size: 11px; color: #64748b;">Roof access protocols</span></td>
-                    <td><span class="spec-value">Must extend 3 ft above landing</span><span class="spec-value">Base distance = 1/4 of working length (4:1 rule)</span></td>
+                    <td><span class="spec-value">Must extend 3 ft above landing</span><span class="spec-value">Base distance = 1/4 of working length</span></td>
                 </tr>
             </table>
         </div>
