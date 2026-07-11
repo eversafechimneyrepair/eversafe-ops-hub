@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EverSafe Hub - Code Library</title>
+    
+    <link rel="icon" type="image/jpeg" href="app-icon.jpg">
+    <link rel="apple-touch-icon" href="app-icon.jpg">
+    <link rel="manifest" href="manifest.json">
+
+    <style>
+        :root { 
+            --primary: #0f172a; 
+            --primary-light: #1e293b; 
+            --accent: #F28C28; 
+            --accent-dark: #d97706;
+            --bg: #f8fafc; 
+            --border: #cbd5e1; 
+            --success: #22c55e; 
+            --success-dark: #16a34a;
+            --danger: #ef4444; 
+            --sms-blue: #007aff;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
+        
+        /* App Header */
+        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
+        .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
+        .back-pill-btn { background: var(--primary-light); color: white; font-size: 10px; font-weight: bold; border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; text-decoration: none; }
+
+        .app-container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
+        h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; color: var(--primary); }
+        p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 25px; text-align: center; line-height: 1.45; }
+
+        /* Scope Cards (Modeled after dispatch-card) */
+        .scope-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); margin-bottom: 15px; position: relative; border-left: 5px solid var(--primary); }
+        .scope-title { font-size: 15px; font-weight: bold; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .scope-list { list-style-type: none; padding-left: 0; margin-top: 10px; }
+        .scope-list li { font-size: 13px; color: #475569; margin-bottom: 12px; line-height: 1.5; padding-left: 15px; position: relative; }
+        .scope-list li::before { content: '▪'; color: var(--accent); position: absolute; left: 0; top: 0; font-size: 16px; line-height: 1; }
+        .scope-list strong { color: var(--primary); font-weight: 700; }
+
+        /* Bottom Nav */
+        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
+
+        .section-divider { display: flex; align-items: center; text-align: center; margin: 30px 0 20px; color: #94a3b8; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .section-divider::before, .section-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
+        .section-divider:not(:empty)::before { margin-right: .5em; }
+        .section-divider:not(:empty)::after { margin-left: .5em; }
+    </style>
+</head>
+<body>
+
+    <!-- Authentication Check -->
+    <script>
+        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
+            window.location.replace("index.html");
+        }
+    </script>
+
+    <div class="app-header">
+        <div class="brand-row">
+            <div class="brand-text">Code & Compliance</div>
+            <a href="jobs.html" class="back-pill-btn">← Back</a>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <h3>Building Code Library</h3>
+        <p class="subtitle">Comprehensive reference guide for structural, electrical, life safety, and accessibility standards in the field.</p>
+
+        <div class="section-divider">Detailed Scopes</div>
+
+        <!-- Scope 1: Structural -->
+        <div class="scope-card">
+            <div class="scope-title">🏗️ 1. Structural & General Building (IBC & IRC)</div>
+            <ul class="scope-list">
+                <li><strong>Load Requirements:</strong> Local wind speed ratings (crucial for hurricane zones), snow loads, and seismic design categories.</li>
+                <li><strong>Foundation & Anchoring:</strong> Concrete pad thickness specifications, anchor bolt sizing, and required embedment depths.</li>
+                <li><strong>Material Standards:</strong> Steel gauge requirements, structural integrity of framing, and span limits.</li>
+            </ul>
+        </div>
+
+        <!-- Scope 2: Electrical -->
+        <div class="scope-card">
+            <div class="scope-title">⚡ 2. Electrical & Backup Power (NEC / NFPA 70)</div>
+            <ul class="scope-list">
+                <li><strong>Low-Voltage (Class 2/3):</strong> Wiring standards for access control, cameras, and automated gates.</li>
+                <li><strong>High-Voltage & Power:</strong> Generator transfer switches (ATS), load calculations, and conduit routing.</li>
+                <li><strong>Grounding & Bonding:</strong> Protection requirements for metal structures and electrical systems against lightning and faults.</li>
+            </ul>
+        </div>
+
+        <!-- Scope 3: Fire & Life Safety -->
+        <div class="scope-card" style="border-left-color: var(--danger);">
+            <div class="scope-title">🔥 3. Fire & Life Safety (IFC & NFPA 101)</div>
+            <ul class="scope-list">
+                <li><strong>Means of Egress:</strong> Allowable door hardware, panic bars, and emergency push panels on security doors.</li>
+                <li><strong>Fire Resistance Ratings:</strong> Rules for fire-stopping materials when penetrating fire-rated walls with conduits, cables, or structural anchors.</li>
+                <li><strong>Clearances:</strong> Maintaining required distances around electrical panels, heating equipment, and fire alarm strobes.</li>
+            </ul>
+        </div>
+
+        <!-- Scope 4: Security -->
+        <div class="scope-card">
+            <div class="scope-title">🛡️ 4. Security & Ballistics (UL & ASTM)</div>
+            <ul class="scope-list">
+                <li><strong>Ballistic Standards:</strong> UL 752 levels (e.g., Level 1 through Level 3 ratings for panels and glass).</li>
+                <li><strong>Forced Entry:</strong> ASTM standards for security screen mesh, main frame extrusions, and hinge requirements.</li>
+                <li><strong>Glazing & Laminate:</strong> Wind-borne debris impact standards and peel/tensile strength codes for security films.</li>
+            </ul>
+        </div>
+
+        <!-- Scope 5: Accessibility -->
+        <div class="scope-card" style="border-left-color: var(--sms-blue);">
+            <div class="scope-title">♿ 5. Accessibility (ADA & ICC A117.1)</div>
+            <ul class="scope-list">
+                <li><strong>Mounting Heights:</strong> Exact allowable heights for card readers, access panels, and door handles.</li>
+                <li><strong>Clearances:</strong> Required maneuvering clearance around doors, entryways, and gates.</li>
+                <li><strong>Protrusion Limits:</strong> Rules on how far a screen, enclosure, or piece of hardware can stick out into a hallway or path without being a hazard.</li>
+            </ul>
+        </div>
+
+        <!-- Scope 6: Energy -->
+        <div class="scope-card" style="border-left-color: var(--success-dark);">
+            <div class="scope-title">🍃 6. Energy & Environmental (IECC)</div>
+            <ul class="scope-list">
+                <li><strong>Insulation & Thermal:</strong> R-value requirements for roofs and walls.</li>
+                <li><strong>Vapor & Weather Barriers:</strong> Requirements for sealing joints, flashing, and managing moisture.</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation Placeholder (Injected via navbar.js) -->
+    <div class="fixed-bottom-nav-bar"></div>
+    <script src="navbar.js"></script>
+
+</body>
+</html>
