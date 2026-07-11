@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EverSafe Hub - Comprehensive Code Library</title>
+    <title>EverSafe Hub - Master Trade Specs</title>
     
     <link rel="icon" type="image/jpeg" href="app-icon.jpg">
     <link rel="apple-touch-icon" href="app-icon.jpg">
@@ -22,6 +22,7 @@
             --danger: #ef4444; 
             --sms-blue: #007aff;
             --chimney-red: #b91c1c;
+            --masonry-gray: #475569;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
@@ -72,14 +73,14 @@
     </div>
 
     <div class="app-container">
-        <h3>Master Field Spec Library</h3>
-        <p class="subtitle">Comprehensive code dimensions, gauges, and limits required to pass municipal and safety inspections.</p>
+        <h3>Master Trade Spec Library</h3>
+        <p class="subtitle">Comprehensive field limits for masonry, chimney venting, and roof access safety.</p>
 
-        <div class="section-divider">Trade Specifications</div>
+        <div class="section-divider">Chimney & Hearth Codes</div>
 
-        <!-- Scope 1: Chimney & Hearth (NEW) -->
+        <!-- Scope 1: Chimney NFPA 211 -->
         <div class="scope-card" style="border-top-color: var(--chimney-red);">
-            <div class="scope-title">🧱 Chimney & Hearth (NFPA 211 / IRC)</div>
+            <div class="scope-title">🧱 NFPA 211 & Flue Standards</div>
             <table class="spec-table">
                 <tr>
                     <td>The "3-2-10" Rule<br><span style="font-size: 11px; color: #64748b;">Chimney Termination Height</span></td>
@@ -90,127 +91,96 @@
                     <td><span class="spec-value">Min 2" (Interior Chimneys)</span><span class="spec-value">Min 1" (Exterior Chimneys)</span></td>
                 </tr>
                 <tr>
-                    <td>Hearth Extension<br><span style="font-size: 11px; color: #64748b;">Firebox Opening < 6 sq. ft.</span></td>
+                    <td>Hearth Extension: Small<br><span style="font-size: 11px; color: #64748b;">Firebox Opening < 6 sq. ft.</span></td>
                     <td><span class="spec-value">Min 16" to the front</span><span class="spec-value">Min 8" to each side</span></td>
                 </tr>
                 <tr>
-                    <td>Hearth Extension<br><span style="font-size: 11px; color: #64748b;">Firebox Opening ≥ 6 sq. ft.</span></td>
+                    <td>Hearth Extension: Large<br><span style="font-size: 11px; color: #64748b;">Firebox Opening ≥ 6 sq. ft.</span></td>
                     <td><span class="spec-value">Min 20" to the front</span><span class="spec-value">Min 12" to each side</span></td>
                 </tr>
                 <tr>
-                    <td>Firebox Wall Thickness<br><span style="font-size: 11px; color: #64748b;">Solid masonry</span></td>
-                    <td><span class="spec-value">Min 8" overall thickness</span><span class="spec-value">Min 2" firebrick lining</span></td>
+                    <td>Flue Sizing Limits<br><span style="font-size: 11px; color: #64748b;">Cross-sectional area vs opening</span></td>
+                    <td><span class="spec-value">Square/Rect Flue: 1/10th of opening</span><span class="spec-value">Round Flue: 1/12th of opening</span></td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 2: Structural & Concrete -->
+        <!-- Scope 2: Masonry & Foundations -->
+        <div class="scope-card" style="border-top-color: var(--masonry-gray);">
+            <div class="scope-title">🏗️ Masonry & Foundations (IRC)</div>
+            <table class="spec-table">
+                <tr>
+                    <td>Chimney Footings<br><span style="font-size: 11px; color: #64748b;">Load bearing requirements</span></td>
+                    <td><span class="spec-value">Min 12" Thick solid concrete</span><span class="spec-value">Extends 6" beyond walls (all sides)</span><span class="spec-value">Must sit below frost line</span></td>
+                </tr>
+                <tr>
+                    <td>Firebox Construction<br><span style="font-size: 11px; color: #64748b;">Wall thickness</span></td>
+                    <td><span class="spec-value">Min 8" overall solid masonry</span><span class="spec-value">Min 2" internal firebrick lining</span></td>
+                </tr>
+                <tr>
+                    <td>Smoke Chamber Walls<br><span style="font-size: 11px; color: #64748b;">Transition to flue</span></td>
+                    <td><span class="spec-value">Max 45° angle of inclination</span><span class="spec-value">Parged smooth with refractory mortar</span></td>
+                </tr>
+                <tr>
+                    <td>Corbeling Limits<br><span style="font-size: 11px; color: #64748b;">Projecting masonry elements</span></td>
+                    <td><span class="spec-value">Max 1/2 of block/brick height per step</span><span class="spec-value">Max overall projection ≤ 1/2 wall thickness</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 3: Roof Flashing -->
         <div class="scope-card" style="border-top-color: var(--accent);">
-            <div class="scope-title">🏗️ Structural & Concrete (IBC)</div>
+            <div class="scope-title">💧 Roof Flashing & Weathering</div>
             <table class="spec-table">
                 <tr>
-                    <td>Concrete Pad Thickness<br><span style="font-size: 11px; color: #64748b;">Equipment/Generators</span></td>
-                    <td><span class="spec-value">Min 4" (Standard load)</span><span class="spec-value">Min 6" (Heavy dynamic load)</span></td>
+                    <td>Cricket / Saddle Rules<br><span style="font-size: 11px; color: #64748b;">Diverting water behind chimney</span></td>
+                    <td><span class="spec-value">Required if chimney is > 30" wide</span><span style="font-size: 10px; color: #94a3b8;">(Measured parallel to the roof ridge)</span></td>
                 </tr>
                 <tr>
-                    <td>Concrete Cure Times<br><span style="font-size: 11px; color: #64748b;">Before bearing full load</span></td>
-                    <td><span class="spec-value">24-48 Hours (Remove forms)</span><span class="spec-value">7 Days (70% strength)</span><span class="spec-value">28 Days (Full cure)</span></td>
+                    <td>Step Flashing<br><span style="font-size: 11px; color: #64748b;">Under shingle tie-ins</span></td>
+                    <td><span class="spec-value">Min 4" run up the chimney wall</span><span class="spec-value">Min 4" resting on the roof deck</span></td>
                 </tr>
                 <tr>
-                    <td>Post-Installed Anchors<br><span style="font-size: 11px; color: #64748b;">Wedge anchors in solid concrete</span></td>
-                    <td><span class="spec-value">Embedment: Min 4-1/2"</span><span class="spec-value">Edge Distance: Min 3-1/4"</span><span class="spec-value">Spacing: Min 6" between bolts</span></td>
-                </tr>
-                <tr>
-                    <td>Steel Framing Limits<br><span style="font-size: 11px; color: #64748b;">Cold-formed metal studs</span></td>
-                    <td><span class="spec-value">18 Gauge (Min for load-bearing)</span><span class="spec-value">Max 24" O.C. spacing</span></td>
+                    <td>Counter Flashing<br><span style="font-size: 11px; color: #64748b;">Masonry cut-in depth</span></td>
+                    <td><span class="spec-value">Embedment: Min 1" deep</span><span class="spec-value">Must be set in mortar joint (no surface caulking only)</span></td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 3: Electrical -->
-        <div class="scope-card" style="border-top-color: var(--success-dark);">
-            <div class="scope-title">⚡ Electrical & Power (NEC)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>Panel Clearances<br><span style="font-size: 11px; color: #64748b;">Working space (NEC 110.26)</span></td>
-                    <td><span class="spec-value">Depth: Min 36" in front</span><span class="spec-value">Width: Min 30"</span><span class="spec-value">Height: Min 6'6" headroom</span></td>
-                </tr>
-                <tr>
-                    <td>Trenching Depths<br><span style="font-size: 11px; color: #64748b;">Direct burial vs. Conduit</span></td>
-                    <td><span class="spec-value">24" (Direct burial cable)</span><span class="spec-value">18" (PVC Conduit)</span><span class="spec-value">6" (Rigid Metal Conduit)</span></td>
-                </tr>
-                <tr>
-                    <td>Conduit Fill Limits<br><span style="font-size: 11px; color: #64748b;">To prevent overheating</span></td>
-                    <td><span class="spec-value">Max 53% (1 wire)</span><span class="spec-value">Max 31% (2 wires)</span><span class="spec-value">Max 40% (3+ wires)</span></td>
-                </tr>
-                <tr>
-                    <td>GFCI Requirements<br><span style="font-size: 11px; color: #64748b;">Protection locations</span></td>
-                    <td><span class="spec-value">All exterior receptacles</span><span class="spec-value">Within 6ft of any sink/water</span><span class="spec-value">All crawl spaces / unfinished basements</span></td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 4: ADA & Accessibility -->
+        <!-- Scope 4: Gas Venting & Appliances -->
         <div class="scope-card" style="border-top-color: var(--sms-blue);">
-            <div class="scope-title">♿ ADA Accessibility (ICC A117.1)</div>
+            <div class="scope-title">🔥 Gas Appliances & Venting (IFGC)</div>
             <table class="spec-table">
                 <tr>
-                    <td>Operable Parts Height<br><span style="font-size: 11px; color: #64748b;">Card readers, keypads, handles</span></td>
-                    <td><span class="spec-value">Min: 34" AFF (Above Finish Floor)</span><span class="spec-value">Max: 48" AFF</span></td>
+                    <td>B-Vent Clearances<br><span style="font-size: 11px; color: #64748b;">Double-wall gas vents</span></td>
+                    <td><span class="spec-value">Min 1" clearance to combustibles</span><span style="font-size: 10px; color: #94a3b8;">Must use factory firestop at ceiling penetrations</span></td>
                 </tr>
                 <tr>
-                    <td>Protrusion Limits<br><span style="font-size: 11px; color: #64748b;">Mounted hardware in paths of travel</span></td>
-                    <td><span class="spec-value">Max 4" off the wall</span><span style="font-size: 10px; color: #94a3b8;">If between 27" and 80" AFF</span></td>
+                    <td>Direct Vent Systems<br><span style="font-size: 11px; color: #64748b;">Coaxial venting</span></td>
+                    <td><span class="spec-value">Clearances strictly per manufacturer</span><span style="font-size: 10px; color: #94a3b8;">(Generally 1" to 2" top clearance, 1" sides/bottom)</span></td>
                 </tr>
                 <tr>
-                    <td>Door Maneuvering Clearance<br><span style="font-size: 11px; color: #64748b;">Swing doors (Pull side)</span></td>
-                    <td><span class="spec-value">Min 18" clearance</span><span style="font-size: 10px; color: #94a3b8;">Beyond the latch side of the door</span></td>
-                </tr>
-                <tr>
-                    <td>Ramp Slopes & Widths<br><span style="font-size: 11px; color: #64748b;">Wheelchair access routes</span></td>
-                    <td><span class="spec-value">Max Slope: 1:12 (8.33%)</span><span class="spec-value">Min Width: 36" clear</span><span class="spec-value">Landings: 60" x 60" at turns</span></td>
+                    <td>CSST Gas Line Grounding<br><span style="font-size: 11px; color: #64748b;">Corrugated Stainless Steel Tubing</span></td>
+                    <td><span class="spec-value">Requires direct electrical bonding</span><span class="spec-value">Min 6 AWG copper ground wire</span></td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 5: Fire & Egress -->
+        <!-- Scope 5: Safety & OSHA -->
         <div class="scope-card" style="border-top-color: var(--danger);">
-            <div class="scope-title">🔥 Fire & Life Safety (NFPA 101)</div>
+            <div class="scope-title">🦺 Roof Safety & Scaffolding (OSHA)</div>
             <table class="spec-table">
                 <tr>
-                    <td>Door Opening Force<br><span style="font-size: 11px; color: #64748b;">Max force to unlatch & open</span></td>
-                    <td><span class="spec-value">5 lbs (Interior non-fire doors)</span><span class="spec-value">15 lbs (Exterior / Panic Hardware)</span></td>
+                    <td>Fall Protection<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span></td>
+                    <td><span class="spec-value">Any work at or above 6 feet</span><span style="font-size: 10px; color: #94a3b8;">(Requires guardrails, safety nets, or PFAS)</span></td>
                 </tr>
                 <tr>
-                    <td>Fire Extinguisher Mounting<br><span style="font-size: 11px; color: #64748b;">NFPA 10 limits</span></td>
-                    <td><span class="spec-value">Max 54" AFF to top (≤ 40 lbs)</span><span class="spec-value">Max 42" AFF to top (> 40 lbs)</span><span class="spec-value">Min 4" clearance from floor</span></td>
+                    <td>Ladder Extensions<br><span style="font-size: 11px; color: #64748b;">Roof access protocols</span></td>
+                    <td><span class="spec-value">Must extend 3 ft above landing</span><span class="spec-value">Base distance = 1/4 of working length (4:1 rule)</span></td>
                 </tr>
                 <tr>
-                    <td>Wall Penetrations<br><span style="font-size: 11px; color: #64748b;">Fire-rated barriers</span></td>
-                    <td><span class="spec-value">Must be sleeved and sealed</span><span class="spec-value">Use UL-listed intumescent caulk</span></td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 6: Ballistics & Security -->
-        <div class="scope-card" style="border-top-color: var(--primary-light);">
-            <div class="scope-title">🛡️ Security & Ballistics (UL 752 / ASTM)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>UL 752 Level 1<br><span style="font-size: 11px; color: #64748b;">Handgun (Medium Power)</span></td>
-                    <td><span class="spec-value">9mm Full Metal Jacket (124g)</span><span class="spec-value">Vel: 1175 fps | 3 Shots</span></td>
-                </tr>
-                <tr>
-                    <td>UL 752 Level 3<br><span style="font-size: 11px; color: #64748b;">Handgun (Super Power)</span></td>
-                    <td><span class="spec-value">.44 Magnum Lead Semi-Wad (240g)</span><span class="spec-value">Vel: 1350 fps | 3 Shots</span></td>
-                </tr>
-                <tr>
-                    <td>UL 752 Level 8<br><span style="font-size: 11px; color: #64748b;">Rifle (High Power Multi-Shot)</span></td>
-                    <td><span class="spec-value">7.62mm Rifle Lead Core (150g)</span><span class="spec-value">Vel: 2750 fps | 5 Shots</span></td>
-                </tr>
-                <tr>
-                    <td>Security Glazing Impact<br><span style="font-size: 11px; color: #64748b;">ASTM F1233 (Forced Entry)</span></td>
-                    <td><span class="spec-value">Class II: Resists 10 impacts</span><span style="font-size: 10px; color: #94a3b8;">(Using 12 lb sledge/tools before failure)</span></td>
+                    <td>Scaffolding Limits<br><span style="font-size: 11px; color: #64748b;">Platform compliance</span></td>
+                    <td><span class="spec-value">Fully planked platforms (no gaps > 1")</span><span class="spec-value">Toe-boards required if > 10 ft high</span></td>
                 </tr>
             </table>
         </div>
