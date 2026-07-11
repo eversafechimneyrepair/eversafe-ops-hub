@@ -43,9 +43,8 @@
         h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; color: var(--primary); }
         p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 15px; text-align: center; line-height: 1.45; }
 
-        /* Quick-Jump Navigation */
-        .quick-jump-container { display: flex; gap: 8px; overflow-x: auto; padding: 5px 0 15px 0; scrollbar-width: none; margin-bottom: 5px; }
-        .quick-jump-container::-webkit-scrollbar { display: none; }
+        /* Quick-Jump Navigation (UPDATED TO WRAP INSTEAD OF SCROLL) */
+        .quick-jump-container { display: flex; flex-wrap: wrap; gap: 8px; padding: 5px 0 15px 0; margin-bottom: 5px; }
         .quick-jump-pill { background: white; border: 1px solid var(--border); color: var(--primary); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; white-space: nowrap; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: background 0.2s; }
         .quick-jump-pill:active { background: #f1f5f9; }
 
