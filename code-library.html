@@ -25,6 +25,9 @@
             --masonry-gray: #475569;
             --defect-orange: #ea580c;
             --liner-silver: #94a3b8;
+            --gas-yellow: #eab308;
+            --prefab-teal: #0f766e;
+            --stove-brown: #78350f;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
@@ -98,15 +101,18 @@
 
     <div class="app-container">
         <h3>Master Trade Spec Library</h3>
-        <p class="subtitle">Field limits and plain-English training for masonry, venting, and safety compliance.</p>
+        <p class="subtitle">Field limits and plain-English training for masonry, venting, accessories, and safety compliance.</p>
 
         <!-- Quick Jump Navigation -->
         <div class="quick-jump-container">
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
+            <a href="#stoves" class="quick-jump-pill">🪵 Wood Stoves</a>
             <a href="#relining" class="quick-jump-pill">🛡️ Relining</a>
             <a href="#clearances" class="quick-jump-pill">🏠 Clearances</a>
             <a href="#masonry" class="quick-jump-pill">🧱 Masonry</a>
+            <a href="#dampers" class="quick-jump-pill">🔥 Gas & Dampers</a>
+            <a href="#prefabs" class="quick-jump-pill">🏭 Prefabs & Pits</a>
             <a href="#safety" class="quick-jump-pill">🦺 Safety</a>
         </div>
 
@@ -213,7 +219,154 @@
             </table>
         </div>
 
-        <div class="section-divider">Relining & Terminations</div>
+        <div class="section-divider">Solid Fuel Appliances</div>
+
+        <!-- Scope: Wood & Pellet Stoves -->
+        <div class="scope-card" id="stoves" style="border-top-color: var(--stove-brown);">
+            <div class="scope-title">🪵 Free-Standing Stoves (Wood/Pellet)</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        Connector Pipe Clearances<br><span style="font-size: 11px; color: #64748b;">Stove to ceiling/wall transition</span>
+                        <span class="spec-value">Single-Wall Pipe: Min 18" Clearance</span>
+                        <span class="spec-value">Double-Wall Pipe: Min 6" Clearance</span>
+                        <span class="defect-flag">Fails if single-wall touches drywall</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> Single-wall black stovepipe radiates a massive amount of raw heat into the room. If it is closer than 18 inches to a combustible wall or ceiling, it will bake the drywall and ignite the studs behind it. Double-wall pipe has an inner stainless liner and an air gap, keeping the outer skin cool enough to drop the clearance to 6 inches.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Appliance Wall Clearances<br><span style="font-size: 11px; color: #64748b;">Space around the stove body</span>
+                        <span class="spec-value">Listed Stoves: Follow Data Plate</span>
+                        <span class="spec-value">Unlisted Stoves: Min 36" Clearance</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Liability:</strong> Modern stoves have heat shields and are tested in a lab (UL 1482). Their exact clearances are printed on the metal data tag on the back. If a stove is "Unlisted" (like an antique potbelly stove or a tag that fell off), the code assumes it's highly dangerous and mandates a massive 36-inch (3-foot) clearance in all directions.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Floor Protection (Ember Pad)<br><span style="font-size: 11px; color: #64748b;">Non-combustible hearth pad</span>
+                        <span class="spec-value">Min 18" in front of loading door</span>
+                        <span class="spec-value">Min 8" to sides and back</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> When a homeowner opens the stove door to add wood, sparks fly out, and burning logs can roll off the ash lip. The hearth pad must extend far enough (18 inches minimum) to catch these embers before they land on carpet, hardwood, or vinyl flooring.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Combustible Wall Pass-Through<br><span style="font-size: 11px; color: #64748b;">Routing pipe through a wall</span>
+                        <span class="spec-value">Must use UL-Listed Solid-Pack Thimble</span>
+                        <span class="info-flag">OR 12" of solid masonry all around</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Danger:</strong> You can never just cut a hole in drywall and run a hot stovepipe through the studs to reach an exterior chimney. The wood inside the wall will ignite. You must install a UL-listed insulated thimble (which has a built-in air space and insulation) to safely transfer the pipe through the combustible wall.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section-divider">Service Calls: Gas & Accessories</div>
+
+        <!-- Scope: Gas & Dampers -->
+        <div class="scope-card" id="dampers" style="border-top-color: var(--gas-yellow);">
+            <div class="scope-title">🔥 Gas Logs & Dampers (IFGC)</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        Top-Mount Dampers<br><span style="font-size: 11px; color: #64748b;">Cable-operated sealing caps</span>
+                        <span class="spec-value">Excellent for wood/pellet efficiency</span>
+                        <span class="defect-flag">Prohibited on active Gas Logs</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Liability:</strong> Top-sealing dampers are great for sealing drafts on wood fireplaces. BUT, if a top-sealer freezes shut or the cable breaks while a customer is burning a wood fire, smoke fills the room instantly, and they put the fire out.</p>
+                                <p><strong>The Fatality Risk:</strong> If a top-mount damper breaks closed over a <em>Gas Log set</em>, there is no smoke. The room fills with invisible, odorless Carbon Monoxide. The occupants will suffocate without ever knowing the damper is closed. Never install a top-sealer on a gas appliance.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Damper Clamps (Vented Gas)<br><span style="font-size: 11px; color: #64748b;">C-clamps on throat dampers</span>
+                        <span class="spec-value">Mandatory for Vented Gas Logs</span>
+                        <span class="info-flag">Must lock damper open permanently</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Liability:</strong> When gas logs are turned off, the open damper lets a lot of cold air into the house. Homeowners will naturally try to close the damper to save heat. However, gas log pilots run 24/7, and turning on the logs with a closed damper pushes pure CO into the home.</p>
+                                <p><strong>The Fix:</strong> The code mandates installing a heavy metal C-clamp on the damper plate. This physically prevents the homeowner from closing the damper, ensuring a permanent exhaust path. If you see un-clamped vented gas logs, fail the inspection and install a clamp.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Unvented (Vent-Free) Gas Logs<br><span style="font-size: 11px; color: #64748b;">Room-exhausting appliances</span>
+                        <span class="spec-value">Requires exact room volume sizing</span>
+                        <span class="defect-flag">Usually prohibited in bedrooms/baths</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> Vent-free logs dump all of their exhaust (mostly water vapor and trace CO) directly into the living space. They rely on the cubic air volume of the room to dilute the exhaust to safe levels.</p>
+                                <p><strong>The Rule:</strong> If you put a high-BTU vent-free unit in a small, closed bedroom, the unit will consume the oxygen and choke the occupants. They must be perfectly sized to the room's cubic footage. If a vent-free set smells terrible or sets off alarms, it is either oversized, dusty, or drafting poorly into the room. Check the sizing charts.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope: Prefabs & Cleanouts -->
+        <div class="scope-card" id="prefabs" style="border-top-color: var(--prefab-teal);">
+            <div class="scope-title">🏭 Prefab Systems & Ash Pits</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        Factory-Built Fireplaces<br><span style="font-size: 11px; color: #64748b;">Zero-Clearance / Prefabs (UL 127)</span>
+                        <span class="spec-value">Must use OEM replacement parts</span>
+                        <span class="defect-flag">Fails if parts are mixed & matched</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Liability:</strong> A prefab fireplace is tested in a lab as a complete, highly-engineered assembly. The metal box, the refractory panels, and the specific double-wall pipe all work together to prevent the house framing from catching fire.</p>
+                                <p><strong>The Rule:</strong> If a refractory panel cracks, you cannot just slap some firebrick or generic board in there. If you connect Brand X pipe to a Brand Y firebox, you instantly void the UL listing. If the house burns down, the liability falls 100% on you for altering a tested appliance. Always find the data tag and order OEM parts.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Ash Pits & Cleanout Doors<br><span style="font-size: 11px; color: #64748b;">Base of the chimney column</span>
+                        <span class="spec-value">Must be cast iron or tight steel</span>
+                        <span class="spec-value">Min 6" clearance to combustibles</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> The ash dump door in the floor of the firebox drops hot coals down into the base of the chimney. Those coals can stay hot for days. If the cleanout door in the basement is made of thin, rusted metal—or worse, if the homeowner piled cardboard boxes right up against it—the radiant heat will start a basement fire. Ensure the door seals tightly so it doesn't feed oxygen to the coals or ruin the upstairs draft.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section-divider">Masonry & Relining</div>
 
         <!-- Scope 3: Relining -->
         <div class="scope-card" id="relining" style="border-top-color: var(--liner-silver);">
@@ -276,7 +429,7 @@
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Physics (Pyrolysis):</strong> When wood framing sits too close to hot masonry for years, the heat slowly bakes the moisture out of the wood, permanently altering its chemical structure. Its ignition temperature drops drastically. Eventually, a totally normal fire in the fireplace can ignite the wood inside the walls. Drywall, siding, and studs CANNOT directly touch the chimney brick.</p>
+                                <p><strong>The Physics (Pyrolysis):</strong> When wood framing sits too close to hot masonry for years, the heat slowly bakes the moisture out of the wood, permanently altering its chemical structure. Its ignition temperature drops drastically. Eventually, a normal fire can ignite the wood inside the walls. Drywall, siding, and studs CANNOT directly touch the chimney brick.</p>
                                 <p><strong>The Field Reality:</strong> Houses settle. Foundations sink. If the chimney is built tight to the framing, the settling house will actually hang off the chimney, cracking the masonry. The air gap allows for natural expansion and settling.</p>
                             </div>
                         </details>
@@ -284,8 +437,6 @@
                 </tr>
             </table>
         </div>
-
-        <div class="section-divider">Masonry & Hearths</div>
 
         <!-- Scope 5: Masonry -->
         <div class="scope-card" id="masonry" style="border-top-color: var(--masonry-gray);">
@@ -349,6 +500,18 @@
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
                                 <p><strong>The Physics:</strong> If the back of the chimney facing the roof peak is wider than 30 inches, it acts like a giant dam. Leaves, snow, and rain will pile up behind it. The standing water builds hydrostatic pressure, which will eventually force water back up under the shingles. You must build a small peaked roof (cricket) behind the chimney to split the water and shed it down the sides.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Fall Protection (OSHA)<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span>
+                        <span class="spec-value">Any work at or above 6 feet</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Reality:</strong> OSHA regulations are written in blood. If your boots are 6 feet or higher off the lower level, you are required to wear a harness tied off to a secure roof anchor (Personal Fall Arrest System), or have guardrails in place. A fall from 10 feet is frequently fatal.</p>
                             </div>
                         </details>
                     </td>
