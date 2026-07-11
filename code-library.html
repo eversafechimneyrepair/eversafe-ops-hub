@@ -28,7 +28,6 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        /* Enable smooth scrolling for the quick-jump links */
         html { scroll-behavior: smooth; }
         
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
@@ -43,32 +42,37 @@
         h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; color: var(--primary); }
         p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 15px; text-align: center; line-height: 1.45; }
 
-        /* Quick-Jump Navigation (UPDATED TO WRAP INSTEAD OF SCROLL) */
+        /* Quick-Jump Navigation */
         .quick-jump-container { display: flex; flex-wrap: wrap; gap: 8px; padding: 5px 0 15px 0; margin-bottom: 5px; }
         .quick-jump-pill { background: white; border: 1px solid var(--border); color: var(--primary); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; white-space: nowrap; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: background 0.2s; }
         .quick-jump-pill:active { background: #f1f5f9; }
 
         /* Scope Cards */
-        /* scroll-margin-top ensures the fixed header doesn't cover the card when jumping */
         .scope-card { scroll-margin-top: 75px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); margin-bottom: 20px; position: relative; border-top: 4px solid var(--primary); }
         .scope-title { font-size: 15px; font-weight: bold; color: var(--primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--bg); }
         
         /* Data Tables for Mobile */
         .spec-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 13px; }
-        .spec-table th { text-align: left; padding: 8px 4px; color: #64748b; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid var(--border); }
         .spec-table td { padding: 12px 4px; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
         .spec-table tr:last-child td { border-bottom: none; }
         .spec-value { font-weight: 700; color: var(--primary); display: block; margin-top: 2px; }
         
-        /* Flags and Translations */
+        /* Flags */
         .defect-flag { color: var(--danger); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-top: 6px; display: inline-block; background: #fef2f2; padding: 3px 6px; border-radius: 4px; border: 1px solid #fee2e2; }
         .info-flag { color: var(--sms-blue); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-top: 6px; display: inline-block; background: #f0f9ff; padding: 3px 6px; border-radius: 4px; border: 1px solid #bae6fd; }
-        .field-translation { font-size: 11.5px; color: #475569; font-style: italic; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #cbd5e1; display: block; line-height: 1.45; }
-        .field-translation strong { color: var(--primary-light); font-style: normal; font-weight: 800; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
+        
+        /* Deep Dive Dropdown (Native HTML5) */
+        details.deep-dive { margin-top: 10px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; transition: all 0.3s ease; }
+        details.deep-dive summary { padding: 10px 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--sms-blue); cursor: pointer; list-style: none; display: flex; align-items: center; user-select: none; }
+        details.deep-dive summary::-webkit-details-marker { display: none; }
+        details.deep-dive summary::before { content: '▶'; font-size: 9px; margin-right: 8px; transition: transform 0.2s; color: var(--sms-blue); }
+        details.deep-dive[open] summary::before { transform: rotate(90deg); }
+        details.deep-dive[open] summary { border-bottom: 1px solid #e2e8f0; background: #f1f5f9; }
+        .deep-dive-content { padding: 12px; font-size: 12.5px; color: #334155; line-height: 1.5; }
+        .deep-dive-content strong { color: var(--primary); font-weight: 800; }
 
         /* Bottom Nav */
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-
         .section-divider { display: flex; align-items: center; text-align: center; margin: 30px 0 20px; color: #94a3b8; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
         .section-divider::before, .section-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
         .section-divider:not(:empty)::before { margin-right: .5em; }
@@ -92,7 +96,7 @@
 
     <div class="app-container">
         <h3>Master Trade Spec Library</h3>
-        <p class="subtitle">Field limits and plain-English translations for masonry, venting, and safety compliance.</p>
+        <p class="subtitle">Field limits and plain-English training for masonry, venting, and safety compliance.</p>
 
         <!-- Quick Jump Navigation -->
         <div class="quick-jump-container">
@@ -106,26 +110,35 @@
 
         <div class="section-divider">NFPA 211 Inspection Protocols</div>
 
-        <!-- Scope 1: Level 1, 2, 3 Triggers -->
+        <!-- Scope 1: Inspections -->
         <div class="scope-card" id="inspections" style="border-top-color: var(--accent);">
             <div class="scope-title">🔍 Inspection Levels & Triggers</div>
             <table class="spec-table">
                 <tr>
-                    <td>Level 1 Inspection<br><span style="font-size: 11px; color: #64748b;">Readily accessible areas</span></td>
                     <td>
+                        Level 1 Inspection<br><span style="font-size: 11px; color: #64748b;">Readily accessible areas</span>
                         <span class="spec-value">Routine annual maintenance</span>
                         <span class="spec-value">Same appliance, same fuel</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> You only do a Level 1 if absolutely nothing has changed with the system since the last sweep, and you are just doing a standard cleaning with a flashlight and brush.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> A Level 1 is a basic visual check. You only perform a Level 1 if the customer has used the system regularly without issue, nothing has changed, and you are just there to sweep. You are only responsible for what you can see with a flashlight.
+                            </div>
+                        </details>
                     </td>
                 </tr>
                 <tr>
-                    <td>Level 2 Inspection<br><span style="font-size: 11px; color: #64748b;">Accessible + Camera Scan</span></td>
                     <td>
+                        Level 2 Inspection<br><span style="font-size: 11px; color: #64748b;">Accessible + Camera Scan</span>
                         <span class="spec-value">Sale/Transfer of property</span>
-                        <span class="spec-value">Post-chimney fire or seismic event</span>
-                        <span class="spec-value">Changing fuel type or relining</span>
+                        <span class="spec-value">Post-chimney fire or weather event</span>
                         <span class="info-flag">Mandatory camera scan</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> If someone just bought the house, had a chimney fire, or is swapping a wood stove for a gas log set, you MUST run a camera up the flue to check for hidden damage. No exceptions.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> If a house was just sold, had a chimney fire, or is getting a new fuel type (like a gas log insert), the code mandates a Level 2. <strong>You must run a camera up the flue.</strong> If you skip the camera, tell them it's fine, and a hidden cracked tile causes a house fire months later, EverSafe is liable. Document the camera scan.
+                            </div>
+                        </details>
                     </td>
                 </tr>
             </table>
@@ -133,25 +146,35 @@
 
         <div class="section-divider">Defects & Flue Maintenance</div>
 
-        <!-- Scope 2: Defect Thresholds (NFPA 211) -->
+        <!-- Scope 2: Defects -->
         <div class="scope-card" id="defects" style="border-top-color: var(--defect-orange);">
             <div class="scope-title">🚫 Defect Limits & Failure Criteria</div>
             <table class="spec-table">
                 <tr>
-                    <td>Creosote Buildup<br><span style="font-size: 11px; color: #64748b;">Sweeping requirement</span></td>
                     <td>
+                        Creosote Buildup<br><span style="font-size: 11px; color: #64748b;">Sweeping requirement</span>
                         <span class="spec-value">Level 1/2 Sweep if > 1/8" thick</span>
                         <span class="defect-flag">Fails if Stage 3 (Glaze) is present</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> If the buildup looks like shiny, hard, black glass (Stage 3), standard sweeping won't work. It is highly flammable. Fail it and quote a chemical rotary treatment (PCR).</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> A standard brush only removes Stage 1 (sooty) and Stage 2 (crunchy) creosote. Stage 3 looks like shiny, hard, black glass or tar. It is highly concentrated fuel. If it catches fire, it expands up to 7 times its size, blocking the flue and pushing a 2000-degree blowtorch into the living room. Fail it immediately and quote a chemical rotary treatment (PCR).
+                            </div>
+                        </details>
                     </td>
                 </tr>
                 <tr>
-                    <td>Flue Liner Integrity<br><span style="font-size: 11px; color: #64748b;">Terra cotta tile defects</span></td>
                     <td>
+                        Flue Liner Integrity<br><span style="font-size: 11px; color: #64748b;">Terra cotta tile defects</span>
                         <span class="spec-value">Zero tolerance for cracks/splits</span>
                         <span class="spec-value">Joint gaps must not exceed 1/8"</span>
                         <span class="defect-flag">Fails if ANY tile is cracked</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> Even a hairline crack in a clay tile means carbon monoxide or fire can escape into the home's framing. You must fail the flue and quote a stainless steel liner or HeatShield repair.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> A terracotta flue tile is designed to contain heat and exhaust. Even a hairline crack or a missing chunk of mortar between tiles breaks that seal. When a fire burns, the draft will pull the heat or deadly carbon monoxide through that crack directly into the home's wood framing or attic. Fail the flue and quote a stainless liner or HeatShield.
+                            </div>
+                        </details>
                     </td>
                 </tr>
             </table>
@@ -159,47 +182,67 @@
 
         <div class="section-divider">Relining & Terminations</div>
 
-        <!-- Scope 3: UL 1777 Relining -->
+        <!-- Scope 3: Relining -->
         <div class="scope-card" id="relining" style="border-top-color: var(--liner-silver);">
-            <div class="scope-title">🛡️ UL 1777 Stainless Steel Relining</div>
+            <div class="scope-title">🛡️ UL 1777 Stainless Relining</div>
             <table class="spec-table">
                 <tr>
-                    <td>Alloy Selection<br><span style="font-size: 11px; color: #64748b;">Matches fuel type</span></td>
                     <td>
+                        Alloy Selection<br><span style="font-size: 11px; color: #64748b;">Matches fuel type</span>
                         <span class="spec-value">316Ti / 316L: Wood, Coal, Pellet, Oil</span>
                         <span class="spec-value">AL29-4C: High-Efficiency Gas/Oil ONLY</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> Wood fires get incredibly hot and produce corrosive creosote. If you use a cheap 304 or AL29-4C liner for a wood stove, it will literally burn through. Always use 316 for solid fuels.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> Wood fires produce moisture and highly acidic creosote. If you use a cheaper 304 stainless or AL29-4C liner for a wood stove, the acid will literally eat holes through the metal in a few years. 316 Titanium alloy is mandatory for solid fuels because it resists this extreme corrosion.
+                            </div>
+                        </details>
                     </td>
                 </tr>
                 <tr>
-                    <td>Liner Insulation<br><span style="font-size: 11px; color: #64748b;">Required for UL listing</span></td>
                     <td>
+                        Liner Insulation<br><span style="font-size: 11px; color: #64748b;">Required for UL listing</span>
                         <span class="spec-value">1/2" Foil-Faced Wrap (Min) OR</span>
                         <span class="spec-value">Pour-down mix (Thermix)</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> If the outside of the masonry chimney touches wood framing (zero clearance), you MUST wrap the liner or pour insulation around it. Otherwise, heat transfers through the brick and can start a house fire.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> Stainless steel conducts heat rapidly. If you drop a bare metal liner into a chimney that is built touching wood framing (zero clearance to combustibles), the heat from the liner will transfer straight through the brick and ignite the wood studs. Wrapping or pouring insulation around the liner stops this heat transfer and keeps the flue warmer, which improves draft.
+                            </div>
+                        </details>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 4: Chimney Heights & Terminations -->
+        <!-- Scope 4: Clearances -->
         <div class="scope-card" id="clearances" style="border-top-color: var(--chimney-red);">
             <div class="scope-title">🏠 Clearances & Terminations</div>
             <table class="spec-table">
                 <tr>
-                    <td>The "3-2-10" Rule<br><span style="font-size: 11px; color: #64748b;">Chimney Termination Height</span></td>
                     <td>
+                        The "3-2-10" Rule<br><span style="font-size: 11px; color: #64748b;">Chimney Termination Height</span>
                         <span class="spec-value">Min 3 ft above roof penetration</span>
-                        <span class="spec-value">Min 2 ft higher than any structure within 10 ft</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> Measure 10 feet horizontally outward from the chimney. The chimney top must be at least 2 feet taller than anything inside that 10-foot circle (like the roof peak, a dormer, or a wall).</span>
+                        <span class="spec-value">Min 2 ft higher than structure within 10 ft</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> Wind behaves like water; when it hits a roof peak, it splashes and swirls, creating high-pressure zones. If the chimney is too short, that swirling wind will blow straight down the flue, pushing smoke and CO into the living room. Measure 10 feet out: the chimney must be at least 2 feet taller than anything in that circle.
+                            </div>
+                        </details>
                     </td>
                 </tr>
                 <tr>
-                    <td>Clearance to Combustibles<br><span style="font-size: 11px; color: #64748b;">Masonry Chimneys</span></td>
                     <td>
+                        Clearance to Combustibles<br><span style="font-size: 11px; color: #64748b;">Masonry Chimneys</span>
                         <span class="spec-value">Min 2" (Interior Chimneys)</span>
                         <span class="spec-value">Min 1" (Exterior Chimneys)</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> Drywall, wood studs, and siding cannot touch the chimney brick directly. There must be an air gap between the masonry and the house materials.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> This prevents Pyrolysis. When wood framing sits too close to hot masonry for years, the heat slowly bakes the moisture out of the wood, lowering its ignition temperature. Eventually, a normal fire can ignite the wood inside the walls. Drywall, siding, and studs CANNOT directly touch the chimney brick.
+                            </div>
+                        </details>
                     </td>
                 </tr>
             </table>
@@ -207,40 +250,35 @@
 
         <div class="section-divider">Masonry & Hearths</div>
 
-        <!-- Scope 5: Masonry & Crowns -->
+        <!-- Scope 5: Masonry -->
         <div class="scope-card" id="masonry" style="border-top-color: var(--masonry-gray);">
             <div class="scope-title">🧱 Masonry, Crowns & Hearths</div>
             <table class="spec-table">
                 <tr>
-                    <td>Chimney Crown (Cast/Poured)<br><span style="font-size: 11px; color: #64748b;">Top seal protection (IRC)</span></td>
                     <td>
+                        Chimney Crown (Cast/Poured)<br><span style="font-size: 11px; color: #64748b;">Top seal protection (IRC)</span>
                         <span class="spec-value">Min 2" thickness at thinnest edge</span>
                         <span class="spec-value">Min 2" overhang past brick w/ drip edge</span>
                         <span class="info-flag">Must have bond break around flue</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> Do not pour the concrete crown tight against the clay flue. Wrap the flue with expansion joint material first. When the flue gets hot and expands, it will crack the concrete crown if there is no bond break to absorb the swelling.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> A proper crown is like an umbrella for the chimney, shedding water away from the bricks. Never pour the concrete tight against the clay flue tile. When the clay gets hot, it expands. If there is no soft expansion joint (bond break) between the clay and the concrete, the expanding flue will crack the crown in half.
+                            </div>
+                        </details>
                     </td>
                 </tr>
                 <tr>
-                    <td>Refractory Mortar (ASTM C199)<br><span style="font-size: 11px; color: #64748b;">Fireboxes and clay flues</span></td>
                     <td>
+                        Refractory Mortar (ASTM C199)<br><span style="font-size: 11px; color: #64748b;">Fireboxes and clay flues</span>
                         <span class="spec-value">Must use Non-Water Soluble type</span>
                         <span class="spec-value">Max joint thickness: 1/8" to 1/4"</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> Never use standard brick mortar inside a firebox. The intense heat will destroy it. Use pre-mixed refractory cement (like ChamberTech or similar) that can withstand 2,000°F.</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Hearth Extension: Small<br><span style="font-size: 11px; color: #64748b;">Firebox Opening < 6 sq. ft.</span></td>
-                    <td>
-                        <span class="spec-value">Min 16" to the front</span>
-                        <span class="spec-value">Min 8" to each side</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> The non-combustible floor (tile/stone) must stick out at least 16 inches in front of the fireplace opening to catch popping embers so they don't burn the carpet or hardwood.</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Hearth Extension: Large<br><span style="font-size: 11px; color: #64748b;">Firebox Opening ≥ 6 sq. ft.</span></td>
-                    <td>
-                        <span class="spec-value">Min 20" to the front</span>
-                        <span class="spec-value">Min 12" to each side</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> Standard Portland cement mortar cannot handle extreme temperatures and will quickly crumble inside a firebox. You must use pre-mixed refractory cement (like ChamberTech) designed to withstand 2,000°F without breaking down.
+                            </div>
+                        </details>
                     </td>
                 </tr>
             </table>
@@ -248,30 +286,32 @@
 
         <div class="section-divider">Safety & Weatherproofing</div>
 
-        <!-- Scope 6: Flashing & Roof Safety -->
+        <!-- Scope 6: Safety -->
         <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
             <div class="scope-title">💧 Flashing & Fall Protection</div>
             <table class="spec-table">
                 <tr>
-                    <td>Cricket / Saddle Rules<br><span style="font-size: 11px; color: #64748b;">Diverting water behind chimney</span></td>
                     <td>
+                        Cricket / Saddle Rules<br><span style="font-size: 11px; color: #64748b;">Diverting water behind chimney</span>
                         <span class="spec-value">Required if chimney is > 30" wide</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> If the back of the chimney facing the roof peak is wider than 30 inches, it acts like a dam for rain and snow. You must build a small peaked roof (cricket) behind it to shed the water to the sides.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> If the back of the chimney facing the roof peak is wider than 30 inches, it acts like a giant dam. Leaves, snow, and rain will pile up behind it, eventually forcing water under the shingles. You must build a small peaked roof (cricket) behind the chimney to split the water and shed it down the sides.
+                            </div>
+                        </details>
                     </td>
                 </tr>
                 <tr>
-                    <td>Fall Protection (OSHA)<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span></td>
                     <td>
+                        Fall Protection (OSHA)<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span>
                         <span class="spec-value">Any work at or above 6 feet</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> If your boots are 6 feet or higher off the ground, OSHA requires you to be wearing a harness tied off to a roof anchor (Personal Fall Arrest System - PFAS).</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Ladder Extensions<br><span style="font-size: 11px; color: #64748b;">Roof access protocols</span></td>
-                    <td>
-                        <span class="spec-value">Must extend 3 ft above landing</span>
-                        <span class="spec-value">4:1 Angle Rule</span>
-                        <span class="field-translation"><strong>Field Translation:</strong> The top of the ladder must stick up 3 rungs past the gutter. For the angle: for every 4 feet of ladder height, pull the base of the ladder 1 foot away from the wall.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <strong>The Reality:</strong> OSHA regulations are written in blood. If your boots are 6 feet or higher off the lower level, you are required to wear a harness tied off to a secure roof anchor (Personal Fall Arrest System), or have guardrails in place. A fall from 10 feet is frequently fatal.
+                            </div>
+                        </details>
                     </td>
                 </tr>
             </table>
@@ -279,7 +319,7 @@
 
     </div>
 
-    <!-- Bottom Navigation Placeholder (Injected via navbar.js) -->
+    <!-- Bottom Navigation Placeholder -->
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
