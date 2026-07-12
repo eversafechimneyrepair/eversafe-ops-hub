@@ -415,6 +415,24 @@
             var paymentMethod = document.getElementById('inv_payment').value;
             var currentStatus = document.getElementById('inv_status').value;
             
+            // 📸 THE PHOTO BRIDGE: Grab the Drive URLs from the iPad's memory
+            var savedPhotos = localStorage.getItem('current_wo_slideshow_data');
+            if (savedPhotos) {
+                try {
+                    let photoArray = JSON.parse(savedPhotos);
+                    let urlList = [];
+                    photoArray.forEach(function(photo) {
+                        if(photo.fileUrl && photo.fileUrl !== "URL_Pending") {
+                            urlList.push("• " + photo.tagText + ": " + photo.fileUrl);
+                        }
+                    });
+                    if (urlList.length > 0) {
+                        // Append the links directly to the bottom of the work scope text!
+                        finalizedScope += "\n\n📸 VISUAL FIELD EVIDENCE LINKS:\n" + urlList.join("\n");
+                    }
+                } catch(e) { console.log("Photo bridge bypass."); }
+            }
+
             var highTicketLimit = 1500.00;
             var triggerHighTicketAlert = (finalLedgerVal >= highTicketLimit) ? "TRUE" : "FALSE";
 
@@ -433,7 +451,7 @@
                             customerPhone: customerPhone,
                             date: new Date().toLocaleDateString(),
                             siteAddress: siteAddress,
-                            workScope: finalizedScope,
+                            workScope: finalizedScope, // 🔥 Now contains the embedded photo links!
                             subtotal: document.getElementById('inv_subtotal').value,
                             total: finalLedgerVal.toFixed(2),
                             paymentMethod: paymentMethod,
@@ -463,6 +481,30 @@
                     statusLine.style.color = "var(--success)";
                     alert("Success! Cash/Check receipt filed with the main office.");
                 }
+                
+                // Clear the cache completely so the next job starts fresh
+                var sessionKeys = [
+                    'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_customer_phone', 'current_wo_service_address',
+                    'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier', 'estimate_scope', 'detailedScope',
+                    'current_wo_price_book_items', 'current_wo_slideshow_data', 'cached_wo_cust', 
+                    'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
+                    'current_wo_itemized_json', 'final_client_signature', 'final_tech_signature', 
+                    'current_wo_status'
+                ];
+                sessionKeys.forEach(function(k) { localStorage.removeItem(k); });
+                
+                window.location.replace("jobs.html");
+            } catch(e) {
+                alert("API Gateway Error: " + e.message);
+                btn.disabled = false;
+                
+                if (paymentMethod === "STRIPE_DIGITAL") {
+                    btn.innerText = "🚀 Dispatch Mobile Checkout Link";
+                } else {
+                    btn.innerText = "✅ Record Cash / Check Payment";
+                }
+            }
+        }
                 
                 var sessionKeys = [
                     'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_customer_phone', 'current_wo_service_address',
