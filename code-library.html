@@ -16,6 +16,7 @@
             --sms-blue: #007aff; --chimney-red: #b91c1c; --masonry-gray: #475569;
             --defect-orange: #ea580c; --liner-silver: #94a3b8; --gas-yellow: #eab308;
             --prefab-teal: #0f766e; --stove-brown: #78350f; --success: #22c55e;
+            --water-blue: #0ea5e9;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -92,6 +93,7 @@
         <div class="quick-jump-container">
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
+            <a href="#waterproofing" class="quick-jump-pill">☔ Waterproofing</a>
             <a href="#stoves" class="quick-jump-pill">🪵 Stoves</a>
             <a href="#dampers" class="quick-jump-pill">🔥 Gas & Dampers</a>
             <a href="#prefabs" class="quick-jump-pill">🏭 Prefabs</a>
@@ -199,6 +201,58 @@
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
                                 <p><strong>The Physics:</strong> If the brickwork is exposed and stepped, the smoke hits those jagged edges and rolls backward. This turbulence slows the draft down, causing smoke to spill into the house. Parging fills those steps with refractory mortar.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 2.5: Waterproofing -->
+        <div class="scope-card" id="waterproofing" style="border-top-color: var(--water-blue);">
+            <div class="scope-title">☔ Waterproofing & Preservation</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">ASTM E514</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'ASTM E514', 'Masonry lacks vapor-permeable water repellent. High risk of moisture absorption and subsequent freeze/thaw spalling.')">📋 Copy</button>
+                        <br>Masonry Water Repellents
+                        <span class="spec-value">Must be 100% vapor permeable</span>
+                        <span class="defect-flag">Fails if painted or film-sealed</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> Bricks are like hard sponges; they absorb water and need to breathe it out. If you coat a chimney with paint, Thompsons Water Seal, or acrylics, it traps the moisture inside the brick. When winter hits, that trapped water freezes, expands, and blows the face off the brick (spalling).</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">ASTM C920</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'ASTM C920', 'Flashing sealant degraded/improper. Requires removal and application of ASTM C920 elastomeric polyurethane/silicone sealant.')">📋 Copy</button>
+                        <br>Joint & Flashing Sealants
+                        <span class="spec-value">Elastomeric Polyurethane or Silicone</span>
+                        <span class="defect-flag">Fails if sealed with roofing tar/mastic</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> Chimneys get incredibly hot, and roofs get baked by the sun. Cheap acrylic caulk or black roofing tar dries out, cracks, and pulls away from the masonry within a year. You must use high-flex, UV-resistant elastomeric sealants that can stretch with the house.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">Crown Repair</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'Crown Preservation', 'Chimney crown exhibits hairline cracking. Recommend elastomeric crown sealant to prevent further water intrusion and freeze-thaw damage.')">📋 Copy</button>
+                        <br>Elastomeric Crown Coatings
+                        <span class="spec-value">Used for cracks < 1/8" wide</span>
+                        <span class="info-flag">Rebuild required if structurally compromised</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Rule:</strong> Brushable crown sealants (like CrownCoat) are fantastic for sealing shrinking cracks and preserving a crown. However, they are not structural. If the concrete is loose, crumbling, or the cracks are wider than 1/8", you cannot just paint over it. It must be torn off and re-poured.</p>
                             </div>
                         </details>
                     </td>
