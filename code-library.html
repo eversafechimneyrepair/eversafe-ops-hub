@@ -17,6 +17,7 @@
             --defect-orange: #ea580c; --liner-silver: #94a3b8; --gas-yellow: #eab308;
             --prefab-teal: #0f766e; --stove-brown: #78350f; --success: #22c55e;
             --water-blue: #0ea5e9; --dryer-gray: #64748b; --mantel-wood: #b45309;
+            --chem-purple: #8b5cf6;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -99,14 +100,17 @@
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
             <a href="#waterproofing" class="quick-jump-pill">☔ Waterproofing</a>
+            <a href="#chemicals" class="quick-jump-pill">🧪 Chemicals</a>
             <a href="#mantels" class="quick-jump-pill">🪵 Mantels</a>
             <a href="#stoves" class="quick-jump-pill">🔥 Stoves</a>
+            <a href="#venting" class="quick-jump-pill">💨 Venting Pipes</a>
             <a href="#dampers" class="quick-jump-pill">⚙️ Gas & Dampers</a>
             <a href="#prefabs" class="quick-jump-pill">🏭 Prefabs</a>
             <a href="#relining" class="quick-jump-pill">🛡️ Relining</a>
-            <a href="#dryer" class="quick-jump-pill">💨 Dryer Vents</a>
-            <a href="#clearances" class="quick-jump-pill">🏠 Roof</a>
+            <a href="#dryer" class="quick-jump-pill">🌀 Dryer Vents</a>
+            <a href="#clearances" class="quick-jump-pill">🏠 Roof Terminations</a>
             <a href="#masonry" class="quick-jump-pill">🧱 Masonry</a>
+            <a href="#safety" class="quick-jump-pill">🦺 Safety & Fall</a>
         </div>
 
         <!-- Scope 1: Inspections -->
@@ -120,12 +124,6 @@
                         <br>Level 1 Inspection<br><span style="font-size: 11px; color: #64748b;">Readily accessible areas</span>
                         <span class="spec-value">Routine annual maintenance</span>
                         <span class="spec-value">Same appliance, same fuel</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Reality:</strong> A Level 1 is a basic visual check of the portions of the chimney you can see without moving anything. "Readily accessible" means no tools required.</p>
-                            </div>
-                        </details>
                     </td>
                 </tr>
                 <tr>
@@ -139,8 +137,8 @@
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Liability:</strong> If a house was just sold, had a chimney fire, or is getting a new fuel type, the code mandates a Level 2. <strong>You must run a camera up the flue.</strong> Document the scan to protect EverSafe's liability.</p>
-                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Wide shot of property exterior, 1x Wide shot of appliance, Full video link to camera scan.</div>
+                                <p><strong>The Liability:</strong> If a house was just sold, had a chimney fire, or is getting a new fuel type, the code mandates a Level 2. <strong>You must run a camera up the flue.</strong></p>
+                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Wide shot exterior, 1x Wide shot appliance, Video link to scan.</div>
                             </div>
                         </details>
                     </td>
@@ -162,7 +160,7 @@
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Danger:</strong> Stage 3 expands up to 7 times its size when ignited, blocking the flue and pushing a 2000-degree blowtorch into the living room. Quote a chemical rotary treatment (PCR).</p>
+                                <p><strong>The Danger:</strong> Stage 3 expands up to 7 times its size when ignited, blocking the flue and pushing a 2000-degree blowtorch into the living room.</p>
                                 <div class="photo-req">📸 REQUIRED PHOTOS: 1x Flash photo up the flue showing glaze, 1x Close up of damper frame buildup.</div>
                             </div>
                         </details>
@@ -178,16 +176,25 @@
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Danger:</strong> Clay tiles fail due to thermal shock. Even a hairline crack breaks the seal, allowing heat and carbon monoxide to escape into the home's wood framing. Fail the flue and quote a stainless liner.</p>
+                                <p><strong>The Danger:</strong> Clay tiles fail due to thermal shock. Even a hairline crack breaks the seal, allowing heat and carbon monoxide to escape into the home's wood framing.</p>
                                 <div class="photo-req">📸 REQUIRED PHOTOS: 1x Clear screenshot from camera scan showing the specific crack/void.</div>
                             </div>
                         </details>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.8</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.8', 'Smoke chamber masonry is stepped (corbeled) and unparged. Causes draft turbulence and creosote buildup. Chamber parging required.')">📋 Copy</button>
+                        <br>Smoke Chamber Parging
+                        <span class="spec-value">Must be parged smooth</span>
+                        <span class="defect-flag">Fails if brick steps are exposed</span>
+                    </td>
+                </tr>
             </table>
         </div>
 
-        <!-- Scope 2.5: Waterproofing -->
+        <!-- Scope 3: Waterproofing -->
         <div class="scope-card" id="waterproofing" style="border-top-color: var(--water-blue);">
             <div class="scope-title">☔ Waterproofing & Preservation</div>
             <table class="spec-table">
@@ -219,11 +226,47 @@
             </table>
         </div>
 
-        <!-- Scope 3: Mantels & Clearances -->
+        <!-- Scope 4: Chemical Limits -->
+        <div class="scope-card" id="chemicals" style="border-top-color: var(--chem-purple);">
+            <div class="scope-title">🧪 Chemical App & Weather Limits</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">Siloxane Repellent</span>
+                        <br>Water Repellent Application
+                        <span class="spec-value">Min Temp: 40°F (and rising)</span>
+                        <span class="defect-flag">Rain Limit: Requires 6 dry hours</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">Elastomeric Sealants</span>
+                        <br>CrownCoat / FlashSeal Application
+                        <span class="spec-value">Min Temp: 45°F</span>
+                        <span class="defect-flag">Rain Limit: Requires 12-24 dry hours</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">Poultice / PCR</span>
+                        <br>Creosote Remover (PCR)
+                        <span class="spec-value">Min Temp: 50°F ambient flue temp</span>
+                        <span class="info-flag">Cure Time: 24 to 48 hours to dry</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> PCR must dry completely to fracture the glaze creosote. If you apply it when the outside air is 30 degrees, the flue is too cold, the water in the product freezes, and it will never dry and flake off.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 5: Mantels & Clearances -->
         <div class="scope-card" id="mantels" style="border-top-color: var(--mantel-wood);">
             <div class="scope-title">🪵 Mantels & TV Clearances</div>
             
-            <!-- Field Calculator -->
             <div class="calc-box">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Mantel Height Calculator (NFPA)</div>
                 <input type="number" id="mantelDepth" class="calc-input full-width" placeholder="Mantel Depth (How far out in inches?)" oninput="calculateMantel()">
@@ -238,18 +281,12 @@
                         <br>Combustible Trim & Mantels
                         <span class="spec-value">Min 6" from opening for 1.5" projection</span>
                         <span class="defect-flag">Fails if TV mounted in radiant heat zone</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> Heat rolls out and up from the firebox. A deep wood mantel catches that rolling heat. The deeper the mantel sticks out from the wall, the higher up it must be mounted to avoid bursting into flames.</p>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 4: Wood Stoves -->
+        <!-- Scope 6: Wood Stoves -->
         <div class="scope-card" id="stoves" style="border-top-color: var(--stove-brown);">
             <div class="scope-title">🔥 Free-Standing Stoves (Wood/Pellet)</div>
             <table class="spec-table">
@@ -274,7 +311,41 @@
             </table>
         </div>
 
-        <!-- Scope 5: Gas & Dampers -->
+        <!-- Scope 7: Venting Pipes -->
+        <div class="scope-card" id="venting" style="border-top-color: var(--liner-silver);">
+            <div class="scope-title">💨 Factory-Built Venting Specs</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">UL 103 HT</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'UL 103 HT', 'Class A solid fuel chimney pipe violates minimum 2-inch clearance to combustibles.')">📋 Copy</button>
+                        <br>Class A Chimney (Solid Fuel)
+                        <span class="spec-value">Min 2" clearance to combustibles</span>
+                        <span class="info-flag">Requires attic insulation shields</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">UL 441</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'UL 441', 'Type B Gas Vent utilized for solid fuel or violates 1-inch minimum clearance.')">📋 Copy</button>
+                        <br>Type B-Vent (Gas Only)
+                        <span class="spec-value">Min 1" clearance to combustibles</span>
+                        <span class="defect-flag">Prohibited for wood/solid fuel</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">UL 641</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'UL 641', 'Pellet vent clearance violation. Pipe joints lack mandatory high-temp RTV silicone seal.')">📋 Copy</button>
+                        <br>Pellet Vent (Type L / PL)
+                        <span class="spec-value">Min 1" to 3" clearance (Check OEM tag)</span>
+                        <span class="info-flag">Joints must be sealed with high-temp RTV</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 8: Gas & Dampers -->
         <div class="scope-card" id="dampers" style="border-top-color: var(--gas-yellow);">
             <div class="scope-title">⚙️ Gas Logs & Dampers (IFGC)</div>
             <table class="spec-table">
@@ -297,7 +368,7 @@
             </table>
         </div>
 
-        <!-- Scope 6: Prefabs -->
+        <!-- Scope 9: Prefabs -->
         <div class="scope-card" id="prefabs" style="border-top-color: var(--prefab-teal);">
             <div class="scope-title">🏭 Prefab Systems & Ash Pits</div>
             <table class="spec-table">
@@ -308,19 +379,12 @@
                         <br>Factory-Built Fireplaces (Zero-Clearance)
                         <span class="spec-value">Must use OEM replacement parts</span>
                         <span class="defect-flag">Fails if parts are mixed & matched</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Liability:</strong> A prefab fireplace is tested as a complete assembly. If you connect Brand X pipe to a Brand Y firebox, you instantly void the UL listing. Always order OEM parts.</p>
-                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Clear shot of the metal data tag (usually inside the side rails).</div>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 7: Relining & Calculators -->
+        <!-- Scope 10: Relining & Calculators -->
         <div class="scope-card" id="relining" style="border-top-color: var(--liner-silver);">
             <div class="scope-title">🛡️ Relining & Sizing Calculator</div>
             
@@ -343,11 +407,10 @@
             </table>
         </div>
 
-        <!-- Scope 8: Dryer Vents -->
+        <!-- Scope 11: Dryer Vents -->
         <div class="scope-card" id="dryer" style="border-top-color: var(--dryer-gray);">
-            <div class="scope-title">💨 Dryer Exhaust (IMC)</div>
+            <div class="scope-title">🌀 Dryer Exhaust (IMC)</div>
             
-            <!-- Field Calculator -->
             <div class="calc-box">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Dryer Vent Max Length Calculator</div>
                 <input type="number" id="dryerLength" class="calc-input" placeholder="Total Straight Pipe (ft)" oninput="calculateDryer()">
@@ -363,27 +426,12 @@
                         <br>Maximum Duct Length
                         <span class="spec-value">Max 35 feet (Concealed)</span>
                         <span class="defect-flag">Deduct 5ft for every 90° elbow</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> Dryers only have enough blower power to push heavy, wet lint 35 feet. Every time the pipe turns 90 degrees, it destroys blower pressure. If the run is too long, lint settles in the pipe, cooks, and catches fire.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IMC 504.8.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IMC 504.8.1', 'Dryer exhaust contains ribbed flexible duct or screws. Combustible lint trap violation.')">📋 Copy</button>
-                        <br>Materials & Fasteners
-                        <span class="spec-value">Rigid, smooth metal duct only (4")</span>
-                        <span class="defect-flag">NO SCREWS allowed in joints</span>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 9: Clearances (With SVG Diagram) -->
+        <!-- Scope 12: Clearances -->
         <div class="scope-card" id="clearances" style="border-top-color: var(--chimney-red);">
             <div class="scope-title">🏠 Roof Terminations</div>
             <table class="spec-table">
@@ -394,30 +442,21 @@
                         <br>The "3-2-10" Rule
                         <span class="spec-value">Min 3 ft above roof penetration</span>
                         <span class="spec-value">Min 2 ft higher than structure within 10 ft</span>
-                        <details class="deep-dive">
-                            <summary>📖 View Diagram & Explanation</summary>
-                            <div class="deep-dive-content">
-                                <svg viewBox="0 0 300 150" style="width: 100%; height: auto; background: white; border: 1px solid #cbd5e1; border-radius: 4px; margin-bottom: 10px;">
-                                    <polygon points="20,130 150,50 280,130" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3"/>
-                                    <rect x="200" y="30" width="30" height="70" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
-                                    <line x1="150" y1="50" x2="200" y2="50" stroke="#0ea5e9" stroke-width="2" stroke-dasharray="4"/>
-                                    <text x="160" y="45" font-size="10" fill="#0ea5e9" font-weight="bold">10 FT</text>
-                                    <line x1="200" y1="30" x2="150" y2="30" stroke="#16a34a" stroke-width="2" stroke-dasharray="4"/>
-                                    <text x="235" y="40" font-size="10" fill="#16a34a" font-weight="bold">2 FT MIN</text>
-                                    <path d="M 240 30 L 240 100" stroke="#eab308" stroke-width="2"/>
-                                    <text x="245" y="70" font-size="10" fill="#eab308" font-weight="bold">3 FT MIN</text>
-                                </svg>
-                                <p>Measure 10 feet out. The chimney must be built at least 2 feet taller than anything in that circle.</p>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 10: Masonry -->
+        <!-- Scope 13: Masonry & Estimator -->
         <div class="scope-card" id="masonry" style="border-top-color: var(--masonry-gray);">
-            <div class="scope-title">🧱 Masonry & Crowns</div>
+            <div class="scope-title">🧱 Masonry & Estimator</div>
+
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Mortar Estimator (80lb Bags)</div>
+                <input type="number" id="brickCount" class="calc-input full-width" placeholder="Total Estimated Bricks" oninput="calculateMortar()">
+                <div class="calc-result" id="mortarOutput">Enter brick count...</div>
+            </div>
+
             <table class="spec-table">
                 <tr>
                     <td>
@@ -426,6 +465,29 @@
                         <br>Chimney Crown (Cast/Poured)
                         <span class="spec-value">Min 2" overhang past brick w/ drip edge</span>
                         <span class="info-flag">Must have bond break around flue</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 14: Safety -->
+        <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
+            <div class="scope-title">🦺 Safety & Fall Protection</div>
+
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Roof Pitch & OSHA Calculator</div>
+                <input type="number" id="roofRise" class="calc-input full-width" placeholder="Rise (Inches up per 12 inches across)" oninput="calculatePitch()">
+                <div class="calc-result" id="pitchOutput">Enter rise...</div>
+            </div>
+
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">OSHA 1926.501</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'OSHA 1926.501', 'Fall protection protocols triggered. Proper PFAS gear utilized for roof access.')">📋 Copy</button>
+                        <br>Fall Protection Threshold
+                        <span class="spec-value">Any work at or above 6 feet</span>
+                        <span class="defect-flag">Mandatory PFAS for pitch > 4/12</span>
                     </td>
                 </tr>
             </table>
@@ -498,7 +560,7 @@
             Req. Round: <strong>${reqRound.toFixed(1)} sq.in.</strong> (Approx <strong>${Math.ceil(idealDiameter)}"</strong> liner)`;
         }
 
-        // 4. Mantel Calculator (NFPA 1:1 Rule starting at 6")
+        // 4. Mantel Calculator
         function calculateMantel() {
             let depth = parseFloat(document.getElementById('mantelDepth').value);
             let out = document.getElementById('mantelOutput');
@@ -507,16 +569,12 @@
                 out.innerText = "Enter mantel depth...";
                 return;
             }
-            
-            // Standard safe baseline: 6" min up to 1.5", then roughly 1:1 above that.
-            // Simplified safe field formula: Height = Depth (if depth > 6), but minimum is ALWAYS 6"
             let reqHeight = Math.max(6, depth); 
-            
             out.innerHTML = `Minimum Safe Height:<br>
             <strong>${reqHeight} inches</strong> above the firebox opening.`;
         }
 
-        // 5. Dryer Vent Calculator (IMC 35ft rule)
+        // 5. Dryer Vent Calculator
         function calculateDryer() {
             let len = parseFloat(document.getElementById('dryerLength').value) || 0;
             let elbows = parseFloat(document.getElementById('dryer90s').value) || 0;
@@ -539,6 +597,48 @@
                 out.innerHTML = `Effective Run: <strong>${effectiveLength} ft</strong>. <br>System FAILS (Exceeds 35ft max).`;
                 out.className = "calc-result fail";
             }
+        }
+
+        // 6. Mortar Estimator
+        function calculateMortar() {
+            let bricks = parseFloat(document.getElementById('brickCount').value);
+            let out = document.getElementById('mortarOutput');
+            
+            if (!bricks || bricks <= 0) {
+                out.innerText = "Enter brick count...";
+                return;
+            }
+            
+            // Standard rule: 1 bag of 80lb mortar lays approx 35 standard modular bricks.
+            let bags = Math.ceil(bricks / 35);
+            out.innerHTML = `Estimated Materials:<br><strong>${bags} Bags</strong> of 80lb Type N Mortar`;
+        }
+
+        // 7. Roof Pitch Calculator
+        function calculatePitch() {
+            let rise = parseFloat(document.getElementById('roofRise').value);
+            let out = document.getElementById('pitchOutput');
+            
+            if (!rise || rise <= 0) {
+                out.innerText = "Enter rise...";
+                out.className = "calc-result";
+                return;
+            }
+            
+            // Calculate angle: arctangent of (rise/run), converted to degrees
+            let angle = Math.atan(rise / 12) * (180 / Math.PI);
+            
+            let response = `Pitch: <strong>${rise}/12</strong> (${angle.toFixed(1)}°)<br>`;
+            
+            if (rise > 4) {
+                response += `⚠️ OSHA Steep Roof (PFAS Anchors Required)`;
+                out.className = "calc-result fail";
+            } else {
+                response += `✅ Low Slope Roof`;
+                out.className = "calc-result pass";
+            }
+            
+            out.innerHTML = response;
         }
     </script>
 </body>
