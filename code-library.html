@@ -19,6 +19,7 @@
             --water-blue: #0ea5e9; --dryer-gray: #64748b; --mantel-wood: #b45309;
             --chem-purple: #8b5cf6; --electric-gold: #ca8a04; --wildlife-green: #15803d;
             --draft-cyan: #06b6d4; --fab-pink: #be185d; --hazmat-lime: #84cc16; --red-tag: #b91c1c;
+            --co-purple: #9333ea;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -60,7 +61,6 @@
         
         .btn-fab { display: block; width: 100%; text-align: center; background: var(--fab-pink); color: white; font-weight: bold; padding: 10px; border-radius: 6px; margin-top: 10px; border: none; cursor: pointer; text-transform: uppercase; font-size: 12px; }
         .btn-fab:active { background: #9d174d; }
-        
         .btn-redtag { background: var(--red-tag); margin-top: 15px; }
         .btn-redtag:active { background: #7f1d1d; }
 
@@ -81,6 +81,7 @@
         .calc-result { font-weight: bold; color: var(--primary); font-size: 14px; margin-top: 5px; }
         .calc-result.pass { color: #15803d; }
         .calc-result.fail { color: var(--danger); }
+        .calc-result.warning { color: var(--accent-dark); }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
@@ -100,15 +101,16 @@
 
         <!-- Search & Quick Jump -->
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Draft', 'Ladder')..." onkeyup="filterCodes()">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Draft', 'Carbon')..." onkeyup="filterCodes()">
         </div>
 
         <div class="quick-jump-container">
+            <a href="#co-levels" class="quick-jump-pill">🚨 Carbon Monoxide</a>
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
             <a href="#forensics" class="quick-jump-pill">🕵️ Forensics</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
-            <a href="#hazmat" class="quick-jump-pill">☢️ Hazmat/Asbestos</a>
-            <a href="#drafting" class="quick-jump-pill">🌬️ Draft & Flow</a>
+            <a href="#hazmat" class="quick-jump-pill">☢️ Hazmat</a>
+            <a href="#drafting" class="quick-jump-pill">🌬️ Draft & Smoke</a>
             <a href="#waterproofing" class="quick-jump-pill">☔ Waterproofing</a>
             <a href="#chemicals" class="quick-jump-pill">🧪 Chemicals</a>
             <a href="#gasbonding" class="quick-jump-pill">⚡ Gas Bonding</a>
@@ -116,15 +118,39 @@
             <a href="#mantels" class="quick-jump-pill">🪵 Mantels</a>
             <a href="#wildlife" class="quick-jump-pill">🦝 Wildlife</a>
             <a href="#stoves" class="quick-jump-pill">🔥 Stoves & Shields</a>
-            <a href="#venting" class="quick-jump-pill">💨 Venting Pipes</a>
+            <a href="#venting" class="quick-jump-pill">💨 Venting / HVAC</a>
             <a href="#dampers" class="quick-jump-pill">⚙️ Gas Dampers</a>
             <a href="#prefabs" class="quick-jump-pill">🏭 Prefabs</a>
             <a href="#relining" class="quick-jump-pill">🛡️ Relining</a>
             <a href="#dryer" class="quick-jump-pill">🌀 Dryer Vents</a>
             <a href="#clearances" class="quick-jump-pill">🏠 Roof Clearances</a>
-            <a href="#masonry" class="quick-jump-pill">🧱 Masonry</a>
+            <a href="#masonry" class="quick-jump-pill">🧱 Masonry & Firebox</a>
             <a href="#safety" class="quick-jump-pill">🦺 Ladders & Fall</a>
             <a href="#fabrication" class="quick-jump-pill">📐 Templates / Lockouts</a>
+        </div>
+
+        <!-- Scope 0: Carbon Monoxide Limits -->
+        <div class="scope-card" id="co-levels" style="border-top-color: var(--co-purple);">
+            <div class="scope-title">🚨 Carbon Monoxide (CO) Limits</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">OSHA / EPA / UL Limits</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'CO EMERGENCY', 'CRITICAL HAZARD: Ambient Carbon Monoxide (CO) levels actively detected exceeding safe residential limits. Immediate spillage occurring from appliance. System legally locked out. Homeowner advised to ventilate premises immediately.')">📋 Copy Evac Notice</button>
+                        <br>Actionable PPM Levels (Parts Per Million)
+                        <span class="spec-value">0 - 9 PPM: Normal / ASHRAE Max Allowable</span>
+                        <span class="spec-value">35 PPM: EPA 1-Hour Max Exposure</span>
+                        <span class="defect-flag">70 PPM: UL Alarm Threshold / Symptoms</span>
+                        <span class="defect-flag">200+ PPM: LETHAL / EVACUATE IMMEDIATELY</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Protocol:</strong> If your personal monitor hits 35 PPM while testing a gas appliance, crack a window and advise the client. If it hits 70 PPM or above, the appliance is failing catastrophically. Shut the gas off, red-tag the unit, and ventilate the house. Extended exposure at 70 PPM causes headaches/nausea. 400 PPM causes death within hours.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Scope 1: Inspections -->
@@ -134,7 +160,6 @@
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 15.3.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 15.3.1', 'Level 1 inspection conducted. Routine visual evaluation of readily accessible areas only.')">📋 Copy</button>
                         <br>Level 1 Inspection<br><span style="font-size: 11px; color: #64748b;">Readily accessible areas</span>
                         <span class="spec-value">Routine annual maintenance</span>
                     </td>
@@ -142,8 +167,8 @@
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 15.4.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 15.4.1', 'Level 2 inspection mandatory due to property transfer/system change. Internal camera scan required.')">📋 Copy</button>
                         <br>Level 2 Inspection<br><span style="font-size: 11px; color: #64748b;">Accessible + Camera Scan</span>
+                        <span class="spec-value">Sale/Transfer of property</span>
                         <span class="info-flag">Mandatory camera scan</span>
                     </td>
                 </tr>
@@ -162,12 +187,6 @@
                         <span class="spec-value">Puffed, honeycomb-like creosote</span>
                         <span class="spec-value">Vertical "clean" cracks in clay tiles</span>
                         <span class="spec-value">Warped damper plates / discolored caps</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Reality:</strong> Most chimney fires go unnoticed by the homeowner. The extreme heat instantly turns flat creosote into expanded honeycomb and creates massive, vertical, razor-thin cracks (Thermal Shock).</p>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
@@ -180,7 +199,6 @@
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 14.4.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.4.1', 'Creosote buildup exceeds 1/8 inch. Mandatory sweeping required. Glaze creosote (Stage 3) observed, presenting immediate fire hazard.')">📋 Copy</button>
                         <br>Creosote Buildup
                         <span class="spec-value">Sweep if > 1/8" thick</span>
                         <span class="defect-flag">Fails if Stage 3 (Glaze) is present</span>
@@ -189,7 +207,6 @@
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 14.9</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.9', 'Flue liner compromised. Cracks and/or missing mortar joints observed. Zero tolerance code violation; system is unsafe for use until relined.')">📋 Copy</button>
                         <br>Flue Liner Integrity
                         <span class="spec-value">Zero tolerance for cracks/splits</span>
                         <span class="defect-flag">Fails if ANY tile is cracked</span>
@@ -208,14 +225,7 @@
                         <button class="btn-copy" onclick="copyToReport(this, 'Hazardous Material Identification', 'Suspected Asbestos Containing Material (ACM) identified. Transite piping / fibrous rope gasket present. Service halted to prevent friable airborne exposure. Abatement contractor required.')">📋 Copy</button>
                         <br>Transite Pipe & Rope Gaskets
                         <span class="spec-value">White/gray cement-like gas vents (Transite)</span>
-                        <span class="spec-value">Frayed white rope gaskets on old inserts</span>
                         <span class="defect-flag">DO NOT SWEEP OR DISTURB</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Danger:</strong> Transite is an asbestos-cement pipe common in pre-1980s gas vents. If you brush it, you release friable asbestos fibers into the home and your lungs. If you see white, chalky pipe or fibrous white rope seals falling apart, halt service immediately.</p>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
@@ -223,12 +233,20 @@
 
         <!-- Scope 2.5: Draft & Pressure -->
         <div class="scope-card" id="drafting" style="border-top-color: var(--draft-cyan);">
-            <div class="scope-title">🌬️ Draft & Negative Pressure</div>
+            <div class="scope-title">🌬️ Draft & Smoke Guard Sizer</div>
+            
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Smoke Guard Corrector (10:1 Ratio)</div>
+                <input type="number" id="sgFbWidth" class="calc-input" placeholder="Firebox Width (in)" oninput="calculateSmokeGuard()">
+                <input type="number" id="sgFbHeight" class="calc-input" placeholder="Firebox Height (in)" oninput="calculateSmokeGuard()">
+                <input type="number" id="sgFlueArea" class="calc-input full-width" placeholder="Actual Flue Area (sq. in) e.g., 8x12 = 96" oninput="calculateSmokeGuard()">
+                <div class="calc-result" id="sgOutput">Enter dimensions to check draft...</div>
+            </div>
+
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">IRC R1006.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1006.1', 'Appliance experiencing severe downdraft/smoke spillage. Building envelope exhibits negative pressure competing with chimney draft. Dedicated exterior combustion air intake required.')">📋 Copy</button>
                         <br>Combustion Air Requirements
                         <span class="spec-value">Required for solid fuel appliances in tight homes</span>
                         <span class="defect-flag">Smoke spillage upon ignition</span>
@@ -244,7 +262,6 @@
                 <tr>
                     <td>
                         <span class="code-ref">ASTM E514</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'ASTM E514', 'Masonry lacks vapor-permeable water repellent. High risk of moisture absorption and subsequent freeze/thaw spalling.')">📋 Copy</button>
                         <br>Masonry Water Repellents
                         <span class="spec-value">Must be 100% vapor permeable</span>
                     </td>
@@ -270,18 +287,12 @@
         <!-- Scope 4.5: CSST Gas Bonding -->
         <div class="scope-card" id="gasbonding" style="border-top-color: var(--electric-gold);">
             <div class="scope-title">⚡ CSST Gas Piping Bonding (NFPA 54)</div>
-            
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 CSST Electrical Bonding Sizer</div>
-                <input type="number" id="bondingLength" class="calc-input full-width" placeholder="Length of bonding conductor run (ft)" oninput="calculateBonding()">
-                <div class="calc-result" id="bondingOutput">Enter length to size wire...</div>
-            </div>
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 54 - 7.13.2</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 54 - 7.13.2', 'Corrugated Stainless Steel Tubing (CSST) gas line is ungrounded / improperly bonded. High risk of puncture/explosion from indirect lightning strikes. Immediate fire hazard.')">📋 Copy</button>
                         <br>CSST Bonding Requirement
+                        <span class="spec-value">Direct connection to electrical grounding system</span>
                         <span class="defect-flag">Fails if missing direct clamp on rigid brass nut</span>
                     </td>
                 </tr>
@@ -291,23 +302,31 @@
         <!-- Scope 4.6: Wood Fuel Diagnostic -->
         <div class="scope-card" id="woodfuel" style="border-top-color: var(--stove-brown);">
             <div class="scope-title">🪵 Firewood Diagnostics & Moisture</div>
-            
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Wood Moisture Analysis Calculator</div>
-                <input type="number" id="woodMoisture" class="calc-input full-width" placeholder="Internal Core Moisture Content (%)" oninput="calculateWoodRisk()">
-                <div class="calc-result" id="woodOutput">Enter moisture percentage...</div>
-            </div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 / Fuel Quality</span>
+                        <br>Moisture Threshold Limits
+                        <span class="spec-value">Target: 15% to 20% max moisture content</span>
+                        <span class="defect-flag">Fails if > 25% (Unseasoned / Wet wood)</span>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Scope 5: Mantels & Clearances -->
         <div class="scope-card" id="mantels" style="border-top-color: var(--mantel-wood);">
             <div class="scope-title">🪵 Mantels & TV Clearances</div>
-            
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Mantel Height Calculator (NFPA)</div>
-                <input type="number" id="mantelDepth" class="calc-input full-width" placeholder="Mantel Depth (How far out in inches?)" oninput="calculateMantel()">
-                <div class="calc-result" id="mantelOutput">Enter mantel depth...</div>
-            </div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 - 11.2.3.3</span>
+                        <br>Combustible Trim & Mantels
+                        <span class="spec-value">Min 6" from opening for 1.5" projection</span>
+                        <span class="defect-flag">Fails if TV mounted in radiant heat zone</span>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <!-- Scope 5.5: Wildlife -->
@@ -317,7 +336,6 @@
                 <tr>
                     <td>
                         <span class="code-ref">Federal MBTA Law</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'Federal MBTA', 'Active Chimney Swift nesting observed. Under the Federal Migratory Bird Treaty Act, removal of active nests or eggs is a federal crime. Service suspended until birds migrate in Autumn.')">📋 Copy</button>
                         <br>Chimney Swifts (Migratory Birds)
                         <span class="defect-flag">DO NOT REMOVE active nests or eggs</span>
                     </td>
@@ -328,36 +346,46 @@
         <!-- Scope 6: Wood Stoves -->
         <div class="scope-card" id="stoves" style="border-top-color: var(--stove-brown);">
             <div class="scope-title">🔥 Free-Standing Stoves & Shields</div>
-            
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Clearance Reduction Calculator</div>
-                <input type="number" id="origClearance" class="calc-input full-width" placeholder="Original Required Clearance (e.g., 36 in)" oninput="calculateShield()">
-                <div class="calc-result" id="shieldOutput">Enter original clearance...</div>
-                <div style="font-size: 11px; margin-top: 5px; color: #64748b;">*Assumes 24-ga sheet metal spaced 1" off wall with 1" bottom airflow gap (NFPA 211).</div>
-            </div>
-
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 12.6.2</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 12.6.2', 'Connector pipe clearance violation. Single-wall pipe requires 18 inches clearance to combustibles. Fire hazard.')">📋 Copy</button>
                         <br>Connector Pipe Clearances
                         <span class="spec-value">Single-Wall: Min 18" Clearance</span>
-                        <span class="spec-value">Double-Wall: Min 6" Clearance</span>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 7-13 condensed for brevity, similar formats -->
-        
+        <!-- Scope 7: Venting Pipes & HVAC -->
+        <div class="scope-card" id="venting" style="border-top-color: var(--liner-silver);">
+            <div class="scope-title">💨 Venting & HVAC Categories</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 54 / IFGC</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 54 / Appliance Venting', 'Category IV condensing appliance improperly vented into standard masonry flue. Causing severe acidic degradation of mortar joints. Flue condemned. Requires AL29-4C stainless or PVC/CPVC per manufacturer instructions.')">📋 Copy</button>
+                        <br>Appliance Venting Categories
+                        <span class="spec-value">Cat I (Non-Condensing, Negative Draft): B-Vent / 304 / Clay</span>
+                        <span class="defect-flag">Cat IV (Condensing, Positive): PVC / AL29-4C ONLY</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> Modern 90%+ efficient furnaces (Category IV) extract so much heat from the exhaust that what comes out of the pipe is literally highly acidic water vapor under pressure. If a plumber vents this into a cold brick chimney, the acid water eats the mortar from the inside out in months. Never let Cat IV vent into clay or standard 316 stainless.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 8: Gas & Dampers -->
         <div class="scope-card" id="dampers" style="border-top-color: var(--gas-yellow);">
             <div class="scope-title">⚙️ Gas Logs & Dampers (IFGC)</div>
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">IFGC 602.2</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IFGC 602.2', 'Vented gas logs lack mandatory damper clamp. Damper must be physically locked in open position to prevent CO buildup.')">📋 Copy</button>
                         <br>Damper Clamps (Vented Gas)
                         <span class="spec-value">Mandatory for Vented Gas Logs</span>
                     </td>
@@ -365,31 +393,84 @@
             </table>
         </div>
 
-        <!-- Scope 14: Safety & Ladders -->
-        <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
-            <div class="scope-title">🦺 Ladders & Fall Protection</div>
-
-            <!-- Ladder Reach Calculator -->
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Extension Ladder Reach Calculator</div>
-                <input type="number" id="eaveHeight" class="calc-input full-width" placeholder="Height to Gutter/Eave (ft)" oninput="calculateLadder()">
-                <div class="calc-result" id="ladderOutput">Enter roof height...</div>
-            </div>
-
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Roof Pitch & OSHA Calculator</div>
-                <input type="number" id="roofRise" class="calc-input full-width" placeholder="Rise (Inches up per 12 inches across)" oninput="calculatePitch()">
-                <div class="calc-result" id="pitchOutput">Enter rise...</div>
-            </div>
-            
+        <!-- Scope 9: Prefabs -->
+        <div class="scope-card" id="prefabs" style="border-top-color: var(--prefab-teal);">
+            <div class="scope-title">🏭 Prefab Systems & Ash Pits</div>
             <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">OSHA 1926.1053</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'OSHA 1926.1053', 'Ladder setup violation. Extension ladder must extend minimum 3 feet above landing surface and maintain 4:1 lean ratio.')">📋 Copy</button>
-                        <br>Ladder Setup Rules
-                        <span class="spec-value">Must extend 3 ft above landing</span>
-                        <span class="spec-value">4:1 Angle (1ft out for every 4ft up)</span>
+                        <span class="code-ref">UL 127</span>
+                        <br>Factory-Built Fireplaces (Zero-Clearance)
+                        <span class="spec-value">Must use OEM replacement parts</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 10: Relining & Calculators -->
+        <div class="scope-card" id="relining" style="border-top-color: var(--liner-silver);">
+            <div class="scope-title">🛡️ Relining & Sizing Calculator</div>
+            
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Flue Sizing Calculator (1/10 Rule)</div>
+                <input type="number" id="fbWidth" class="calc-input" placeholder="Width (in)" oninput="calculateFlue()">
+                <input type="number" id="fbHeight" class="calc-input" placeholder="Height (in)" oninput="calculateFlue()">
+                <div class="calc-result" id="calcOutput">Enter dimensions to calculate required liner...</div>
+            </div>
+        </div>
+
+        <!-- Scope 11: Dryer Vents -->
+        <div class="scope-card" id="dryer" style="border-top-color: var(--dryer-gray);">
+            <div class="scope-title">🌀 Dryer Exhaust (IMC)</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">IMC 504.8.4</span>
+                        <br>Maximum Duct Length
+                        <span class="spec-value">Max 35 feet (Concealed)</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 12: Clearances -->
+        <div class="scope-card" id="clearances" style="border-top-color: var(--chimney-red);">
+            <div class="scope-title">🏠 Roof Terminations</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.9</span>
+                        <br>The "3-2-10" Rule
+                        <span class="spec-value">Min 3 ft above roof penetration</span>
+                        <span class="spec-value">Min 2 ft higher than structure within 10 ft</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 13: Masonry & Estimator -->
+        <div class="scope-card" id="masonry" style="border-top-color: var(--masonry-gray);">
+            <div class="scope-title">🧱 Masonry & Firebox Estimators</div>
+
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Firebox Rebuild Calculator</div>
+                <input type="number" id="fbrWidth" class="calc-input" placeholder="Box Width (in)" oninput="calculateFirebox()">
+                <input type="number" id="fbrHeight" class="calc-input" placeholder="Box Height (in)" oninput="calculateFirebox()">
+                <input type="number" id="fbrDepth" class="calc-input full-width" placeholder="Box Depth (in)" oninput="calculateFirebox()">
+                <div class="calc-result" id="fbrOutput">Enter dimensions to calculate brick/cement order...</div>
+            </div>
+
+        </div>
+
+        <!-- Scope 14: Safety -->
+        <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
+            <div class="scope-title">🦺 Safety & Fall Protection</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">OSHA 1926.501</span>
+                        <br>Fall Protection Threshold
+                        <span class="spec-value">Any work at or above 6 feet</span>
                     </td>
                 </tr>
             </table>
@@ -460,73 +541,60 @@
             }).catch(err => alert("Failed to copy."));
         }
 
-        // Calculators
-        function calculateMantel() {
-            let depth = parseFloat(document.getElementById('mantelDepth').value);
-            let out = document.getElementById('mantelOutput');
-            if (!depth || depth < 0) { out.innerText = "Enter mantel depth..."; return; }
-            out.innerHTML = `Minimum Safe Height:<br><strong>${Math.max(6, depth)} inches</strong> above the firebox opening.`;
+        // Flue Calculator
+        function calculateFlue() {
+            let w = parseFloat(document.getElementById('fbWidth').value);
+            let h = parseFloat(document.getElementById('fbHeight').value);
+            let out = document.getElementById('calcOutput');
+            if (!w || !h) { out.innerText = "Enter dimensions to calculate required liner..."; return; }
+            let area = w * h;
+            let reqRound = area / 12;
+            let idealDiameter = 2 * Math.sqrt(reqRound / Math.PI);
+            out.innerHTML = `Req. Round Liner: <strong>${Math.ceil(idealDiameter)}"</strong> diameter`;
         }
 
-        function calculateBonding() {
-            let length = parseFloat(document.getElementById('bondingLength').value);
-            let out = document.getElementById('bondingOutput');
-            if (!length || length <= 0) { out.innerText = "Enter length to size wire..."; out.className = "calc-result"; return; }
-            if (length > 100) {
-                out.innerHTML = `Req Wire: <strong>#6 AWG Bare Copper</strong><br>⚠️ Long run (${length}ft). Check path resistance.`;
-                out.className = "calc-result fail";
-            } else {
-                out.innerHTML = `Req Wire: <strong>#6 AWG Bare Copper</strong><br>✅ Code Approved.`;
+        // NEW: Smoke Guard Calculator
+        function calculateSmokeGuard() {
+            let w = parseFloat(document.getElementById('sgFbWidth').value);
+            let h = parseFloat(document.getElementById('sgFbHeight').value);
+            let flueArea = parseFloat(document.getElementById('sgFlueArea').value);
+            let out = document.getElementById('sgOutput');
+            
+            if (!w || !h || !flueArea) { out.innerText = "Enter dimensions to check draft..."; out.className = "calc-result"; return; }
+            
+            let actualOpening = w * h;
+            let idealOpening = flueArea * 10;
+            
+            if (actualOpening <= idealOpening) {
+                out.innerHTML = `Ratio: OK. Flue is properly sized for this opening.`;
                 out.className = "calc-result pass";
+            } else {
+                let excessArea = actualOpening - idealOpening;
+                let dropNeeded = excessArea / w;
+                out.innerHTML = `Ratio: FAILING (Opening too large).<br>Install a <strong>${Math.ceil(dropNeeded)} inch</strong> metal smoke guard to stop smoking.`;
+                out.className = "calc-result fail";
             }
         }
 
-        function calculateWoodRisk() {
-            let moisture = parseFloat(document.getElementById('woodMoisture').value);
-            let out = document.getElementById('woodOutput');
-            if (!moisture || moisture <= 0) { out.innerText = "Enter moisture percentage..."; out.className = "calc-result"; return; }
-            if (moisture < 15) { out.innerHTML = `Moisture: <strong>${moisture}%</strong><br>🔥 Burns too fast. Hard on welds.`; out.className = "calc-result pass"; }
-            else if (moisture <= 20) { out.innerHTML = `Moisture: <strong>${moisture}%</strong><br>✅ Perfect Seasoning.`; out.className = "calc-result pass"; }
-            else if (moisture <= 25) { out.innerHTML = `Moisture: <strong>${moisture}%</strong><br>⚠️ Marginal. Prone to smoking.`; out.className = "calc-result fail"; }
-            else { out.innerHTML = `Moisture: <strong>${moisture}%</strong> (UNSEASONED)<br>❌ CRITICAL RISK: Will cause rapid Stage 3 Glaze Creosote.`; out.className = "calc-result fail"; }
-        }
-
-        function calculatePitch() {
-            let rise = parseFloat(document.getElementById('roofRise').value);
-            let out = document.getElementById('pitchOutput');
-            if (!rise || rise <= 0) { out.innerText = "Enter rise..."; out.className = "calc-result"; return; }
-            let angle = Math.atan(rise / 12) * (180 / Math.PI);
-            if (rise > 4) { out.innerHTML = `Pitch: <strong>${rise}/12</strong> (${angle.toFixed(1)}°)<br>⚠️ OSHA Steep Roof (PFAS Required)`; out.className = "calc-result fail"; }
-            else { out.innerHTML = `Pitch: <strong>${rise}/12</strong> (${angle.toFixed(1)}°)<br>✅ Low Slope Roof`; out.className = "calc-result pass"; }
-        }
-        
-        // NEW: Shield Reducer (NFPA 66% Rule)
-        function calculateShield() {
-            let orig = parseFloat(document.getElementById('origClearance').value);
-            let out = document.getElementById('shieldOutput');
-            if (!orig || orig <= 0) { out.innerText = "Enter original clearance..."; return; }
-            // NFPA allows 66% reduction, down to a hard minimum of 12 inches.
-            let reduced = Math.max(12, orig * 0.34); 
-            out.innerHTML = `New Reduced Clearance:<br><strong>${Math.ceil(reduced)} inches</strong> minimum to wall.`;
-        }
-
-        // NEW: Extension Ladder Geometry
-        function calculateLadder() {
-            let h = parseFloat(document.getElementById('eaveHeight').value);
-            let out = document.getElementById('ladderOutput');
-            if (!h || h <= 0) { out.innerText = "Enter roof height..."; return; }
+        // NEW: Firebox Rebuild Estimator
+        function calculateFirebox() {
+            let w = parseFloat(document.getElementById('fbrWidth').value);
+            let h = parseFloat(document.getElementById('fbrHeight').value);
+            let d = parseFloat(document.getElementById('fbrDepth').value);
+            let out = document.getElementById('fbrOutput');
             
-            // Base must be H / 4. 
-            let base = h / 4;
-            // Hypotenuse (length of ladder to touch eave) = sqrt(H^2 + B^2)
-            let reach = Math.sqrt(Math.pow(h, 2) + Math.pow(base, 2));
-            // Add 3 ft for OSHA overhang
-            let totalNeeded = reach + 3;
-            // Account for overlap (usually 3ft overlap on standard extension ladders)
-            let ladderToBuy = totalNeeded + 3;
-
-            out.innerHTML = `Ladder Base Pull-Out: <strong>${base.toFixed(1)} ft</strong> from wall<br>Min. Extended Length: <strong>${totalNeeded.toFixed(1)} ft</strong><br>You need a <strong>${Math.ceil(ladderToBuy)} ft</strong> extension ladder.`;
+            if (!w || !h || !d) { out.innerText = "Enter dimensions to calculate brick/cement order..."; return; }
+            
+            // Area in sq inches: Back wall + 2 side walls + floor
+            let totalAreaInches = (w * h) + (2 * (d * h)) + (w * d);
+            // Standard 9x4.5 split brick exposed face = ~40 sq inches per brick with joint
+            let rawBricks = totalAreaInches / 40;
+            let orderBricks = Math.ceil(rawBricks * 1.15); // 15% waste for cuts
+            let cementGals = Math.ceil(orderBricks / 50); // 1 gal pre-mixed lays approx 50 bricks
+            
+            out.innerHTML = `Order List:<br><strong>${orderBricks}</strong> standard firebricks (9x4.5 split)<br><strong>${cementGals}</strong> gallons of refractory cement (ChamberTech/HeatStop)`;
         }
+
     </script>
 </body>
 </html>
