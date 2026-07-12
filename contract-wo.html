@@ -136,6 +136,13 @@
                 </ul>
             </div>
 
+            <!-- DYNAMIC LEGAL WAIVERS INJECTION -->
+            <div id="dynamicLegalWaiversContainer" style="background: #fffbeb; border: 1px solid #fcd34d; border-radius: 6px; padding: 18px; margin-bottom: 20px; font-size: 12.5px; line-height: 1.5; color: #92400e; display: none;">
+                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 13px; text-transform: uppercase;">⚠️ Scope-Specific Acknowledgements</h4>
+                <ul id="waiverList" style="padding-left: 18px; margin-bottom: 0;"></ul>
+            </div>
+            <!-- END WAIVERS -->
+
             <div class="contract-divider"></div>
             
             <p style="font-size: 13px; color: #64748b; line-height: 1.5; text-align: center; font-weight: 500;">
@@ -169,6 +176,22 @@
             document.getElementById('finalPriceText').innerText = "$" + (localStorage.getItem('current_wo_est_cost') || "0.00");
 
             renderClientFacingScopeList();
+
+            // --- LOAD DYNAMIC WAIVERS ---
+            var savedWaivers = localStorage.getItem("everSafeDynamicWaivers");
+            if (savedWaivers) {
+                try {
+                    var waiversArray = JSON.parse(savedWaivers);
+                    if (waiversArray.length > 0) {
+                        var listHtml = "";
+                        waiversArray.forEach(function(clause) {
+                            listHtml += "<li style='margin-bottom: 8px; text-align: justify; font-weight: 600;'>" + clause + "</li>";
+                        });
+                        document.getElementById('waiverList').innerHTML = listHtml;
+                        document.getElementById('dynamicLegalWaiversContainer').style.display = "block";
+                    }
+                } catch(e) { console.error("Waiver parse error", e); }
+            }
         });
 
         function renderClientFacingScopeList() {
@@ -329,4 +352,3 @@
     </script>
 </body>
 </html>
-
