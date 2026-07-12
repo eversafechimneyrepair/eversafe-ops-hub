@@ -280,7 +280,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px; cursor:pointer;">Inject Selected Line Item into Bid Matrix ➔</button>
+                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px; cursor:pointer; width: 100%; font-weight: bold; border-radius: 4px; border: none;">Inject Selected Line Item into Bid Matrix ➔</button>
             </div>
 
             <div class="section-title" id="dynamicTableTitle">Compiled Project Cost Matrix & Construction Takeoff Drawer</div>            
@@ -318,7 +318,7 @@
 
             <!-- REVENUE BREAKDOWN CARD -->
             <div class="revenue-breakdown-card" style="margin-top: 15px;">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                    
                 <div class="breakdown-row">                                            
                     <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
@@ -334,19 +334,17 @@
                 <div class="breakdown-row" id="row_expense">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                    
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                 <div class="breakdown-row" id="row_margin" style="background: #f0fdf4; margin-top: 4px;">                                            
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
                 </div> 
                 
-                <!-- NEW TAX OVERRIDE BOX -->
                 <div class="breakdown-row" style="background: #f8fafc; border-top: 1px dashed #cbd5e1; margin-top: 8px; padding-top: 12px; padding-bottom: 8px;">
                     <div style="font-weight: bold; color: #475569;">Override Tax Rate (%) if needed:</div>
                     <div><input type="number" id="manualTaxOverride" placeholder="Auto" oninput="recalculateMasterLedger()" style="width: 80px; padding: 6px; font-weight: bold; text-align: center; border: 1px solid #cbd5e1; border-radius: 4px;"></div>
                 </div>
 
-                <!-- NEW CASH DISCOUNT TOGGLE -->
                 <div class="breakdown-row" style="background: #fffbeb; padding-top: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
                     <div style="font-weight: bold; color: #b45309;">
                         <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
@@ -357,28 +355,48 @@
                     <div id="lbl_cash_discount" style="font-weight:900; color:#dc2626;">-$0.00</div>
                 </div>
 
+                <!-- NEGOTIATION GUARDRAIL MODULE -->
+                <div class="breakdown-row" style="padding-top: 12px; border-bottom: 1px solid #e2e8f0; display: block;">
+                    <div style="text-align: right; margin-bottom: 10px;">
+                        <button type="button" onclick="toggleNegotiationGuardrail()" style="background: none; border: none; font-size: 11px; color: #94a3b8; cursor: pointer; text-decoration: underline;">Unlock Flex Pricing</button>
+                    </div>
+
+                    <div id="negotiation-module" style="display: none; background: #fdf4ff; border: 1px dashed #d8b4fe; padding: 12px; margin-bottom: 5px; border-radius: 6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: bold; color: #7e22ce; text-transform: uppercase;">🛡️ Authorized Flex Discount</span>
+                            <span id="flex_discount_display" style="color: var(--danger); font-weight: bold;">-$0.00</span>
+                        </div>
+                        <input type="range" id="flex_discount_slider" min="0" max="0" value="0" step="10" style="width: 100%; cursor: pointer;" oninput="applyGuardrailDiscount()">
+                        <div style="display:flex; justify-content:space-between; font-size: 10px; color: #9333ea; margin-top: 4px; font-weight: bold;">
+                            <span>$0</span>
+                            <span id="max_discount_label">Max Authorized: $0</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- END NEGOTIATION GUARDRAIL MODULE -->
+
                 <div class="breakdown-row" style="padding-top: 12px;">                                            
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                            
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                    
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                 <div class="breakdown-row grand-prime">                                            
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                            
                     <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
-                </div>                                      
+                </div>                                       
             </div>
 
             <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
                 <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
                 
-                <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155;">                                
-                    </div>                                                                                                            
-                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155; width: 100%; padding: 8px;">                                
+                    </div>                                                                                
+                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
                         <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                
-                    </div>                                                                                                            
+                    </div>                                                                                
                 </div>   
                 
                 <div id="partnerSplitDashboard" class="partner-telemetry-box" style="display:none;">
@@ -403,9 +421,9 @@
 
                 <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">                                                                                                        
                     <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                                                                                                        
-                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                                
-                </div>                                                        
-            </div>                                                                                                                                                                        
+                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                        
+                </div>                                                
+            </div>                                                                                                                                                                                                                                                                                                                                                        
             
             <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--accent); margin-bottom: 12px; box-shadow: 0 4px 12px rgba(242,140,40,0.2);">⚡ Send Remote Signing Link (Text & Email)</button>
             
@@ -520,17 +538,13 @@
             "LINE_TILE_REMOVAL":    { cat: "REMOVALS", label: "Clay Flue Tile Breaker Knockout & Extraction (per ft)", OH_LUCAS: 45.00, OH_WOOD: 45.00, OH_MID_DIST: 45.00, OH_EXTENDED: 45.00, MI_MONROE_CORE: 55.00, MI_MONROE_OUTER: 55.00, MI_WASHTENAW_MID: 65.00, MI_EXTENDED: 65.00, dynamic: true, defQty: 25, unit: "ft", matCost: 5.00, labRate: 55.00, labHours: 0.35, wbs: ["Deploy rotary tile breaking whip down flue structural core", "Shatter failing terra cotta liners to maximize internal dimensions", "Extract broken clay shards from cleanout or firebox base"], mats: ["Rotary whip head replacements", "Debris extraction containment"] },
             
             "APP_WOOD":             { cat: "COMPONENTS", label: "Wood-Burning Stove/Insert Appliance Installation", OH_LUCAS: 1250.00, OH_WOOD: 1250.00, OH_MID_DIST: 1250.00, OH_EXTENDED: 1250.00, MI_MONROE_CORE: 1350.00, MI_MONROE_OUTER: 1350.00, MI_WASHTENAW_MID: 1450.00, MI_EXTENDED: 1450.00, dynamic: false, matCost: 450.00, labRate: 55.00, labHours: 6.0, wbs: ["Maneuver heavy appliance into hearth space", "Connect to stainless steel venting system", "Test draft draw and seal compliance"], mats: ["Appliance adapter transition plates", "High-temp silicone"] },
-            "APP_GAS":              { cat: "COMPONENTS", label: "Gas Log Set / Burner Assembly Installation", OH_LUCAS: 650.00, OH_WOOD: 650.00, OH_MID_DIST: 650.00, OH_EXTENDED: 650.00, MI_MONROE_CORE: 700.00, MI_MONROE_OUTER: 700.00, MI_WASHTENAW_MID: 750.00, MI_EXTENDED: 750.00, dynamic: false, matCost: 250.00, labRate: 55.00, labHours: 3.5, wbs: ["Run gas manifold connections", "Place ceramic logs into engineered burner tray", "Test ignition, pilot system, and flame alignment"], mats: ["Threaded gas line fittings", "High-temp thread sealant"] },
-
-            "LOG_PERMIT":           { cat: "LOGISTICS", label: "Local Building Code Permit Filing Fee", OH_LUCAS: 125.00, OH_WOOD: 125.00, OH_MID_DIST: 125.00, OH_EXTENDED: 125.00, MI_MONROE_CORE: 125.00, MI_MONROE_OUTER: 125.00, MI_WASHTENAW_MID: 125.00, MI_EXTENDED: 125.00, dynamic: false, matCost: 125.00, labRate: 0.00, labHours: 0.0, wbs: ["Submit structural layout sheets to regional inspection office"], mats: ["Municipal Permit Fees"] },
-            "LOG_DUMPSTER":         { cat: "LOGISTICS", label: "On-Site Brick/Debris Disposal Box Unit", OH_LUCAS: 350.00, OH_WOOD: 350.00, OH_MID_DIST: 350.00, OH_EXTENDED: 350.00, MI_MONROE_CORE: 350.00, MI_MONROE_OUTER: 350.00, MI_WASHTENAW_MID: 350.00, MI_EXTENDED: 350.00, dynamic: false, matCost: 350.00, labRate: 0.00, labHours: 0.0, wbs: ["Drop and park steel container dump beds adjacent to roof paths"], mats: ["Dumpster Rental Container Credit Allocation"] },
-            "LOG_DISPATCH":         { cat: "LOGISTICS", label: "Standard Technician Dispatch & Service Call Fee", OH_LUCAS: 119.00, OH_WOOD: 119.00, OH_MID_DIST: 119.00, OH_EXTENDED: 119.00, MI_MONROE_CORE: 119.00, MI_MONROE_OUTER: 119.00, MI_WASHTENAW_MID: 119.00, MI_EXTENDED: 119.00, dynamic: false, matCost: 15.00, labRate: 55.00, labHours: 1.0, wbs: ["Dispatch certified technician to property location", "Perform initial visual assessment of homeowner concern", "Provide baseline recommendations and preliminary estimate"], mats: ["Vehicle dispatch and routing fuel allocation"] },
-            "LOG_DISPATCH_CREDIT":  { cat: "LOGISTICS", label: "Diagnostic Fee Refund (Credited Toward Repair)", OH_LUCAS: -119.00, OH_WOOD: -119.00, OH_MID_DIST: -119.00, OH_EXTENDED: -119.00, MI_MONROE_CORE: -119.00, MI_MONROE_OUTER: -119.00, MI_WASHTENAW_MID: -119.00, MI_EXTENDED: -119.00, dynamic: false, matCost: 0.00, labRate: 0.00, labHours: 0.0, wbs: ["Courtesy credit of initial dispatch/diagnostic fee applied directly toward approved repair scope"], mats: ["Administrative Credit Only"] }
+            "APP_GAS":              { cat: "COMPONENTS", label: "Gas Log Set / Burner Assembly Installation", OH_LUCAS: 650.00, OH_WOOD: 650.00, OH_MID_DIST: 650.00, OH_EXTENDED: 650.00, MI_MONROE_CORE: 700.00, MI_MONROE_OUTER: 700.00, MI_WASHTENAW_MID: 750.00, MI_EXTENDED: 750.00, dynamic: false, matCost: 250.00, labRate: 55.00, labHours: 3.5, wbs: ["Run gas manifold connections", "Place ceramic logs into engineered burner tray", "Test ignition, pilot system, and flame alignment"], mats: ["Threaded gas line fittings", "High-temp thread sealant"] }
         };
 
         var ACTIVE_RUNNING_ESTIMATE = [];
         var GLOBAL_ITEMIZED_LIST = [];
         var GLOBAL_GRAND_TOTAL = 0.00;
+        var ACTIVE_FLEX_DISCOUNT = 0.00;
 
         function toggleCustomLaborField() {
             var model = document.getElementById('laborPayoutModelSelector').value;
@@ -715,7 +729,7 @@
                 Object.keys(inheritedFlags).forEach(function(flagKey) {
                     var lookupTarget = "";
                     if (flagKey.includes("firebox_brick")) lookupTarget = "MAS_FIREBOX_REBUILD";
-                    if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS";
+                    if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS_STD_25"; // Updated to standard kit
                     if (flagKey.includes("mortar_tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
                     if (flagKey.includes("crown_defect")) lookupTarget = "WATER_TOTAL_SYSTEM_SEAL";
 
@@ -868,6 +882,7 @@
                 document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
                 document.getElementById('lbl_cash_discount').innerText = "-$0.00";
                 document.getElementById('internalJobCostInput').value = "0.00";
+                document.getElementById('flex_discount_display').innerText = "-$0.00";
                 
                 document.getElementById('partnerSplitDashboard').style.display = "none";
                 document.getElementById('standardTelemetryGrid').style.display = "grid";
@@ -885,7 +900,7 @@
             document.getElementById('btnEmailEstimate').disabled = false;
 
             ACTIVE_RUNNING_ESTIMATE.forEach(function(item) {
-                if (item.key.includes("LINE_STAINLESS") || item.key.includes("LINE_OVAL") || item.key.includes("LINE_INSUL_4") || item.key.includes("LINE_ALUM")) hasLinerActive = true;
+                if (item.key.includes("LINE_STAINLESS") || item.key.includes("LINE_TITANIUM") || item.key.includes("LINE_SMOOTH") || item.key.includes("LINE_OVAL") || item.key.includes("LINE_INSUL_4") || item.key.includes("LINE_ALUM") || item.key.includes("LINE_PELLET")) hasLinerActive = true;
                 if (item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL") hasPrerequisiteActive = true;
                 if (item.key === "LINE_INSUL_BLANKET") hasBlanketWrapActive = true;
             });
@@ -1075,7 +1090,7 @@
                     '</tr>';
                 
                 var labelWithQty = spec.dynamic ? displayLabel + " (Qty: " + item.qty + " " + spec.unit + ")" : displayLabel;
-                GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2) });
+                GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2), wbs: spec.wbs });
             });
 
             tbody.innerHTML = htmlConstructionBuffer;
@@ -1182,6 +1197,10 @@
 
             var taxableSubtotal = baseSubtotalWithTravel + computedOverhead + computedExpenses + computedMarginBuffer;
 
+            // 🟢 APPLY GUARDRAIL DISCOUNT
+            taxableSubtotal = taxableSubtotal - ACTIVE_FLEX_DISCOUNT;
+            if (taxableSubtotal < 0) taxableSubtotal = 0;
+
             // 🟢 NEW LOGIC: Cash Discount Calculation
             var cashDiscountAmount = 0;
             var isCashDiscount = document.getElementById('cashDiscountToggle').checked;
@@ -1253,6 +1272,36 @@
             if (isCashDiscount) {
                 GLOBAL_ITEMIZED_LIST.push({ label: "Courtesy 3% Cash / Check Processing Discount", price: "-" + cashDiscountAmount.toFixed(2) });
             }
+            if (ACTIVE_FLEX_DISCOUNT > 0) {
+                GLOBAL_ITEMIZED_LIST.push({ label: "Approved Flex Pricing Deduction", price: "-" + ACTIVE_FLEX_DISCOUNT.toFixed(2) });
+            }
+        } // End Recalculate Master Ledger
+
+        // --- NEGOTIATION GUARDRAIL LOGIC ---
+        function toggleNegotiationGuardrail() {
+            var module = document.getElementById('negotiation-module');
+            module.style.display = module.style.display === "none" ? "block" : "none";
+            if (module.style.display === "block") calculateMaxAllowableDiscount();
+        }
+
+        function calculateMaxAllowableDiscount() {
+            var trueExpenseTotal = parseFloat(document.getElementById('internalJobCostInput').value) || 0;
+            var currentRetailPrice = GLOBAL_GRAND_TOTAL + ACTIVE_FLEX_DISCOUNT; 
+            var absoluteFloorPrice = trueExpenseTotal / 0.80; // 20% margin floor
+            
+            var maxDiscount = currentRetailPrice - absoluteFloorPrice;
+            if (maxDiscount < 0) maxDiscount = 0;
+            
+            var slider = document.getElementById('flex_discount_slider');
+            slider.max = Math.floor(maxDiscount);
+            document.getElementById('max_discount_label').innerText = "Max Authorized: $" + Math.floor(maxDiscount);
+        }
+
+        function applyGuardrailDiscount() {
+            var slider = document.getElementById('flex_discount_slider');
+            ACTIVE_FLEX_DISCOUNT = parseFloat(slider.value) || 0;
+            document.getElementById('flex_discount_display').innerText = "-$" + ACTIVE_FLEX_DISCOUNT.toFixed(2);
+            recalculateMasterLedger(); 
         }
 
         function evaluateSmartRecommendations() {
@@ -1265,7 +1314,7 @@
 
             var isRebuild = hasItem("MAS_REBUILD");
             var isDemo = hasItem("RMV_STACK") || hasItem("MAS_REBUILD_TOTAL") || hasItem("LINE_TILE_REMOVAL");
-            var isLiner = hasItem("LINE_STAINLESS") || hasItem("LINE_OVAL") || hasItem("LINE_INSUL_4") || hasItem("LINE_ALUM");
+            var isLiner = hasItem("LINE_STAINLESS") || hasItem("LINE_TITANIUM") || hasItem("LINE_SMOOTH") || hasItem("LINE_OVAL") || hasItem("LINE_INSUL_4") || hasItem("LINE_ALUM") || hasItem("LINE_PELLET");
             var isSweep = hasItem("SWEEP") || hasItem("LINE_TILE_REMOVAL");
             var isAppliance = hasItem("APP_WOOD") || hasItem("APP_GAS");
             var hasPermit = hasItem("LOG_PERMIT");
@@ -1337,7 +1386,7 @@
 
         function modifyUnitPriceOverrideTarget(idxTarget, newPriceVal) {
             var parse = parseFloat(newPriceVal);
-            if (isNaN(parse) || parse < 0) parse = 0; // Allow it to be manipulated to $0.00
+            if (isNaN(parse) || parse < 0) parse = 0; 
             ACTIVE_RUNNING_ESTIMATE[idxTarget].rateOverride = parse;
             recalculateMasterLedger();
         }
@@ -1355,7 +1404,46 @@
             var alertMsg = "User '" + currentUser + "' locked and compiled a project bid valuation of $" + GLOBAL_GRAND_TOTAL.toFixed(2) + " under routed operating accounting books channel: [" + activeEntity + "]";
             dispatchSilentTelemetryAlert("Work Order Compiled", alertMsg);
 
+            // Construct the rich data matrix specifically for the newly upgraded billing-invoice.html
+            var enrichedBids = [];
+            ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
+                var spec = COMPLETE_PRICE_BOOK[item.key];
+                enrichedBids.push({
+                    label: GLOBAL_ITEMIZED_LIST[idx].label,
+                    qty: item.qty,
+                    wbs: spec.wbs,
+                    finalPrice: GLOBAL_ITEMIZED_LIST[idx].price
+                });
+            });
+
+            // Add the dynamic flex/cash discounts to the bottom of the invoice list
+            if (GLOBAL_ITEMIZED_LIST.length > ACTIVE_RUNNING_ESTIMATE.length) {
+                for (var i = ACTIVE_RUNNING_ESTIMATE.length; i < GLOBAL_ITEMIZED_LIST.length; i++) {
+                    enrichedBids.push({
+                        label: GLOBAL_ITEMIZED_LIST[i].label,
+                        qty: 1,
+                        wbs: [],
+                        finalPrice: GLOBAL_ITEMIZED_LIST[i].price
+                    });
+                }
+            }
+
+            // Save all the structural data bridges to LocalStorage
+            localStorage.setItem("everSafeActiveBidMatrix", JSON.stringify(enrichedBids));
             localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
+            
+            // Re-calculate raw taxes and subtotals to pass seamlessly to the invoice screen
+            var rawTotal = GLOBAL_GRAND_TOTAL;
+            var taxText = document.getElementById('lbl_calculated_tax').innerText.replace("+$", "").replace(",", "");
+            var taxNum = parseFloat(taxText) || 0;
+            var subNum = rawTotal - taxNum;
+
+            localStorage.setItem("everSafeMasterLedger", JSON.stringify({
+                subtotal: subNum.toFixed(2),
+                tax: taxNum.toFixed(2),
+                total: rawTotal.toFixed(2)
+            }));
+            
             localStorage.setItem('current_wo_est_cost', GLOBAL_GRAND_TOTAL.toFixed(2));
             window.location.replace("contract-wo.html");
         }
