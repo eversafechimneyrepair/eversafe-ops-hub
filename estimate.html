@@ -380,8 +380,11 @@
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
                 </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                 <div class="breakdown-row grand-prime">                                            
-                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>                                            
-                    <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
+                    <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>
+                    <div style="text-align: right;">
+                        <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
+                        <div id="monthlyPaymentBadge" style="font-size: 11px; font-weight: 800; color: #2563eb; margin-top: 4px; background: #eff6ff; padding: 4px 8px; border-radius: 4px; display: inline-block; border: 1px solid #bfdbfe;">Financing available</div>
+                    </div>
                 </div>                                       
             </div>
 
@@ -427,8 +430,10 @@
             
             <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--accent); margin-bottom: 12px; box-shadow: 0 4px 12px rgba(242,140,40,0.2);">⚡ Send Remote Signing Link (Text & Email)</button>
             
-            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="margin-top: 0; background: var(--primary-light); box-shadow: none;">Compile & Generate In-Person Work Order ➔</button>                
+            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="margin-top: 0; background: var(--primary-light); box-shadow: none;">📝 Compile & Generate In-Person Work Order ➔</button>                
             
+            <button type="button" class="btn-action" id="savePipelineBtn" onclick="executeSaveToPipeline()" style="margin-top: 12px; background: #f8fafc; color: #475569; box-shadow: none; border: 2px dashed #cbd5e1;">💾 Save as Open Quote (Sync to Pipeline)</button>
+
             <div id="estimateEmailStatus" style="font-size:13px; font-weight:bold; margin-top:15px; text-align:center;"></div>
         </div>        
     </div>
@@ -797,6 +802,22 @@
         function recalculateMasterLedger() {
             GLOBAL_ITEMIZED_LIST = []; 
             GLOBAL_GRAND_TOTAL = 0.00;
+
+            // --- MONTHLY PAYMENT ESTIMATOR LOGIC ---
+            var paymentBadge = document.getElementById('monthlyPaymentBadge');
+            if (GLOBAL_GRAND_TOTAL >= 2500) {
+                // High-Ticket: Est. 60 Months at ~9.9% APR (Factor ~0.0212)
+                var mo60 = Math.ceil(GLOBAL_GRAND_TOTAL * 0.0212);
+                paymentBadge.innerText = "Or as low as $" + mo60 + "/mo (60 mo)";
+                paymentBadge.style.display = "inline-block";
+            } else if (GLOBAL_GRAND_TOTAL >= 500) {
+                // Mid-Ticket: Est. 36 Months at ~9.9% APR (Factor ~0.0322)
+                var mo36 = Math.ceil(GLOBAL_GRAND_TOTAL * 0.0322);
+                paymentBadge.innerText = "Or as low as $" + mo36 + "/mo (36 mo)";
+                paymentBadge.style.display = "inline-block";
+            } else {
+                paymentBadge.style.display = "none";
+            }
 
             var zone = document.getElementById('regionalZoneSelector').value;
             var marginPctInput = parseFloat(document.getElementById('corporateMarginBufferInput').value) || 0;
@@ -1395,8 +1416,41 @@
             ACTIVE_RUNNING_ESTIMATE.splice(idxTarget, 1); recalculateMasterLedger();
         }
 
+        // --- DYNAMIC LEGAL WAIVER GENERATOR ---
+        function compileDynamicWaivers() {
+            var waivers = [];
+            var hasMasonry = false; var hasWoodInsert = false; var hasWaterproofing = false; var hasLiner = false;
+
+            ACTIVE_RUNNING_ESTIMATE.forEach(function(item) {
+                var cat = COMPLETE_PRICE_BOOK[item.key].cat;
+                if (cat === "MASONRY") hasMasonry = true;
+                if (item.key.includes("APP_WOOD") || item.key.includes("SWEEP_WOOD_INSERT")) hasWoodInsert = true;
+                if (cat === "WATERPROOFING" || item.key.includes("CROWN")) hasWaterproofing = true;
+                if (cat === "RELINING") hasLiner = true;
+            });
+
+            if (hasMasonry) {
+                waivers.push("🧱 MASONRY COLOR MATCHING: Due to the aging and weathering of existing bricks, exact color matching of new mortar or replacement bricks cannot be guaranteed. Temporary white efflorescence powder may appear during the curing process.");
+            }
+            if (hasWoodInsert) {
+                waivers.push("🔥 WOOD INSERT HIDDEN HAZARDS: Extraction of existing wood inserts may reveal concealed structural damage or stage-3 glazed creosote behind the appliance. Any underlying hazards discovered are not covered under the baseline estimate.");
+            }
+            if (hasWaterproofing) {
+                waivers.push("💧 WATERPROOFING CURING: Elastomeric sealants and water repellents require 24-48 hours of dry weather to cure. We cannot warranty leaks originating from roof decking, failing shingles, or internal chimney condensation.");
+            }
+            if (hasLiner) {
+                waivers.push("🛠️ RELINE RETROFIT TOLERANCES: Installing a new stainless liner into an existing masonry structure may require minor internal brick shaving. If the flue is severely offset, dimensions may need to be ovalized or resized on-site.");
+            }
+
+            // Lock it into the iPad's memory so the next page can read it
+            localStorage.setItem("everSafeDynamicWaivers", JSON.stringify(waivers));
+        }
+
         function lockBidAndAdvanceToWorkOrderReview() {
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
+            
+            // FIRE THE WAIVER GENERATOR BEFORE LEAVING THE PAGE
+            compileDynamicWaivers();
             
             var activeEntity = document.getElementById('operatingEntitySelector').value;
             var currentUser = localStorage.getItem('eversafe_authenticated_user') || "FieldCrewAccount";
