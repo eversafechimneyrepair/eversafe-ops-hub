@@ -14,6 +14,7 @@
             --primary: #0f172a; 
             --primary-light: #1e293b; 
             --accent: #F28C28; 
+            --accent-dark: #d97706;
             --bg: #f8fafc; 
             --border: #cbd5e1; 
             --success: #22c55e; 
@@ -104,7 +105,6 @@
             <div class="form-group" style="margin-bottom:12px;"><label>Billing Address:</label><input type="text" id="inv_addr"></div>
 
             <div class="section-title">Settled Scope &amp; Line Items</div>
-            <!-- Removed readonly and increased rows so techs can easily tap and type -->
             <textarea id="inv_scope" rows="8" placeholder="Type or edit the project scope here..."></textarea>
 
             <div class="grid-2" style="margin-top:15px;">
@@ -190,7 +190,7 @@
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
         var ORIGINAL_PROJECT_ESTIMATE_MAX = parseFloat(localStorage.getItem('current_wo_est_cost')) || 0;
 
-       window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function() {
             // 1. Pull Customer Details
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || localStorage.getItem('cached_wo_email') || "";
@@ -221,7 +221,6 @@
                 }
             }
 
-            // Inject the scope into the unlocked textarea
             document.getElementById('inv_scope').value = builtScope || "";
 
             // 3. Intelligent Price Routing
@@ -246,6 +245,10 @@
             runTotalsCalc();
             initializeUniversalPointerCanvasPads();
             toggleAutomationInterfaceTray(); 
+
+            // Initialize Background Sync
+            setInterval(attemptBackgroundSync, 15000); 
+            window.addEventListener('online', attemptBackgroundSync); 
         });
 
         function runTotalsCalc() {
@@ -297,21 +300,17 @@
             var submitBtn = document.getElementById('submitInvoiceBtn');
             
             if (paymentMethod === "STRIPE_DIGITAL") {
-                // Show Stripe Link UI, Hide Signatures
                 stripePanel.style.display = "block";
                 manualWrapper.style.display = "none";
                 statusField.value = "PENDING_COLLECTION";
                 submitBtn.innerText = "🚀 Dispatch Mobile Checkout Link";
                 submitBtn.style.background = "#2563eb";
             } else {
-                // Hide Stripe UI, Show Signatures
                 stripePanel.style.display = "none";
                 manualWrapper.style.display = "block";
                 statusField.value = "PAID_SETTLED";
                 submitBtn.innerText = "✅ Record Cash / Check Payment";
                 submitBtn.style.background = "var(--success)";
-                
-                // Re-initialize pads if they were hidden when the page loaded to fix width scaling bugs
                 initializeUniversalPointerCanvasPads();
             }
         }
@@ -320,7 +319,6 @@
             ['inv_tech_sig', 'inv_client_sig'].forEach(function(id) {
                 var canvas = document.getElementById(id); if(!canvas) return;
                 
-                // Only set width if the canvas is actually visible, otherwise it collapses to 0px
                 if (canvas.offsetWidth > 0) {
                     var rect = canvas.parentNode.getBoundingClientRect();
                     canvas.width = rect.width || canvas.offsetWidth || 340; 
@@ -372,8 +370,6 @@
         
         function extractCanvasBase64DataStringUrl(id) {
             var c = document.getElementById(id); if(!c) return "N/A";
-            
-            // If the wrapper is hidden, the canvas is blank, just return empty.
             if(document.getElementById('manualCheckoutWrapper').style.display === "none") return "EMPTY";
 
             var b = document.createElement('canvas'); b.width = c.width; b.height = c.height;
@@ -400,6 +396,18 @@
             await uploadInvoiceToOfficeSheet(hashKeyType);
         }
 
+        function clearSessionCache() {
+            var sessionKeys = [
+                'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_customer_phone', 'current_wo_service_address',
+                'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier', 'estimate_scope', 'detailedScope',
+                'current_wo_price_book_items', 'current_wo_slideshow_data', 'cached_wo_cust', 
+                'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
+                'current_wo_itemized_json', 'final_client_signature', 'final_tech_signature', 
+                'current_wo_status', 'everSafeActiveBidMatrix', 'everSafeMasterLedger', 'everSafeDynamicWaivers'
+            ];
+            sessionKeys.forEach(function(k) { localStorage.removeItem(k); });
+        }
+
         async function uploadInvoiceToOfficeSheet(tokenStr) {
             var statusLine = document.getElementById('invoiceStatusLine');
             var btn = document.getElementById('submitInvoiceBtn');
@@ -415,7 +423,7 @@
             var paymentMethod = document.getElementById('inv_payment').value;
             var currentStatus = document.getElementById('inv_status').value;
             
-            // 📸 THE PHOTO BRIDGE: Grab the Drive URLs from the iPad's memory
+            // 📸 THE PHOTO BRIDGE
             var savedPhotos = localStorage.getItem('current_wo_slideshow_data');
             if (savedPhotos) {
                 try {
@@ -427,7 +435,6 @@
                         }
                     });
                     if (urlList.length > 0) {
-                        // Append the links directly to the bottom of the work scope text!
                         finalizedScope += "\n\n📸 VISUAL FIELD EVIDENCE LINKS:\n" + urlList.join("\n");
                     }
                 } catch(e) { console.log("Photo bridge bypass."); }
@@ -435,6 +442,27 @@
 
             var highTicketLimit = 1500.00;
             var triggerHighTicketAlert = (finalLedgerVal >= highTicketLimit) ? "TRUE" : "FALSE";
+
+            var finalPayload = {
+                route: "generateInvoiceDispatch",
+                payload: {
+                    customerName: customerName,
+                    customerPhone: customerPhone,
+                    date: new Date().toLocaleDateString(),
+                    siteAddress: siteAddress,
+                    workScope: finalizedScope, 
+                    subtotal: document.getElementById('inv_subtotal').value,
+                    total: finalLedgerVal.toFixed(2),
+                    paymentMethod: paymentMethod,
+                    status: currentStatus,
+                    techName: CURRENT_USER,
+                    billingEmail: billingEmail,
+                    token: tokenStr,
+                    techSignature: tSig,
+                    clientSignature: cSig,
+                    highTicket: triggerHighTicketAlert
+                }
+            };
 
             btn.disabled = true;
 
@@ -444,26 +472,7 @@
                 let googleResponse = await fetch(GOOGLE_API_GATEWAY_URL, { 
                     method: "POST", 
                     headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify({ 
-                        route: "generateInvoiceDispatch",
-                        payload: {
-                            customerName: customerName,
-                            customerPhone: customerPhone,
-                            date: new Date().toLocaleDateString(),
-                            siteAddress: siteAddress,
-                            workScope: finalizedScope, // 🔥 Now contains the embedded photo links!
-                            subtotal: document.getElementById('inv_subtotal').value,
-                            total: finalLedgerVal.toFixed(2),
-                            paymentMethod: paymentMethod,
-                            status: currentStatus,
-                            techName: CURRENT_USER,
-                            billingEmail: billingEmail,
-                            token: tokenStr,
-                            techSignature: tSig,
-                            clientSignature: cSig,
-                            highTicket: triggerHighTicketAlert
-                        }
-                    })
+                    body: JSON.stringify(finalPayload)
                 });
 
                 let googleResult = await googleResponse.json();
@@ -482,67 +491,27 @@
                     alert("Success! Cash/Check receipt filed with the main office.");
                 }
                 
-                // Clear the cache completely so the next job starts fresh
-                var sessionKeys = [
-                    'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_customer_phone', 'current_wo_service_address',
-                    'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier', 'estimate_scope', 'detailedScope',
-                    'current_wo_price_book_items', 'current_wo_slideshow_data', 'cached_wo_cust', 
-                    'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
-                    'current_wo_itemized_json', 'final_client_signature', 'final_tech_signature', 
-                    'current_wo_status'
-                ];
-                sessionKeys.forEach(function(k) { localStorage.removeItem(k); });
-                
+                clearSessionCache();
                 window.location.replace("jobs.html");
+                
             } catch(e) {
-                alert("API Gateway Error: " + e.message);
-                btn.disabled = false;
+                // 🛡️ DEAD ZONE BAILOUT
+                lockPayloadInOfflineVault("generateInvoiceDispatch", finalPayload, "Invoice Synced Successfully");
                 
-                if (paymentMethod === "STRIPE_DIGITAL") {
-                    btn.innerText = "🚀 Dispatch Mobile Checkout Link";
-                } else {
-                    btn.innerText = "✅ Record Cash / Check Payment";
-                }
-            }
-        }
+                btn.innerText = "💾 Saved to Offline Vault";
+                btn.style.background = "var(--accent-dark)";
                 
-                var sessionKeys = [
-                    'current_wo_customer_name', 'current_wo_customer_email', 'current_wo_customer_phone', 'current_wo_service_address',
-                    'current_wo_est_cost', 'current_wo_work_scope', 'current_wo_selected_tier', 'estimate_scope', 'detailedScope',
-                    'current_wo_price_book_items', 'current_wo_slideshow_data', 'cached_wo_cust', 
-                    'cached_wo_email', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
-                    'current_wo_itemized_json', 'final_client_signature', 'final_tech_signature', 
-                    'current_wo_status'
-                ];
-                sessionKeys.forEach(function(k) { localStorage.removeItem(k); });
-                
-                window.location.replace("jobs.html");
-            } catch(e) {
-                alert("API Gateway Error: " + e.message);
-                btn.disabled = false;
-                
-                if (paymentMethod === "STRIPE_DIGITAL") {
-                    btn.innerText = "🚀 Dispatch Mobile Checkout Link";
-                } else {
-                    btn.innerText = "✅ Record Cash / Check Payment";
-                }
+                setTimeout(function() {
+                    clearSessionCache();
+                    window.location.replace("jobs.html");
+                }, 3000);
             }
         }
 
-        function executeFieldCrewLogout() {
-            localStorage.clear(); window.location.replace("index.html");
-        }
         // ==========================================
         // 📡 EVERSAFE OFFLINE SYNC ENGINE (LOCKBOX)
         // ==========================================
         
-        // 1. Initialize the heartbeat when the page loads
-        window.addEventListener('DOMContentLoaded', function() {
-            setInterval(attemptBackgroundSync, 15000); // Check the lockbox every 15 seconds
-            window.addEventListener('online', attemptBackgroundSync); // Trigger immediately when 5G returns
-        });
-
-        // 2. The function to safely lock data in the vault if a drop occurs
         function lockPayloadInOfflineVault(endpointRoute, payloadData, successMessage) {
             var outbox = JSON.parse(localStorage.getItem('eversafe_offline_outbox') || "[]");
             
@@ -556,20 +525,18 @@
             
             localStorage.setItem('eversafe_offline_outbox', JSON.stringify(outbox));
             
-            // Alert the tech so they don't panic
-            var statusLine = document.getElementById('invoiceStatusLine') || document.getElementById('estimateEmailStatus');
+            var statusLine = document.getElementById('invoiceStatusLine');
             if(statusLine) {
                 statusLine.innerHTML = "⚠️ <b>Dead Zone Detected.</b> Data saved to Offline Vault. It will auto-sync when cell service returns.";
                 statusLine.style.color = "var(--accent-dark)";
             }
         }
 
-        // 3. The heartbeat loop that drains the vault
         async function attemptBackgroundSync() {
-            if (!navigator.onLine) return; // Still offline, do nothing
+            if (!navigator.onLine) return; 
             
             var outbox = JSON.parse(localStorage.getItem('eversafe_offline_outbox') || "[]");
-            if (outbox.length === 0) return; // Vault is empty
+            if (outbox.length === 0) return; 
             
             console.log("Network restored. Attempting to sync " + outbox.length + " items from vault...");
 
@@ -587,8 +554,6 @@
                     let result = await response.json();
                     if (result.success) {
                         successfulSyncs.push(job.id);
-                        
-                        // Safety check: Only fire telemetry if the function exists on this page
                         if (typeof dispatchSilentTelemetryAlert === "function") {
                             dispatchSilentTelemetryAlert("Offline Sync Recovered", "A payload dropped in a dead zone successfully arrived at the office.");
                         }
@@ -598,15 +563,21 @@
                 }
             }
 
-            // Remove only the jobs that successfully reached the server
             if (successfulSyncs.length > 0) {
                 outbox = outbox.filter(job => !successfulSyncs.includes(job.id));
                 localStorage.setItem('eversafe_offline_outbox', JSON.stringify(outbox));
                 
-                var statusLine = document.getElementById('invoiceStatusLine') || document.getElementById('estimateEmailStatus');
+                var statusLine = document.getElementById('invoiceStatusLine');
                 if(statusLine && outbox.length === 0) {
                     statusLine.innerHTML = "✅ Connection Restored. All offline data successfully synced to office!";
                     statusLine.style.color = "var(--success)";
                 }
             }
         }
+
+        function executeFieldCrewLogout() {
+            localStorage.clear(); window.location.replace("index.html");
+        }
+    </script>
+</body>
+</html>
