@@ -233,9 +233,11 @@
                         statusDiv.innerHTML = "✅ Asset written successfully to Secure Drive folder!";
                         statusDiv.style.color = "var(--success-dark)";
                         
+                        // 🟢 BRIDGE FIX: We now capture and store the live Google Drive URL
                         SLIDESHOW_REGISTRY.push({
                             localData: base64Data,
-                            tagText: classificationLabel
+                            tagText: classificationLabel,
+                            fileUrl: result.fileUrl || "URL_Pending" 
                         });
                         
                         localStorage.setItem('current_wo_slideshow_data', JSON.stringify(SLIDESHOW_REGISTRY));
@@ -252,7 +254,12 @@
                     statusDiv.innerHTML = "⚠️ Ledger Stream Exception (Local Cache Preservation Active)."; 
                     statusDiv.style.color = "var(--accent-dark)";
                     
-                    SLIDESHOW_REGISTRY.push({ localData: base64Data, tagText: classificationLabel + " (Offline Local)" });
+                    // Fallback storage if they hit a dead zone while uploading
+                    SLIDESHOW_REGISTRY.push({ 
+                        localData: base64Data, 
+                        tagText: classificationLabel + " (Offline Local)",
+                        fileUrl: "Pending_Upload_Sync" 
+                    });
                     localStorage.setItem('current_wo_slideshow_data', JSON.stringify(SLIDESHOW_REGISTRY));
                     ACTIVE_SLIDE_INDEX = SLIDESHOW_REGISTRY.length - 1;
                     renderActivePresentationSlide();
