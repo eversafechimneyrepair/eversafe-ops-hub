@@ -11,87 +11,64 @@
 
     <style>
         :root { 
-            --primary: #0f172a; 
-            --primary-light: #1e293b; 
-            --accent: #F28C28; 
-            --accent-dark: #d97706;
-            --bg: #f8fafc; 
-            --border: #cbd5e1; 
-            --success: #22c55e; 
-            --success-dark: #16a34a;
-            --danger: #ef4444; 
-            --sms-blue: #007aff;
-            --chimney-red: #b91c1c;
-            --masonry-gray: #475569;
-            --defect-orange: #ea580c;
-            --liner-silver: #94a3b8;
-            --gas-yellow: #eab308;
-            --prefab-teal: #0f766e;
-            --stove-brown: #78350f;
+            --primary: #0f172a; --primary-light: #1e293b; --accent: #F28C28; 
+            --bg: #f8fafc; --border: #cbd5e1; --danger: #ef4444; 
+            --sms-blue: #007aff; --chimney-red: #b91c1c; --masonry-gray: #475569;
+            --defect-orange: #ea580c; --liner-silver: #94a3b8; --gas-yellow: #eab308;
+            --prefab-teal: #0f766e; --stove-brown: #78350f; --success: #22c55e;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         html { scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
         
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
-        
-        /* App Header */
-        .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        /* Header */
+        .app-header { background: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
-        .back-pill-btn { background: var(--primary-light); color: white; font-size: 10px; font-weight: bold; border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; cursor: pointer; text-transform: uppercase; text-decoration: none; }
+        .back-pill-btn { background: var(--primary-light); color: white; font-size: 10px; font-weight: bold; border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; text-decoration: none; text-transform: uppercase; }
 
         .app-container { max-width: 650px; margin: 0 auto; padding: 0 15px; }
-        h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; text-align: center; letter-spacing: 0.5px; color: var(--primary); }
-        p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 15px; text-align: center; line-height: 1.45; }
+        h3 { margin-bottom: 5px; font-size: 18px; text-transform: uppercase; text-align: center; color: var(--primary); }
+        p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 15px; text-align: center; }
 
-        /* Quick-Jump Navigation */
-        .quick-jump-container { display: flex; flex-wrap: wrap; gap: 8px; padding: 5px 0 15px 0; margin-bottom: 5px; }
-        .quick-jump-pill { background: white; border: 1px solid var(--border); color: var(--primary); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; white-space: nowrap; text-decoration: none; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: background 0.2s; }
-        .quick-jump-pill:active { background: #f1f5f9; }
+        /* Search Bar */
+        .search-container { position: sticky; top: 55px; background: var(--bg); padding: 10px 0; z-index: 90; border-bottom: 1px solid var(--border); margin-bottom: 15px; }
+        .search-input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; font-weight: bold; outline: none; }
+        .search-input:focus { border-color: var(--accent); }
 
-        /* Scope Cards */
-        .scope-card { scroll-margin-top: 75px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; box-shadow: 0 4px 6px rgba(0,0,0,0.01); margin-bottom: 20px; position: relative; border-top: 4px solid var(--primary); }
+        /* Quick-Jump */
+        .quick-jump-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .quick-jump-pill { background: white; border: 1px solid var(--border); color: var(--primary); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; text-decoration: none; }
+
+        /* Scope Cards & Tables */
+        .scope-card { scroll-margin-top: 130px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; margin-bottom: 20px; border-top: 4px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.01); }
         .scope-title { font-size: 15px; font-weight: bold; color: var(--primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--bg); }
-        
-        /* Data Tables for Mobile */
-        .spec-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 13px; }
-        .spec-table td { padding: 15px 4px; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
+        .spec-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        .spec-table td { padding: 15px 4px; border-bottom: 1px solid #e2e8f0; vertical-align: top; position: relative; }
         .spec-table tr:last-child td { border-bottom: none; }
-        .spec-value { font-weight: 700; color: var(--primary); display: block; margin-top: 2px; }
+        .spec-value { font-weight: 700; color: var(--primary); display: block; margin-top: 4px; }
         
-        /* Tags and Badges */
-        .code-ref { display: inline-block; font-family: "Courier New", Courier, monospace; font-size: 10.5px; font-weight: 800; background: #e2e8f0; color: #475569; padding: 3px 6px; border-radius: 4px; margin-bottom: 6px; letter-spacing: 0.5px; border: 1px solid #cbd5e1; }
-        .defect-flag { color: var(--danger); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-top: 6px; display: inline-block; background: #fef2f2; padding: 3px 6px; border-radius: 4px; border: 1px solid #fee2e2; }
-        .info-flag { color: var(--sms-blue); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-top: 6px; display: inline-block; background: #f0f9ff; padding: 3px 6px; border-radius: 4px; border: 1px solid #bae6fd; }
-        
-        /* Deep Dive Dropdown (Native HTML5) */
-        details.deep-dive { margin-top: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; transition: all 0.3s ease; }
-        details.deep-dive summary { padding: 10px 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--sms-blue); cursor: pointer; list-style: none; display: flex; align-items: center; user-select: none; line-height: 1.4; }
-        details.deep-dive summary::-webkit-details-marker { display: none; }
-        details.deep-dive summary::before { content: '▶'; font-size: 9px; margin-right: 8px; transition: transform 0.2s; color: var(--sms-blue); }
-        details.deep-dive[open] summary::before { transform: rotate(90deg); }
-        details.deep-dive[open] summary { border-bottom: 1px solid #e2e8f0; background: #f1f5f9; color: var(--primary); }
-        .deep-dive-content { padding: 12px; font-size: 12.5px; color: #334155; line-height: 1.5; }
-        .deep-dive-content strong { color: var(--primary); font-weight: 800; }
-        .deep-dive-content p { margin-bottom: 10px; }
-        .deep-dive-content p:last-child { margin-bottom: 0; }
+        /* Badges & Buttons */
+        .code-ref { font-family: monospace; font-size: 10.5px; font-weight: 800; background: #e2e8f0; padding: 3px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
+        .defect-flag { color: var(--danger); font-size: 11px; font-weight: bold; text-transform: uppercase; background: #fef2f2; padding: 3px 6px; border-radius: 4px; border: 1px solid #fee2e2; display: inline-block; margin-top: 6px; }
+        .btn-copy { position: absolute; right: 4px; top: 12px; background: #f1f5f9; color: var(--sms-blue); border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .btn-copy:active { background: var(--sms-blue); color: white; }
 
-        /* Bottom Nav */
-        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
-        .section-divider { display: flex; align-items: center; text-align: center; margin: 30px 0 20px; color: #94a3b8; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
-        .section-divider::before, .section-divider::after { content: ''; flex: 1; border-bottom: 1px solid var(--border); }
-        .section-divider:not(:empty)::before { margin-right: .5em; }
-        .section-divider:not(:empty)::after { margin-left: .5em; }
+        /* Deep Dives & Calculators */
+        details.deep-dive { margin-top: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; }
+        details.deep-dive summary { padding: 10px 12px; font-size: 11px; font-weight: bold; color: var(--sms-blue); cursor: pointer; list-style: none; text-transform: uppercase; }
+        details.deep-dive summary::-webkit-details-marker { display: none; }
+        .deep-dive-content { padding: 12px; font-size: 12.5px; line-height: 1.5; color: #334155; }
+        .deep-dive-content strong { color: var(--primary); }
+        
+        .calc-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
+        .calc-input { width: 48%; padding: 10px; border: 1px solid #93c5fd; border-radius: 4px; font-size: 14px; margin-bottom: 10px; }
+        .calc-result { font-weight: bold; color: var(--primary); font-size: 14px; margin-top: 5px; }
+
+        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
     </style>
 </head>
 <body>
-
-    <script>
-        if (localStorage.getItem('eversafe_session_active') !== 'true' || !localStorage.getItem('eversafe_authenticated_user')) {
-            window.location.replace("index.html");
-        }
-    </script>
 
     <div class="app-header">
         <div class="brand-row">
@@ -102,441 +79,113 @@
 
     <div class="app-container">
         <h3>Master Trade Spec Library</h3>
-        <p class="subtitle">Official NFPA, IRC, and UL legal code thresholds, with plain-English training translations.</p>
+        <p class="subtitle">Searchable field limits, calculators, and report templates.</p>
 
-        <!-- Quick Jump Navigation -->
+        <!-- Search & Quick Jump -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Clearance', 'NFPA')..." onkeyup="filterCodes()">
+        </div>
+
         <div class="quick-jump-container">
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
-            <a href="#stoves" class="quick-jump-pill">🪵 Wood Stoves</a>
             <a href="#relining" class="quick-jump-pill">🛡️ Relining</a>
             <a href="#clearances" class="quick-jump-pill">🏠 Clearances</a>
-            <a href="#masonry" class="quick-jump-pill">🧱 Masonry</a>
-            <a href="#dampers" class="quick-jump-pill">🔥 Gas & Dampers</a>
-            <a href="#prefabs" class="quick-jump-pill">🏭 Prefabs</a>
-            <a href="#safety" class="quick-jump-pill">🦺 Safety</a>
+            <a href="#stoves" class="quick-jump-pill">🪵 Stoves</a>
         </div>
 
-        <div class="section-divider">NFPA 211 Inspection Protocols</div>
-
-        <!-- Scope 1: Inspections -->
-        <div class="scope-card" id="inspections" style="border-top-color: var(--accent);">
-            <div class="scope-title">🔍 Inspection Levels & Triggers</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 15.3.1</span><br>
-                        Level 1 Inspection<br><span style="font-size: 11px; color: #64748b;">Readily accessible areas</span>
-                        <span class="spec-value">Routine annual maintenance</span>
-                        <span class="spec-value">Same appliance, same fuel</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Level 1 Limits</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Reality:</strong> A Level 1 is a basic visual check of the portions of the chimney you can see without moving anything. "Readily accessible" means no tools required.</p>
-                                <p><strong>The Limit:</strong> You only perform a Level 1 if the customer has used the system regularly without issue, nothing has changed, and you are just there to sweep. If you have to take a stove pipe apart, you've moved past a Level 1.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 15.4.1</span><br>
-                        Level 2 Inspection<br><span style="font-size: 11px; color: #64748b;">Accessible + Camera Scan</span>
-                        <span class="spec-value">Sale/Transfer of property</span>
-                        <span class="spec-value">Post-chimney fire or weather event</span>
-                        <span class="info-flag">Mandatory camera scan</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Mandatory Level 2</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Reality:</strong> "Accessible" means you can use hand tools to open doors, remove panels, or detach a stove pipe to see inside. You do not break drywall or brick.</p>
-                                <p><strong>The Liability:</strong> If a house was just sold, had a chimney fire, or is getting a new fuel type, the code mandates a Level 2. <strong>You must run a camera up the flue.</strong> If you skip the camera, mark it "good," and a hidden cracked tile causes a house fire months later, EverSafe is liable. Document the scan.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 15.5.1</span><br>
-                        Level 3 Inspection<br><span style="font-size: 11px; color: #64748b;">Concealed Areas</span>
-                        <span class="spec-value">Suspected concealed hazard</span>
-                        <span class="spec-value">Requires destructive access</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Destructive Demo</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Reality:</strong> This is demolition. If you did a Level 2 and suspect there is a massive framing clearance violation or a broken thimble hidden behind the drywall or masonry, you recommend a Level 3.</p>
-                                <p><strong>The Execution:</strong> We literally cut holes in the walls or tear down brick to see what is happening. We never quote this lightly, but we never ignore a hidden hazard.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section-divider">Defects & Flue Maintenance</div>
-
-        <!-- Scope 2: Defects -->
+        <!-- Scope: Defects -->
         <div class="scope-card" id="defects" style="border-top-color: var(--defect-orange);">
             <div class="scope-title">🚫 Defect Limits & Failure Criteria</div>
             <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">NFPA 211 - 14.4.1</span><br>
-                        Creosote Buildup<br><span style="font-size: 11px; color: #64748b;">Sweeping requirement</span>
+                        <span class="code-ref">NFPA 211 - 14.4.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.4.1', 'Creosote Buildup > 1/8 inch dictates mandatory sweeping. Glaze creosote (Stage 3) observed, presenting immediate fire hazard.')">📋 Copy</button>
+                        <br>Creosote Buildup
                         <span class="spec-value">Sweep if > 1/8" thick</span>
                         <span class="defect-flag">Fails if Stage 3 (Glaze) is present</span>
                         <details class="deep-dive">
-                            <summary>📖 Read the "Why": Creosote Stages</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> Creosote forms when flue gases cool down too quickly and condense on the walls of the chimney. This happens from burning wet, unseasoned wood or having a flue that is too large/cold.</p>
-                                <p><strong>The Danger:</strong> A standard brush only removes Stage 1 (sooty) and Stage 2 (crunchy). Stage 3 looks like shiny, hard, black glass. It is highly concentrated fuel. If it catches fire, it expands up to 7 times its size, blocking the flue and pushing a 2000-degree blowtorch into the living room. Fail it immediately and quote a chemical rotary treatment (PCR).</p>
-                            </div>
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">Stage 3 looks like shiny, hard, black glass. It expands up to 7 times its size when ignited, blocking the flue and pushing a 2000-degree blowtorch into the living room.</div>
                         </details>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <span class="code-ref">NFPA 211 - 14.9</span><br>
-                        Flue Liner Integrity<br><span style="font-size: 11px; color: #64748b;">Terra cotta tile defects</span>
+                        <span class="code-ref">NFPA 211 - 14.9</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.9', 'Flue liner compromised. Cracks and/or missing mortar joints observed. Zero tolerance code violation; system is unsafe for use until relined.')">📋 Copy</button>
+                        <br>Flue Liner Integrity
                         <span class="spec-value">Zero tolerance for cracks/splits</span>
                         <span class="defect-flag">Fails if ANY tile is cracked</span>
                         <details class="deep-dive">
-                            <summary>📖 Read the "Why": Flue Cracks & Voids</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics (Thermal Shock):</strong> Clay tiles fail due to thermal shock—heating up and cooling down too rapidly, usually from a chimney fire or sudden water intrusion on a hot flue. They don't just "crack from old age."</p>
-                                <p><strong>The Danger:</strong> A terracotta flue tile is designed to contain heat and exhaust. Even a hairline crack breaks that seal. When a fire burns, the draft will pull the heat or deadly carbon monoxide through that crack directly into the home's wood framing. There is no such thing as an "okay" crack. Fail the flue and quote a stainless liner or HeatShield.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.8</span><br>
-                        Smoke Chamber Parging<br><span style="font-size: 11px; color: #64748b;">Transition zone below the flue</span>
-                        <span class="spec-value">Must be parged smooth</span>
-                        <span class="defect-flag">Fails if brick steps are exposed</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Chamber Turbulence</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> The smoke chamber is an inverted funnel above the damper. If the brickwork is exposed and stepped (corbeled), the smoke hits those jagged edges and rolls backward. This turbulence slows the draft down to a crawl, causing smoke to spill into the house and massive creosote buildup.</p>
-                                <p><strong>The Fix:</strong> Parging fills those steps with refractory mortar, creating a perfectly smooth, aerodynamic funnel so the smoke rockets straight up the flue. Fail exposed corbeling and quote a parging repair (ChamberTech).</p>
-                            </div>
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">Tiles fail due to thermal shock. Even a hairline crack breaks the seal, allowing heat and carbon monoxide to escape into the home's wood framing.</div>
                         </details>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <div class="section-divider">Solid Fuel Appliances</div>
-
-        <!-- Scope: Wood & Pellet Stoves -->
-        <div class="scope-card" id="stoves" style="border-top-color: var(--stove-brown);">
-            <div class="scope-title">🪵 Free-Standing Stoves (Wood/Pellet)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 12.6.2</span><br>
-                        Connector Pipe Clearances<br><span style="font-size: 11px; color: #64748b;">Stove to ceiling/wall transition</span>
-                        <span class="spec-value">Single-Wall Pipe: Min 18" Clearance</span>
-                        <span class="spec-value">Double-Wall Pipe: Min 6" Clearance</span>
-                        <span class="defect-flag">Fails if single-wall touches drywall</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Pipe Radiance</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> Single-wall black stovepipe radiates a massive amount of raw heat into the room. If it is closer than 18 inches to a combustible wall or ceiling, it will bake the drywall and ignite the studs behind it. Double-wall pipe has an inner stainless liner and an air gap, keeping the outer skin cool enough to drop the clearance to 6 inches.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">UL 1482</span><br>
-                        Appliance Wall Clearances<br><span style="font-size: 11px; color: #64748b;">Space around the stove body</span>
-                        <span class="spec-value">Listed Stoves: Follow Data Plate</span>
-                        <span class="spec-value">Unlisted Stoves: Min 36" Clearance</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Listed vs. Unlisted</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Liability:</strong> Modern stoves have heat shields and are tested in a lab. Their exact safe clearances are printed on the metal data tag on the back. If a stove is "Unlisted" (like an antique potbelly stove or a tag that fell off), the code assumes it's highly dangerous and mandates a massive 36-inch (3-foot) clearance in all directions.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 12.6.2.6</span><br>
-                        Floor Protection (Ember Pad)<br><span style="font-size: 11px; color: #64748b;">Non-combustible hearth pad</span>
-                        <span class="spec-value">Min 18" in front of loading door</span>
-                        <span class="spec-value">Min 8" to sides and back</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Escaping Embers</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> When a homeowner opens the stove door to add wood, sparks fly out, and burning logs can roll off the ash lip. The hearth pad must extend far enough (18 inches minimum) to catch these embers before they land on carpet, hardwood, or vinyl flooring.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.18</span><br>
-                        Combustible Wall Pass-Through<br><span style="font-size: 11px; color: #64748b;">Routing pipe through a wall</span>
-                        <span class="spec-value">Must use UL-Listed Solid-Pack Thimble</span>
-                        <span class="info-flag">OR 12" of solid masonry all around</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Wall Ignition</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Danger:</strong> You can never just cut a hole in drywall and run a hot stovepipe through the studs to reach an exterior chimney. The wood inside the wall will ignite. You must install a UL-listed insulated thimble (which has a built-in air space and insulation) to safely transfer the pipe through the combustible wall.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section-divider">Service Calls: Gas & Accessories</div>
-
-        <!-- Scope: Gas & Dampers -->
-        <div class="scope-card" id="dampers" style="border-top-color: var(--gas-yellow);">
-            <div class="scope-title">🔥 Gas Logs & Dampers (IFGC)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IFGC 602.1</span><br>
-                        Top-Mount Dampers<br><span style="font-size: 11px; color: #64748b;">Cable-operated sealing caps</span>
-                        <span class="spec-value">Excellent for wood/pellet efficiency</span>
-                        <span class="defect-flag">Prohibited on active Gas Logs</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": CO Poisoning Risk</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Liability:</strong> Top-sealing dampers are great for sealing drafts on wood fireplaces. BUT, if a top-sealer freezes shut or the cable breaks while a customer is burning a wood fire, smoke fills the room instantly, and they put the fire out.</p>
-                                <p><strong>The Fatality Risk:</strong> If a top-mount damper breaks closed over a <em>Gas Log set</em>, there is no smoke. The room fills with invisible, odorless Carbon Monoxide. The occupants will suffocate without ever knowing the damper is closed. Never install a top-sealer on a gas appliance.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IFGC 602.2</span><br>
-                        Damper Clamps (Vented Gas)<br><span style="font-size: 11px; color: #64748b;">C-clamps on throat dampers</span>
-                        <span class="spec-value">Mandatory for Vented Gas Logs</span>
-                        <span class="info-flag">Must lock damper open permanently</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Pilot Light Exhaust</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Liability:</strong> When gas logs are turned off, the open damper lets a lot of cold air into the house. Homeowners will naturally try to close the damper to save heat. However, gas log pilots run 24/7, and turning on the logs with a closed damper pushes pure CO into the home.</p>
-                                <p><strong>The Fix:</strong> The code mandates installing a heavy metal C-clamp on the damper plate. This physically prevents the homeowner from closing the damper, ensuring a permanent exhaust path. If you see un-clamped vented gas logs, fail the inspection and install a clamp.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IFGC 603.1</span><br>
-                        Unvented (Vent-Free) Gas Logs<br><span style="font-size: 11px; color: #64748b;">Room-exhausting appliances</span>
-                        <span class="spec-value">Requires exact room volume sizing</span>
-                        <span class="defect-flag">Usually prohibited in bedrooms/baths</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Room Oxygen Depletion</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> Vent-free logs dump all of their exhaust (mostly water vapor and trace CO) directly into the living space. They rely on the cubic air volume of the room to dilute the exhaust to safe levels.</p>
-                                <p><strong>The Rule:</strong> If you put a high-BTU vent-free unit in a small, closed bedroom, the unit will consume the oxygen and choke the occupants. They must be perfectly sized to the room's cubic footage. If a vent-free set smells terrible or sets off alarms, it is either oversized, dusty, or drafting poorly into the room. Check the sizing charts.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope: Prefabs & Cleanouts -->
-        <div class="scope-card" id="prefabs" style="border-top-color: var(--prefab-teal);">
-            <div class="scope-title">🏭 Prefab Systems & Ash Pits</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">UL 127</span><br>
-                        Factory-Built Fireplaces<br><span style="font-size: 11px; color: #64748b;">Zero-Clearance / Prefabs</span>
-                        <span class="spec-value">Must use OEM replacement parts</span>
-                        <span class="defect-flag">Fails if parts are mixed & matched</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": UL Liability Voids</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Liability:</strong> A prefab fireplace is tested in a lab as a complete, highly-engineered assembly. The metal box, the refractory panels, and the specific double-wall pipe all work together to prevent the house framing from catching fire.</p>
-                                <p><strong>The Rule:</strong> If a refractory panel cracks, you cannot just slap some firebrick or generic board in there. If you connect Brand X pipe to a Brand Y firebox, you instantly void the UL listing. If the house burns down, the liability falls 100% on you for altering a tested appliance. Always find the data tag and order OEM parts.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.5</span><br>
-                        Ash Pits & Cleanout Doors<br><span style="font-size: 11px; color: #64748b;">Base of the chimney column</span>
-                        <span class="spec-value">Must be cast iron or tight steel</span>
-                        <span class="spec-value">Min 6" clearance to combustibles</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Basement Fires</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> The ash dump door in the floor of the firebox drops hot coals down into the base of the chimney. Those coals can stay hot for days. If the cleanout door in the basement is made of thin, rusted metal—or worse, if the homeowner piled cardboard boxes right up against it—the radiant heat will start a basement fire. Ensure the door seals tightly so it doesn't feed oxygen to the coals or ruin the upstairs draft.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section-divider">Masonry & Relining</div>
-
-        <!-- Scope 3: Relining -->
+        <!-- Scope: Relining & Calculators -->
         <div class="scope-card" id="relining" style="border-top-color: var(--liner-silver);">
-            <div class="scope-title">🛡️ UL 1777 Stainless Relining</div>
+            <div class="scope-title">🛡️ Relining & Sizing Calculator</div>
+            
+            <!-- Field Calculator -->
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Flue Sizing Calculator (1/10 Rule)</div>
+                <input type="number" id="fbWidth" class="calc-input" placeholder="Width (in)" oninput="calculateFlue()">
+                <input type="number" id="fbHeight" class="calc-input" placeholder="Height (in)" oninput="calculateFlue()">
+                <div class="calc-result" id="calcOutput">Enter dimensions to calculate required liner...</div>
+            </div>
+
             <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">UL 1777</span><br>
-                        Alloy Selection<br><span style="font-size: 11px; color: #64748b;">Matches fuel type</span>
-                        <span class="spec-value">316Ti / 316L: Wood, Coal, Pellet, Oil</span>
-                        <span class="spec-value">AL29-4C: High-Efficiency Gas ONLY</span>
+                        <span class="code-ref">UL 1777</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'UL 1777', 'Stainless liner lacks required insulation wrap or pour-down mix. Heat transfer risk to combustibles violates UL listing.')">📋 Copy</button>
+                        <br>Liner Insulation
+                        <span class="spec-value">1/2" Foil-Faced Wrap OR Thermix</span>
                         <details class="deep-dive">
-                            <summary>📖 Read the "Why": Acid Corrosion</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>Wood (316Ti):</strong> Wood fires get incredibly hot and produce highly acidic creosote. If you use a cheaper 304 or AL29-4C liner for a wood stove, the acid and heat will literally eat holes through the metal in a few years. 316 Titanium alloy is mandatory for solid fuels because it resists extreme heat and corrosion.</p>
-                                <p><strong>Gas (AL29-4C):</strong> High-efficiency gas furnaces barely vent any heat, meaning the exhaust is mostly warm, highly acidic water vapor. AL29-4C is specifically engineered to handle massive amounts of corrosive condensation without rusting out.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">UL 1777</span><br>
-                        Liner Insulation<br><span style="font-size: 11px; color: #64748b;">Required for UL listing</span>
-                        <span class="spec-value">1/2" Foil-Faced Wrap (Min) OR</span>
-                        <span class="spec-value">Pour-down mix (Thermix)</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Framing Ignition & Draft</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>Protection:</strong> Stainless steel conducts heat rapidly. If you drop a bare metal liner into a chimney that touches wood framing (zero clearance to combustibles), the heat transfers straight through the brick and ignites the wood studs. Wrapping it stops the transfer.</p>
-                                <p><strong>Performance:</strong> Heat rises. If the liner isn't insulated, the surrounding cold masonry sucks the heat out of the exhaust gas. The smoke slows down, draft fails, and creosote dumps rapidly. Insulation keeps the inner liner hot, ensuring a fast, clean draft.</p>
-                            </div>
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">Stainless steel conducts heat rapidly. Wrapping it stops heat transfer to the home's framing and keeps the inner liner hot, ensuring a fast, clean draft.</div>
                         </details>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 4: Clearances -->
+        <!-- Scope: Clearances (With SVG Diagram) -->
         <div class="scope-card" id="clearances" style="border-top-color: var(--chimney-red);">
             <div class="scope-title">🏠 Clearances & Terminations</div>
             <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">IRC R1003.9 / NFPA 211 - 6.4</span><br>
-                        The "3-2-10" Rule<br><span style="font-size: 11px; color: #64748b;">Chimney Termination Height</span>
+                        <span class="code-ref">IRC R1003.9</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.9', 'Chimney termination violates the 3-2-10 clearance rule. Stack is susceptible to high-pressure wind downdrafts.')">📋 Copy</button>
+                        <br>The "3-2-10" Rule
                         <span class="spec-value">Min 3 ft above roof penetration</span>
                         <span class="spec-value">Min 2 ft higher than structure within 10 ft</span>
                         <details class="deep-dive">
-                            <summary>📖 Read the "Why": Wind Turbulence</summary>
+                            <summary>📖 View Diagram & Explanation</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> Wind behaves like water; when it hits a roof peak, it splashes and swirls, creating high-pressure zones. If the chimney is too short, that swirling high-pressure wind will cap the chimney and blow straight down the flue, pushing smoke and CO directly into the living room.</p>
-                                <p><strong>The Execution:</strong> Measure 10 feet horizontally outward from the chimney top. The chimney must be built at least 2 feet taller than anything inside that 10-foot circle (like the roof peak, a dormer, or a wall) to keep the exhaust out of the wind turbulence.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.18 / NFPA 211 - 11.2</span><br>
-                        Clearance to Combustibles<br><span style="font-size: 11px; color: #64748b;">Masonry Chimneys</span>
-                        <span class="spec-value">Min 2" (Interior Chimneys)</span>
-                        <span class="spec-value">Min 1" (Exterior Chimneys)</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Pyrolysis</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics (Pyrolysis):</strong> When wood framing sits too close to hot masonry for years, the heat slowly bakes the moisture out of the wood, permanently altering its chemical structure. Its ignition temperature drops drastically. Eventually, a normal fire can ignite the wood inside the walls. Drywall, siding, and studs CANNOT directly touch the chimney brick.</p>
-                                <p><strong>The Field Reality:</strong> Houses settle. Foundations sink. If the chimney is built tight to the framing, the settling house will actually hang off the chimney, cracking the masonry. The air gap allows for natural expansion and settling.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 5: Masonry -->
-        <div class="scope-card" id="masonry" style="border-top-color: var(--masonry-gray);">
-            <div class="scope-title">🧱 Masonry, Crowns & Hearths</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.9.1</span><br>
-                        Chimney Crown (Cast/Poured)<br><span style="font-size: 11px; color: #64748b;">Top seal protection</span>
-                        <span class="spec-value">Min 2" overhang past brick w/ drip edge</span>
-                        <span class="info-flag">Must have bond break around flue</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Expansion & Spalling</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Bond Break:</strong> Never pour concrete tight against the clay flue. When the clay gets hot, it expands outward. If there is no soft expansion joint (bond break) between the clay and the concrete, the expanding flue will literally rip the concrete crown apart.</p>
-                                <p><strong>The Drip Edge:</strong> Water is sticky (capillary action). If a crown is flush with the bricks, rain will run down the concrete, curl under, and soak the brick face, causing spalling (flaking). The crown must overhang by 2", and have a groove (drip edge) cut underneath it to force the water to drip off into the air, completely missing the bricks.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">ASTM C270 / C199</span><br>
-                        ASTM Mortar Types<br><span style="font-size: 11px; color: #64748b;">Compressive Strength</span>
-                        <span class="spec-value">Type N: Standard brickwork (750 psi)</span>
-                        <span class="spec-value">Type S: Structural/Below Grade (1800 psi)</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Mortar Sacrifices</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> You do NOT want the strongest mortar possible for a chimney. A chimney is constantly swaying in the wind and expanding with heat. Type N is softer and more flexible. If you use ultra-hard Type S mortar on a standard chimney repair, the rigid mortar will refuse to flex, and the bricks themselves will crack under the pressure. The mortar is supposed to be the sacrificial element.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="section-divider">Safety & Weatherproofing</div>
-
-        <!-- Scope 6: Safety -->
-        <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
-            <div class="scope-title">💧 Flashing & Fall Protection</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.20</span><br>
-                        Step & Counter Flashing<br><span style="font-size: 11px; color: #64748b;">Waterproofing the roof seam</span>
-                        <span class="spec-value">Counter flashing cut 1" into mortar</span>
-                        <span class="defect-flag">Fails if only glued/caulked to brick face</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Dual Movement</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> The roof framing and the masonry chimney expand, contract, and settle at totally different rates. You MUST use a two-part system. The "Step" flashing is nailed to the roof deck. The "Counter" flashing is ground into the masonry joint and hangs down over the step flashing like a skirt.</p>
-                                <p><strong>The Failure:</strong> If you nail a single piece of metal to the roof AND glue it to the brick, the differing movement of the house vs. the chimney will tear the metal or caulk open within a single season, causing massive water leaks.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.20</span><br>
-                        Cricket / Saddle<br><span style="font-size: 11px; color: #64748b;">Diverting water behind chimney</span>
-                        <span class="spec-value">Required if chimney is > 30" wide</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": Hydrostatic Pressure</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> If the back of the chimney facing the roof peak is wider than 30 inches, it acts like a giant dam. Leaves, snow, and rain will pile up behind it. The standing water builds hydrostatic pressure, which will eventually force water back up under the shingles. You must build a small peaked roof (cricket) behind the chimney to split the water and shed it down the sides.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">OSHA 1926.501</span><br>
-                        Fall Protection<br><span style="font-size: 11px; color: #64748b;">When harnesses are required</span>
-                        <span class="spec-value">Any work at or above 6 feet</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why": OSHA Regulations</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Reality:</strong> OSHA regulations are written in blood. If your boots are 6 feet or higher off the lower level, you are required to wear a harness tied off to a secure roof anchor (Personal Fall Arrest System), or have guardrails in place. A fall from 10 feet is frequently fatal.</p>
+                                <!-- Offline pure CSS/SVG Diagram -->
+                                <svg viewBox="0 0 300 150" style="width: 100%; height: auto; background: white; border: 1px solid #cbd5e1; border-radius: 4px; margin-bottom: 10px;">
+                                    <!-- House / Roof -->
+                                    <polygon points="20,130 150,50 280,130" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3"/>
+                                    <!-- Chimney -->
+                                    <rect x="200" y="30" width="30" height="70" fill="#ef4444" stroke="#b91c1c" stroke-width="2"/>
+                                    <!-- 10ft Line -->
+                                    <line x1="150" y1="50" x2="200" y2="50" stroke="#0ea5e9" stroke-width="2" stroke-dasharray="4"/>
+                                    <text x="160" y="45" font-size="10" fill="#0ea5e9" font-weight="bold">10 FT</text>
+                                    <!-- 2ft Line -->
+                                    <line x1="200" y1="30" x2="150" y2="30" stroke="#16a34a" stroke-width="2" stroke-dasharray="4"/>
+                                    <text x="235" y="40" font-size="10" fill="#16a34a" font-weight="bold">2 FT MIN</text>
+                                    <!-- 3ft Line -->
+                                    <path d="M 240 30 L 240 100" stroke="#eab308" stroke-width="2"/>
+                                    <text x="245" y="70" font-size="10" fill="#eab308" font-weight="bold">3 FT MIN</text>
+                                </svg>
+                                Measure 10 feet out. The chimney must be built at least 2 feet taller than anything in that circle to prevent wind downdrafts from pushing CO into the home.
                             </div>
                         </details>
                     </td>
@@ -546,9 +195,74 @@
 
     </div>
 
-    <!-- Bottom Navigation Placeholder -->
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
+    <script>
+        // 1. Live Search Filter
+        function filterCodes() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let tables = document.querySelectorAll('.spec-table');
+            
+            tables.forEach(table => {
+                let rows = table.querySelectorAll('tr');
+                let hasVisibleRow = false;
+                
+                rows.forEach(row => {
+                    if (row.innerText.toLowerCase().includes(input)) {
+                        row.style.display = '';
+                        hasVisibleRow = true;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                
+                // Hide the whole card if all rows are filtered out
+                let card = table.closest('.scope-card');
+                card.style.display = hasVisibleRow ? '' : 'none';
+            });
+        }
+
+        // 2. Copy to Report Function
+        function copyToReport(btn, code, text) {
+            let fullText = `[CODE REF: ${code}] ${text}`;
+            navigator.clipboard.writeText(fullText).then(() => {
+                let originalText = btn.innerText;
+                btn.innerText = "✅ COPIED";
+                btn.style.background = "var(--success)";
+                btn.style.color = "white";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = "#f1f5f9";
+                    btn.style.color = "var(--sms-blue)";
+                }, 2000);
+            }).catch(err => {
+                alert("Failed to copy text. Check browser permissions.");
+            });
+        }
+
+        // 3. Flue Sizing Calculator
+        function calculateFlue() {
+            let w = parseFloat(document.getElementById('fbWidth').value);
+            let h = parseFloat(document.getElementById('fbHeight').value);
+            let out = document.getElementById('calcOutput');
+            
+            if (!w || !h) {
+                out.innerText = "Enter dimensions to calculate required liner...";
+                return;
+            }
+            
+            let area = w * h;
+            let reqSquare = area / 10;
+            let reqRound = area / 12;
+            
+            // Calculate corresponding round diameter: Area = pi * r^2 -> d = 2 * sqrt(Area/pi)
+            let idealDiameter = 2 * Math.sqrt(reqRound / Math.PI);
+            
+            out.innerHTML = `Firebox Area: ${area} sq.in.<br>
+            Req. Square Flue: <strong>${reqSquare.toFixed(1)} sq.in.</strong><br>
+            Req. Round Flue: <strong>${reqRound.toFixed(1)} sq.in.</strong> (Approx <strong>${Math.ceil(idealDiameter)}"</strong> liner)`;
+        }
+    </script>
 </body>
 </html>
