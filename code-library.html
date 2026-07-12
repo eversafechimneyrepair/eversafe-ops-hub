@@ -51,6 +51,7 @@
         /* Badges & Buttons */
         .code-ref { font-family: monospace; font-size: 10.5px; font-weight: 800; background: #e2e8f0; padding: 3px 6px; border-radius: 4px; display: inline-block; margin-bottom: 6px; }
         .defect-flag { color: var(--danger); font-size: 11px; font-weight: bold; text-transform: uppercase; background: #fef2f2; padding: 3px 6px; border-radius: 4px; border: 1px solid #fee2e2; display: inline-block; margin-top: 6px; }
+        .info-flag { color: var(--sms-blue); font-size: 11px; font-weight: bold; text-transform: uppercase; background: #f0f9ff; padding: 3px 6px; border-radius: 4px; border: 1px solid #bae6fd; display: inline-block; margin-top: 6px; }
         .btn-copy { position: absolute; right: 4px; top: 12px; background: #f1f5f9; color: var(--sms-blue); border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .btn-copy:active { background: var(--sms-blue); color: white; }
 
@@ -60,6 +61,8 @@
         details.deep-dive summary::-webkit-details-marker { display: none; }
         .deep-dive-content { padding: 12px; font-size: 12.5px; line-height: 1.5; color: #334155; }
         .deep-dive-content strong { color: var(--primary); }
+        .deep-dive-content p { margin-bottom: 10px; }
+        .deep-dive-content p:last-child { margin-bottom: 0; }
         
         .calc-box { background: #eff6ff; border: 1px solid #bfdbfe; padding: 15px; border-radius: 6px; margin-bottom: 15px; }
         .calc-input { width: 48%; padding: 10px; border: 1px solid #93c5fd; border-radius: 4px; font-size: 14px; margin-bottom: 10px; }
@@ -89,25 +92,84 @@
         <div class="quick-jump-container">
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
+            <a href="#stoves" class="quick-jump-pill">🪵 Stoves</a>
+            <a href="#dampers" class="quick-jump-pill">🔥 Gas & Dampers</a>
+            <a href="#prefabs" class="quick-jump-pill">🏭 Prefabs</a>
             <a href="#relining" class="quick-jump-pill">🛡️ Relining</a>
             <a href="#clearances" class="quick-jump-pill">🏠 Clearances</a>
-            <a href="#stoves" class="quick-jump-pill">🪵 Stoves</a>
+            <a href="#masonry" class="quick-jump-pill">🧱 Masonry</a>
+            <a href="#safety" class="quick-jump-pill">🦺 Safety</a>
         </div>
 
-        <!-- Scope: Defects -->
+        <!-- Scope 1: Inspections -->
+        <div class="scope-card" id="inspections" style="border-top-color: var(--accent);">
+            <div class="scope-title">🔍 Inspection Levels & Triggers</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 - 15.3.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 15.3.1', 'Level 1 inspection conducted. Routine visual evaluation of readily accessible areas only.')">📋 Copy</button>
+                        <br>Level 1 Inspection<br><span style="font-size: 11px; color: #64748b;">Readily accessible areas</span>
+                        <span class="spec-value">Routine annual maintenance</span>
+                        <span class="spec-value">Same appliance, same fuel</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Reality:</strong> A Level 1 is a basic visual check of the portions of the chimney you can see without moving anything. "Readily accessible" means no tools required.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 - 15.4.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 15.4.1', 'Level 2 inspection mandatory due to property transfer/system change. Internal camera scan required.')">📋 Copy</button>
+                        <br>Level 2 Inspection<br><span style="font-size: 11px; color: #64748b;">Accessible + Camera Scan</span>
+                        <span class="spec-value">Sale/Transfer of property</span>
+                        <span class="spec-value">Post-chimney fire or weather event</span>
+                        <span class="info-flag">Mandatory camera scan</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Liability:</strong> If a house was just sold, had a chimney fire, or is getting a new fuel type, the code mandates a Level 2. <strong>You must run a camera up the flue.</strong> Document the scan to protect EverSafe's liability.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 - 15.5.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 15.5.1', 'Level 3 inspection recommended to access concealed hazards. Destructive access required.')">📋 Copy</button>
+                        <br>Level 3 Inspection<br><span style="font-size: 11px; color: #64748b;">Concealed Areas</span>
+                        <span class="spec-value">Suspected concealed hazard</span>
+                        <span class="spec-value">Requires destructive access</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Reality:</strong> This is demolition. If you did a Level 2 and suspect there is a massive framing clearance violation hidden behind the drywall or masonry, you recommend a Level 3.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 2: Defects -->
         <div class="scope-card" id="defects" style="border-top-color: var(--defect-orange);">
             <div class="scope-title">🚫 Defect Limits & Failure Criteria</div>
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 14.4.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.4.1', 'Creosote Buildup > 1/8 inch dictates mandatory sweeping. Glaze creosote (Stage 3) observed, presenting immediate fire hazard.')">📋 Copy</button>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.4.1', 'Creosote buildup exceeds 1/8 inch. Mandatory sweeping required. Glaze creosote (Stage 3) observed, presenting immediate fire hazard.')">📋 Copy</button>
                         <br>Creosote Buildup
                         <span class="spec-value">Sweep if > 1/8" thick</span>
                         <span class="defect-flag">Fails if Stage 3 (Glaze) is present</span>
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">Stage 3 looks like shiny, hard, black glass. It expands up to 7 times its size when ignited, blocking the flue and pushing a 2000-degree blowtorch into the living room.</div>
+                            <div class="deep-dive-content">
+                                <p><strong>The Danger:</strong> Stage 3 looks like shiny, hard, black glass. It expands up to 7 times its size when ignited, blocking the flue and pushing a 2000-degree blowtorch into the living room. Fail it immediately and quote a chemical rotary treatment (PCR).</p>
+                            </div>
                         </details>
                     </td>
                 </tr>
@@ -120,14 +182,136 @@
                         <span class="defect-flag">Fails if ANY tile is cracked</span>
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">Tiles fail due to thermal shock. Even a hairline crack breaks the seal, allowing heat and carbon monoxide to escape into the home's wood framing.</div>
+                            <div class="deep-dive-content">
+                                <p><strong>The Danger:</strong> Clay tiles fail due to thermal shock. Even a hairline crack breaks the seal, allowing heat and carbon monoxide to escape into the home's wood framing. Fail the flue and quote a stainless liner or HeatShield.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.8</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.8', 'Smoke chamber masonry is stepped (corbeled) and unparged. Causes draft turbulence and creosote buildup. Chamber parging required.')">📋 Copy</button>
+                        <br>Smoke Chamber Parging
+                        <span class="spec-value">Must be parged smooth</span>
+                        <span class="defect-flag">Fails if brick steps are exposed</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> If the brickwork is exposed and stepped, the smoke hits those jagged edges and rolls backward. This turbulence slows the draft down, causing smoke to spill into the house. Parging fills those steps with refractory mortar.</p>
+                            </div>
                         </details>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope: Relining & Calculators -->
+        <!-- Scope 3: Wood Stoves -->
+        <div class="scope-card" id="stoves" style="border-top-color: var(--stove-brown);">
+            <div class="scope-title">🪵 Free-Standing Stoves (Wood/Pellet)</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 - 12.6.2</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 12.6.2', 'Connector pipe clearance violation. Single-wall pipe requires 18 inches clearance to combustibles. Fire hazard.')">📋 Copy</button>
+                        <br>Connector Pipe Clearances
+                        <span class="spec-value">Single-Wall: Min 18" Clearance</span>
+                        <span class="spec-value">Double-Wall: Min 6" Clearance</span>
+                        <span class="defect-flag">Fails if single-wall touches drywall</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 - 12.6.2.6</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 12.6.2.6', 'Hearth pad ember protection is undersized. Must extend minimum 18 inches in front of loading door.')">📋 Copy</button>
+                        <br>Floor Protection (Ember Pad)
+                        <span class="spec-value">Min 18" in front of loading door</span>
+                        <span class="spec-value">Min 8" to sides and back</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.18</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.18', 'Combustible wall pass-through violation. Stove pipe passing through wall lacks UL-listed solid-pack thimble.')">📋 Copy</button>
+                        <br>Combustible Wall Pass-Through
+                        <span class="spec-value">Must use UL-Listed Solid-Pack Thimble</span>
+                        <span class="info-flag">OR 12" of solid masonry all around</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 4: Gas & Dampers -->
+        <div class="scope-card" id="dampers" style="border-top-color: var(--gas-yellow);">
+            <div class="scope-title">🔥 Gas Logs & Dampers (IFGC)</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">IFGC 602.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IFGC 602.1', 'Top-mount damper installed over active gas logs. Extreme CO hazard. Top damper must be removed or permanently disabled.')">📋 Copy</button>
+                        <br>Top-Mount Dampers
+                        <span class="defect-flag">Prohibited on active Gas Logs</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Fatality Risk:</strong> If a top-mount damper breaks closed over a Gas Log set, there is no smoke. The room fills with invisible, odorless Carbon Monoxide. Never install a top-sealer on a gas appliance.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IFGC 602.2</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IFGC 602.2', 'Vented gas logs lack mandatory damper clamp. Damper must be physically locked in open position to prevent CO buildup.')">📋 Copy</button>
+                        <br>Damper Clamps (Vented Gas)
+                        <span class="spec-value">Mandatory for Vented Gas Logs</span>
+                        <span class="info-flag">Must lock damper open permanently</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IFGC 603.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IFGC 603.1', 'Vent-free gas appliance installed in confined space/bedroom. Volume sizing violation presents severe indoor air quality hazard.')">📋 Copy</button>
+                        <br>Unvented (Vent-Free) Gas Logs
+                        <span class="spec-value">Requires exact room volume sizing</span>
+                        <span class="defect-flag">Usually prohibited in bedrooms/baths</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 5: Prefabs -->
+        <div class="scope-card" id="prefabs" style="border-top-color: var(--prefab-teal);">
+            <div class="scope-title">🏭 Prefab Systems & Ash Pits</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">UL 127</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'UL 127', 'Factory-built fireplace contains non-OEM/aftermarket components. Modification voids the UL listing and presents a fire hazard.')">📋 Copy</button>
+                        <br>Factory-Built Fireplaces (Zero-Clearance)
+                        <span class="spec-value">Must use OEM replacement parts</span>
+                        <span class="defect-flag">Fails if parts are mixed & matched</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Liability:</strong> A prefab fireplace is tested in a lab as a complete assembly. If you connect Brand X pipe to a Brand Y firebox, you instantly void the UL listing. Always order OEM parts.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.5</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.5', 'Ash pit cleanout door compromised. Missing/loose door creates drafting issues and basement fire hazard.')">📋 Copy</button>
+                        <br>Ash Pits & Cleanout Doors
+                        <span class="spec-value">Must be cast iron or tight steel</span>
+                        <span class="spec-value">Min 6" clearance to combustibles</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 6: Relining & Calculators -->
         <div class="scope-card" id="relining" style="border-top-color: var(--liner-silver);">
             <div class="scope-title">🛡️ Relining & Sizing Calculator</div>
             
@@ -148,14 +332,25 @@
                         <span class="spec-value">1/2" Foil-Faced Wrap OR Thermix</span>
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">Stainless steel conducts heat rapidly. Wrapping it stops heat transfer to the home's framing and keeps the inner liner hot, ensuring a fast, clean draft.</div>
+                            <div class="deep-dive-content">
+                                <p><strong>Protection:</strong> Stainless steel conducts heat rapidly. Wrapping it stops heat transfer to the home's framing and keeps the inner liner hot, ensuring a fast, clean draft.</p>
+                            </div>
                         </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">UL 1777</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'UL 1777', 'Improper liner alloy for solid fuel application. Severe corrosion risk. 316Ti alloy required.')">📋 Copy</button>
+                        <br>Alloy Selection
+                        <span class="spec-value">316Ti / 316L: Wood, Coal, Pellet, Oil</span>
+                        <span class="spec-value">AL29-4C: High-Efficiency Gas ONLY</span>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope: Clearances (With SVG Diagram) -->
+        <!-- Scope 7: Clearances (With SVG Diagram) -->
         <div class="scope-card" id="clearances" style="border-top-color: var(--chimney-red);">
             <div class="scope-title">🏠 Clearances & Terminations</div>
             <table class="spec-table">
@@ -185,9 +380,87 @@
                                     <path d="M 240 30 L 240 100" stroke="#eab308" stroke-width="2"/>
                                     <text x="245" y="70" font-size="10" fill="#eab308" font-weight="bold">3 FT MIN</text>
                                 </svg>
-                                Measure 10 feet out. The chimney must be built at least 2 feet taller than anything in that circle to prevent wind downdrafts from pushing CO into the home.
+                                <p>Measure 10 feet out. The chimney must be built at least 2 feet taller than anything in that circle to prevent wind downdrafts from pushing CO into the home.</p>
                             </div>
                         </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.18</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.18', 'Combustible framing in direct contact with masonry chimney. Framing must be recessed 2 inches (interior) to prevent pyrolysis fire risk.')">📋 Copy</button>
+                        <br>Clearance to Combustibles
+                        <span class="spec-value">Min 2" (Interior Chimneys)</span>
+                        <span class="spec-value">Min 1" (Exterior Chimneys)</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 8: Masonry -->
+        <div class="scope-card" id="masonry" style="border-top-color: var(--masonry-gray);">
+            <div class="scope-title">🧱 Masonry, Crowns & Hearths</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.9.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.9.1', 'Chimney crown defective/lacking proper overhang. Water shedding onto brick face causing masonry degradation.')">📋 Copy</button>
+                        <br>Chimney Crown (Cast/Poured)
+                        <span class="spec-value">Min 2" overhang past brick w/ drip edge</span>
+                        <span class="info-flag">Must have bond break around flue</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Bond Break:</strong> Never pour concrete tight against the clay flue. When the clay gets hot, it expands. If there is no soft expansion joint (bond break), the expanding flue will literally rip the concrete crown apart.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">ASTM C270</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'ASTM C270', 'Incorrect masonry mortar utilized; lacks required flexural strength for chimney application.')">📋 Copy</button>
+                        <br>ASTM Mortar Types
+                        <span class="spec-value">Type N: Standard brickwork (750 psi)</span>
+                        <span class="spec-value">Type S: Structural/Below Grade (1800 psi)</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 9: Safety & Weatherproofing -->
+        <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
+            <div class="scope-title">💧 Flashing & Fall Protection</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.20</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.20', 'Flashing system failure. Missing 2-part step and counter flashing ground into mortar joints. Subject to severe water intrusion.')">📋 Copy</button>
+                        <br>Step & Counter Flashing
+                        <span class="spec-value">Counter flashing cut 1" into mortar</span>
+                        <span class="defect-flag">Fails if only glued/caulked to brick face</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> The roof framing and the chimney settle at totally different rates. You MUST use a two-part system. If you nail a single piece of metal to the roof AND glue it to the brick, the differing movement will tear the caulk open in a single season.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">IRC R1003.20</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.20', 'Chimney exceeds 30 inches parallel to roof ridge and lacks mandatory cricket. High risk of hydrostatic water entry.')">📋 Copy</button>
+                        <br>Cricket / Saddle
+                        <span class="spec-value">Required if chimney is > 30" wide</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">OSHA 1926.501</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'OSHA 1926.501', 'Fall protection protocols triggered. Proper PFAS gear utilized for roof access.')">📋 Copy</button>
+                        <br>Fall Protection
+                        <span class="spec-value">Any work at or above 6 feet</span>
                     </td>
                 </tr>
             </table>
