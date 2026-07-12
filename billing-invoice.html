@@ -532,6 +532,81 @@
         function executeFieldCrewLogout() {
             localStorage.clear(); window.location.replace("index.html");
         }
-    </script>
-</body>
-</html>
+        // ==========================================
+        // 📡 EVERSAFE OFFLINE SYNC ENGINE (LOCKBOX)
+        // ==========================================
+        
+        // 1. Initialize the heartbeat when the page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            setInterval(attemptBackgroundSync, 15000); // Check the lockbox every 15 seconds
+            window.addEventListener('online', attemptBackgroundSync); // Trigger immediately when 5G returns
+        });
+
+        // 2. The function to safely lock data in the vault if a drop occurs
+        function lockPayloadInOfflineVault(endpointRoute, payloadData, successMessage) {
+            var outbox = JSON.parse(localStorage.getItem('eversafe_offline_outbox') || "[]");
+            
+            outbox.push({
+                id: "SYNC_" + Date.now(),
+                timestamp: new Date().toLocaleString(),
+                route: endpointRoute,
+                payload: payloadData,
+                successMessage: successMessage
+            });
+            
+            localStorage.setItem('eversafe_offline_outbox', JSON.stringify(outbox));
+            
+            // Alert the tech so they don't panic
+            var statusLine = document.getElementById('invoiceStatusLine') || document.getElementById('estimateEmailStatus');
+            if(statusLine) {
+                statusLine.innerHTML = "⚠️ <b>Dead Zone Detected.</b> Data saved to Offline Vault. It will auto-sync when cell service returns.";
+                statusLine.style.color = "var(--accent-dark)";
+            }
+        }
+
+        // 3. The heartbeat loop that drains the vault
+        async function attemptBackgroundSync() {
+            if (!navigator.onLine) return; // Still offline, do nothing
+            
+            var outbox = JSON.parse(localStorage.getItem('eversafe_offline_outbox') || "[]");
+            if (outbox.length === 0) return; // Vault is empty
+            
+            console.log("Network restored. Attempting to sync " + outbox.length + " items from vault...");
+
+            var successfulSyncs = [];
+
+            for (let i = 0; i < outbox.length; i++) {
+                let job = outbox[i];
+                try {
+                    let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain" },
+                        body: JSON.stringify(job.payload)
+                    });
+                    
+                    let result = await response.json();
+                    if (result.success) {
+                        successfulSyncs.push(job.id);
+                        
+                        // Safety check: Only fire telemetry if the function exists on this page
+                        if (typeof dispatchSilentTelemetryAlert === "function") {
+                            dispatchSilentTelemetryAlert("Offline Sync Recovered", "A payload dropped in a dead zone successfully arrived at the office.");
+                        }
+                    }
+                } catch (e) {
+                    console.log("Background sync failed for job: " + job.id + ". Will retry.");
+                }
+            }
+
+            // Remove only the jobs that successfully reached the server
+            if (successfulSyncs.length > 0) {
+                outbox = outbox.filter(job => !successfulSyncs.includes(job.id));
+                localStorage.setItem('eversafe_offline_outbox', JSON.stringify(outbox));
+                
+                var statusLine = document.getElementById('invoiceStatusLine') || document.getElementById('estimateEmailStatus');
+                if(statusLine && outbox.length === 0) {
+                    statusLine.innerHTML = "✅ Connection Restored. All offline data successfully synced to office!";
+                    statusLine.style.color = "var(--success)";
+                }
+            }
+        }
