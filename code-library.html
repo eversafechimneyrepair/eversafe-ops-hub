@@ -17,7 +17,7 @@
             --defect-orange: #ea580c; --liner-silver: #94a3b8; --gas-yellow: #eab308;
             --prefab-teal: #0f766e; --stove-brown: #78350f; --success: #22c55e;
             --water-blue: #0ea5e9; --dryer-gray: #64748b; --mantel-wood: #b45309;
-            --chem-purple: #8b5cf6;
+            --chem-purple: #8b5cf6; --electric-gold: #ca8a04;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -40,7 +40,7 @@
 
         /* Quick-Jump */
         .quick-jump-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-        .quick-jump-pill { background: white; border: 1px solid var(--border); color: var(--primary); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; text-decoration: none; }
+        .quick-jump-pill { background: white; border: 1px solid var(--border); color: var(--primary); padding: 8px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; white-space: nowrap; text-decoration: none; }
 
         /* Scope Cards & Tables */
         .scope-card { scroll-margin-top: 130px; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; margin-bottom: 20px; border-top: 4px solid var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.01); }
@@ -72,7 +72,7 @@
         .calc-input { width: 48%; padding: 10px; border: 1px solid #93c5fd; border-radius: 4px; font-size: 14px; margin-bottom: 10px; }
         .calc-input.full-width { width: 100%; }
         .calc-result { font-weight: bold; color: var(--primary); font-size: 14px; margin-top: 5px; }
-        .calc-result.pass { color: var(--success-dark); }
+        .calc-result.pass { color: #15803d; }
         .calc-result.fail { color: var(--danger); }
 
         .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--primary); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
@@ -93,7 +93,7 @@
 
         <!-- Search & Quick Jump -->
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Clearance', 'Dryer')..." onkeyup="filterCodes()">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Bonding', 'Creosote')..." onkeyup="filterCodes()">
         </div>
 
         <div class="quick-jump-container">
@@ -101,6 +101,8 @@
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
             <a href="#waterproofing" class="quick-jump-pill">☔ Waterproofing</a>
             <a href="#chemicals" class="quick-jump-pill">🧪 Chemicals</a>
+            <a href="#gasbonding" class="quick-jump-pill">⚡ CSST Gas Bonding</a>
+            <a href="#woodfuel" class="quick-jump-pill">🪵 Wood Diagnostics</a>
             <a href="#mantels" class="quick-jump-pill">🪵 Mantels</a>
             <a href="#stoves" class="quick-jump-pill">🔥 Stoves</a>
             <a href="#venting" class="quick-jump-pill">💨 Venting Pipes</a>
@@ -157,13 +159,6 @@
                         <br>Creosote Buildup
                         <span class="spec-value">Sweep if > 1/8" thick</span>
                         <span class="defect-flag">Fails if Stage 3 (Glaze) is present</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Danger:</strong> Stage 3 expands up to 7 times its size when ignited, blocking the flue and pushing a 2000-degree blowtorch into the living room.</p>
-                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Flash photo up the flue showing glaze, 1x Close up of damper frame buildup.</div>
-                            </div>
-                        </details>
                     </td>
                 </tr>
                 <tr>
@@ -173,13 +168,6 @@
                         <br>Flue Liner Integrity
                         <span class="spec-value">Zero tolerance for cracks/splits</span>
                         <span class="defect-flag">Fails if ANY tile is cracked</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Danger:</strong> Clay tiles fail due to thermal shock. Even a hairline crack breaks the seal, allowing heat and carbon monoxide to escape into the home's wood framing.</p>
-                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Clear screenshot from camera scan showing the specific crack/void.</div>
-                            </div>
-                        </details>
                     </td>
                 </tr>
                 <tr>
@@ -214,13 +202,6 @@
                         <br>Elastomeric Crown Coatings
                         <span class="spec-value">Used for cracks < 1/8" wide</span>
                         <span class="info-flag">Rebuild required if structurally compromised</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Rule:</strong> Brushable sealants (CrownCoat) preserve a crown. However, if the concrete is loose, crumbling, or cracks exceed 1/8", it is a structural failure. It must be torn off and re-poured.</p>
-                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Wide shot of crown, 1x Macro close-up of crack with tape measure/coin for scale.</div>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
@@ -246,16 +227,63 @@
                         <span class="defect-flag">Rain Limit: Requires 12-24 dry hours</span>
                     </td>
                 </tr>
+            </table>
+        </div>
+
+        <!-- Scope 4.5: CSST Gas Bonding -->
+        <div class="scope-card" id="gasbonding" style="border-top-color: var(--electric-gold);">
+            <div class="scope-title">⚡ CSST Gas Piping Bonding (NFPA 54)</div>
+            
+            <!-- Wire Gauge Calculator -->
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 CSST Electrical Bonding Sizer</div>
+                <input type="number" id="bondingLength" class="calc-input full-width" placeholder="Length of bonding conductor run (ft)" oninput="calculateBonding()">
+                <div class="calc-result" id="bondingOutput">Enter length to size wire...</div>
+            </div>
+
+            <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">Poultice / PCR</span>
-                        <br>Creosote Remover (PCR)
-                        <span class="spec-value">Min Temp: 50°F ambient flue temp</span>
-                        <span class="info-flag">Cure Time: 24 to 48 hours to dry</span>
+                        <span class="code-ref">NFPA 54 - 7.13.2</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 54 - 7.13.2', 'Corrugated Stainless Steel Tubing (CSST) gas line is ungrounded / improperly bonded. High risk of puncture/explosion from indirect lightning strikes. Immediate fire hazard.')">📋 Copy</button>
+                        <br>CSST Bonding Requirement
+                        <span class="spec-value">Direct connection to electrical grounding system</span>
+                        <span class="defect-flag">Fails if missing direct clamp on rigid brass nut</span>
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> PCR must dry completely to fracture the glaze creosote. If you apply it when the outside air is 30 degrees, the flue is too cold, the water in the product freezes, and it will never dry and flake off.</p>
+                                <p><strong>The Physics:</strong> CSST has extremely thin steel walls. If lightning hits near the house, a huge charge builds up in the metal framing. If the gas pipe isn't grounded to the exact same electrical potential, the charge will leap (arc) to the gas line, punching tiny holes straight through the steel and instantly igniting the gas inside the wall.</p>
+                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Wide shot of the gas manifold showing missing bonding clamp.</div>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 4.6: Wood Fuel Diagnostic -->
+        <div class="scope-card" id="woodfuel" style="border-top-color: var(--stove-brown);">
+            <div class="scope-title">🪵 Firewood Diagnostics & Creosote Prevention</div>
+            
+            <!-- Moisture Risk Calculator -->
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Wood Moisture Analysis Calculator</div>
+                <input type="number" id="woodMoisture" class="calc-input full-width" placeholder="Internal Core Moisture Content (%)" oninput="calculateWoodRisk()">
+                <div class="calc-result" id="woodOutput">Enter moisture percentage...</div>
+            </div>
+
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 / Wood Burner Diagnostics</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'Wood Diagnostics', 'Client is burning unseasoned wood exceeding 20% internal moisture content. Results in chilled flue gas, poor draft, and rapid structural glaze creosote accumulation.')">📋 Copy</button>
+                        <br>Moisture Threshold Limits
+                        <span class="spec-value">Target: 15% to 20% max moisture content</span>
+                        <span class="defect-flag">Fails if > 25% (Unseasoned / Wet wood)</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> When wood is wet, the fire spends all its energy boiling that internal water into steam instead of throwing heat. This steam chills the flue gas. When the smoke drop below 250°F, it instantly turns into gooey liquid creosote on the liner walls, hardening into catastrophic Stage 3 Glaze.</p>
                             </div>
                         </details>
                     </td>
@@ -321,7 +349,6 @@
                         <button class="btn-copy" onclick="copyToReport(this, 'UL 103 HT', 'Class A solid fuel chimney pipe violates minimum 2-inch clearance to combustibles.')">📋 Copy</button>
                         <br>Class A Chimney (Solid Fuel)
                         <span class="spec-value">Min 2" clearance to combustibles</span>
-                        <span class="info-flag">Requires attic insulation shields</span>
                     </td>
                 </tr>
                 <tr>
@@ -331,15 +358,6 @@
                         <br>Type B-Vent (Gas Only)
                         <span class="spec-value">Min 1" clearance to combustibles</span>
                         <span class="defect-flag">Prohibited for wood/solid fuel</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">UL 641</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'UL 641', 'Pellet vent clearance violation. Pipe joints lack mandatory high-temp RTV silicone seal.')">📋 Copy</button>
-                        <br>Pellet Vent (Type L / PL)
-                        <span class="spec-value">Min 1" to 3" clearance (Check OEM tag)</span>
-                        <span class="info-flag">Joints must be sealed with high-temp RTV</span>
                     </td>
                 </tr>
             </table>
@@ -540,7 +558,7 @@
             });
         }
 
-        // 3. Flue Calculator
+        // 3. Flue Sizing Calculator
         function calculateFlue() {
             let w = parseFloat(document.getElementById('fbWidth').value);
             let h = parseFloat(document.getElementById('fbHeight').value);
@@ -560,7 +578,7 @@
             Req. Round: <strong>${reqRound.toFixed(1)} sq.in.</strong> (Approx <strong>${Math.ceil(idealDiameter)}"</strong> liner)`;
         }
 
-        // 4. Mantel Calculator
+        // 4. Mantel Height Calculator
         function calculateMantel() {
             let depth = parseFloat(document.getElementById('mantelDepth').value);
             let out = document.getElementById('mantelOutput');
@@ -599,7 +617,7 @@
             }
         }
 
-        // 6. Mortar Estimator
+        // 6. Mortar Bag Estimator
         function calculateMortar() {
             let bricks = parseFloat(document.getElementById('brickCount').value);
             let out = document.getElementById('mortarOutput');
@@ -608,13 +626,11 @@
                 out.innerText = "Enter brick count...";
                 return;
             }
-            
-            // Standard rule: 1 bag of 80lb mortar lays approx 35 standard modular bricks.
             let bags = Math.ceil(bricks / 35);
             out.innerHTML = `Estimated Materials:<br><strong>${bags} Bags</strong> of 80lb Type N Mortar`;
         }
 
-        // 7. Roof Pitch Calculator
+        // 7. Roof Pitch & OSHA Shield
         function calculatePitch() {
             let rise = parseFloat(document.getElementById('roofRise').value);
             let out = document.getElementById('pitchOutput');
@@ -624,10 +640,7 @@
                 out.className = "calc-result";
                 return;
             }
-            
-            // Calculate angle: arctangent of (rise/run), converted to degrees
             let angle = Math.atan(rise / 12) * (180 / Math.PI);
-            
             let response = `Pitch: <strong>${rise}/12</strong> (${angle.toFixed(1)}°)<br>`;
             
             if (rise > 4) {
@@ -637,8 +650,55 @@
                 response += `✅ Low Slope Roof`;
                 out.className = "calc-result pass";
             }
-            
             out.innerHTML = response;
+        }
+
+        // 8. NEW: CSST Wire Gauge Calculator (NEC 250 Bonding Codes)
+        function calculateBonding() {
+            let length = parseFloat(document.getElementById('bondingLength').value);
+            let out = document.getElementById('bondingOutput');
+            
+            if (!length || length <= 0) {
+                out.innerText = "Enter length to size wire...";
+                out.className = "calc-result";
+                return;
+            }
+            
+            // Per national codes, CSST must be bonded with a wire no smaller than 6 AWG copper wire.
+            // If the run gets extremely long, drop an operational warning.
+            if (length > 100) {
+                out.innerHTML = `Req Wire: <strong>#6 AWG Bare Copper</strong><br>⚠️ Long run (${length}ft). Check system grounding path resistance directly.`;
+                out.className = "calc-result fail";
+            } else {
+                out.innerHTML = `Req Wire: <strong>#6 AWG Bare Copper Wire</strong><br>✅ Code Approved (Clamp securely to rigid brass adapter hex nut).`;
+                out.className = "calc-result pass";
+            }
+        }
+
+        // 9. NEW: Wood Moisture Performance Logic
+        function calculateWoodRisk() {
+            let moisture = parseFloat(document.getElementById('woodMoisture').value);
+            let out = document.getElementById('woodOutput');
+            
+            if (!moisture || moisture <= 0) {
+                out.innerText = "Enter moisture percentage...";
+                out.className = "calc-result";
+                return;
+            }
+            
+            if (moisture < 15) {
+                out.innerHTML = `Moisture: <strong>${moisture}%</strong> (Ultra-Dry)<br>🔥 Burn Risk: Burns too fast. Hard on firebox welds. High heat output.`;
+                out.className = "calc-result pass";
+            } else if (moisture >= 15 && moisture <= 20) {
+                out.innerHTML = `Moisture: <strong>${moisture}%</strong> (Optimum)<br>✅ Perfect Seasoning: Maximum BTU output, clean ignition, minimum creosote risk.`;
+                out.className = "calc-result pass";
+            } else if (moisture > 20 && moisture <= 25) {
+                out.innerHTML = `Moisture: <strong>${moisture}%</strong> (Marginal)<br>⚠️ Slow Draft: Hard to light. Prone to smoking back into the room. Sweeping frequency should double.`;
+                out.className = "calc-result fail";
+            } else {
+                out.innerHTML = `Moisture: <strong>${moisture}%</strong> (UNSEASONED / FAILURE)<br>❌ CRITICAL RISK: Moisture acts as a heat sink. Flue gas will drop below 250°F, creating rapid <strong>Stage 3 Glaze Creosote</strong>. System is unsafe.`;
+                out.className = "calc-result fail";
+            }
         }
     </script>
 </body>
