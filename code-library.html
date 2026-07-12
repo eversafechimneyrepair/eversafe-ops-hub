@@ -17,7 +17,8 @@
             --defect-orange: #ea580c; --liner-silver: #94a3b8; --gas-yellow: #eab308;
             --prefab-teal: #0f766e; --stove-brown: #78350f; --success: #22c55e;
             --water-blue: #0ea5e9; --dryer-gray: #64748b; --mantel-wood: #b45309;
-            --chem-purple: #8b5cf6; --electric-gold: #ca8a04;
+            --chem-purple: #8b5cf6; --electric-gold: #ca8a04; --wildlife-green: #15803d;
+            --draft-cyan: #06b6d4; --fab-pink: #be185d;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -56,6 +57,9 @@
         .info-flag { color: var(--sms-blue); font-size: 11px; font-weight: bold; text-transform: uppercase; background: #f0f9ff; padding: 3px 6px; border-radius: 4px; border: 1px solid #bae6fd; display: inline-block; margin-top: 6px; }
         .btn-copy { position: absolute; right: 4px; top: 12px; background: #f1f5f9; color: var(--sms-blue); border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .btn-copy:active { background: var(--sms-blue); color: white; }
+        
+        .btn-fab { display: block; width: 100%; text-align: center; background: var(--fab-pink); color: white; font-weight: bold; padding: 10px; border-radius: 6px; margin-top: 10px; border: none; cursor: pointer; text-transform: uppercase; font-size: 12px; }
+        .btn-fab:active { background: #9d174d; }
 
         /* Deep Dives & Calculators */
         details.deep-dive { margin-top: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; }
@@ -93,17 +97,20 @@
 
         <!-- Search & Quick Jump -->
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Bonding', 'Creosote')..." onkeyup="filterCodes()">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Draft', 'Creosote')..." onkeyup="filterCodes()">
         </div>
 
         <div class="quick-jump-container">
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
+            <a href="#forensics" class="quick-jump-pill">🕵️ Forensics</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
+            <a href="#drafting" class="quick-jump-pill">🌬️ Draft & Flow</a>
             <a href="#waterproofing" class="quick-jump-pill">☔ Waterproofing</a>
             <a href="#chemicals" class="quick-jump-pill">🧪 Chemicals</a>
-            <a href="#gasbonding" class="quick-jump-pill">⚡ CSST Gas Bonding</a>
+            <a href="#gasbonding" class="quick-jump-pill">⚡ Gas Bonding</a>
             <a href="#woodfuel" class="quick-jump-pill">🪵 Wood Diagnostics</a>
             <a href="#mantels" class="quick-jump-pill">🪵 Mantels</a>
+            <a href="#wildlife" class="quick-jump-pill">🦝 Wildlife</a>
             <a href="#stoves" class="quick-jump-pill">🔥 Stoves</a>
             <a href="#venting" class="quick-jump-pill">💨 Venting Pipes</a>
             <a href="#dampers" class="quick-jump-pill">⚙️ Gas & Dampers</a>
@@ -112,7 +119,8 @@
             <a href="#dryer" class="quick-jump-pill">🌀 Dryer Vents</a>
             <a href="#clearances" class="quick-jump-pill">🏠 Roof Terminations</a>
             <a href="#masonry" class="quick-jump-pill">🧱 Masonry</a>
-            <a href="#safety" class="quick-jump-pill">🦺 Safety & Fall</a>
+            <a href="#safety" class="quick-jump-pill">🦺 Safety</a>
+            <a href="#fabrication" class="quick-jump-pill">📐 Custom Parts</a>
         </div>
 
         <!-- Scope 1: Inspections -->
@@ -136,11 +144,28 @@
                         <span class="spec-value">Sale/Transfer of property</span>
                         <span class="spec-value">Post-chimney fire or weather event</span>
                         <span class="info-flag">Mandatory camera scan</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Scope 1.5: Chimney Fire Forensics -->
+        <div class="scope-card" id="forensics" style="border-top-color: var(--danger);">
+            <div class="scope-title">🕵️ Chimney Fire Forensics</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">NFPA 211 - 14.5</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.5 / Fire Event', 'Evidence of sudden thermal shock and hostile fire event observed. Findings include: Puffed/expanded creosote, vertically fractured terra cotta tiles, thermal discoloration of exterior masonry, and warping of metal damper components. System is condemned until fully rebuilt/relined.')">📋 Copy Insurance Narrative</button>
+                        <br>Visual Evidence of Hostile Fire
+                        <span class="spec-value">Puffed, honeycomb-like creosote</span>
+                        <span class="spec-value">Vertical "clean" cracks in clay tiles</span>
+                        <span class="spec-value">Warped damper plates / discolored caps</span>
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Liability:</strong> If a house was just sold, had a chimney fire, or is getting a new fuel type, the code mandates a Level 2. <strong>You must run a camera up the flue.</strong></p>
-                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Wide shot exterior, 1x Wide shot appliance, Video link to scan.</div>
+                                <p><strong>The Reality:</strong> Most chimney fires go unnoticed by the homeowner because they sound like a low rumble or a strong wind. The extreme, sudden heat (2000°F+) instantly turns flat creosote into expanded, puffy honeycomb. It also causes the clay tiles to expand faster than they can handle, creating massive, vertical, razor-thin cracks (Thermal Shock).</p>
+                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Puffed creosote texture, 1x Vertical tile crack, 1x Warped metal or heat discoloration.</div>
                             </div>
                         </details>
                     </td>
@@ -170,13 +195,27 @@
                         <span class="defect-flag">Fails if ANY tile is cracked</span>
                     </td>
                 </tr>
+            </table>
+        </div>
+
+        <!-- Scope 2.5: Draft & Pressure -->
+        <div class="scope-card" id="drafting" style="border-top-color: var(--draft-cyan);">
+            <div class="scope-title">🌬️ Draft & Negative Pressure</div>
+            <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">IRC R1003.8</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.8', 'Smoke chamber masonry is stepped (corbeled) and unparged. Causes draft turbulence and creosote buildup. Chamber parging required.')">📋 Copy</button>
-                        <br>Smoke Chamber Parging
-                        <span class="spec-value">Must be parged smooth</span>
-                        <span class="defect-flag">Fails if brick steps are exposed</span>
+                        <span class="code-ref">IRC R1006.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1006.1', 'Appliance experiencing severe downdraft/smoke spillage. Building envelope exhibits negative pressure competing with chimney draft. Dedicated exterior combustion air intake required.')">📋 Copy</button>
+                        <br>Combustion Air Requirements
+                        <span class="spec-value">Required for solid fuel appliances in tight homes</span>
+                        <span class="defect-flag">Smoke spillage upon ignition</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> Fire needs oxygen. A standard fireplace pulls 300+ cubic feet of air per minute out of the house. If the house is sealed tight with modern windows, or if a bathroom fan/kitchen hood is running, a vacuum forms. The chimney is the largest hole in the house, so the house literally sucks air *down* the chimney, bringing smoke into the living room.</p>
+                                <p><strong>The Test:</strong> Crack a window near the fireplace 2 inches. If the smoke immediately reverses and drafts perfectly up the chimney, the house is negatively pressurized. You must install a dedicated outside air kit.</p>
+                            </div>
+                        </details>
                     </td>
                 </tr>
             </table>
@@ -193,15 +232,6 @@
                         <br>Masonry Water Repellents
                         <span class="spec-value">Must be 100% vapor permeable</span>
                         <span class="defect-flag">Fails if painted or film-sealed</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">Crown Repair</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'Crown Preservation', 'Chimney crown exhibits hairline cracking. Recommend elastomeric crown sealant to prevent further water intrusion and freeze-thaw damage.')">📋 Copy</button>
-                        <br>Elastomeric Crown Coatings
-                        <span class="spec-value">Used for cracks < 1/8" wide</span>
-                        <span class="info-flag">Rebuild required if structurally compromised</span>
                     </td>
                 </tr>
             </table>
@@ -234,7 +264,6 @@
         <div class="scope-card" id="gasbonding" style="border-top-color: var(--electric-gold);">
             <div class="scope-title">⚡ CSST Gas Piping Bonding (NFPA 54)</div>
             
-            <!-- Wire Gauge Calculator -->
             <div class="calc-box">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 CSST Electrical Bonding Sizer</div>
                 <input type="number" id="bondingLength" class="calc-input full-width" placeholder="Length of bonding conductor run (ft)" oninput="calculateBonding()">
@@ -249,13 +278,6 @@
                         <br>CSST Bonding Requirement
                         <span class="spec-value">Direct connection to electrical grounding system</span>
                         <span class="defect-flag">Fails if missing direct clamp on rigid brass nut</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> CSST has extremely thin steel walls. If lightning hits near the house, a huge charge builds up in the metal framing. If the gas pipe isn't grounded to the exact same electrical potential, the charge will leap (arc) to the gas line, punching tiny holes straight through the steel and instantly igniting the gas inside the wall.</p>
-                                <div class="photo-req">📸 REQUIRED PHOTOS: 1x Wide shot of the gas manifold showing missing bonding clamp.</div>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
@@ -263,9 +285,8 @@
 
         <!-- Scope 4.6: Wood Fuel Diagnostic -->
         <div class="scope-card" id="woodfuel" style="border-top-color: var(--stove-brown);">
-            <div class="scope-title">🪵 Firewood Diagnostics & Creosote Prevention</div>
+            <div class="scope-title">🪵 Firewood Diagnostics & Moisture</div>
             
-            <!-- Moisture Risk Calculator -->
             <div class="calc-box">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Wood Moisture Analysis Calculator</div>
                 <input type="number" id="woodMoisture" class="calc-input full-width" placeholder="Internal Core Moisture Content (%)" oninput="calculateWoodRisk()">
@@ -275,17 +296,11 @@
             <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">NFPA 211 / Wood Burner Diagnostics</span>
+                        <span class="code-ref">NFPA 211 / Fuel Quality</span>
                         <button class="btn-copy" onclick="copyToReport(this, 'Wood Diagnostics', 'Client is burning unseasoned wood exceeding 20% internal moisture content. Results in chilled flue gas, poor draft, and rapid structural glaze creosote accumulation.')">📋 Copy</button>
                         <br>Moisture Threshold Limits
                         <span class="spec-value">Target: 15% to 20% max moisture content</span>
                         <span class="defect-flag">Fails if > 25% (Unseasoned / Wet wood)</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> When wood is wet, the fire spends all its energy boiling that internal water into steam instead of throwing heat. This steam chills the flue gas. When the smoke drop below 250°F, it instantly turns into gooey liquid creosote on the liner walls, hardening into catastrophic Stage 3 Glaze.</p>
-                            </div>
-                        </details>
                     </td>
                 </tr>
             </table>
@@ -314,6 +329,43 @@
             </table>
         </div>
 
+        <!-- Scope 5.5: Wildlife & Biohazards -->
+        <div class="scope-card" id="wildlife" style="border-top-color: var(--wildlife-green);">
+            <div class="scope-title">🦝 Wildlife & Biohazards</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">Federal MBTA Law</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'Federal MBTA', 'Active Chimney Swift nesting observed. Under the Federal Migratory Bird Treaty Act, removal of active nests or eggs is a federal crime. Service suspended until birds migrate in Autumn.')">📋 Copy</button>
+                        <br>Chimney Swifts (Migratory Birds)
+                        <span class="spec-value">Federally protected species</span>
+                        <span class="defect-flag">DO NOT REMOVE active nests or eggs</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Law:</strong> Chimney Swifts are protected under the Federal Migratory Bird Treaty Act. If you knowingly knock down a nest with eggs or chicks, you and the company can be fined up to $15,000 and face jail time. You must wait for them to fly south in the fall, then sweep the flue and install a cap.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">OSHA Biohazard PPE</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'Biohazard Protocol', 'Excessive wildlife guano/droppings present in flue system. Poses severe Histoplasmosis respiratory risk. Specialized biohazard removal required prior to standard servicing.')">📋 Copy</button>
+                        <br>Animal Droppings & Histoplasmosis
+                        <span class="spec-value">Raccoon, Bat, and Bird Guano</span>
+                        <span class="info-flag">Mandatory P100 / N95 Respirator</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Danger:</strong> Droppings (especially bird and bat) contain spores of a fungus called Histoplasma. When you sweep, these invisible spores go airborne. If inhaled, they cause Histoplasmosis, a severe and potentially fatal lung infection. Never sweep heavy guano without a high-grade respirator and HEPA vacuum control.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
         <!-- Scope 6: Wood Stoves -->
         <div class="scope-card" id="stoves" style="border-top-color: var(--stove-brown);">
             <div class="scope-title">🔥 Free-Standing Stoves (Wood/Pellet)</div>
@@ -325,15 +377,6 @@
                         <br>Connector Pipe Clearances
                         <span class="spec-value">Single-Wall: Min 18" Clearance</span>
                         <span class="spec-value">Double-Wall: Min 6" Clearance</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 12.6.2.6</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 12.6.2.6', 'Hearth pad ember protection is undersized. Must extend minimum 18 inches in front of loading door.')">📋 Copy</button>
-                        <br>Floor Protection (Ember Pad)
-                        <span class="spec-value">Min 18" in front of loading door</span>
-                        <span class="spec-value">Min 8" to sides and back</span>
                     </td>
                 </tr>
             </table>
@@ -351,15 +394,6 @@
                         <span class="spec-value">Min 2" clearance to combustibles</span>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">UL 441</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'UL 441', 'Type B Gas Vent utilized for solid fuel or violates 1-inch minimum clearance.')">📋 Copy</button>
-                        <br>Type B-Vent (Gas Only)
-                        <span class="spec-value">Min 1" clearance to combustibles</span>
-                        <span class="defect-flag">Prohibited for wood/solid fuel</span>
-                    </td>
-                </tr>
             </table>
         </div>
 
@@ -375,14 +409,6 @@
                         <span class="defect-flag">Prohibited on active Gas Logs</span>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">IFGC 602.2</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IFGC 602.2', 'Vented gas logs lack mandatory damper clamp. Damper must be physically locked in open position to prevent CO buildup.')">📋 Copy</button>
-                        <br>Damper Clamps (Vented Gas)
-                        <span class="spec-value">Mandatory for Vented Gas Logs</span>
-                    </td>
-                </tr>
             </table>
         </div>
 
@@ -396,7 +422,6 @@
                         <button class="btn-copy" onclick="copyToReport(this, 'UL 127', 'Factory-built fireplace contains non-OEM components. Modification voids the UL listing and presents a fire hazard.')">📋 Copy</button>
                         <br>Factory-Built Fireplaces (Zero-Clearance)
                         <span class="spec-value">Must use OEM replacement parts</span>
-                        <span class="defect-flag">Fails if parts are mixed & matched</span>
                     </td>
                 </tr>
             </table>
@@ -412,12 +437,11 @@
                 <input type="number" id="fbHeight" class="calc-input" placeholder="Height (in)" oninput="calculateFlue()">
                 <div class="calc-result" id="calcOutput">Enter dimensions to calculate required liner...</div>
             </div>
-
+            
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">UL 1777</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'UL 1777', 'Stainless liner lacks required insulation wrap or pour-down mix. Heat transfer risk to combustibles violates UL listing.')">📋 Copy</button>
                         <br>Liner Insulation
                         <span class="spec-value">1/2" Foil-Faced Wrap OR Thermix</span>
                     </td>
@@ -435,18 +459,6 @@
                 <input type="number" id="dryer90s" class="calc-input" placeholder="Number of 90° Elbows" oninput="calculateDryer()">
                 <div class="calc-result" id="dryerOutput">Enter run data...</div>
             </div>
-
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IMC 504.8.4</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IMC 504.8.4', 'Dryer exhaust duct length exceeds 35 ft effective limit. High risk of lint blockage and fire.')">📋 Copy</button>
-                        <br>Maximum Duct Length
-                        <span class="spec-value">Max 35 feet (Concealed)</span>
-                        <span class="defect-flag">Deduct 5ft for every 90° elbow</span>
-                    </td>
-                </tr>
-            </table>
         </div>
 
         <!-- Scope 12: Clearances -->
@@ -456,7 +468,6 @@
                 <tr>
                     <td>
                         <span class="code-ref">IRC R1003.9</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.9', 'Chimney termination violates the 3-2-10 clearance rule. Stack is susceptible to high-pressure wind downdrafts.')">📋 Copy</button>
                         <br>The "3-2-10" Rule
                         <span class="spec-value">Min 3 ft above roof penetration</span>
                         <span class="spec-value">Min 2 ft higher than structure within 10 ft</span>
@@ -474,18 +485,6 @@
                 <input type="number" id="brickCount" class="calc-input full-width" placeholder="Total Estimated Bricks" oninput="calculateMortar()">
                 <div class="calc-result" id="mortarOutput">Enter brick count...</div>
             </div>
-
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.9.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IRC R1003.9.1', 'Chimney crown defective/lacking proper overhang. Water shedding onto brick face causing masonry degradation.')">📋 Copy</button>
-                        <br>Chimney Crown (Cast/Poured)
-                        <span class="spec-value">Min 2" overhang past brick w/ drip edge</span>
-                        <span class="info-flag">Must have bond break around flue</span>
-                    </td>
-                </tr>
-            </table>
         </div>
 
         <!-- Scope 14: Safety -->
@@ -497,18 +496,24 @@
                 <input type="number" id="roofRise" class="calc-input full-width" placeholder="Rise (Inches up per 12 inches across)" oninput="calculatePitch()">
                 <div class="calc-result" id="pitchOutput">Enter rise...</div>
             </div>
+        </div>
+        
+        <!-- Scope 15: Custom Fabrication Templates -->
+        <div class="scope-card" id="fabrication" style="border-top-color: var(--fab-pink);">
+            <div class="scope-title">📐 Custom Parts Measurement Generator</div>
+            <p style="font-size: 12.5px; color: #475569; margin-bottom: 12px;">Tap a button to instantly copy a blank measurement worksheet to your clipboard for easy pasting into your job notes or supplier emails.</p>
+            
+            <button class="btn-fab" onclick="copyTemplate(this, 'CHASE COVER ORDER\n===================\n- Width (Left to Right): ____ in\n- Depth (Front to Back): ____ in\n- Skirt Length/Drop: ____ in (Standard is 3in)\n- Hole Diameter: ____ in (Add 1in to pipe OD)\n- Hole Offset from Left Edge (to center): ____ in\n- Hole Offset from Front Edge (to center): ____ in\n- Metal Type (Stainless/Copper/Galv): ____________\n- Cross Break Required? (Yes/No): ____________')">
+                📋 Copy Chase Cover Template
+            </button>
 
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">OSHA 1926.501</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'OSHA 1926.501', 'Fall protection protocols triggered. Proper PFAS gear utilized for roof access.')">📋 Copy</button>
-                        <br>Fall Protection Threshold
-                        <span class="spec-value">Any work at or above 6 feet</span>
-                        <span class="defect-flag">Mandatory PFAS for pitch > 4/12</span>
-                    </td>
-                </tr>
-            </table>
+            <button class="btn-fab" onclick="copyTemplate(this, 'TOP DAMPER ORDER\n===================\n- Inside Flue Width: ____ in\n- Inside Flue Length: ____ in\n- Outside Flue Width: ____ in\n- Outside Flue Length: ____ in\n- Is tile flush with crown? (Yes/No): ____________\n- Cable Length Required: ____ ft (Standard 30ft)\n- Model Preferred (Lyemance/Lock-Top): ____________')">
+                📋 Copy Top-Sealer Damper Template
+            </button>
+            
+            <button class="btn-fab" onclick="copyTemplate(this, 'LINER KIT ORDER\n===================\n- Appliance Type (Wood/Gas/Pellet): ____________\n- Flue Profile (Round/Oval/Square): ____________\n- Liner Diameter Needed: ____ in\n- Total Length Needed (Bottom to Top): ____ ft\n- Insulation (Wrap / Pour-Down): ____________\n- Top Plate Size (Width x Depth): ____ x ____ in\n- Tee/Takeoff Required? (Yes/No): ____________')">
+                📋 Copy Relining Kit Template
+            </button>
         </div>
 
     </div>
@@ -557,8 +562,23 @@
                 alert("Failed to copy text.");
             });
         }
+        
+        // 2.5 Copy Blank Measurement Templates
+        function copyTemplate(btn, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                let originalText = btn.innerText;
+                btn.innerText = "✅ WORKSHEET COPIED";
+                btn.style.background = "var(--success)";
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.background = "var(--fab-pink)";
+                }, 2000);
+            }).catch(err => {
+                alert("Failed to copy template.");
+            });
+        }
 
-        // 3. Flue Sizing Calculator
+        // 3. Flue Calculator
         function calculateFlue() {
             let w = parseFloat(document.getElementById('fbWidth').value);
             let h = parseFloat(document.getElementById('fbHeight').value);
@@ -653,7 +673,7 @@
             out.innerHTML = response;
         }
 
-        // 8. NEW: CSST Wire Gauge Calculator (NEC 250 Bonding Codes)
+        // 8. CSST Wire Gauge Calculator (NEC 250 Bonding Codes)
         function calculateBonding() {
             let length = parseFloat(document.getElementById('bondingLength').value);
             let out = document.getElementById('bondingOutput');
@@ -663,9 +683,6 @@
                 out.className = "calc-result";
                 return;
             }
-            
-            // Per national codes, CSST must be bonded with a wire no smaller than 6 AWG copper wire.
-            // If the run gets extremely long, drop an operational warning.
             if (length > 100) {
                 out.innerHTML = `Req Wire: <strong>#6 AWG Bare Copper</strong><br>⚠️ Long run (${length}ft). Check system grounding path resistance directly.`;
                 out.className = "calc-result fail";
@@ -675,7 +692,7 @@
             }
         }
 
-        // 9. NEW: Wood Moisture Performance Logic
+        // 9. Wood Moisture Performance Logic
         function calculateWoodRisk() {
             let moisture = parseFloat(document.getElementById('woodMoisture').value);
             let out = document.getElementById('woodOutput');
