@@ -104,7 +104,8 @@
             <div class="form-group" style="margin-bottom:12px;"><label>Billing Address:</label><input type="text" id="inv_addr"></div>
 
             <div class="section-title">Settled Scope &amp; Line Items</div>
-            <textarea id="inv_scope" rows="4" readonly></textarea>
+            <!-- Removed readonly and increased rows so techs can easily tap and type -->
+            <textarea id="inv_scope" rows="8" placeholder="Type or edit the project scope here..."></textarea>
 
             <div class="grid-2" style="margin-top:15px;">
                 <div class="form-group">
@@ -189,25 +190,54 @@
         var CURRENT_USER = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
         var ORIGINAL_PROJECT_ESTIMATE_MAX = parseFloat(localStorage.getItem('current_wo_est_cost')) || 0;
 
-        window.addEventListener('DOMContentLoaded', function() {
+       window.addEventListener('DOMContentLoaded', function() {
+            // 1. Pull Customer Details
             document.getElementById('inv_cust').value = localStorage.getItem('current_wo_customer_name') || localStorage.getItem('cached_wo_cust') || "";
             document.getElementById('inv_email').value = localStorage.getItem('current_wo_customer_email') || localStorage.getItem('cached_wo_email') || "";
             document.getElementById('inv_phone').value = localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('cached_wo_phone') || "";
             document.getElementById('inv_addr').value = localStorage.getItem('current_wo_service_address') || localStorage.getItem('cached_wo_addr') || "";
             
-            var detailedScope = localStorage.getItem('current_wo_work_scope') || localStorage.getItem('estimate_scope') || localStorage.getItem('detailedScope') || localStorage.getItem('cached_inv_scope');
-            
-            // Format the scope text clean as bullets
-            if (detailedScope && detailedScope.includes("[") && detailedScope.includes("]")) {
-                var scopeParts = detailedScope.split('\n');
-                var cleanedScope = scopeParts.filter(line => !line.startsWith('[')).join('\n').trim();
-                document.getElementById('inv_scope').value = cleanedScope;
-            } else {
-                document.getElementById('inv_scope').value = detailedScope || "No scope found in memory.";
+            // 2. Intelligent Scope Builder (Pulls Active Bids from Estimator)
+            let builtScope = "";
+            let activeBids = localStorage.getItem("everSafeActiveBidMatrix");
+            let fallbackScope = localStorage.getItem('current_wo_work_scope') || localStorage.getItem('estimate_scope') || localStorage.getItem('cached_inv_scope') || "";
+
+            if (activeBids && JSON.parse(activeBids).length > 0) {
+                let items = JSON.parse(activeBids);
+                let scopeLines = [];
+                items.forEach(item => {
+                    scopeLines.push(`• ${item.label} (Qty: ${item.qty})`);
+                    if (item.wbs && item.wbs.length > 0) {
+                        scopeLines.push(`  Scope: ${item.wbs.join(", ")}`);
+                    }
+                });
+                builtScope = scopeLines.join("\n\n");
+            } else if (fallbackScope) {
+                if (fallbackScope.includes("[") && fallbackScope.includes("]")) {
+                    let scopeParts = fallbackScope.split('\n');
+                    builtScope = scopeParts.filter(line => !line.startsWith('[')).join('\n').trim();
+                } else {
+                    builtScope = fallbackScope;
+                }
+            }
+
+            // Inject the scope into the unlocked textarea
+            document.getElementById('inv_scope').value = builtScope || "";
+
+            // 3. Intelligent Price Routing
+            let masterLedger = localStorage.getItem("everSafeMasterLedger");
+            if (ORIGINAL_PROJECT_ESTIMATE_MAX === 0) {
+                if (masterLedger) {
+                    let ledger = JSON.parse(masterLedger);
+                    ORIGINAL_PROJECT_ESTIMATE_MAX = parseFloat(ledger.total) || 0;
+                } else {
+                    ORIGINAL_PROJECT_ESTIMATE_MAX = parseFloat(localStorage.getItem('current_wo_est_cost')) || 0;
+                }
             }
                 
             document.getElementById('inv_subtotal').value = ORIGINAL_PROJECT_ESTIMATE_MAX.toFixed(2);
             
+            // 4. Set Listeners
             document.getElementById('inv_cust').addEventListener('input', function() { localStorage.setItem('current_wo_customer_name', this.value); });
             document.getElementById('inv_phone').addEventListener('input', function() { localStorage.setItem('current_wo_customer_phone', this.value); });
             document.getElementById('inv_email').addEventListener('input', function() { localStorage.setItem('current_wo_customer_email', this.value); });
