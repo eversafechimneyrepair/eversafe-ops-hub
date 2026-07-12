@@ -20,6 +20,7 @@
             --chem-purple: #8b5cf6; --electric-gold: #ca8a04; --wildlife-green: #15803d;
             --draft-cyan: #06b6d4; --fab-pink: #be185d; --hazmat-lime: #84cc16; --red-tag: #b91c1c;
             --co-purple: #9333ea; --price-green: #16a34a; --tool-slate: #334155; --truck-black: #1e293b;
+            --offset-teal: #0d9488; --script-rose: #e11d48;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
@@ -63,6 +64,8 @@
         .btn-fab:active { background: #9d174d; }
         .btn-redtag { background: var(--red-tag); margin-top: 15px; }
         .btn-redtag:active { background: #7f1d1d; }
+        .btn-script { background: var(--script-rose); }
+        .btn-script:active { background: #9f1239; }
 
         /* Session Export Floating Button */
         .btn-session-export { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; border: 2px solid var(--accent); padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; z-index: 101; text-transform: uppercase; letter-spacing: 0.5px; width: 80%; max-width: 300px;}
@@ -103,61 +106,116 @@
 
         <!-- Search & Quick Jump -->
         <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Payload', 'ROI')..." onkeyup="filterCodes()">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search codes (e.g., 'Offset', 'Script')..." onkeyup="filterCodes()">
         </div>
 
         <div class="quick-jump-container">
-            <a href="#logistics" class="quick-jump-pill">🛻 Fleet Payload</a>
+            <a href="#scripts" class="quick-jump-pill">🗣️ Sales Scripts</a>
+            <a href="#offset" class="quick-jump-pill">📐 Pipe Offset Calc</a>
+            <a href="#drafting" class="quick-jump-pill">🌬️ Draft & Air</a>
             <a href="#estimates" class="quick-jump-pill">💰 ROI & Pricing</a>
             <a href="#tools" class="quick-jump-pill">🧹 Tools & Brushes</a>
-            <a href="#co-levels" class="quick-jump-pill">🚨 Carbon Monoxide</a>
-            <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
-            <a href="#forensics" class="quick-jump-pill">🕵️ Forensics</a>
+            <a href="#co-levels" class="quick-jump-pill">🚨 CO Limits</a>
             <a href="#defects" class="quick-jump-pill">🚫 Defects</a>
             <a href="#hazmat" class="quick-jump-pill">☢️ Hazmat</a>
-            <a href="#drafting" class="quick-jump-pill">🌬️ Draft & Smoke</a>
+            <a href="#waterproofing" class="quick-jump-pill">☔ Leaks vs Condensation</a>
+            <a href="#chemicals" class="quick-jump-pill">🧪 Chemicals</a>
             <a href="#gasbonding" class="quick-jump-pill">⚡ Gas Bonding</a>
+            <a href="#woodfuel" class="quick-jump-pill">🪵 Wood Moisture</a>
             <a href="#mantels" class="quick-jump-pill">🪵 Mantels</a>
             <a href="#stoves" class="quick-jump-pill">🔥 Stoves & Shields</a>
             <a href="#venting" class="quick-jump-pill">💨 HVAC Venting</a>
             <a href="#relining" class="quick-jump-pill">🛡️ Relining</a>
-            <a href="#clearances" class="quick-jump-pill">🏠 Terminations</a>
+            <a href="#dryer" class="quick-jump-pill">🌀 Dryer Vents</a>
             <a href="#masonry" class="quick-jump-pill">🧱 Masonry</a>
             <a href="#safety" class="quick-jump-pill">🦺 Ladders & Fall</a>
-            <a href="#fabrication" class="quick-jump-pill">📐 Templates</a>
+            <a href="#logistics" class="quick-jump-pill">🛻 Fleet Payload</a>
         </div>
 
-        <!-- NEW SCOPE: Fleet Logistics -->
-        <div class="scope-card" id="logistics" style="border-top-color: var(--truck-black);">
-            <div class="scope-title">🛻 Fleet Safety & Logistics</div>
+        <!-- NEW SCOPE: Scripts -->
+        <div class="scope-card" id="scripts" style="border-top-color: var(--script-rose);">
+            <div class="scope-title">🗣️ De-escalation & Sales Scripts</div>
+            <p style="font-size: 12px; color: #475569; margin-bottom: 12px;">Copy these exact phrases to handle tough homeowner objections smoothly.</p>
+
+            <button class="btn-fab btn-script" onclick="copyTemplate(this, 'I completely understand your frustration. I can\'t speak for the inspection that was done last year, but my license and our EverSafe company protocols require me to document and report this. It is a severe fire hazard, and if I didn\'t tell you about it today, I would be legally liable if anything happened to your family.')">
+                📋 "The last guy said it was fine!"
+            </button>
+            
+            <button class="btn-fab btn-script" onclick="copyTemplate(this, 'I know this wasn\'t the news you were hoping for, especially right before the holidays. My goal isn\'t to ruin your plans; my job is just to make sure your home doesn\'t catch fire. The system is structurally unsafe right now. We can rush a temporary seal to make it safe, or schedule the repair for after the holidays, but I cannot ethically let you burn a fire tonight.')">
+                📋 "But I need it for the Holidays!"
+            </button>
+
+            <button class="btn-fab btn-script" onclick="copyTemplate(this, 'I hear you. You just wanted a basic sweep, and I totally respect that budget. However, running a heavy wire brush down a liner that is already failing will actually tear it apart further. I can\'t ethically charge you to sweep a system that isn\'t safe to use anyway. Here is the report showing exactly why it failed.')">
+                📋 "I just want a sweep, don't upsell me."
+            </button>
+        </div>
+
+        <!-- NEW SCOPE: Pipe Offset Trigonometry -->
+        <div class="scope-card" id="offset" style="border-top-color: var(--offset-teal);">
+            <div class="scope-title">📐 Pipe Offset Calculator (Trig)</div>
             
             <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Truck Payload Safety Calculator</div>
-                <input type="number" id="truckBricks" class="calc-input" placeholder="Qty: Standard Bricks" oninput="calculatePayload()">
-                <input type="number" id="truckMortar" class="calc-input" placeholder="Qty: 80lb Bags" oninput="calculatePayload()">
-                <input type="number" id="truckFlues" class="calc-input full-width" placeholder="Qty: Clay Flue Tiles (2ft sections)" oninput="calculatePayload()">
-                <div class="calc-result" id="payloadOutput">Enter material counts to check weight...</div>
-                <div style="font-size: 11px; margin-top: 5px; color: #64748b;">*Assumes 4.5lbs/brick, 80lbs/bag, 35lbs/flue tile. Do not exceed vehicle gross axle weight rating (GAWR).</div>
-            </div>
-
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Scaffolding Staging Estimator</div>
-                <input type="number" id="scaffoldHeight" class="calc-input full-width" placeholder="Target Reach Height (Feet)" oninput="calculateScaffold()">
-                <div class="calc-result" id="scaffoldOutput">Enter height...</div>
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Venting Obstacle Bypass</div>
+                <input type="number" id="offsetInches" class="calc-input full-width" placeholder="Desired Horizontal Shift (inches)" oninput="calculateOffset()">
+                
+                <select id="offsetAngle" class="calc-input full-width" onchange="calculateOffset()" style="background: white;">
+                    <option value="15">15-Degree Elbows</option>
+                    <option value="30" selected>30-Degree Elbows</option>
+                </select>
+                
+                <div class="calc-result" id="offsetOutput">Enter required offset...</div>
+                <div style="font-size: 11px; margin-top: 5px; color: #64748b;">*Calculates straight pipe length needed between elbows. Does NOT account for elbow joint overlap.</div>
             </div>
         </div>
 
-        <!-- SCOPE: Pricing & Estimating -->
+        <!-- UPDATED SCOPE: Draft & Combustion Air -->
+        <div class="scope-card" id="drafting" style="border-top-color: var(--draft-cyan);">
+            <div class="scope-title">🌬️ Draft & Combustion Air</div>
+            
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Outside Air Intake Sizer (IFGC)</div>
+                <input type="number" id="btuInput" class="calc-input full-width" placeholder="Total Appliance BTU (e.g., 40000)" oninput="calculateCombustionAir()">
+                <div class="calc-result" id="btuOutput">Enter total BTUs...</div>
+            </div>
+
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Smoke Guard Corrector (10:1)</div>
+                <input type="number" id="sgFbWidth" class="calc-input" placeholder="Firebox Width (in)" oninput="calculateSmokeGuard()">
+                <input type="number" id="sgFbHeight" class="calc-input" placeholder="Firebox Height (in)" oninput="calculateSmokeGuard()">
+                <input type="number" id="sgFlueArea" class="calc-input full-width" placeholder="Actual Flue Area (sq. in)" oninput="calculateSmokeGuard()">
+                <div class="calc-result" id="sgOutput">Enter dimensions to check draft...</div>
+            </div>
+        </div>
+
+        <!-- UPDATED SCOPE: Leak vs Condensation Matrix -->
+        <div class="scope-card" id="waterproofing" style="border-top-color: var(--water-blue);">
+            <div class="scope-title">☔ Leak Diagnostic Matrix</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">Diagnostic Profile</span>
+                        <br>Rain Leak vs. Mechanical Condensation
+                        <span class="spec-value">Rain: Occurs during/after storms. Brown, sooty water.</span>
+                        <span class="defect-flag">Condensation: Occurs in freezing weather. Highly acidic, clear/white chalky water running out of cleanouts.</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Fix:</strong> If the chimney leaks during a sunny, 20-degree winter week, the flashing didn't fail. A high-efficiency gas furnace or water heater is condensing inside the cold masonry flue. Selling a crown rebuild won't fix it. You must install a proper AL29-4C insulated liner to contain the mechanical condensation.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Core Scopes 1-14 (Standardized from Version 18) -->
         <div class="scope-card" id="estimates" style="border-top-color: var(--price-green);">
             <div class="scope-title">💰 ROI & Job Estimators</div>
-            
             <div class="calc-box">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Damper ROI (Sales Closer)</div>
                 <input type="number" id="damperCost" class="calc-input full-width" placeholder="Total Cost of New Damper Install ($)" oninput="calculateROI()">
                 <div class="calc-result" id="roiOutput">Enter installation cost...</div>
-                <div style="font-size: 11px; margin-top: 5px; color: #64748b;">*Based on DOE average $200/year HVAC loss from leaky throat dampers.</div>
             </div>
-
             <div class="calc-box">
                 <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Relining System Estimator</div>
                 <input type="number" id="relineLength" class="calc-input" placeholder="Liner Length (ft)">
@@ -168,22 +226,6 @@
             </div>
         </div>
 
-        <!-- SCOPE: Tool Selection Matrix -->
-        <div class="scope-card" id="tools" style="border-top-color: var(--tool-slate);">
-            <div class="scope-title">🧹 Equipment & Tool Standards</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">OEM Warranty Specs</span>
-                        <br>Stainless Steel Liners (UL 1777)
-                        <span class="spec-value">Poly brushes / Nylon Whips ONLY</span>
-                        <span class="defect-flag">NEVER use steel wire brushes</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope: Carbon Monoxide Limits -->
         <div class="scope-card" id="co-levels" style="border-top-color: var(--co-purple);">
             <div class="scope-title">🚨 Carbon Monoxide (CO) Limits</div>
             <table class="spec-table">
@@ -200,16 +242,16 @@
             </table>
         </div>
 
-        <!-- Core Scopes 1-14 (Condensed for view, all previous functionality maintained) -->
-        <div class="scope-card" id="inspections" style="border-top-color: var(--accent);">
-            <div class="scope-title">🔍 Inspections & Forensics</div>
+        <!-- Defect Arrays -->
+        <div class="scope-card" id="defects" style="border-top-color: var(--defect-orange);">
+            <div class="scope-title">🚫 Defects & Forensics</div>
             <table class="spec-table">
                 <tr>
                     <td>
-                        <span class="code-ref">NFPA 211 - 15.4.1</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 15.4.1', 'Level 2 inspection mandatory due to property transfer/system change. Internal camera scan required.')">📋 Copy</button>
-                        <br>Level 2 Inspection
-                        <span class="info-flag">Mandatory camera scan</span>
+                        <span class="code-ref">NFPA 211 - 14.9</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.9', 'Flue liner compromised. Cracks and/or missing mortar joints observed. Zero tolerance code violation.')">📋 Copy</button>
+                        <br>Flue Liner Integrity
+                        <span class="spec-value">Zero tolerance for cracks/splits</span>
                     </td>
                 </tr>
                 <tr>
@@ -223,77 +265,28 @@
             </table>
         </div>
 
-        <div class="scope-card" id="defects" style="border-top-color: var(--defect-orange);">
-            <div class="scope-title">🚫 Defects & Hazmat</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 14.9</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.9', 'Flue liner compromised. Cracks and/or missing mortar joints observed. Zero tolerance code violation.')">📋 Copy</button>
-                        <br>Flue Liner Integrity
-                        <span class="spec-value">Zero tolerance for cracks/splits</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">Asbestos Protocol</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'Hazmat', 'Suspected Asbestos Containing Material (ACM) identified. Transite piping present. Service halted.')">📋 Copy</button>
-                        <br>Transite Pipe
-                        <span class="defect-flag">DO NOT SWEEP OR DISTURB</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Venting Additions (Direct Vent) -->
-        <div class="scope-card" id="venting" style="border-top-color: var(--liner-silver);">
-            <div class="scope-title">💨 Venting & HVAC Sidewalls</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IFGC 503.8 (Direct Vent)</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'IFGC 503.8', 'HVAC direct vent termination clearance violation. Proximity to operable window/door risks exhaust entrainment.')">📋 Copy</button>
-                        <br>Sidewall Vent Clearances
-                        <span class="spec-value">Min 12" below/horizontal to operable window</span>
-                        <span class="spec-value">Min 4 feet below ventilated soffit</span>
-                        <span class="spec-value">Min 3 feet above forced air inlet</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 54 / IFGC</span>
-                        <br>Appliance Venting Categories
-                        <span class="defect-flag">Cat IV (Condensing): PVC / AL29-4C ONLY</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Safety, Scaffold, Ladders -->
-        <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
-            <div class="scope-title">🦺 Ladders & Fall Protection</div>
-            
+        <!-- Logistics -->
+        <div class="scope-card" id="logistics" style="border-top-color: var(--truck-black);">
+            <div class="scope-title">🛻 Fleet Safety & Logistics</div>
             <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Extension Ladder Reach Calculator</div>
-                <input type="number" id="eaveHeight" class="calc-input full-width" placeholder="Height to Gutter/Eave (ft)" oninput="calculateLadder()">
-                <div class="calc-result" id="ladderOutput">Enter roof height...</div>
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Truck Payload Safety Calculator</div>
+                <input type="number" id="truckBricks" class="calc-input" placeholder="Qty: Standard Bricks" oninput="calculatePayload()">
+                <input type="number" id="truckMortar" class="calc-input" placeholder="Qty: 80lb Bags" oninput="calculatePayload()">
+                <input type="number" id="truckFlues" class="calc-input full-width" placeholder="Qty: Clay Flue Tiles (2ft sections)" oninput="calculatePayload()">
+                <div class="calc-result" id="payloadOutput">Enter material counts to check weight...</div>
             </div>
-
             <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Roof Pitch & OSHA Calculator</div>
-                <input type="number" id="roofRise" class="calc-input full-width" placeholder="Rise (Inches up per 12 inches across)" oninput="calculatePitch()">
-                <div class="calc-result" id="pitchOutput">Enter rise...</div>
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Scaffolding Staging Estimator</div>
+                <input type="number" id="scaffoldHeight" class="calc-input full-width" placeholder="Target Reach Height (Feet)" oninput="calculateScaffold()">
+                <div class="calc-result" id="scaffoldOutput">Enter height...</div>
             </div>
         </div>
-        
-        <!-- Custom Fabrication Templates & Lockouts -->
+
         <div class="scope-card" id="fabrication" style="border-top-color: var(--fab-pink);">
             <div class="scope-title">📐 Field Templates & Lockouts</div>
-            
             <button class="btn-fab btn-redtag" onclick="copyTemplate(this, '🚨 SYSTEM CONDEMNED - DO NOT OPERATE 🚨\n=========================================\nWARNING: This system has been inspected and found to possess severe safety defects that present an immediate risk of fire, property damage, carbon monoxide poisoning, or death.\n\nEverSafe explicitly advises that this appliance NOT BE USED under any circumstances until comprehensive repairs/relining have been completed by a certified professional.')">
                 🛑 Copy "Red Tag" Legal Warning
             </button>
-
             <button class="btn-fab" onclick="copyTemplate(this, 'CHASE COVER ORDER\n===================\n- Width (L to R): ____ in\n- Depth (F to B): ____ in\n- Hole Diameter: ____ in (Add 1in to pipe OD)\n- Hole Offset from Left Edge: ____ in\n- Hole Offset from Front Edge: ____ in')">
                 📋 Copy Chase Cover Template
             </button>
@@ -362,110 +355,97 @@
             navigator.clipboard.writeText(text).then(() => {
                 let originalText = btn.innerText;
                 let originalBg = btn.style.background;
-                btn.innerText = "✅ ADDED TO REPORT";
+                btn.innerText = "✅ COPIED";
                 btn.style.background = "var(--success)";
                 setTimeout(() => { btn.innerText = originalText; btn.style.background = originalBg; }, 2000);
             }).catch(err => alert("Failed to copy."));
         }
 
-        // NEW: Truck Payload Estimator
-        function calculatePayload() {
-            let b = parseFloat(document.getElementById('truckBricks').value) || 0;
-            let m = parseFloat(document.getElementById('truckMortar').value) || 0;
-            let f = parseFloat(document.getElementById('truckFlues').value) || 0;
-            let out = document.getElementById('payloadOutput');
+        // NEW: Pipe Offset Calculator (Trig)
+        function calculateOffset() {
+            let offset = parseFloat(document.getElementById('offsetInches').value);
+            let angle = parseFloat(document.getElementById('offsetAngle').value);
+            let out = document.getElementById('offsetOutput');
             
-            if (b === 0 && m === 0 && f === 0) { out.innerText = "Enter material counts to check weight..."; out.className = "calc-result"; return; }
+            if (!offset || offset <= 0) { out.innerText = "Enter required offset..."; return; }
             
-            let totalWeight = (b * 4.5) + (m * 80) + (f * 35);
+            // Convert angle to radians for Math.sin / Math.tan
+            let radians = angle * (Math.PI / 180);
             
-            let status = "";
-            let cssClass = "calc-result pass";
+            // Travel (Hypotenuse) = Opposite / sin(theta)
+            let pipeLength = offset / Math.sin(radians);
+            // Vertical Rise Consumed = Opposite / tan(theta)
+            let riseConsumed = offset / Math.tan(radians);
             
-            if (totalWeight > 2000) {
-                status = "❌ SEVERE OVERLOAD (Requires 1-Ton Truck or Trailer)";
-                cssClass = "calc-result fail";
-            } else if (totalWeight > 1200) {
-                status = "⚠️ CAUTION: Exceeds standard 1/2-Ton limit (F150/1500)";
-                cssClass = "calc-result warning";
-            } else {
-                status = "✅ Safe for standard 1/2-Ton truck";
-            }
+            out.innerHTML = `Pipe Length Needed: <strong>${pipeLength.toFixed(1)} inches</strong><br>
+            Vertical Height Consumed: <strong>${riseConsumed.toFixed(1)} inches</strong>`;
             
-            out.innerHTML = `Total Payload: <strong>${totalWeight.toLocaleString()} lbs</strong><br>${status}`;
-            out.className = cssClass;
-            
-            if(totalWeight > 0) addToSession(`[LOGISTICS] Material Load Weight: ${totalWeight.toLocaleString()} lbs.`);
+            addToSession(`[CALC] Offset: ${offset}" shift at ${angle}° requires ${pipeLength.toFixed(1)}" of pipe.`);
         }
 
-        // NEW: Scaffold Staging Estimator
+        // NEW: Combustion Air Sizer
+        function calculateCombustionAir() {
+            let btu = parseFloat(document.getElementById('btuInput').value);
+            let out = document.getElementById('btuOutput');
+            
+            if (!btu || btu <= 0) { out.innerText = "Enter total BTUs..."; return; }
+            
+            // Standard IFGC rule for outdoor combustion air: 1 sq inch per 4,000 BTU
+            let sqInches = btu / 4000;
+            // Round duct diameter = 2 * sqrt(Area / Pi)
+            let idealDiameter = 2 * Math.sqrt(sqInches / Math.PI);
+            
+            out.innerHTML = `Req. Free Area: <strong>${sqInches.toFixed(1)} sq. inches</strong><br>
+            Pipe Size: Approx <strong>${Math.ceil(idealDiameter)}"</strong> round intake duct.`;
+            
+            addToSession(`[CALC] Combustion Air: ${btu} BTU requires ${sqInches.toFixed(1)} sq.in. of free air (${Math.ceil(idealDiameter)}" duct).`);
+        }
+
+        // Previous Calculators (Condensed)
+        function calculateSmokeGuard() {
+            let w = parseFloat(document.getElementById('sgFbWidth').value);
+            let h = parseFloat(document.getElementById('sgFbHeight').value);
+            let flueArea = parseFloat(document.getElementById('sgFlueArea').value);
+            let out = document.getElementById('sgOutput');
+            if (!w || !h || !flueArea) return;
+            let actualOpening = w * h; let idealOpening = flueArea * 10;
+            if (actualOpening <= idealOpening) { out.innerHTML = `Ratio: OK.`; out.className = "calc-result pass"; } 
+            else { let dropNeeded = Math.ceil((actualOpening - idealOpening) / w); out.innerHTML = `FAILS. Install a <strong>${dropNeeded} inch</strong> metal smoke guard.`; out.className = "calc-result fail"; addToSession(`[CALC] Smoke Guard Required: ${dropNeeded} inch drop.`); }
+        }
+
+        function calculatePayload() {
+            let b = parseFloat(document.getElementById('truckBricks').value) || 0; let m = parseFloat(document.getElementById('truckMortar').value) || 0; let f = parseFloat(document.getElementById('truckFlues').value) || 0;
+            let out = document.getElementById('payloadOutput');
+            if (b===0 && m===0 && f===0) return;
+            let totalWeight = (b*4.5) + (m*80) + (f*35);
+            if (totalWeight > 2000) { out.innerHTML = `Total Payload: <strong>${totalWeight.toLocaleString()} lbs</strong><br>❌ SEVERE OVERLOAD`; out.className = "calc-result fail"; } 
+            else if (totalWeight > 1200) { out.innerHTML = `Total Payload: <strong>${totalWeight.toLocaleString()} lbs</strong><br>⚠️ Exceeds 1/2-Ton limit`; out.className = "calc-result warning"; } 
+            else { out.innerHTML = `Total Payload: <strong>${totalWeight.toLocaleString()} lbs</strong><br>✅ Safe`; out.className = "calc-result pass"; }
+        }
+
         function calculateScaffold() {
             let h = parseFloat(document.getElementById('scaffoldHeight').value);
             let out = document.getElementById('scaffoldOutput');
-            if (!h || h <= 0) { out.innerText = "Enter height..."; return; }
-            
-            // Standard scaffold frame is 5ft high.
-            let tiers = Math.ceil(h / 5);
-            let frames = tiers * 2;
-            let crossbraces = tiers * 2;
-            
-            out.innerHTML = `To reach ${h}ft, you need <strong>${tiers} Tiers</strong>:<br>
-            - ${frames}x 5x5 Frames<br>
-            - ${crossbraces}x Cross Braces<br>
-            - 4x Leveling Jacks<br>
-            - 3x Walk Boards (Min)`;
-            
-            addToSession(`[LOGISTICS] Scaffold Order for ${h}ft: ${frames} Frames, ${crossbraces} Braces, 4 Jacks.`);
+            if (!h) return;
+            let tiers = Math.ceil(h / 5); let frames = tiers * 2;
+            out.innerHTML = `<strong>${tiers} Tiers</strong>:<br>- ${frames}x Frames & Braces<br>- 4x Jacks<br>- 3x Walk Boards`;
         }
 
-        // NEW: Damper ROI Estimator
         function calculateROI() {
             let cost = parseFloat(document.getElementById('damperCost').value);
             let out = document.getElementById('roiOutput');
-            if (!cost || cost <= 0) { out.innerText = "Enter installation cost..."; return; }
-            
-            let savingsPerYear = 200; // DOE average
-            let payback = cost / savingsPerYear;
-            
-            out.innerHTML = `Estimated Annual HVAC Savings: <strong>$200/yr</strong><br>
-            Investment Payback Period: <strong>${payback.toFixed(1)} Years</strong><br>
-            <em>(After ${payback.toFixed(1)} years, the damper actively makes the customer money).</em>`;
-            
-            addToSession(`[SALES] Damper ROI: Quoted $${cost}. Pays for itself in ${payback.toFixed(1)} years via HVAC savings.`);
+            if (!cost) return;
+            let payback = cost / 200;
+            out.innerHTML = `Estimated Annual HVAC Savings: <strong>$200/yr</strong><br>Payback Period: <strong>${payback.toFixed(1)} Years</strong>`;
         }
 
-        // Relining Estimator
         function calculateRelineEstimate() {
-            let len = parseFloat(document.getElementById('relineLength').value) || 0;
-            let pft = parseFloat(document.getElementById('relinePerFt').value) || 0;
-            let base = parseFloat(document.getElementById('relineBase').value) || 0;
+            let len = parseFloat(document.getElementById('relineLength').value) || 0; let pft = parseFloat(document.getElementById('relinePerFt').value) || 0; let base = parseFloat(document.getElementById('relineBase').value) || 0;
             let out = document.getElementById('relineQuoteOutput');
             if (len === 0 || pft === 0) return;
             let total = (len * pft) + base;
             out.innerHTML = `<strong>Estimate: $${total.toLocaleString()}</strong>`;
-            addToSession(`[ESTIMATE] Reline: ${len}ft @ $${pft}/ft + $${base} Base = $${total.toLocaleString()}`);
-        }
-
-        // Ladder Geometry
-        function calculateLadder() {
-            let h = parseFloat(document.getElementById('eaveHeight').value);
-            let out = document.getElementById('ladderOutput');
-            if (!h || h <= 0) return;
-            let base = h / 4;
-            let reach = Math.sqrt(Math.pow(h, 2) + Math.pow(base, 2));
-            let totalNeeded = reach + 3;
-            let ladderToBuy = totalNeeded + 3;
-            out.innerHTML = `Ladder Base Pull-Out: <strong>${base.toFixed(1)} ft</strong><br>You need a <strong>${Math.ceil(ladderToBuy)} ft</strong> extension ladder.`;
-        }
-
-        // Roof Pitch
-        function calculatePitch() {
-            let rise = parseFloat(document.getElementById('roofRise').value);
-            let out = document.getElementById('pitchOutput');
-            if (!rise || rise <= 0) return;
-            let angle = Math.atan(rise / 12) * (180 / Math.PI);
-            if (rise > 4) { out.innerHTML = `Pitch: <strong>${rise}/12</strong> (${angle.toFixed(1)}°)<br>⚠️ OSHA Steep Roof (PFAS Required)`; out.className = "calc-result fail"; }
-            else { out.innerHTML = `Pitch: <strong>${rise}/12</strong> (${angle.toFixed(1)}°)<br>✅ Low Slope Roof`; out.className = "calc-result pass"; }
+            addToSession(`[ESTIMATE] Reline: $${total.toLocaleString()}`);
         }
     </script>
 </body>
