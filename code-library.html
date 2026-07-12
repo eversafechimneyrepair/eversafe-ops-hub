@@ -19,11 +19,11 @@
             --water-blue: #0ea5e9; --dryer-gray: #64748b; --mantel-wood: #b45309;
             --chem-purple: #8b5cf6; --electric-gold: #ca8a04; --wildlife-green: #15803d;
             --draft-cyan: #06b6d4; --fab-pink: #be185d; --hazmat-lime: #84cc16; --red-tag: #b91c1c;
-            --co-purple: #9333ea;
+            --co-purple: #9333ea; --price-green: #16a34a; --tool-slate: #334155;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); padding-top: 75px; padding-bottom: 85px; color: #0f172a; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); padding-top: 75px; padding-bottom: 120px; color: #0f172a; }
         
         /* Header */
         .app-header { background: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
@@ -63,6 +63,10 @@
         .btn-fab:active { background: #9d174d; }
         .btn-redtag { background: var(--red-tag); margin-top: 15px; }
         .btn-redtag:active { background: #7f1d1d; }
+
+        /* Session Export Floating Button */
+        .btn-session-export { position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; border: 2px solid var(--accent); padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.3); cursor: pointer; z-index: 101; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-session-export:active { background: var(--primary-light); }
 
         /* Deep Dives & Calculators */
         details.deep-dive { margin-top: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; }
@@ -105,6 +109,8 @@
         </div>
 
         <div class="quick-jump-container">
+            <a href="#estimates" class="quick-jump-pill">💰 Price Estimator</a>
+            <a href="#tools" class="quick-jump-pill">🧹 Tools & Brushes</a>
             <a href="#co-levels" class="quick-jump-pill">🚨 Carbon Monoxide</a>
             <a href="#inspections" class="quick-jump-pill">🔍 Inspections</a>
             <a href="#forensics" class="quick-jump-pill">🕵️ Forensics</a>
@@ -129,6 +135,58 @@
             <a href="#fabrication" class="quick-jump-pill">📐 Templates / Lockouts</a>
         </div>
 
+        <!-- NEW SCOPE: Pricing & Estimating -->
+        <div class="scope-card" id="estimates" style="border-top-color: var(--price-green);">
+            <div class="scope-title">💰 Rapid Job Estimators</div>
+            
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Relining System Estimator</div>
+                <input type="number" id="relineLength" class="calc-input" placeholder="Liner Length (ft)">
+                <input type="number" id="relinePerFt" class="calc-input" placeholder="Price per Ft (e.g. 100)">
+                <input type="number" id="relineBase" class="calc-input full-width" placeholder="Base Components/Labor Fee (e.g. 600)">
+                <button class="btn-fab" style="background: var(--price-green); margin-bottom: 10px;" onclick="calculateRelineEstimate()">Calculate Liner Quote</button>
+                <div class="calc-result" id="relineQuoteOutput">Enter job details...</div>
+            </div>
+
+            <div class="calc-box">
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Crown Rebuild Estimator</div>
+                <input type="number" id="crownWidth" class="calc-input" placeholder="Crown Width (in)">
+                <input type="number" id="crownLength" class="calc-input" placeholder="Crown Length (in)">
+                <input type="number" id="crownPerSqFt" class="calc-input full-width" placeholder="Price per Sq Ft (e.g. 200)">
+                <button class="btn-fab" style="background: var(--price-green); margin-bottom: 10px;" onclick="calculateCrownEstimate()">Calculate Crown Quote</button>
+                <div class="calc-result" id="crownQuoteOutput">Enter dimensions...</div>
+            </div>
+        </div>
+
+        <!-- NEW SCOPE: Tool Selection Matrix -->
+        <div class="scope-card" id="tools" style="border-top-color: var(--tool-slate);">
+            <div class="scope-title">🧹 Equipment & Tool Standards</div>
+            <table class="spec-table">
+                <tr>
+                    <td>
+                        <span class="code-ref">OEM Warranty Specs</span>
+                        <br>Stainless Steel Liners (UL 1777)
+                        <span class="spec-value">Poly brushes / Nylon Whips ONLY</span>
+                        <span class="defect-flag">NEVER use steel wire brushes</span>
+                        <details class="deep-dive">
+                            <summary>📖 Read the "Why"</summary>
+                            <div class="deep-dive-content">
+                                <p><strong>The Physics:</strong> Stainless steel builds a microscopic layer of oxidation that prevents rust. A hard carbon-steel wire brush digs into the titanium alloy, transferring rustable carbon particles into the scratches. It instantly voids the $2,000 lifetime liner warranty.</p>
+                            </div>
+                        </details>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="code-ref">Industry Best Practice</span>
+                        <br>Terra Cotta Clay Flues
+                        <span class="spec-value">Wire brushes or Chain Rotary Systems</span>
+                        <span class="info-flag">Poly brushes ineffective on Stage 2 creosote</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
         <!-- Scope 0: Carbon Monoxide Limits -->
         <div class="scope-card" id="co-levels" style="border-top-color: var(--co-purple);">
             <div class="scope-title">🚨 Carbon Monoxide (CO) Limits</div>
@@ -145,7 +203,7 @@
                         <details class="deep-dive">
                             <summary>📖 Read the "Why"</summary>
                             <div class="deep-dive-content">
-                                <p><strong>The Protocol:</strong> If your personal monitor hits 35 PPM while testing a gas appliance, crack a window and advise the client. If it hits 70 PPM or above, the appliance is failing catastrophically. Shut the gas off, red-tag the unit, and ventilate the house. Extended exposure at 70 PPM causes headaches/nausea. 400 PPM causes death within hours.</p>
+                                <p><strong>The Protocol:</strong> If your personal monitor hits 35 PPM while testing a gas appliance, crack a window and advise the client. If it hits 70 PPM or above, the appliance is failing catastrophically. Shut the gas off, red-tag the unit, and ventilate the house.</p>
                             </div>
                         </details>
                     </td>
@@ -153,7 +211,7 @@
             </table>
         </div>
 
-        <!-- Scope 1: Inspections -->
+        <!-- Remaining Core Scopes (1-14) -->
         <div class="scope-card" id="inspections" style="border-top-color: var(--accent);">
             <div class="scope-title">🔍 Inspection Levels & Triggers</div>
             <table class="spec-table">
@@ -167,38 +225,21 @@
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 15.4.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 15.4.1', 'Level 2 inspection mandatory due to property transfer/system change. Internal camera scan required.')">📋 Copy</button>
                         <br>Level 2 Inspection<br><span style="font-size: 11px; color: #64748b;">Accessible + Camera Scan</span>
-                        <span class="spec-value">Sale/Transfer of property</span>
                         <span class="info-flag">Mandatory camera scan</span>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 1.5: Chimney Fire Forensics -->
-        <div class="scope-card" id="forensics" style="border-top-color: var(--danger);">
-            <div class="scope-title">🕵️ Chimney Fire Forensics</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 14.5</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.5 / Fire Event', 'Evidence of sudden thermal shock and hostile fire event observed. Findings include: Puffed/expanded creosote, vertically fractured terra cotta tiles, thermal discoloration of exterior masonry, and warping of metal damper components. System is condemned until fully rebuilt/relined.')">📋 Copy Ins. Narrative</button>
-                        <br>Visual Evidence of Hostile Fire
-                        <span class="spec-value">Puffed, honeycomb-like creosote</span>
-                        <span class="spec-value">Vertical "clean" cracks in clay tiles</span>
-                        <span class="spec-value">Warped damper plates / discolored caps</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 2: Defects -->
         <div class="scope-card" id="defects" style="border-top-color: var(--defect-orange);">
             <div class="scope-title">🚫 Defect Limits & Failure Criteria</div>
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 14.4.1</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.4.1', 'Creosote buildup exceeds 1/8 inch. Mandatory sweeping required. Glaze creosote (Stage 3) observed, presenting immediate fire hazard.')">📋 Copy</button>
                         <br>Creosote Buildup
                         <span class="spec-value">Sweep if > 1/8" thick</span>
                         <span class="defect-flag">Fails if Stage 3 (Glaze) is present</span>
@@ -207,6 +248,7 @@
                 <tr>
                     <td>
                         <span class="code-ref">NFPA 211 - 14.9</span>
+                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 211 - 14.9', 'Flue liner compromised. Cracks and/or missing mortar joints observed. Zero tolerance code violation; system is unsafe for use until relined.')">📋 Copy</button>
                         <br>Flue Liner Integrity
                         <span class="spec-value">Zero tolerance for cracks/splits</span>
                         <span class="defect-flag">Fails if ANY tile is cracked</span>
@@ -215,23 +257,20 @@
             </table>
         </div>
         
-        <!-- Scope 2.1: Hazmat -->
         <div class="scope-card" id="hazmat" style="border-top-color: var(--hazmat-lime);">
             <div class="scope-title">☢️ Hazmat & Asbestos</div>
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">Asbestos Protocol</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'Hazardous Material Identification', 'Suspected Asbestos Containing Material (ACM) identified. Transite piping / fibrous rope gasket present. Service halted to prevent friable airborne exposure. Abatement contractor required.')">📋 Copy</button>
+                        <button class="btn-copy" onclick="copyToReport(this, 'Hazardous Material', 'Suspected Asbestos Containing Material (ACM) identified. Transite piping / fibrous rope gasket present. Service halted to prevent friable airborne exposure.')">📋 Copy</button>
                         <br>Transite Pipe & Rope Gaskets
-                        <span class="spec-value">White/gray cement-like gas vents (Transite)</span>
                         <span class="defect-flag">DO NOT SWEEP OR DISTURB</span>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 2.5: Draft & Pressure -->
         <div class="scope-card" id="drafting" style="border-top-color: var(--draft-cyan);">
             <div class="scope-title">🌬️ Draft & Smoke Guard Sizer</div>
             
@@ -242,263 +281,74 @@
                 <input type="number" id="sgFlueArea" class="calc-input full-width" placeholder="Actual Flue Area (sq. in) e.g., 8x12 = 96" oninput="calculateSmokeGuard()">
                 <div class="calc-result" id="sgOutput">Enter dimensions to check draft...</div>
             </div>
-
+            
             <table class="spec-table">
                 <tr>
                     <td>
                         <span class="code-ref">IRC R1006.1</span>
                         <br>Combustion Air Requirements
                         <span class="spec-value">Required for solid fuel appliances in tight homes</span>
-                        <span class="defect-flag">Smoke spillage upon ignition</span>
                     </td>
                 </tr>
             </table>
         </div>
 
-        <!-- Scope 3: Waterproofing -->
-        <div class="scope-card" id="waterproofing" style="border-top-color: var(--water-blue);">
-            <div class="scope-title">☔ Waterproofing & Preservation</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">ASTM E514</span>
-                        <br>Masonry Water Repellents
-                        <span class="spec-value">Must be 100% vapor permeable</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 4: Chemical Limits -->
-        <div class="scope-card" id="chemicals" style="border-top-color: var(--chem-purple);">
-            <div class="scope-title">🧪 Chemical App & Weather Limits</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">Siloxane Repellent</span>
-                        <br>Water Repellent Application
-                        <span class="spec-value">Min Temp: 40°F (and rising)</span>
-                        <span class="defect-flag">Rain Limit: Requires 6 dry hours</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 4.5: CSST Gas Bonding -->
         <div class="scope-card" id="gasbonding" style="border-top-color: var(--electric-gold);">
             <div class="scope-title">⚡ CSST Gas Piping Bonding (NFPA 54)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 54 - 7.13.2</span>
-                        <br>CSST Bonding Requirement
-                        <span class="spec-value">Direct connection to electrical grounding system</span>
-                        <span class="defect-flag">Fails if missing direct clamp on rigid brass nut</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 4.6: Wood Fuel Diagnostic -->
-        <div class="scope-card" id="woodfuel" style="border-top-color: var(--stove-brown);">
-            <div class="scope-title">🪵 Firewood Diagnostics & Moisture</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 / Fuel Quality</span>
-                        <br>Moisture Threshold Limits
-                        <span class="spec-value">Target: 15% to 20% max moisture content</span>
-                        <span class="defect-flag">Fails if > 25% (Unseasoned / Wet wood)</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 5: Mantels & Clearances -->
-        <div class="scope-card" id="mantels" style="border-top-color: var(--mantel-wood);">
-            <div class="scope-title">🪵 Mantels & TV Clearances</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 11.2.3.3</span>
-                        <br>Combustible Trim & Mantels
-                        <span class="spec-value">Min 6" from opening for 1.5" projection</span>
-                        <span class="defect-flag">Fails if TV mounted in radiant heat zone</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 5.5: Wildlife -->
-        <div class="scope-card" id="wildlife" style="border-top-color: var(--wildlife-green);">
-            <div class="scope-title">🦝 Wildlife & Biohazards</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">Federal MBTA Law</span>
-                        <br>Chimney Swifts (Migratory Birds)
-                        <span class="defect-flag">DO NOT REMOVE active nests or eggs</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 6: Wood Stoves -->
-        <div class="scope-card" id="stoves" style="border-top-color: var(--stove-brown);">
-            <div class="scope-title">🔥 Free-Standing Stoves & Shields</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 211 - 12.6.2</span>
-                        <br>Connector Pipe Clearances
-                        <span class="spec-value">Single-Wall: Min 18" Clearance</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 7: Venting Pipes & HVAC -->
-        <div class="scope-card" id="venting" style="border-top-color: var(--liner-silver);">
-            <div class="scope-title">💨 Venting & HVAC Categories</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">NFPA 54 / IFGC</span>
-                        <button class="btn-copy" onclick="copyToReport(this, 'NFPA 54 / Appliance Venting', 'Category IV condensing appliance improperly vented into standard masonry flue. Causing severe acidic degradation of mortar joints. Flue condemned. Requires AL29-4C stainless or PVC/CPVC per manufacturer instructions.')">📋 Copy</button>
-                        <br>Appliance Venting Categories
-                        <span class="spec-value">Cat I (Non-Condensing, Negative Draft): B-Vent / 304 / Clay</span>
-                        <span class="defect-flag">Cat IV (Condensing, Positive): PVC / AL29-4C ONLY</span>
-                        <details class="deep-dive">
-                            <summary>📖 Read the "Why"</summary>
-                            <div class="deep-dive-content">
-                                <p><strong>The Physics:</strong> Modern 90%+ efficient furnaces (Category IV) extract so much heat from the exhaust that what comes out of the pipe is literally highly acidic water vapor under pressure. If a plumber vents this into a cold brick chimney, the acid water eats the mortar from the inside out in months. Never let Cat IV vent into clay or standard 316 stainless.</p>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 8: Gas & Dampers -->
-        <div class="scope-card" id="dampers" style="border-top-color: var(--gas-yellow);">
-            <div class="scope-title">⚙️ Gas Logs & Dampers (IFGC)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IFGC 602.2</span>
-                        <br>Damper Clamps (Vented Gas)
-                        <span class="spec-value">Mandatory for Vented Gas Logs</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 9: Prefabs -->
-        <div class="scope-card" id="prefabs" style="border-top-color: var(--prefab-teal);">
-            <div class="scope-title">🏭 Prefab Systems & Ash Pits</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">UL 127</span>
-                        <br>Factory-Built Fireplaces (Zero-Clearance)
-                        <span class="spec-value">Must use OEM replacement parts</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 10: Relining & Calculators -->
-        <div class="scope-card" id="relining" style="border-top-color: var(--liner-silver);">
-            <div class="scope-title">🛡️ Relining & Sizing Calculator</div>
             
             <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Flue Sizing Calculator (1/10 Rule)</div>
-                <input type="number" id="fbWidth" class="calc-input" placeholder="Width (in)" oninput="calculateFlue()">
-                <input type="number" id="fbHeight" class="calc-input" placeholder="Height (in)" oninput="calculateFlue()">
-                <div class="calc-result" id="calcOutput">Enter dimensions to calculate required liner...</div>
+                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 CSST Electrical Bonding Sizer</div>
+                <input type="number" id="bondingLength" class="calc-input full-width" placeholder="Length of bonding conductor run (ft)" oninput="calculateBonding()">
+                <div class="calc-result" id="bondingOutput">Enter length to size wire...</div>
             </div>
         </div>
 
-        <!-- Scope 11: Dryer Vents -->
-        <div class="scope-card" id="dryer" style="border-top-color: var(--dryer-gray);">
-            <div class="scope-title">🌀 Dryer Exhaust (IMC)</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IMC 504.8.4</span>
-                        <br>Maximum Duct Length
-                        <span class="spec-value">Max 35 feet (Concealed)</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 12: Clearances -->
-        <div class="scope-card" id="clearances" style="border-top-color: var(--chimney-red);">
-            <div class="scope-title">🏠 Roof Terminations</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">IRC R1003.9</span>
-                        <br>The "3-2-10" Rule
-                        <span class="spec-value">Min 3 ft above roof penetration</span>
-                        <span class="spec-value">Min 2 ft higher than structure within 10 ft</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- Scope 13: Masonry & Estimator -->
-        <div class="scope-card" id="masonry" style="border-top-color: var(--masonry-gray);">
-            <div class="scope-title">🧱 Masonry & Firebox Estimators</div>
-
-            <div class="calc-box">
-                <div style="font-size: 12px; font-weight: bold; margin-bottom: 8px; color: var(--primary); text-transform: uppercase;">🧮 Firebox Rebuild Calculator</div>
-                <input type="number" id="fbrWidth" class="calc-input" placeholder="Box Width (in)" oninput="calculateFirebox()">
-                <input type="number" id="fbrHeight" class="calc-input" placeholder="Box Height (in)" oninput="calculateFirebox()">
-                <input type="number" id="fbrDepth" class="calc-input full-width" placeholder="Box Depth (in)" oninput="calculateFirebox()">
-                <div class="calc-result" id="fbrOutput">Enter dimensions to calculate brick/cement order...</div>
-            </div>
-
-        </div>
-
-        <!-- Scope 14: Safety -->
-        <div class="scope-card" id="safety" style="border-top-color: var(--sms-blue);">
-            <div class="scope-title">🦺 Safety & Fall Protection</div>
-            <table class="spec-table">
-                <tr>
-                    <td>
-                        <span class="code-ref">OSHA 1926.501</span>
-                        <br>Fall Protection Threshold
-                        <span class="spec-value">Any work at or above 6 feet</span>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        
         <!-- Scope 15: Custom Fabrication Templates & Lockouts -->
         <div class="scope-card" id="fabrication" style="border-top-color: var(--fab-pink);">
             <div class="scope-title">📐 Field Templates & Lockouts</div>
             
-            <button class="btn-fab btn-redtag" onclick="copyTemplate(this, '🚨 SYSTEM CONDEMNED - DO NOT OPERATE 🚨\n=========================================\nWARNING: This system has been inspected and found to possess severe safety defects that present an immediate risk of fire, property damage, carbon monoxide poisoning, or death.\n\nEverSafe explicitly advises that this appliance NOT BE USED under any circumstances until comprehensive repairs/relining have been completed by a certified professional. By operating this appliance against this warning, the homeowner assumes all liability for ensuing damages or injury.')">
+            <button class="btn-fab btn-redtag" onclick="copyTemplate(this, '🚨 SYSTEM CONDEMNED - DO NOT OPERATE 🚨\n=========================================\nWARNING: This system has been inspected and found to possess severe safety defects that present an immediate risk of fire, property damage, carbon monoxide poisoning, or death.\n\nEverSafe explicitly advises that this appliance NOT BE USED under any circumstances until comprehensive repairs/relining have been completed by a certified professional.')">
                 🛑 Copy "Red Tag" Legal Warning
             </button>
 
-            <button class="btn-fab" onclick="copyTemplate(this, 'CHASE COVER ORDER\n===================\n- Width (L to R): ____ in\n- Depth (F to B): ____ in\n- Skirt Length/Drop: ____ in (Standard is 3in)\n- Hole Diameter: ____ in (Add 1in to pipe OD)\n- Hole Offset from Left Edge: ____ in\n- Hole Offset from Front Edge: ____ in')">
+            <button class="btn-fab" onclick="copyTemplate(this, 'CHASE COVER ORDER\n===================\n- Width (L to R): ____ in\n- Depth (F to B): ____ in\n- Hole Diameter: ____ in (Add 1in to pipe OD)\n- Hole Offset from Left Edge: ____ in\n- Hole Offset from Front Edge: ____ in')">
                 📋 Copy Chase Cover Template
-            </button>
-            
-            <button class="btn-fab" onclick="copyTemplate(this, 'LINER KIT ORDER\n===================\n- Appliance Type: ____________\n- Liner Diameter Needed: ____ in\n- Total Length (Bottom to Top): ____ ft\n- Insulation (Wrap / Pour): ____________\n- Top Plate Size: ____ x ____ in')">
-                📋 Copy Relining Kit Template
             </button>
         </div>
 
     </div>
 
+    <!-- Export Button -->
+    <button class="btn-session-export" onclick="exportSession()">📤 Compile & Send Report</button>
+
     <div class="fixed-bottom-nav-bar"></div>
     <script src="navbar.js"></script>
 
     <script>
+        // GLOBAL SESSION MEMORY
+        let sessionNotes = [];
+
+        function addToSession(note) {
+            // Prevent duplicates
+            if (!sessionNotes.includes(note)) {
+                sessionNotes.push(note);
+            }
+        }
+
+        function exportSession() {
+            if (sessionNotes.length === 0) {
+                alert("No codes or calculations have been copied yet during this session.");
+                return;
+            }
+            
+            let reportDate = new Date().toLocaleString();
+            let fullReport = `=== EVERSAFE FIELD REPORT ===\nDate: ${reportDate}\n\n` + sessionNotes.join('\n\n') + `\n\n=============================\n`;
+            
+            navigator.clipboard.writeText(fullReport).then(() => {
+                alert("✅ Full report compiled and copied to clipboard! Paste it into your CRM notes, text message, or email.");
+            }).catch(err => alert("Failed to copy."));
+        }
+
         // 1. Live Search
         function filterCodes() {
             let input = document.getElementById('searchInput').value.toLowerCase();
@@ -522,9 +372,11 @@
         // 2. Copy functions
         function copyToReport(btn, code, text) {
             let fullText = `[CODE REF: ${code}] ${text}`;
+            addToSession(fullText); // Add to global memory
+            
             navigator.clipboard.writeText(fullText).then(() => {
                 let originalText = btn.innerText;
-                btn.innerText = "✅ COPIED";
+                btn.innerText = "✅ SAVED";
                 btn.style.background = "var(--success)";
                 btn.style.color = "white";
                 setTimeout(() => { btn.innerText = originalText; btn.style.background = "#f1f5f9"; btn.style.color = "var(--sms-blue)"; }, 2000);
@@ -532,13 +384,46 @@
         }
         
         function copyTemplate(btn, text) {
+            addToSession(text); // Add to global memory
+            
             navigator.clipboard.writeText(text).then(() => {
                 let originalText = btn.innerText;
                 let originalBg = btn.style.background;
-                btn.innerText = "✅ COPIED TO CLIPBOARD";
+                btn.innerText = "✅ ADDED TO REPORT";
                 btn.style.background = "var(--success)";
                 setTimeout(() => { btn.innerText = originalText; btn.style.background = originalBg; }, 2000);
             }).catch(err => alert("Failed to copy."));
+        }
+
+        // NEW Estimators
+        function calculateRelineEstimate() {
+            let len = parseFloat(document.getElementById('relineLength').value) || 0;
+            let pft = parseFloat(document.getElementById('relinePerFt').value) || 0;
+            let base = parseFloat(document.getElementById('relineBase').value) || 0;
+            let out = document.getElementById('relineQuoteOutput');
+            
+            if (len === 0 || pft === 0) { out.innerText = "Enter job details..."; return; }
+            let total = (len * pft) + base;
+            
+            let resultText = `Reline Estimate: ${len}ft @ $${pft}/ft + $${base} Base = $${total.toLocaleString()}`;
+            out.innerHTML = `<strong>Estimate: $${total.toLocaleString()}</strong>`;
+            addToSession("[ESTIMATE] " + resultText);
+        }
+
+        function calculateCrownEstimate() {
+            let w = parseFloat(document.getElementById('crownWidth').value) || 0;
+            let l = parseFloat(document.getElementById('crownLength').value) || 0;
+            let sqftPrice = parseFloat(document.getElementById('crownPerSqFt').value) || 0;
+            let out = document.getElementById('crownQuoteOutput');
+            
+            if (w === 0 || l === 0 || sqftPrice === 0) { out.innerText = "Enter dimensions..."; return; }
+            
+            let sqFt = (w * l) / 144;
+            let total = sqFt * sqftPrice;
+            
+            let resultText = `Crown Rebuild Estimate: ${sqFt.toFixed(1)} SqFt @ $${sqftPrice}/SqFt = $${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            out.innerHTML = `<strong>Estimate: $${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong>`;
+            addToSession("[ESTIMATE] " + resultText);
         }
 
         // Flue Calculator
@@ -546,55 +431,42 @@
             let w = parseFloat(document.getElementById('fbWidth').value);
             let h = parseFloat(document.getElementById('fbHeight').value);
             let out = document.getElementById('calcOutput');
-            if (!w || !h) { out.innerText = "Enter dimensions to calculate required liner..."; return; }
-            let area = w * h;
-            let reqRound = area / 12;
-            let idealDiameter = 2 * Math.sqrt(reqRound / Math.PI);
-            out.innerHTML = `Req. Round Liner: <strong>${Math.ceil(idealDiameter)}"</strong> diameter`;
+            if (!w || !h) return;
+            let area = w * h; let reqRound = area / 12;
+            let idealDiameter = Math.ceil(2 * Math.sqrt(reqRound / Math.PI));
+            out.innerHTML = `Req. Round Liner: <strong>${idealDiameter}"</strong> diameter`;
+            addToSession(`[CALC] Flue Size Required: ${idealDiameter}" round (Firebox ${w}x${h})`);
         }
 
-        // NEW: Smoke Guard Calculator
         function calculateSmokeGuard() {
             let w = parseFloat(document.getElementById('sgFbWidth').value);
             let h = parseFloat(document.getElementById('sgFbHeight').value);
             let flueArea = parseFloat(document.getElementById('sgFlueArea').value);
             let out = document.getElementById('sgOutput');
             
-            if (!w || !h || !flueArea) { out.innerText = "Enter dimensions to check draft..."; out.className = "calc-result"; return; }
+            if (!w || !h || !flueArea) return;
             
             let actualOpening = w * h;
             let idealOpening = flueArea * 10;
             
             if (actualOpening <= idealOpening) {
-                out.innerHTML = `Ratio: OK. Flue is properly sized for this opening.`;
+                out.innerHTML = `Ratio: OK.`;
                 out.className = "calc-result pass";
             } else {
-                let excessArea = actualOpening - idealOpening;
-                let dropNeeded = excessArea / w;
-                out.innerHTML = `Ratio: FAILING (Opening too large).<br>Install a <strong>${Math.ceil(dropNeeded)} inch</strong> metal smoke guard to stop smoking.`;
+                let dropNeeded = Math.ceil((actualOpening - idealOpening) / w);
+                out.innerHTML = `FAILS. Install a <strong>${dropNeeded} inch</strong> metal smoke guard.`;
                 out.className = "calc-result fail";
+                addToSession(`[CALC] Smoke Guard Required: ${dropNeeded} inch drop to correct draft ratio.`);
             }
         }
 
-        // NEW: Firebox Rebuild Estimator
-        function calculateFirebox() {
-            let w = parseFloat(document.getElementById('fbrWidth').value);
-            let h = parseFloat(document.getElementById('fbrHeight').value);
-            let d = parseFloat(document.getElementById('fbrDepth').value);
-            let out = document.getElementById('fbrOutput');
-            
-            if (!w || !h || !d) { out.innerText = "Enter dimensions to calculate brick/cement order..."; return; }
-            
-            // Area in sq inches: Back wall + 2 side walls + floor
-            let totalAreaInches = (w * h) + (2 * (d * h)) + (w * d);
-            // Standard 9x4.5 split brick exposed face = ~40 sq inches per brick with joint
-            let rawBricks = totalAreaInches / 40;
-            let orderBricks = Math.ceil(rawBricks * 1.15); // 15% waste for cuts
-            let cementGals = Math.ceil(orderBricks / 50); // 1 gal pre-mixed lays approx 50 bricks
-            
-            out.innerHTML = `Order List:<br><strong>${orderBricks}</strong> standard firebricks (9x4.5 split)<br><strong>${cementGals}</strong> gallons of refractory cement (ChamberTech/HeatStop)`;
+        function calculateBonding() {
+            let length = parseFloat(document.getElementById('bondingLength').value);
+            let out = document.getElementById('bondingOutput');
+            if (!length) return;
+            out.innerHTML = `Req Wire: <strong>#6 AWG Bare Copper</strong>`;
+            addToSession(`[CALC] Gas Bonding Wire Required: #6 AWG Bare Copper for ${length}ft run.`);
         }
-
     </script>
 </body>
 </html>
