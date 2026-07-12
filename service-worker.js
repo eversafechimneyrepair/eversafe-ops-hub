@@ -1,10 +1,10 @@
 /**
  * EverSafe Operations Hub - Enterprise PWA Service Worker Engine
- * Version: 8.5 Production Complete
- * Engineering Focus: Full 10-Node Offline Cache Coverage & Real-Time Garbage Collection
+ * Version: 9.0 Production Complete
+ * Engineering Focus: Full 11-Node Offline Cache Coverage & Real-Time Garbage Collection
  */
 
-const CACHE_NAME = 'eversafe-enterprise-v8'; // Forcefully dumps old local storage caches immediately
+const CACHE_NAME = 'eversafe-enterprise-v9'; // Forcefully dumps old local storage caches immediately
 
 // Exhaustive offline hardware storage core registry array matrix
 const ASSETS_TO_CACHE = [
@@ -20,6 +20,7 @@ const ASSETS_TO_CACHE = [
   './billing-invoice.html',
   './dispatches.html',
   './vault-upload.html',
+  './code-library.html', // <-- NEW LIBRARY ADDED HERE
   './navbar.js',
   './manifest.json',
   './app-icon.jpg',
