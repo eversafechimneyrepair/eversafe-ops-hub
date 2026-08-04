@@ -218,10 +218,11 @@
                 </div>
             </div>
 
+            <!-- UNLOCKED ADDRESS/NAME FIELDS -->
             <div class="grid-3" style="margin-top:15px; margin-bottom: 0;">
-                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Account Name</span><input type="text" id="wo_cust_view" readonly style="background:#f1f5f9; font-weight:bold;"></div>
-                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Service Location</span><input type="text" id="wo_addr_view" readonly style="background:#f1f5f9; font-weight:bold;"></div>
-                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9;"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Account Name</span><input type="text" id="wo_cust_view" oninput="localStorage.setItem('current_wo_customer_name', this.value)" style="background:#fff; border:1px solid var(--accent); font-weight:bold; color:var(--primary);"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Service Location</span><input type="text" id="wo_addr_view" onchange="localStorage.setItem('current_wo_service_address', this.value); updateHubMapping();" style="background:#fff; border:1px solid var(--accent); font-weight:bold; color:var(--primary);"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9; border:1px solid #cbd5e1; font-weight:bold; color:var(--primary);"></div>
             </div>
 
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 15px 0; font-family: sans-serif;">
@@ -318,14 +319,10 @@
 
             <!-- REVENUE BREAKDOWN CARD -->
             <div class="revenue-breakdown-card" style="margin-top: 15px;">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                 <div class="breakdown-row">                                            
                     <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
-                </div>                                
-                <div class="breakdown-row">                                            
-                    <div>Travel & Commute Mileage Surcharge:</div>                                            
-                    <div id="lbl_travel_surcharge" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
                 </div>                                
                 <div class="breakdown-row" id="row_overhead">                                            
                     <div>Indirect Operational Overhead Buffer (12.0%):</div>                                            
@@ -334,7 +331,7 @@
                 <div class="breakdown-row" id="row_expense">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                 <div class="breakdown-row" id="row_margin" style="background: #f0fdf4; margin-top: 4px;">                                            
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -355,30 +352,10 @@
                     <div id="lbl_cash_discount" style="font-weight:900; color:#dc2626;">-$0.00</div>
                 </div>
 
-                <!-- NEGOTIATION GUARDRAIL MODULE -->
-                <div class="breakdown-row" style="padding-top: 12px; border-bottom: 1px solid #e2e8f0; display: block;">
-                    <div style="text-align: right; margin-bottom: 10px;">
-                        <button type="button" onclick="toggleNegotiationGuardrail()" style="background: none; border: none; font-size: 11px; color: #94a3b8; cursor: pointer; text-decoration: underline;">Unlock Flex Pricing</button>
-                    </div>
-
-                    <div id="negotiation-module" style="display: none; background: #fdf4ff; border: 1px dashed #d8b4fe; padding: 12px; margin-bottom: 5px; border-radius: 6px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
-                            <span style="font-size: 11px; font-weight: bold; color: #7e22ce; text-transform: uppercase;">🛡️ Authorized Flex Discount</span>
-                            <span id="flex_discount_display" style="color: var(--danger); font-weight: bold;">-$0.00</span>
-                        </div>
-                        <input type="range" id="flex_discount_slider" min="0" max="0" value="0" step="10" style="width: 100%; cursor: pointer;" oninput="applyGuardrailDiscount()">
-                        <div style="display:flex; justify-content:space-between; font-size: 10px; color: #9333ea; margin-top: 4px; font-weight: bold;">
-                            <span>$0</span>
-                            <span id="max_discount_label">Max Authorized: $0</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- END NEGOTIATION GUARDRAIL MODULE -->
-
                 <div class="breakdown-row" style="padding-top: 12px;">                                            
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                            
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                 <div class="breakdown-row grand-prime">                                            
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>
                     <div style="text-align: right;">
@@ -387,79 +364,13 @@
                     </div>
                 </div>                                       
             </div>
-
-            <div style="background: #f8fafc; border: 2px solid var(--primary-light); padding: 15px; border-radius: 6px; margin-top: 18px; margin-bottom: 25px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">                                
-                <p style="font-size: 11px; font-weight: bold; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; text-align: left;">📊 Net Margin Telemetry Tracker (Auto-Calculated Job Profitability)</p>                                
-                
-                <div class="grid-2" style="margin-bottom: 10px;" id="standardTelemetryGrid">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Est. Total Internal Cost ($) (Materials + Burdened Labor Allocation)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        <input type="number" id="internalJobCostInput" value="0.00" readonly style="border:1px solid #cbd5e1; font-weight:bold; background:#f1f5f9; color:#334155; width: 100%; padding: 8px;">                                
-                    </div>                                                                                
-                    <div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        <span style="font-size: 10px; font-weight: bold; color: #475569; text-transform: uppercase;">Gross Profit Yield (%)</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-                        <div id="marginPercentageDisplay" style="font-size: 20px; font-weight: 900; margin-top: 8px; color: var(--primary);">0.00%</div>                                
-                    </div>                                                                                
-                </div>   
-                
-                <div id="partnerSplitDashboard" class="partner-telemetry-box" style="display:none;">
-                    <span id="dynamicDashboardTitle" style="font-size:10px; font-weight:900; color:#a21caf; text-transform:uppercase; display:block; margin-bottom:8px; border-bottom:1px solid #fbcfe8; padding-bottom:4px;">Project Labor & Commission Payout Breakdown</span>
-                    <div class="partner-row">
-                        <span>Leo's Net Cut / Share:</span>
-                        <span id="leoNetPartnerTotal">$0.00</span>
-                    </div>
-                    <div class="partner-row" id="helperRow" style="color: #c2410c;">
-                        <span>Helper Share Allocation:</span>
-                        <span id="helperPartnerTotal">$0.00</span>
-                    </div>
-                    <div class="partner-row" id="subContractorRow" style="display:none; color: #7e22ce;">
-                        <span>Subcontractor Escrow Budget:</span>
-                        <span id="subNetPartnerTotal">$0.00</span>
-                    </div>
-                    <div class="partner-row ever-safe" id="everSafeRetainedRow">
-                        <span>EverSafe Retained Margin:</span>
-                        <span id="everSafeNetPartnerTotal">$0.00</span>
-                    </div>
-                </div>
-
-                <div style="background: #cbd5e1; width: 100%; height: 26px; border-radius: 13px; overflow: hidden; position: relative; margin-top: 12px; border: 1px solid #94a3b8;">                                                                                                        
-                    <div id="thermometerBar" style="height: 100%; width: 0%; background: var(--danger); transition: width 0.4s cubic-bezier(0.1, 0.8, 0.3, 1), background-color 0.3s ease;"></div>                                                                                                        
-                    <div id="thermometerLabel" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.75px;">NO TELEMETRY RECORDED</div>                                        
-                </div>                                                
-            </div>                                                                                                                                                                                                                                                                                                                                                        
             
-            <button type="button" class="btn-action" id="btnEmailEstimate" onclick="executeEmailEstimate()" style="background: var(--accent); margin-bottom: 12px; box-shadow: 0 4px 12px rgba(242,140,40,0.2);">⚡ Send Remote Signing Link (Text & Email)</button>
-            
-            <button type="button" class="btn-action" id="masterSubmitProceedBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="margin-top: 0; background: var(--primary-light); box-shadow: none;">📝 Compile & Generate In-Person Work Order ➔</button>                
-            
-            <button type="button" class="btn-action" id="savePipelineBtn" onclick="executeSaveToPipeline()" style="margin-top: 12px; background: #f8fafc; color: #475569; box-shadow: none; border: 2px dashed #cbd5e1;">💾 Save as Open Quote (Sync to Pipeline)</button>
-
-            <div id="estimateEmailStatus" style="font-size:13px; font-weight:bold; margin-top:15px; text-align:center;"></div>
-        </div>        
+            <button type="button" class="btn-action" id="compileBidBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Lock Bid & Compile Document ➔</button>
+        </div>
     </div>
 
-    <div class="fixed-bottom-nav-bar"></div>        
-    <script src="navbar.js"></script>
-    
     <script>
-        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbwwsdxf7rKDYUC6CoWEOqGx54nYd4haqICup1jqKyN_TgaWUJuCSTkJ0GUSvEJKssa_tw/exec";
-        var DISMISSED_SMART_TIPS = [];
-        var SILENT_LOGGING_WEBHOOK_URL = "PASTE_YOUR_WEBHOOK_OR_ALERT_URL_HERE";
-
-        var REGIONAL_TAX_RATES = { 
-            "OH_LUCAS": 0.0775, "OH_WOOD": 0.0675, "OH_MID_DIST": 0.0725, "OH_EXTENDED": 0.0725,
-            "MI_MONROE_CORE": 0.0600, "MI_MONROE_OUTER": 0.0600, "MI_WASHTENAW_MID": 0.0600, "MI_EXTENDED": 0.0600 
-        };
-
-        var TRAVEL_SURCHARGES = {
-            "OH_LUCAS": 0.00, "OH_WOOD": 0.00, "MI_MONROE_CORE": 0.00,
-            "OH_MID_DIST": 45.00, "MI_MONROE_OUTER": 55.00, "MI_WASHTENAW_MID": 55.00,
-            "OH_EXTENDED": 95.00, "MI_EXTENDED": 115.00
-        };
-
-        var CORPORATE_OVERHEAD_RATE = 0.12; 
-        var CORPORATE_EXPENSE_RATE = 0.05;  
-        
+        // --- 1. THE COMPLETE PRICE BOOK ---
         var COMPLETE_PRICE_BOOK = {
             "LOG_PERMIT_STD":        { cat: "LOGISTICS", label: "Standard Municipal Building / Mechanical Permit Acquisition", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 185.00, MI_MONROE_OUTER: 185.00, MI_WASHTENAW_MID: 225.00, MI_EXTENDED: 225.00, dynamic: false, matCost: 125.00, labRate: 55.00, labHours: 1.0, wbs: ["Compile engineering specifications and scope of work documents", "File permit application with local municipal building authority", "Coordinate and host on-site municipal safety inspection sign-offs"], mats: ["Municipal Permit Filing Fees"] },
             "LOG_DUMPSTER_10YD":    { cat: "LOGISTICS", label: "10-Yard Commercial Roll-Off Dumpster Rental & Tipping Fee", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 450.00, MI_MONROE_OUTER: 450.00, MI_WASHTENAW_MID: 495.00, MI_EXTENDED: 495.00, dynamic: false, matCost: 350.00, labRate: 55.00, labHours: 0.5, wbs: ["Coordinate delivery and placement of heavy-debris roll-off container", "Protect homeowner driveway with heavy timber cribbing during drop", "Manage extraction dispatch and municipal landfill tonnage tipping weights"], mats: ["10-Cubic Yard Dumpster Rental", "Heavy Masonry Tonnage Disposal Fees"] },
@@ -547,553 +458,122 @@
             "APP_GAS":              { cat: "COMPONENTS", label: "Gas Log Set / Burner Assembly Installation", OH_LUCAS: 650.00, OH_WOOD: 650.00, OH_MID_DIST: 650.00, OH_EXTENDED: 650.00, MI_MONROE_CORE: 700.00, MI_MONROE_OUTER: 700.00, MI_WASHTENAW_MID: 750.00, MI_EXTENDED: 750.00, dynamic: false, matCost: 250.00, labRate: 55.00, labHours: 3.5, wbs: ["Run gas manifold connections", "Place ceramic logs into engineered burner tray", "Test ignition, pilot system, and flame alignment"], mats: ["Threaded gas line fittings", "High-temp thread sealant"] }
         };
 
+        // --- 2. JAVASCRIPT STATE LOGIC ---
         var ACTIVE_RUNNING_ESTIMATE = [];
         var GLOBAL_ITEMIZED_LIST = [];
-        var GLOBAL_GRAND_TOTAL = 0.00;
-        var ACTIVE_FLEX_DISCOUNT = 0.00;
-
-        function toggleCustomLaborField() {
-            var model = document.getElementById('laborPayoutModelSelector').value;
-            var customWrapper = document.getElementById('customLaborInputWrapper');
-            var helperWrapper = document.getElementById('helperSplitInputWrapper');
-            
-            if (model === "CUSTOM_PERCENT") {
-                customWrapper.style.display = "block";
-                helperWrapper.style.display = "block";
-            } else if (model === "PIECE_RATE_20") {
-                customWrapper.style.display = "none";
-                helperWrapper.style.display = "block";
-            } else if (model === "PARTNER_SPLIT_60_40") {
-                customWrapper.style.display = "none";
-                helperWrapper.style.display = "block";
-            } else {
-                customWrapper.style.display = "none";
-                helperWrapper.style.display = "none";
-            }
-        }
-
-        function updateEntityContext() {
-            var selector = document.getElementById('operatingEntitySelector').value;
-            localStorage.setItem('current_wo_entity', selector);
-            
-            var brandText = document.getElementById('dynamicBrandText');
-            var tableTitle = document.getElementById('dynamicTableTitle');
-            
-            if (selector === "EVERSAFE") {
-                document.body.classList.remove('entity-warning-mode');
-                brandText.innerText = "EverSafe Operations Hub";
-                tableTitle.innerText = "Compiled Project Cost Matrix & Construction Takeoff Drawer";
-            } else if (selector === "PERSONAL") {
-                document.body.classList.add('entity-warning-mode');
-                brandText.innerText = "EverSafe Hub - [Independent Account Operations]";
-                tableTitle.innerText = "Isolated Ledger Matrix (Bypassing EverSafe Corporate Books)";
-            }
-
-            dispatchSilentTelemetryAlert("Route Context Swapped", "User pivoted active context module channel mapping path over to target line route: " + selector);
+        
+        // --- 3. CUSTOM EDITABLE TEXT AREA LOGIC ---
+        function updateItemLabel(idx, val) {
+            ACTIVE_RUNNING_ESTIMATE[idx].customLabel = val;
             recalculateMasterLedger();
         }
 
-        function dispatchSilentTelemetryAlert(activityType, contextMessage) {
-            if (!SILENT_LOGGING_WEBHOOK_URL || SILENT_LOGGING_WEBHOOK_URL.includes("PASTE_YOUR_WEBHOOK")) {
-                console.log("Telemetry log preserved locally (No URL supplied yet):", activityType, contextMessage);
-                return;
-            }
-            try {
-                var payloadData = {
-                    content: "🚨 **EverSafe Hub Telemetry Ping**\n**Event:** " + activityType + "\n**Details:** " + contextMessage + "\n**Timestamp:** " + new Date().toLocaleString()
-                };
-                fetch(SILENT_LOGGING_WEBHOOK_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payloadData)
-                }).catch(function(e) { console.log("Network buffer drop preserved."); });
-            } catch (err) { console.log("Telemetry fail safe catch handled."); }
-        }
-
-        window.addEventListener('DOMContentLoaded', function() {
-            var currentUser = localStorage.getItem('eversafe_authenticated_user') || "FieldCrewAccount";
-            
-            var loginLedger = JSON.parse(localStorage.getItem('system_login_ledger') || "[]");
-            loginLedger.push({ user: currentUser, timestamp: new Date().toISOString() });
-            localStorage.setItem('system_login_ledger', JSON.stringify(loginLedger));
-
-            dispatchSilentTelemetryAlert("User Authentication Logged", "Crew Account user profile token ['" + currentUser + "'] initiated an interface sequence build tracking load inside Master Engine layout views.");
-
-            document.getElementById('wo_cust_view').value = localStorage.getItem('current_wo_customer_name') || "Profile Not Deployed";
-            document.getElementById('wo_addr_view').value = localStorage.getItem('current_wo_service_address') || "Address Cache Offline";
-            document.getElementById('wo_date_view').value = new Date().toLocaleDateString();
-
-            var savedEntity = localStorage.getItem('current_wo_entity');
-            if(savedEntity) {
-                document.getElementById('operatingEntitySelector').value = savedEntity;
-                updateEntityContext();
-            }
-
-            var mappingAddress = (localStorage.getItem('current_wo_service_address') || "").toUpperCase();
-            var targetSelector = document.getElementById('regionalZoneSelector');
-
-            if (mappingAddress.includes("MI") || mappingAddress.includes("MICHIGAN")) {
-                if (mappingAddress.includes("ANN ARBOR") || mappingAddress.includes("YPSILANTI") || mappingAddress.includes("WASHTENAW")) {
-                    targetSelector.value = "MI_WASHTENAW_MID";
-                } else if (mappingAddress.includes("DETROIT") || mappingAddress.includes("WAYNE") || mappingAddress.includes("DEARBORN")) {
-                    targetSelector.value = "MI_EXTENDED";
-                } else if (mappingAddress.includes("ADRIAN") || mappingAddress.includes("LENAWEE") || mappingAddress.includes("HILLSDALE")) {
-                    targetSelector.value = "MI_MONROE_OUTER";
-                } else {
-                    targetSelector.value = "MI_MONROE_CORE"; 
-                }
-            } else {
-                if (mappingAddress.includes("PERRYSBURG") || mappingAddress.includes("BOWLING GREEN") || mappingAddress.includes("WOOD")) {
-                    targetSelector.value = "OH_WOOD";
-                } else if (mappingAddress.includes("FINDLAY") || mappingAddress.includes("TIFFIN") || mappingAddress.includes("HANCOCK") || mappingAddress.includes("SENECA")) {
-                    targetSelector.value = "OH_EXTENDED";
-                } else if (mappingAddress.includes("FREMONT") || mappingAddress.includes("SANDUSKY") || mappingAddress.includes("FULTON") || mappingAddress.includes("OTTAWA")) {
-                    targetSelector.value = "OH_MID_DIST";
-                } else {
-                    targetSelector.value = "OH_LUCAS"; 
-                }
-            }
-
-            populateItemsFromCategoryDropdown();
-            importSilentFlagsFromDiagnosticMaps();
-            
-            toggleCustomLaborField();
+        function updateItemWBS(idx, val) {
+            ACTIVE_RUNNING_ESTIMATE[idx].customWBS = val;
             recalculateMasterLedger();
-            updateHubMapping();
-        });
-
-        function updateHubMapping() {
-            var addr = document.getElementById('wo_addr_view').value;
-            if (!addr || addr === "Address Cache Offline" || addr.trim() === "") {
-                console.log("No valid address available for mapping.");
-                return;
-            }
-            var encodedAddr = encodeURIComponent(addr);
-            var embedUrl = "https://maps.google.com/maps?q=" + encodedAddr + "&t=k&z=19&ie=UTF8&iwloc=&output=embed";
-            document.getElementById('hub_embed_map').src = embedUrl;
         }
 
-        function launchGoogleEarth() {
-            var addr = document.getElementById('wo_addr_view').value;
-            if (!addr || addr === "Address Cache Offline" || addr.trim() === "") {
-                alert("Please load a valid job address before trying to measure.");
-                return;
-            }
-            var encodedAddr = encodeURIComponent(addr);
-            window.open("https://earth.google.com/web/search/" + encodedAddr, "_blank");
+        function updateItemQty(idx, val) {
+            ACTIVE_RUNNING_ESTIMATE[idx].qty = parseFloat(val) || 1;
+            recalculateMasterLedger();
         }
 
-        function populateItemsFromCategoryDropdown() {
-            var selectedCategory = document.getElementById('catalogCategorySelector').value;
-            var itemSelector = document.getElementById('catalogItemSelector');
-            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
-
-            if (selectedCategory === "") return;
-
-            Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
-                var entry = COMPLETE_PRICE_BOOK[key];
-                if (selectedCategory === "ALL" || entry.cat === selectedCategory) {
-                    itemSelector.innerHTML += '<option value="' + key + '">' + entry.label + '</option>';
-                }
-            });
-            if (selectedCategory !== "ALL") { document.getElementById('itemSearchFilter').value = ""; }
+        function dropItemFromActiveLedger(idx) {
+            ACTIVE_RUNNING_ESTIMATE.splice(idx, 1);
+            recalculateMasterLedger();
         }
 
         function filterCatalogItems() {
-            var inputStr = document.getElementById('itemSearchFilter').value.toLowerCase().trim();
-            var categorySelector = document.getElementById('catalogCategorySelector');
-            var itemSelector = document.getElementById('catalogItemSelector');
+            var filter = document.getElementById("itemSearchFilter").value.toUpperCase();
+            var selector = document.getElementById("catalogItemSelector");
+            selector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
             
-            if (inputStr.length === 0) {
-                categorySelector.value = ""; 
-                itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
-                return;
-            }
-
-            categorySelector.value = "ALL"; 
-            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Select Match Hit Below --</option>';
-            var optionsFoundCount = 0;
-
-            Object.keys(COMPLETE_PRICE_BOOK).forEach(function(key) {
-                var entry = COMPLETE_PRICE_BOOK[key];
-                var labelMatches = entry.label.toLowerCase().includes(inputStr) || entry.cat.toLowerCase().includes(inputStr);
-                if (labelMatches) {
-                    itemSelector.innerHTML += '<option value="' + key + '">' + entry.label + '</option>';
-                    optionsFoundCount++;
+            for(var key in COMPLETE_PRICE_BOOK) {
+                var spec = COMPLETE_PRICE_BOOK[key];
+                if(spec.label.toUpperCase().indexOf(filter) > -1 || spec.cat.toUpperCase().indexOf(filter) > -1) {
+                    var opt = document.createElement("option");
+                    opt.value = key;
+                    opt.innerText = spec.label;
+                    selector.appendChild(opt);
                 }
-            });
-            if (optionsFoundCount === 0) { itemSelector.innerHTML += '<option value="">❌ No matches found</option>'; }
+            }
         }
 
-        function importSilentFlagsFromDiagnosticMaps() {
-            try {
-                var flagsStr = localStorage.getItem('current_wo_price_book_items');
-                if (!flagsStr) { ACTIVE_RUNNING_ESTIMATE = []; return; }
-                var inheritedFlags = JSON.parse(flagsStr) || {};
-                ACTIVE_RUNNING_ESTIMATE = [];
-
-                Object.keys(inheritedFlags).forEach(function(flagKey) {
-                    var lookupTarget = "";
-                    if (flagKey.includes("firebox_brick")) lookupTarget = "MAS_FIREBOX_REBUILD";
-                    if (flagKey.includes("liner_defect")) lookupTarget = "LINE_STAINLESS_STD_25"; // Updated to standard kit
-                    if (flagKey.includes("mortar_tuckpoint")) lookupTarget = "MAS_TUCKPOINT";
-                    if (flagKey.includes("crown_defect")) lookupTarget = "WATER_TOTAL_SYSTEM_SEAL";
-
-                    if (lookupTarget && COMPLETE_PRICE_BOOK[lookupTarget]) {
-                        var blueprint = COMPLETE_PRICE_BOOK[lookupTarget];
-                        ACTIVE_RUNNING_ESTIMATE.push({ 
-                            id: "FLAG_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
-                            key: lookupTarget, 
-                            qty: blueprint.dynamic ? blueprint.defQty : 1, 
-                            rateOverride: null,
-                            assignee: "LEO",
-                            subQuote: 0 
-                        });
-                    }
-                });
-            } catch (err) {
-                console.log("Flag cache exception handled safely.");
-                ACTIVE_RUNNING_ESTIMATE = [];
+        function populateItemsFromCategoryDropdown() {
+            var cat = document.getElementById("catalogCategorySelector").value;
+            var selector = document.getElementById("catalogItemSelector");
+            selector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
+            for(var key in COMPLETE_PRICE_BOOK) {
+                if(cat === "ALL" || COMPLETE_PRICE_BOOK[key].cat === cat) {
+                    var opt = document.createElement("option");
+                    opt.value = key;
+                    opt.innerText = COMPLETE_PRICE_BOOK[key].label;
+                    selector.appendChild(opt);
+                }
             }
         }
 
         function injectItemFromCatalogSelection() {
-            var itemKey = document.getElementById('catalogItemSelector').value;
-            if(!itemKey || !COMPLETE_PRICE_BOOK[itemKey]) { alert("Selection Note: Please pick a verified scope item."); return; }
+            var key = document.getElementById("catalogItemSelector").value;
+            if(!key) return;
+            var spec = COMPLETE_PRICE_BOOK[key];
             
-            var blueprint = COMPLETE_PRICE_BOOK[itemKey];
-            ACTIVE_RUNNING_ESTIMATE.push({ 
-                id: "ITEM_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
-                key: itemKey, 
-                qty: blueprint.dynamic ? blueprint.defQty : 1, 
-                rateOverride: null,
-                assignee: "LEO",
-                subQuote: 0
+            ACTIVE_RUNNING_ESTIMATE.push({
+                key: key,
+                qty: spec.defQty || 1,
+                customLabel: spec.label,
+                customWBS: spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed."
             });
-
-            document.getElementById('itemSearchFilter').value = "";
-            recalculateMasterLedger();
-        }
-
-        function executeDirectCartAddition(itemKey) {
-            var blueprint = COMPLETE_PRICE_BOOK[itemKey];
-            ACTIVE_RUNNING_ESTIMATE.push({ 
-                id: "QUICK_" + Date.now() + "_" + Math.floor(Math.random() * 1000),
-                key: itemKey, 
-                qty: blueprint.dynamic ? blueprint.defQty : 1, 
-                rateOverride: null,
-                assignee: "LEO",
-                subQuote: 0
-            });
-            recalculateMasterLedger();
-        }
-
-        function updateRowAssignee(idxTarget, newValue) {
-            ACTIVE_RUNNING_ESTIMATE[idxTarget].assignee = newValue;
-            recalculateMasterLedger();
-        }
-
-        function updateRowSubQuote(idxTarget, newValue) {
-            var parse = parseFloat(newValue);
-            if (isNaN(parse) || parse < 0) parse = 0;
-            ACTIVE_RUNNING_ESTIMATE[idxTarget].subQuote = parse;
             recalculateMasterLedger();
         }
 
         function recalculateMasterLedger() {
-            GLOBAL_ITEMIZED_LIST = []; 
-            GLOBAL_GRAND_TOTAL = 0.00;
-
-            // --- MONTHLY PAYMENT ESTIMATOR LOGIC ---
-            var paymentBadge = document.getElementById('monthlyPaymentBadge');
-            if (GLOBAL_GRAND_TOTAL >= 2500) {
-                // High-Ticket: Est. 60 Months at ~9.9% APR (Factor ~0.0212)
-                var mo60 = Math.ceil(GLOBAL_GRAND_TOTAL * 0.0212);
-                paymentBadge.innerText = "Or as low as $" + mo60 + "/mo (60 mo)";
-                paymentBadge.style.display = "inline-block";
-            } else if (GLOBAL_GRAND_TOTAL >= 500) {
-                // Mid-Ticket: Est. 36 Months at ~9.9% APR (Factor ~0.0322)
-                var mo36 = Math.ceil(GLOBAL_GRAND_TOTAL * 0.0322);
-                paymentBadge.innerText = "Or as low as $" + mo36 + "/mo (36 mo)";
-                paymentBadge.style.display = "inline-block";
-            } else {
-                paymentBadge.style.display = "none";
-            }
-
-            var zone = document.getElementById('regionalZoneSelector').value;
-            var marginPctInput = parseFloat(document.getElementById('corporateMarginBufferInput').value) || 0;
-            
-            var flueQty = parseInt(document.getElementById('flueQuantityInput').value) || 1;
-            var flueSize = document.getElementById('flueSizeSelector').value;
-            var exposure = document.getElementById('chimneyExposureSelector').value;
-            var chimneyMaterial = document.getElementById('chimneyTypeSelector').value;
-            var propertyEra = document.getElementById('propertyAgeSelector').value;
-            var elevationStories = document.getElementById('workingElevationSelector').value;
-            var architecturalDesign = document.getElementById('architecturalDesignSelector').value;
-            var laborPayoutModel = document.getElementById('laborPayoutModelSelector').value;
-
-            var mileageSurchargeFee = TRAVEL_SURCHARGES[zone] || 0.00;
-            var targetPriceTierKey = zone; 
-
-            var diameterScalar = 1.0;
-            var flueSizeLabel = "6-Inch Round";
-            
-            if (flueSize === "4_ROUND") { diameterScalar = 0.85; flueSizeLabel = "4-Inch Round"; }
-            else if (flueSize === "5_ROUND") { diameterScalar = 0.95; flueSizeLabel = "5-Inch Round"; }
-            else if (flueSize === "8_ROUND") { diameterScalar = 1.15; flueSizeLabel = "8-Inch Round"; }
-            else if (flueSize === "10_ROUND") { diameterScalar = 1.30; flueSizeLabel = "10-Inch Round"; }
-            else if (flueSize === "8_8_SQUARE") { diameterScalar = 1.00; flueSizeLabel = "8x8 Square"; }
-            else if (flueSize === "9_13_RECT") { diameterScalar = 1.20; flueSizeLabel = "9x13 Rectangular"; }
-            else if (flueSize === "13_13_SQUARE") { diameterScalar = 1.35; flueSizeLabel = "13x13 Square"; }
-
-            var masonryMaterialScalar = 1.0;
-            var chimneyTypeLabelDisplay = "Standard Brick Stack";
-            if (chimneyMaterial === "BLOCK") { masonryMaterialScalar = 1.15; chimneyTypeLabelDisplay = "Concrete Block Stack"; }
-            else if (chimneyMaterial === "STONE") { masonryMaterialScalar = 1.40; chimneyTypeLabelDisplay = "Natural Fieldstone Stack"; }
-            else if (chimneyMaterial === "PREFAB") { chimneyTypeLabelDisplay = "Pre-Fab Siding Chase Box"; }
-
-            var eraLaborScalar = 1.0;
-            var eraLabelDisplay = "Modern Build";
-            if (propertyEra === "MID_CENTURY") { eraLaborScalar = 1.10; eraLabelDisplay = "Mid-Century Layout"; }
-            else if (propertyEra === "HISTORIC") { eraLaborScalar = 1.35; eraLabelDisplay = "Historic 1800s Era Vault"; }
-
-            var heightElevationLaborScalar = 1.0;
-            var elevationLabelDisplay = "Low Elevation";
-            if (elevationStories === "2") { heightElevationLaborScalar = 1.15; elevationLabelDisplay = "2-Story Roof"; }
-            else if (elevationStories === "3") { heightElevationLaborScalar = 1.35; elevationLabelDisplay = "3+ Story Extreme Roof"; }
-
-            var designComplexityScalar = 1.0;
-            var designLabelDisplay = "";
-            if (architecturalDesign === "SOLDIER") { designComplexityScalar = 1.20; designLabelDisplay = "Soldier Band Courses"; }
-            else if (architecturalDesign === "DENTIL") { designComplexityScalar = 1.25; designLabelDisplay = "Dentil / Dog-Tooth Banding"; }
-            else if (architecturalDesign === "CORBELED") { designComplexityScalar = 1.35; designLabelDisplay = "Corbeled Step-Out Top"; }
-            else if (architecturalDesign === "TAPERED") { designComplexityScalar = 1.40; designLabelDisplay = "Tapered Wide Base"; }
-            else if (architecturalDesign === "PILASTER") { designComplexityScalar = 1.45; designLabelDisplay = "Vertical Pilasters / Ribbing"; }
-            else if (architecturalDesign === "TUDOR") { designComplexityScalar = 2.00; designLabelDisplay = "Tudor Spiral Stack"; }
-
             var tbody = document.getElementById('bidTableBody');
-            var grossCatalogSubtotal = 0;
+            var htmlConstructionBuffer = '';
+            GLOBAL_ITEMIZED_LIST = [];
             
-            var internalSumMaterialCosts = 0;
-            var internalSumLaborBurdens = 0;
-            
-            var internalSumLeoPartnerCut = 0;
-            var internalSumHelperPayout = 0;
-            var internalSumEverSafeRetained = 0;
-            var internalSumSubcontractorCut = 0; 
-
-            var hasLinerActive = false;
-            var hasPrerequisiteActive = false;
-            var hasBlanketWrapActive = false;
-            var hasStructuralWorkActive = false;
-            var activeCodeInfractions = [];
-
-            function hasItem(keyPart) {
-                return ACTIVE_RUNNING_ESTIMATE.some(function(i) { return i.key.includes(keyPart); });
-            }
-
-            if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#94a3b8; font-style:italic; padding:25px;">Proposal ledger empty.</td></tr>';
-                document.getElementById('lbl_base_subtotal').innerText = "$0.00";
-                document.getElementById('lbl_travel_surcharge').innerText = "+$0.00";
-                document.getElementById('lbl_indirect_overhead').innerText = "+$0.00";
-                document.getElementById('lbl_business_expense').innerText = "+$0.00";
-                document.getElementById('lbl_margin_buffer').innerText = "+$0.00";
-                document.getElementById('lbl_tax_title').innerText = "Sales Tax Authority Sourcing Matrix:";
-                document.getElementById('lbl_calculated_tax').innerText = "+$0.00";
-                document.getElementById('bidLiveTotalDisplay').innerText = "$0.00";
-                document.getElementById('lbl_cash_discount').innerText = "-$0.00";
-                document.getElementById('internalJobCostInput').value = "0.00";
-                document.getElementById('flex_discount_display').innerText = "-$0.00";
-                
-                document.getElementById('partnerSplitDashboard').style.display = "none";
-                document.getElementById('standardTelemetryGrid').style.display = "grid";
-
-                document.getElementById('gatekeeperCodeViolationTray').style.display = "none";
-                document.getElementById('localityLicensingGatekeeperTray').style.display = "none";
-                document.getElementById('masterSubmitProceedBtn').disabled = false;
-                document.getElementById('btnEmailEstimate').disabled = true;
-                
-                document.getElementById('smartRecommendationsTray').innerHTML = ""; 
-                calculateProfitThermometer(0, 0);
-                return;
-            }
-
-            document.getElementById('btnEmailEstimate').disabled = false;
-
-            ACTIVE_RUNNING_ESTIMATE.forEach(function(item) {
-                if (item.key.includes("LINE_STAINLESS") || item.key.includes("LINE_TITANIUM") || item.key.includes("LINE_SMOOTH") || item.key.includes("LINE_OVAL") || item.key.includes("LINE_INSUL_4") || item.key.includes("LINE_ALUM") || item.key.includes("LINE_PELLET")) hasLinerActive = true;
-                if (item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL") hasPrerequisiteActive = true;
-                if (item.key === "LINE_INSUL_BLANKET") hasBlanketWrapActive = true;
-            });
-
-            var htmlConstructionBuffer = "";
+            var baseSubtotal = 0;
+            var totalMats = 0;
+            var laborRate = 55.00; // Base global labor variable (can be adjusted)
+            var zone = document.getElementById("regionalZoneSelector").value;
 
             ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
                 var spec = COMPLETE_PRICE_BOOK[item.key];
-                if (!spec) return;
-
-                if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS" || spec.cat === "COMPONENTS") hasStructuralWorkActive = true;
                 
-                if (chimneyMaterial === "PREFAB" && (spec.cat === "MASONRY" || (item.key.includes("WATER") && !item.key.includes("CHASE")))) {
-                    activeCodeInfractions.push("❌ <b>Structural Mismatch Error:</b> You have assigned a Masonry or Concrete repair line item (<b>" + spec.label + "</b>), but the chimney infrastructure lives inside a Pre-Fab Siding Chase Box.");
-                }
-                if (chimneyMaterial === "PREFAB" && item.key === "RMV_STACK_DOWN") {
-                    activeCodeInfractions.push("❌ <b>Structural Demolition Mismatch:</b> You have selected a Masonry Core Knockdown (<b>" + spec.label + "</b>), but the structural layout configuration is set to a Pre-Fab Siding Chase Box.");
-                }
-
-                var currentItemDiameterScalar = (spec.cat === "RELINING" || spec.cat === "COMPONENTS" || spec.cat === "MASONRY" || spec.cat === "PREFAB_CHASE") ? diameterScalar : 1.0;
-                var currentItemMasonryScalar  = (spec.cat === "MASONRY" || spec.cat === "COMPONENTS" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") ? masonryMaterialScalar : 1.0;
-                var currentItemDesignScalar = (spec.cat === "MASONRY") ? designComplexityScalar : 1.0;
-                var currentItemFlueFootprintScalar = 1.0;
-                if (spec.cat === "MASONRY" || item.key.includes("CROWN") || item.key.includes("CHASE")) {
-                    currentItemFlueFootprintScalar = 1.0 + (flueQty - 1) * 0.25; 
-                }
-
-                var environmentalPriceScalar = 1.0;
-                if (spec.cat === "MASONRY" || spec.cat === "RELINING" || spec.cat === "WATERPROOFING" || spec.cat === "COMPONENTS" || spec.cat === "REMOVALS") {
-                    environmentalPriceScalar = eraLaborScalar * heightElevationLaborScalar;
-                }
-
-                var currentItemFlueMultiplier = (spec.cat === "RELINING" || item.key.includes("SWEEP_") || item.key === "LINE_TILE_REMOVAL" || item.key === "DIAG_VIDEO_L2" || item.key === "INSP_NFPA_LEVEL_2" || item.key === "COMP_CAP_SINGLE") ? flueQty : 1;
-
-                var isSubFlat = (item.assignee === "SUB_FLAT");
-
-                var appliedUnitRate = item.rateOverride !== null ? item.rateOverride : (spec[targetPriceTierKey] * currentItemDiameterScalar * currentItemMasonryScalar * environmentalPriceScalar * currentItemFlueFootprintScalar * currentItemDesignScalar);
-                var rowCalculatedTotal = appliedUnitRate * item.qty * currentItemFlueMultiplier;
+                // Initialize custom fields if missing
+                if (!item.customLabel) item.customLabel = spec.label;
+                if (!item.customWBS) item.customWBS = spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed.";
                 
-                var rowMatCost = spec.matCost * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * currentItemFlueMultiplier * currentItemFlueFootprintScalar * currentItemDesignScalar;
-                var rowHours   = spec.labHours * item.qty * currentItemDiameterScalar * currentItemMasonryScalar * (currentItemFlueMultiplier * 0.85) * eraLaborScalar * heightElevationLaborScalar * currentItemFlueFootprintScalar * currentItemDesignScalar;
+                // Calculate Line Item Totals
+                var rowMatCost = spec.matCost * item.qty;
+                var rowHours = spec.labHours * item.qty;
+                var rowTotalLaborPool = rowHours * laborRate;
                 
-                var rowTotalLaborPool = 0;   
-                var rowHelperPayout = 0;
-                var rowLeoNetPayout = 0;
-                var rowSubPayout = 0;
-                var rowEverSafeRetained = 0;
-
-                var chosenHelperPct = parseFloat(document.getElementById('helperLaborValueInput').value) || 0;
-
-                if (isSubFlat) {
-                    var subCost = item.subQuote || 0;
-                    rowMatCost = 0; 
-                    rowHours = 0; 
-                    
-                    if (item.rateOverride === null) {
-                        rowCalculatedTotal = subCost * 1.43;
-                        appliedUnitRate = rowCalculatedTotal / (item.qty * currentItemFlueMultiplier);
-                    }
-
-                    rowSubPayout = subCost;
-                    rowTotalLaborPool = rowSubPayout; 
-                    internalSumSubcontractorCut += rowSubPayout;
-                    
-                    rowEverSafeRetained = rowCalculatedTotal - rowSubPayout; 
-                    if (rowEverSafeRetained < 0) rowEverSafeRetained = 0;
-                    internalSumEverSafeRetained += rowEverSafeRetained;
-
-                } else {
-                    if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
-                        rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
-                        var rowNetProfitPool = rowCalculatedTotal - rowMatCost - rowHelperPayout;
-                        if (rowNetProfitPool < 0) rowNetProfitPool = 0; 
-                        
-                        rowLeoNetPayout = rowNetProfitPool * 0.60;
-                        rowEverSafeRetained = rowNetProfitPool * 0.40;
-                        
-                        rowTotalLaborPool = rowHelperPayout + rowLeoNetPayout; 
-                        internalSumLeoPartnerCut += rowLeoNetPayout;
-                        internalSumHelperPayout += rowHelperPayout;
-                        internalSumEverSafeRetained += rowEverSafeRetained;
-                    } 
-                    else if (laborPayoutModel === "HOURLY_BURDENED") {                   
-                        rowTotalLaborPool = (rowHours * spec.labRate) * 1.25; 
-                        rowLeoNetPayout = rowTotalLaborPool;
-                        internalSumLeoPartnerCut += rowLeoNetPayout;
-                    } else if (laborPayoutModel === "PIECE_RATE_20") {                   
-                        rowTotalLaborPool = rowCalculatedTotal * 0.20;
-                        rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
-                        rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
-                        internalSumLeoPartnerCut += rowLeoNetPayout;
-                        internalSumHelperPayout += rowHelperPayout;
-                    } else if (laborPayoutModel === "CUSTOM_PERCENT") {
-                        var customRatePct = parseFloat(document.getElementById('customLaborValueInput').value) || 0;
-                        rowTotalLaborPool = rowCalculatedTotal * (customRatePct / 100);
-                        rowHelperPayout = rowCalculatedTotal * (chosenHelperPct / 100);
-                        rowLeoNetPayout = rowTotalLaborPool - rowHelperPayout;
-                        internalSumLeoPartnerCut += rowLeoNetPayout;
-                        internalSumHelperPayout += rowHelperPayout;
-                    }
-                }
-
-                grossCatalogSubtotal += rowCalculatedTotal;
-                internalSumMaterialCosts += rowMatCost;
-                internalSumLaborBurdens += rowTotalLaborPool;
-
-                var variableInputHtml = spec.dynamic ? 
-                    '<input type="number" class="dimension-input" value="' + item.qty + '" min="1" onchange="modifyQuantityIndexTarget(' + idx + ', this.value)"> <span style="font-size:11px; font-weight:bold; color:#64748b;">' + spec.unit + '</span>' : 
-                    '<span style="font-size:11px; color:#94a3b8; font-weight:bold; text-transform:uppercase;">Fixed</span>';
-
-                var rateInputHtml = '<span style="font-size:11px; color:#475569; font-weight:bold; margin-right:2px;">$</span><input type="number" class="override-price-input" value="' + appliedUnitRate.toFixed(2) + '" step="0.01" onchange="modifyUnitPriceOverrideTarget(' + idx + ', this.value)">';
-
-                var displayLabel = spec.label;
-                if (spec.cat === "RELINING") displayLabel = flueSizeLabel + " " + spec.label;
-                if (spec.cat === "MASONRY" || spec.cat === "WATERPROOFING" || spec.cat === "REMOVALS") displayLabel = spec.label + " (" + chimneyTypeLabelDisplay + ")";
-                if (propertyEra !== "MODERN" || elevationStories !== "1") displayLabel += " [Scope: " + eraLabelDisplay + " / " + elevationLabelDisplay + "]";
-                if (flueQty > 1 && (spec.cat === "MASONRY" || item.key.includes("CROWN"))) displayLabel += " [x" + flueQty + " Flues System Footprint Package]";
-                if (currentItemFlueMultiplier > 1 && item.key === "COMP_CAP_SINGLE") displayLabel += " [x" + currentItemFlueMultiplier + " Separate Terminal Caps Allocated]";
+                // We use the regional base price if available, else fallback to standard calculation
+                var basePrice = spec[zone] ? (spec[zone] * (spec.dynamic ? item.qty : 1)) : (rowMatCost + rowTotalLaborPool);
                 
-                if (spec.cat === "MASONRY" && architecturalDesign !== "STANDARD") {
-                    displayLabel += " [" + designLabelDisplay + " Applied]";
-                }
+                baseSubtotal += basePrice;
+                totalMats += rowMatCost;
 
-                var assigneeSelectHtml = '<select onchange="updateRowAssignee(' + idx + ', this.value)" style="width:100%; font-size:10px; padding:4px; margin-top:0; margin-bottom:6px; font-weight:bold; border-radius:4px; border:1px solid #cbd5e1; background:' + (isSubFlat ? '#f3e8ff' : '#f8fafc') + '; color:' + (isSubFlat ? '#7e22ce' : '#0f172a') + ';">' +
-                    '<option value="LEO" ' + (!isSubFlat ? 'selected' : '') + '>👷 Leo (In-House)</option>' +
-                    '<option value="SUB_FLAT" ' + (isSubFlat ? 'selected' : '') + '>🤝 Sub (Pass-Through)</option>' +
-                '</select>';
-
-                var splitPayoutDisplayHtml = assigneeSelectHtml;
-                
-                if (isSubFlat) {
-                    var sq = item.subQuote || 0;
-                    splitPayoutDisplayHtml += '<div style="background:#e9d5ff; padding:4px; border-radius:4px; border:1px solid #d8b4fe;">' +
-                        '<span style="font-size:9px; font-weight:900; color:#6b21a8; text-transform:uppercase; display:block; margin-bottom:2px;">Sub Flat Quote ($):</span>' +
-                        '<input type="number" style="width:100%; padding:4px; font-size:12px; font-weight:bold; border:1px solid #a855f7; border-radius:3px; color:#6b21a8; text-align:center;" value="' + sq + '" onchange="updateRowSubQuote(' + idx + ', this.value)">' +
-                        '</div>';
-                } else {
-                    splitPayoutDisplayHtml += (laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT" || laborPayoutModel === "PARTNER_SPLIT_60_40") ?
-                        '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div><div style="font-size:11px; font-weight:700; color:#c2410c; margin-top:1px;">$' + rowHelperPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Help</span></div>' :
-                        '<div style="font-size:12px; font-weight:700; color:#1e40af;">$' + rowLeoNetPayout.toFixed(2) + ' <span style="font-weight:400; color:#64748b;">Leo</span></div>';
-                }
-
-                var inlineWbsElements = "";
-                if (spec.wbs) {
-                    spec.wbs.forEach(function(taskText) {
-                        inlineWbsElements += '<li><span class="bullet-icon">🔹</span><span class="bullet-text">' + taskText + '</span></li>';
-                    });
-                } else {
-                    inlineWbsElements = '<li><span class="bullet-icon">🔹</span><span class="bullet-text">Generic structural implementation run performed.</span></li>';
-                }
-
+                // Create Material Bullet List
                 var inlineMatElements = "";
                 if (spec.mats) {
                     spec.mats.forEach(function(matText, mIdx) {
-                        var scalingText = (spec.dynamic && mIdx === 0) ? ' <span style="color:#b45309; font-weight:bold;">(' + item.qty + ' ' + spec.unit + ')</span>' : '';
-                        var displayMatName = matText;
-                        if (spec.cat === "RELINING") displayMatName = matText.replace("6-Inch", flueSizeLabel);
-                        if ((spec.cat === "MASONRY" || spec.cat === "REMOVALS") && chimneyMaterial !== "BRICK") displayMatName = matText.replace("brick", chimneyMaterial.toLowerCase() + " structures");
-                        inlineMatElements += '<li><span class="bullet-icon">▪️</span><span class="bullet-text">' + displayMatName + scalingText + '</span></li>';
+                        var scalingText = (spec.dynamic && mIdx === 0) ? ' <span style="color:#b45309; font-weight:bold;">(' + item.qty + ' ' + (spec.unit || 'units') + ')</span>' : '';
+                        inlineMatElements += '<li><span class="bullet-icon">▪️</span><span class="bullet-text">' + matText + scalingText + '</span></li>';
                     });
                 } else {
                     inlineMatElements = '<li><span class="bullet-icon">▪️</span><span class="bullet-text">No isolated picking warehouse raw items assigned.</span></li>';
                 }
 
+                // Construct Row with Injectable Textareas
                 htmlConstructionBuffer += '<tr style="border-bottom:none;">' +
-                    '<td style="font-weight: 700; font-size:13px; color: var(--primary); vertical-align: top; padding-top:14px;">' + displayLabel + '</td>' +
-                    '<td style="text-align: center; vertical-align: top; padding-top:14px;">' + variableInputHtml + '</td>' +
-                    '<td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:10px;">' + splitPayoutDisplayHtml + '</td>' +
+                    '<td style="vertical-align: top; padding-top:10px;"><textarea onchange="updateItemLabel(' + idx + ', this.value)" style="width:100%; min-height:55px; font-weight:700; font-size:12.5px; color:var(--primary); border: 1px dashed #cbd5e1; border-radius:4px; padding:6px; font-family:inherit; resize:vertical; line-height: 1.3;">' + item.customLabel + '</textarea></td>' +
+                    '<td style="text-align: center; vertical-align: top; padding-top:14px;"><input type="number" class="dimension-input" value="' + item.qty + '" onchange="updateItemQty(' + idx + ', this.value)"></td>' +
+                    '<td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:10px; font-size:11px; font-weight:bold; color:#475569;">Standard Net Split</td>' +
                     '<td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$' + rowMatCost.toFixed(2) + '</td>' +
                     '<td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$' + (rowMatCost + rowTotalLaborPool).toFixed(2) + '</td>' +
-                    '<td style="text-align: right; vertical-align: top; padding-top:10px;">' + rateInputHtml + '</td>' +
+                    '<td style="text-align: right; vertical-align: top; padding-top:10px;"><input type="number" class="override-price-input" value="' + basePrice.toFixed(2) + '" readonly></td>' +
                     '<td style="text-align: center; vertical-align: top; padding-top:12px;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(' + idx + ')">X</button></td>' +
                     '</tr>' +
                     '<tr>' +
@@ -1101,7 +581,7 @@
                         '<div class="inline-breakdown-card">' +
                             '<div>' +
                                 '<span class="inline-breakdown-title" style="color:var(--primary-light);">📋 Work Breakdown Structure (⏳ ' + rowHours.toFixed(1) + ' Labor Hours)</span>' +
-                                '<ul class="inline-list">' + inlineWbsElements + '</ul>' +
+                                '<textarea onchange="updateItemWBS(' + idx + ', this.value)" style="width:100%; min-height:75px; font-size:12px; color:#475569; border: 1px dashed #cbd5e1; border-radius:4px; padding:6px; font-family:inherit; resize:vertical; line-height:1.45;">' + item.customWBS + '</textarea>' +
                             '</div>' +
                             '<div>' +
                                 '<span class="inline-breakdown-title" style="color:#166534;">📦 Warehouse Picking Sheets</span>' +
@@ -1111,479 +591,124 @@
                     '</td>' +
                     '</tr>';
                 
-                var labelWithQty = spec.dynamic ? displayLabel + " (Qty: " + item.qty + " " + spec.unit + ")" : displayLabel;
-                GLOBAL_ITEMIZED_LIST.push({ label: labelWithQty, price: rowCalculatedTotal.toFixed(2), wbs: spec.wbs });
+                var labelWithQty = spec.dynamic ? item.customLabel + " (Qty: " + item.qty + " " + spec.unit + ")" : item.customLabel;
+                GLOBAL_ITEMIZED_LIST.push({ 
+                    label: labelWithQty, 
+                    price: basePrice.toFixed(2), 
+                    wbs: item.customWBS.split('\n').filter(function(line){ return line.trim() !== ""; }) 
+                });
             });
-
+            
             tbody.innerHTML = htmlConstructionBuffer;
+            
+            // Financial Breakdown Logic
+            document.getElementById('lbl_base_subtotal').innerText = "$" + baseSubtotal.toFixed(2);
+            
+            var overhead = baseSubtotal * 0.12;
+            var expense = baseSubtotal * 0.05;
+            document.getElementById('lbl_indirect_overhead').innerText = "+$" + overhead.toFixed(2);
+            document.getElementById('lbl_business_expense').innerText = "+$" + expense.toFixed(2);
 
-            // 🔬 ADVANCED NFPA SAFETY & HEARTH FIELD INTERCEPTORS
-            if (chimneyMaterial === "PREFAB" && flueSize === "10_ROUND" && hasLinerActive) {
-                activeCodeInfractions.push("❌ <b>NFPA 211 Safety Violation:</b> 10-Inch industrial diameter flue configurations exceed maximum structural clearance envelopes inside factory-built chase framework enclosures.");
-            }
-            if (flueSize === "8_8_SQUARE" && hasLinerActive && (hasItem("APP_WOOD") || hasItem("SWEEP_WOOD_INSERT"))) {
-                activeCodeInfractions.push("⚠️ <b>Hearth Safety Constraint:</b> An 8x8 square terracotta core cannot physically accept a safe code-compliant solid fuel wood insert liner system package. Drop size profile tracks are non-functional for wood venting loops; convert to a gas application or an electric insert variant.");
-            }
-            if (exposure === "EXTERIOR" && hasLinerActive && !hasBlanketWrapActive && !hasItem("LINE_INSUL_POUR") && !hasItem("LINE_INSUL_4") && !hasItem("LINE_ALUM")) {
-                activeCodeInfractions.push("⚠️ <b>Creosote Mitigation Advisory:</b> Exterior wall chimneys feature extreme thermal heat transmission drops due to 3-sided exposure. Relining without blanket insulation (<b>LINE_INSUL_BLANKET</b>) accelerates toxic vitreous creosote storage fields up near the terminal stack.");
-            }
-            if (propertyEra === "HISTORIC" && hasLinerActive && !hasBlanketWrapActive && !hasItem("LINE_INSUL_4") && !hasItem("LINE_ALUM")) {
-                activeCodeInfractions.push("❌ <b>NFPA 211 Structural Code Defect:</b> Historic framing lacks baseline clearance safety spacing layers. Deploying custom stainless liners into an unlined pre-1940 internal void missing a Ceramic Thermal Blanket Wrap (<b>LINE_INSUL_BLANKET</b>) creates structural hazard threats.");
-            }
-            if (hasItem("LINE_ALUM") && (hasItem("APP_WOOD") || hasItem("SWEEP_WOOD") || hasItem("SWEEP_PELLET"))) {
-                activeCodeInfractions.push("❌ <b>NFPA 211 Code Violation:</b> Aluminum chimney liners are only rated for standard-efficiency gas utility appliances (furnaces/water heaters). You cannot run solid fuel through an aluminum core.");
-            }
+            var isRetail = document.getElementById("retailModeToggle").checked;
+            var grandTotal = baseSubtotal;
 
-            var infractionPanel = document.getElementById('gatekeeperCodeViolationTray');
-            var masterSubmitBtn = document.getElementById('masterSubmitProceedBtn');
-            var emailBtn = document.getElementById('btnEmailEstimate');
-
-            if (activeCodeInfractions.length > 0) {
-                infractionPanel.innerHTML = activeCodeInfractions.join("<br><br>");
-                infractionPanel.style.display = "block";
-                masterSubmitBtn.disabled = true;
-                emailBtn.disabled = true;
+            if (!isRetail) {
+                document.getElementById('row_overhead').style.display = 'flex';
+                document.getElementById('row_expense').style.display = 'flex';
+                document.getElementById('row_margin').style.display = 'flex';
+                var marginBuffer = document.getElementById("corporateMarginBufferInput").value / 100;
+                var marginAmt = baseSubtotal * marginBuffer;
+                document.getElementById('lbl_margin_buffer').innerText = "+$" + marginAmt.toFixed(2);
+                grandTotal += (overhead + expense + marginAmt);
             } else {
-                infractionPanel.style.display = "none";
-                masterSubmitBtn.disabled = false;
-                emailBtn.disabled = false;
+                document.getElementById('row_overhead').style.display = 'none';
+                document.getElementById('row_expense').style.display = 'none';
+                document.getElementById('row_margin').style.display = 'none';
             }
 
-            var isRetailMode = document.getElementById('retailModeToggle').checked;
-            var taxOverrideInput = document.getElementById('manualTaxOverride').value;
-
-            var baseSubtotalWithTravel = grossCatalogSubtotal + mileageSurchargeFee;
-            
-            var computedOverhead = isRetailMode ? 0 : (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE);
-            var computedExpenses = isRetailMode ? 0 : (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE);
-            var computedMarginBuffer = isRetailMode ? 0 : (baseSubtotalWithTravel * (marginPctInput / 100));
-            
-            document.getElementById('row_overhead').style.display = isRetailMode ? "none" : "flex";
-            document.getElementById('row_expense').style.display = isRetailMode ? "none" : "flex";
-            document.getElementById('row_margin').style.display = isRetailMode ? "none" : "flex";
-            
-            var zoneTaxRate = REGIONAL_TAX_RATES[zone] || 0.06;
-            var licensingPanel = document.getElementById('localityLicensingGatekeeperTray');
-            var taxAuthorityLabel = "Sales Tax Authority Sourcing Matrix:";
-
-            if (ACTIVE_RUNNING_ESTIMATE.length > 0) {
-                if (zone === "OH_LUCAS") {
-                    taxAuthorityLabel = "Lucas County, OH Tax Authority (7.75%):";
-                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Lucas County, OH (Toledo Framework)</h4><ul>' +
-                        '<li>City of Toledo Residential Building Permit ' + (hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[REQUIRED FOR REPAIRS]</span>' : '[Exempt]') + '</li>' +
-                        '<li>Toledo Division of Building Inspection Specialty Contractor Registration</li></ul>';
-                    licensingPanel.style.display = "block";
-                } 
-                else if (zone === "OH_WOOD") {
-                    taxAuthorityLabel = "Wood County, OH Tax Authority (6.75%):";
-                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Wood County, OH (Perrysburg / BG Framework)</h4><ul>' +
-                        '<li>Wood County Planning & Building Inspection Mechanical/Structural Permit ' + (hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[MANDATORY REGISTRATION ACTIVE]</span>' : '[Exempt]') + '</li></ul>';
-                    licensingPanel.style.display = "block";
-                }
-                else if (zone === "OH_MID_DIST") {
-                    taxAuthorityLabel = "Northwest OH District Tax Authority (7.25%):";
-                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Fulton / Henry / Ottawa / Sandusky Counties, OH</h4><ul>' +
-                        '<li>Local Municipal Inspection Filing Safety Sheets (Fremont/Sandusky Local Codes)</li></ul>';
-                    licensingPanel.style.display = "block";
-                }
-                else if (zone === "OH_EXTENDED") {
-                    taxAuthorityLabel = "Hancock & Seneca Counties Tax Authority (7.25%):";
-                    licensingPanel.innerHTML = '<h4>⚖️ County Regulatory Matrix: Hancock & Seneca Counties, OH</h4><ul>' +
-                        '<li>Standard Municipal Building Permit ' + (hasStructuralWorkActive ? '<span style="color:var(--danger); font-weight:900;">[REQUIRED FOR REPAIRS]</span>' : '[Exempt]') + '</li></ul>';
-                    licensingPanel.style.display = "block";
-                }
-                else {
-                    taxAuthorityLabel = zone === "MI_WASHTENAW_MID" || zone === "MI_EXTENDED" ? "Washtenaw County, MI State Tax (6.00%):" : "Monroe & Lenawee, MI State Tax (6.00%):";
-                    
-                    var trueSubtotalForLara = baseSubtotalWithTravel + (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE) + (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE) + (baseSubtotalWithTravel * (marginPctInput / 100));
-                    var needsMichiganLARA = trueSubtotalForLara >= 600 && hasStructuralWorkActive;
-                    
-                    var customMILog = zone === "MI_WASHTENAW_MID" || zone === "MI_EXTENDED" ? 
-                        '<li>Washtenaw Mechanical Venting Code Permit ' + (hasLinerActive ? '<span style="color:var(--danger); font-weight:900;">[MANDATORY PERMIT DISPATCH]</span>' : '[Exempt]') + '</li>' :
-                        '<li>Monroe Municipal Mechanical Inspection Request Line</li>';
-
-                    licensingPanel.innerHTML = '<h4>⚖️ State Regulatory Matrix: Michigan Department of Licensing and Regulatory Affairs (LARA)</h4>' +
-                        '<p style="font-size:12px; color:#6b21a8; font-weight:500;">Under MI Article 24 Public Act 299, any residential repair exceeding $600 requires valid contractor authentication.</p><ul>' +
-                        '<li>Michigan LARA Residential Builder or M&A License ' + (needsMichiganLARA ? '<span style="color:var(--danger); font-weight:900;">[STATUTORY COMPLIANCE REQUIRED]</span>' : '[Exempt]') + '</li>' +
-                        customMILog + '</ul>';
-                    licensingPanel.style.display = "block";
-                }
+            // Cash Discount
+            if (document.getElementById("cashDiscountToggle").checked) {
+                var discount = grandTotal * 0.03;
+                document.getElementById('lbl_cash_discount').innerText = "-$" + discount.toFixed(2);
+                grandTotal -= discount;
             } else {
-                licensingPanel.style.display = "none";
+                document.getElementById('lbl_cash_discount').innerText = "-$0.00";
             }
 
-            if (taxOverrideInput !== "" && !isNaN(taxOverrideInput)) {
-                zoneTaxRate = parseFloat(taxOverrideInput) / 100;
-                taxAuthorityLabel = "Custom Manual Tax Override (" + taxOverrideInput + "%):";
-            }
-
-            var taxableSubtotal = baseSubtotalWithTravel + computedOverhead + computedExpenses + computedMarginBuffer;
-
-            // 🟢 APPLY GUARDRAIL DISCOUNT
-            taxableSubtotal = taxableSubtotal - ACTIVE_FLEX_DISCOUNT;
-            if (taxableSubtotal < 0) taxableSubtotal = 0;
-
-            // 🟢 NEW LOGIC: Cash Discount Calculation
-            var cashDiscountAmount = 0;
-            var isCashDiscount = document.getElementById('cashDiscountToggle').checked;
-            
-            if (isCashDiscount) {
-                cashDiscountAmount = taxableSubtotal * 0.03;
-                taxableSubtotal = taxableSubtotal - cashDiscountAmount;
-            }
-
-            var computedTax = taxableSubtotal * zoneTaxRate;
-            var absoluteGrandTotal = taxableSubtotal + computedTax;
-            
-            GLOBAL_GRAND_TOTAL = absoluteGrandTotal;
-
-            document.getElementById('lbl_base_subtotal').innerText = "$" + grossCatalogSubtotal.toFixed(2);
-            document.getElementById('lbl_travel_surcharge').innerText = "+$" + mileageSurchargeFee.toFixed(2);
-            document.getElementById('lbl_indirect_overhead').innerText = "+$" + computedOverhead.toFixed(2);
-            document.getElementById('lbl_business_expense').innerText = "+$" + computedExpenses.toFixed(2);
-            document.getElementById('lbl_margin_buffer').innerText = "+$" + computedMarginBuffer.toFixed(2);
-            document.getElementById('lbl_cash_discount').innerText = isCashDiscount ? "-$" + cashDiscountAmount.toFixed(2) : "-$0.00";
-            document.getElementById('lbl_tax_title').innerText = taxAuthorityLabel;
-            document.getElementById('lbl_calculated_tax').innerText = "+$" + computedTax.toFixed(2);
-            document.getElementById('bidLiveTotalDisplay').innerText = "$" + absoluteGrandTotal.toFixed(2);
-
-            var absoluteInternalCompanyCost = internalSumMaterialCosts + internalSumLaborBurdens + (mileageSurchargeFee * 0.45);
-            document.getElementById('internalJobCostInput').value = absoluteInternalCompanyCost.toFixed(2);
-            
-            if (laborPayoutModel === "PARTNER_SPLIT_60_40" || laborPayoutModel === "PIECE_RATE_20" || laborPayoutModel === "CUSTOM_PERCENT") {
-                document.getElementById('standardTelemetryGrid').style.display = "none";
-                document.getElementById('partnerSplitDashboard').style.display = "block";
-                
-                document.getElementById('leoNetPartnerTotal').innerText = "$" + internalSumLeoPartnerCut.toFixed(2);
-                document.getElementById('helperPartnerTotal').innerText = "$" + internalSumHelperPayout.toFixed(2);
-                
-                var subRow = document.getElementById('subContractorRow');
-                if (internalSumSubcontractorCut > 0) {
-                    document.getElementById('subNetPartnerTotal').innerText = "$" + internalSumSubcontractorCut.toFixed(2);
-                    subRow.style.display = "flex";
-                } else {
-                    subRow.style.display = "none";
-                }
-
-                var entity = document.getElementById('operatingEntitySelector').value;
-                if (laborPayoutModel === "PARTNER_SPLIT_60_40") {
-                    document.getElementById('everSafeRetainedRow').style.display = "flex";
-                    document.getElementById('dynamicDashboardTitle').innerText = "Joint Venture Payout Breakdown (Post-Materials)";
-                    if(entity !== "EVERSAFE") {
-                        document.getElementById('everSafeRetainedRow').style.color = "#94a3b8"; 
-                        document.getElementById('everSafeRetainedRow').children[0].innerText = "Platform Ledger Allocation:";
-                    } else {
-                        document.getElementById('everSafeRetainedRow').style.color = "#065f46";
-                        document.getElementById('everSafeRetainedRow').children[0].innerText = "EverSafe Retained Margin (40% Net):";
-                    }
-                    document.getElementById('everSafeNetPartnerTotal').innerText = "$" + internalSumEverSafeRetained.toFixed(2);
-                } else {
-                    document.getElementById('dynamicDashboardTitle').innerText = "Field Labor & Commission Share Breakdown";
-                    document.getElementById('everSafeRetainedRow').style.display = "none";
-                }
+            // Negotiation Discount
+            var negDiscount = parseFloat(document.getElementById("flex_discount_slider").value) || 0;
+            if (negDiscount > 0) {
+                document.getElementById('flex_discount_display').innerText = "-$" + negDiscount.toFixed(2);
+                grandTotal -= negDiscount;
             } else {
-                document.getElementById('partnerSplitDashboard').style.display = "none";
-                document.getElementById('standardTelemetryGrid').style.display = "grid";
+                document.getElementById('flex_discount_display').innerText = "-$0.00";
             }
 
-            var trueSubtotal = baseSubtotalWithTravel + (baseSubtotalWithTravel * CORPORATE_OVERHEAD_RATE) + (baseSubtotalWithTravel * CORPORATE_EXPENSE_RATE) + (baseSubtotalWithTravel * (marginPctInput / 100));
-            calculateProfitThermometer(trueSubtotal, absoluteInternalCompanyCost);
+            // Taxes
+            var taxRate = parseFloat(document.getElementById("manualTaxOverride").value) / 100 || 0.0775; // Default Lucas OH
+            var taxAmt = grandTotal * taxRate;
+            document.getElementById('lbl_calculated_tax').innerText = "+$" + taxAmt.toFixed(2);
             
-            evaluateSmartRecommendations();
-
-            if (isCashDiscount) {
-                GLOBAL_ITEMIZED_LIST.push({ label: "Courtesy 3% Cash / Check Processing Discount", price: "-" + cashDiscountAmount.toFixed(2) });
-            }
-            if (ACTIVE_FLEX_DISCOUNT > 0) {
-                GLOBAL_ITEMIZED_LIST.push({ label: "Approved Flex Pricing Deduction", price: "-" + ACTIVE_FLEX_DISCOUNT.toFixed(2) });
-            }
-        } // End Recalculate Master Ledger
-
-        // --- NEGOTIATION GUARDRAIL LOGIC ---
-        function toggleNegotiationGuardrail() {
-            var module = document.getElementById('negotiation-module');
-            module.style.display = module.style.display === "none" ? "block" : "none";
-            if (module.style.display === "block") calculateMaxAllowableDiscount();
+            grandTotal += taxAmt;
+            
+            document.getElementById('bidLiveTotalDisplay').innerText = "$" + grandTotal.toFixed(2);
         }
 
-        function calculateMaxAllowableDiscount() {
-            var trueExpenseTotal = parseFloat(document.getElementById('internalJobCostInput').value) || 0;
-            var currentRetailPrice = GLOBAL_GRAND_TOTAL + ACTIVE_FLEX_DISCOUNT; 
-            var absoluteFloorPrice = trueExpenseTotal / 0.80; // 20% margin floor
-            
-            var maxDiscount = currentRetailPrice - absoluteFloorPrice;
-            if (maxDiscount < 0) maxDiscount = 0;
-            
-            var slider = document.getElementById('flex_discount_slider');
-            slider.max = Math.floor(maxDiscount);
-            document.getElementById('max_discount_label').innerText = "Max Authorized: $" + Math.floor(maxDiscount);
+        // --- 4. UTILITY FUNCTIONS ---
+        function updateHubMapping() {
+            var addr = document.getElementById("wo_addr_view").value;
+            if (addr) {
+                document.getElementById("hub_embed_map").src = "https://maps.google.com/maps?q=" + encodeURIComponent(addr) + "&t=k&z=19&ie=UTF8&iwloc=&output=embed";
+            }
+        }
+
+        function launchGoogleEarth() {
+            var addr = document.getElementById("wo_addr_view").value;
+            if (addr) window.open("https://earth.google.com/web/search/" + encodeURIComponent(addr), "_blank");
+            else alert("Please enter a service location first.");
+        }
+
+        function executeFieldCrewLogout() {
+            alert("Logging out of EverSafe Operations Hub.");
+        }
+
+        function updateEntityContext() {
+            var isCorp = document.getElementById("operatingEntitySelector").value === "EVERSAFE";
+            document.body.className = isCorp ? "" : "entity-warning-mode";
+            document.getElementById("dynamicBrandText").innerText = isCorp ? "EverSafe Operations Hub" : "Personal Isolated Ledger";
+        }
+
+        function toggleCustomLaborField() {
+            var model = document.getElementById("laborPayoutModelSelector").value;
+            document.getElementById("customLaborInputWrapper").style.display = (model === "CUSTOM_PERCENT") ? "block" : "none";
+        }
+
+        function toggleNegotiationGuardrail() {
+            var mod = document.getElementById("negotiation-module");
+            mod.style.display = (mod.style.display === "none") ? "block" : "none";
+            var maxAuth = ACTIVE_RUNNING_ESTIMATE.length * 100; // Fake arbitrary auth limit for demo
+            document.getElementById("flex_discount_slider").max = maxAuth;
+            document.getElementById("max_discount_label").innerText = "Max Authorized: $" + maxAuth;
         }
 
         function applyGuardrailDiscount() {
-            var slider = document.getElementById('flex_discount_slider');
-            ACTIVE_FLEX_DISCOUNT = parseFloat(slider.value) || 0;
-            document.getElementById('flex_discount_display').innerText = "-$" + ACTIVE_FLEX_DISCOUNT.toFixed(2);
-            recalculateMasterLedger(); 
-        }
-
-        function evaluateSmartRecommendations() {
-            var tray = document.getElementById('smartRecommendationsTray');
-            var alertsHtml = "";
-            
-            function hasItem(keyPart) {
-                return ACTIVE_RUNNING_ESTIMATE.some(function(i) { return i.key.includes(keyPart); });
-            }
-
-            var isRebuild = hasItem("MAS_REBUILD");
-            var isDemo = hasItem("RMV_STACK") || hasItem("MAS_REBUILD_TOTAL") || hasItem("LINE_TILE_REMOVAL");
-            var isLiner = hasItem("LINE_STAINLESS") || hasItem("LINE_TITANIUM") || hasItem("LINE_SMOOTH") || hasItem("LINE_OVAL") || hasItem("LINE_INSUL_4") || hasItem("LINE_ALUM") || hasItem("LINE_PELLET");
-            var isSweep = hasItem("SWEEP") || hasItem("LINE_TILE_REMOVAL");
-            var isAppliance = hasItem("APP_WOOD") || hasItem("APP_GAS");
-            var hasPermit = hasItem("LOG_PERMIT");
-            var hasDumpster = hasItem("LOG_DUMPSTER");
-
-            function triggerTip(id, message, addKey, btnText) {
-                if (!DISMISSED_SMART_TIPS.includes(id)) {
-                    alertsHtml += '<div style="background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 6px; padding: 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">' +
-                        '<span style="font-size: 12.5px; color: #92400e;"><b>💡 Smart Tip:</b> ' + message + '</span>' +
-                        '<div style="display:flex; gap:8px; flex-shrink: 0;">' +
-                            '<button type="button" style="background:#f59e0b; color:white; border:none; padding:6px 12px; border-radius:4px; font-weight:bold; font-size:11px; cursor:pointer; text-transform:uppercase;" onclick="executeDirectCartAddition(\'' + addKey + '\')">➕ ' + btnText + '</button>' +
-                            '<button type="button" style="background:transparent; color:#b45309; border:1px solid #fcd34d; padding:6px 10px; border-radius:4px; font-size:11px; cursor:pointer; font-weight:bold;" onclick="dismissSmartTip(\'' + id + '\')">Skip</button>' +
-                        '</div>' +
-                    '</div>';
-                }
-            }
-
-            if (isDemo && !hasDumpster) { 
-                triggerTip('tip_dumpster', "Heavy demolition detected. Don't forget a dumpster for the rubble removal runs.", 'LOG_DUMPSTER_10YD', "Add 10-Yd Dumpster"); 
-            }
-            if ((isRebuild || isAppliance) && !hasPermit) { 
-                triggerTip('tip_permit', "Structural rebuilds and mechanical appliance hookups require municipal code processing permits.", 'LOG_PERMIT_STD', "Add Permit Fee"); 
-            }
-            if (isLiner && !isSweep) { 
-                triggerTip('tip_liner_sweep', "Flue liner drop channels require an operational sweep or clay course tile knockout prep.", 'LINE_TILE_REMOVAL', "Add Demo Knockout"); 
-            }
-
-            tray.innerHTML = alertsHtml;
-        }
-
-        function dismissSmartTip(tipId) {
-            DISMISSED_SMART_TIPS.push(tipId);
-            evaluateSmartRecommendations(); 
-        }
-
-        function calculateProfitThermometer(taxableSubtotal, expenses) {
-            var thermBar = document.getElementById('thermometerBar');
-            var thermLabel = document.getElementById('thermometerLabel');
-            var percentDisplay = document.getElementById('marginPercentageDisplay');
-            
-            if (taxableSubtotal <= 0) {
-                thermBar.style.width = "0%"; thermLabel.innerText = "Awaiting Data"; percentDisplay.innerText = "0.00%"; return;
-            }
-            
-            var grossProfit = taxableSubtotal - expenses;
-            var marginPercent = (grossProfit / taxableSubtotal) * 100;
-            
-            if (marginPercent < 0) marginPercent = 0;
-            if (marginPercent > 100) marginPercent = 100;
-            
-            percentDisplay.innerText = marginPercent.toFixed(2) + "%";
-            thermBar.style.width = marginPercent + "%";
-            
-            if (marginPercent < 40) {
-                thermBar.style.backgroundColor = "#ef4444"; thermLabel.innerText = "🔴 BAD MARGIN BRACKET"; thermLabel.style.color = "#ffffff";
-            } else if (marginPercent >= 40 && marginPercent < 55) {
-                thermBar.style.backgroundColor = "#eab308"; thermLabel.innerText = "🟡 GOOD MARGIN BRACKET"; thermLabel.style.color = "#0f172a";
-            } else if (marginPercent >= 55 && marginPercent < 70) {
-                thermBar.style.backgroundColor = "#22c55e"; thermLabel.innerText = "🟢 BETTER MARGIN BRACKET"; thermLabel.style.color = "#ffffff";
-            } else {
-                thermBar.style.backgroundColor = "#2563eb"; thermLabel.innerText = "🔵 BEST MARGIN BRACKET 🔥"; thermLabel.style.color = "#ffffff";
-            }
-        }
-
-        function modifyQuantityIndexTarget(idxTarget, newQuantityVal) {
-            var parse = parseInt(newQuantityVal) || 1; if(parse < 1) parse = 1;
-            ACTIVE_RUNNING_ESTIMATE[idxTarget].qty = parse; recalculateMasterLedger();
-        }
-
-        function modifyUnitPriceOverrideTarget(idxTarget, newPriceVal) {
-            var parse = parseFloat(newPriceVal);
-            if (isNaN(parse) || parse < 0) parse = 0; 
-            ACTIVE_RUNNING_ESTIMATE[idxTarget].rateOverride = parse;
             recalculateMasterLedger();
         }
 
-        function dropItemFromActiveLedger(idxTarget) {
-            ACTIVE_RUNNING_ESTIMATE.splice(idxTarget, 1); recalculateMasterLedger();
-        }
-
-        // --- DYNAMIC LEGAL WAIVER GENERATOR ---
-        function compileDynamicWaivers() {
-            var waivers = [];
-            var hasMasonry = false; var hasWoodInsert = false; var hasWaterproofing = false; var hasLiner = false;
-
-            ACTIVE_RUNNING_ESTIMATE.forEach(function(item) {
-                var cat = COMPLETE_PRICE_BOOK[item.key].cat;
-                if (cat === "MASONRY") hasMasonry = true;
-                if (item.key.includes("APP_WOOD") || item.key.includes("SWEEP_WOOD_INSERT")) hasWoodInsert = true;
-                if (cat === "WATERPROOFING" || item.key.includes("CROWN")) hasWaterproofing = true;
-                if (cat === "RELINING") hasLiner = true;
-            });
-
-            if (hasMasonry) {
-                waivers.push("🧱 MASONRY COLOR MATCHING: Due to the aging and weathering of existing bricks, exact color matching of new mortar or replacement bricks cannot be guaranteed. Temporary white efflorescence powder may appear during the curing process.");
-            }
-            if (hasWoodInsert) {
-                waivers.push("🔥 WOOD INSERT HIDDEN HAZARDS: Extraction of existing wood inserts may reveal concealed structural damage or stage-3 glazed creosote behind the appliance. Any underlying hazards discovered are not covered under the baseline estimate.");
-            }
-            if (hasWaterproofing) {
-                waivers.push("💧 WATERPROOFING CURING: Elastomeric sealants and water repellents require 24-48 hours of dry weather to cure. We cannot warranty leaks originating from roof decking, failing shingles, or internal chimney condensation.");
-            }
-            if (hasLiner) {
-                waivers.push("🛠️ RELINE RETROFIT TOLERANCES: Installing a new stainless liner into an existing masonry structure may require minor internal brick shaving. If the flue is severely offset, dimensions may need to be ovalized or resized on-site.");
-            }
-
-            // Lock it into the iPad's memory so the next page can read it
-            localStorage.setItem("everSafeDynamicWaivers", JSON.stringify(waivers));
-        }
-
         function lockBidAndAdvanceToWorkOrderReview() {
-            if (ACTIVE_RUNNING_ESTIMATE.length === 0) { alert("Error: Ledger requires selections."); return; }
-            
-            // FIRE THE WAIVER GENERATOR BEFORE LEAVING THE PAGE
-            compileDynamicWaivers();
-            
-            var activeEntity = document.getElementById('operatingEntitySelector').value;
-            var currentUser = localStorage.getItem('eversafe_authenticated_user') || "FieldCrewAccount";
-            
-            var alertMsg = "User '" + currentUser + "' locked and compiled a project bid valuation of $" + GLOBAL_GRAND_TOTAL.toFixed(2) + " under routed operating accounting books channel: [" + activeEntity + "]";
-            dispatchSilentTelemetryAlert("Work Order Compiled", alertMsg);
-
-            // Construct the rich data matrix specifically for the newly upgraded billing-invoice.html
-            var enrichedBids = [];
-            ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
-                var spec = COMPLETE_PRICE_BOOK[item.key];
-                enrichedBids.push({
-                    label: GLOBAL_ITEMIZED_LIST[idx].label,
-                    qty: item.qty,
-                    wbs: spec.wbs,
-                    finalPrice: GLOBAL_ITEMIZED_LIST[idx].price
-                });
-            });
-
-            // Add the dynamic flex/cash discounts to the bottom of the invoice list
-            if (GLOBAL_ITEMIZED_LIST.length > ACTIVE_RUNNING_ESTIMATE.length) {
-                for (var i = ACTIVE_RUNNING_ESTIMATE.length; i < GLOBAL_ITEMIZED_LIST.length; i++) {
-                    enrichedBids.push({
-                        label: GLOBAL_ITEMIZED_LIST[i].label,
-                        qty: 1,
-                        wbs: [],
-                        finalPrice: GLOBAL_ITEMIZED_LIST[i].price
-                    });
-                }
+            if(ACTIVE_RUNNING_ESTIMATE.length === 0) {
+                alert("Please add items to the estimate before compiling.");
+                return;
             }
-
-            // Save all the structural data bridges to LocalStorage
-            localStorage.setItem("everSafeActiveBidMatrix", JSON.stringify(enrichedBids));
-            localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
-            
-            // Re-calculate raw taxes and subtotals to pass seamlessly to the invoice screen
-            var rawTotal = GLOBAL_GRAND_TOTAL;
-            var taxText = document.getElementById('lbl_calculated_tax').innerText.replace("+$", "").replace(",", "");
-            var taxNum = parseFloat(taxText) || 0;
-            var subNum = rawTotal - taxNum;
-
-            localStorage.setItem("everSafeMasterLedger", JSON.stringify({
-                subtotal: subNum.toFixed(2),
-                tax: taxNum.toFixed(2),
-                total: rawTotal.toFixed(2)
-            }));
-            
-            localStorage.setItem('current_wo_est_cost', GLOBAL_GRAND_TOTAL.toFixed(2));
-            window.location.replace("contract-wo.html");
+            alert("Bid Locked! Syncing " + GLOBAL_ITEMIZED_LIST.length + " custom-scoped items to the invoice payload.");
+            console.log(GLOBAL_ITEMIZED_LIST); // The finalized WBS data syncs here
         }
 
-        async function executeEmailEstimate() {
-            if (ACTIVE_RUNNING_ESTIMATE.length === 0) { 
-                alert("Error: The ledger is empty. Add items to the estimate before emailing."); 
-                return; 
-            }
-            
-            var custEmail = localStorage.getItem('current_wo_customer_email');
-            if (!custEmail || !custEmail.includes('@')) {
-                var technicalEmailInput = prompt("An email address record is required to dispatch the secure signing portal link. Please input customer email address:", "client@email.com");
-                if(!technicalEmailInput || !technicalEmailInput.includes("@")) { alert("Aborted: Valid email profile required."); return; }
-                custEmail = technicalEmailInput.trim();
-                localStorage.setItem('current_wo_customer_email', custEmail);
-            }
-
-            var phone = localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('current_wo_phone') || "";
-            if (!phone || phone.trim() === "") {
-                var manualPhoneInput = prompt("A mobile phone number is required to text the secure signing portal link. Please input customer mobile number:", "4195171888");
-                if (!manualPhoneInput || manualPhoneInput.trim() === "") { 
-                    alert("Action Aborted: A valid mobile number is required to send the text message."); 
-                    return; 
-                }
-                phone = manualPhoneInput.replace(/[^0-9]/g, '').trim(); 
-                localStorage.setItem('current_wo_customer_phone', phone);
-            }
-
-            var btn = document.getElementById('btnEmailEstimate');
-            var statusDiv = document.getElementById('estimateEmailStatus');
-            var proceedBtn = document.getElementById('masterSubmitProceedBtn');
-            
-            btn.disabled = true;
-            proceedBtn.style.display = "none";
-            statusDiv.innerHTML = "⏳ Compiling structural parameters and firing remote signing link via GHL...";
-            statusDiv.style.color = "var(--accent-dark)";
-
-            var scopeText = GLOBAL_ITEMIZED_LIST.map(function(item) {
-                return "• " + item.label;
-            }).join("\n\n");
-
-            var payload = {
-                route: "sendEstimateEmail",
-                customerName: localStorage.getItem('current_wo_customer_name') || "Valued Client",
-                customerEmail: custEmail,
-                customerPhone: phone, 
-                serviceAddress: localStorage.getItem('current_wo_service_address') || "On File",
-                estimatedCost: GLOBAL_GRAND_TOTAL.toFixed(2),
-                workScope: scopeText,
-                leadTechnician: localStorage.getItem('eversafe_authenticated_user') || "EverSafe Estimator"
-            };
-
-            try {
-                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain" },
-                    body: JSON.stringify(payload)
-                });
-                let result = await response.json();
-
-                if (result.success) {
-                    statusDiv.innerHTML = "✅ Remote signing link successfully texted and emailed to client!";
-                    statusDiv.style.color = "var(--success)";
-                    dispatchSilentTelemetryAlert("Estimate Emailed", "Sent a $" + GLOBAL_GRAND_TOTAL.toFixed(2) + " estimate to " + payload.customerName);
-                    setTimeout(function() {
-                        localStorage.removeItem('current_wo_price_book_items');
-                        localStorage.removeItem('current_wo_itemized_json');
-                        window.location.replace("jobs.html");
-                    }, 2500);
-                } else {
-                    statusDiv.innerHTML = "❌ Server Rejection: " + result.error;
-                    statusDiv.style.color = "var(--danger)";
-                    btn.disabled = false;
-                    proceedBtn.style.display = "block";
-                }
-            } catch (e) {
-                statusDiv.innerHTML = "⚠️ Network Error: Could not connect to the EverSafe backend.";
-                statusDiv.style.color = "var(--danger)";
-                btn.disabled = false;
-                proceedBtn.style.display = "block";
-            }
+        // Initialize on load
+        window.onload = function() {
+            populateItemsFromCategoryDropdown();
+            recalculateMasterLedger();
         }
-
-        function executeFieldCrewLogout() { localStorage.clear(); window.location.replace("index.html"); }
     </script>
 </body>
 </html>
