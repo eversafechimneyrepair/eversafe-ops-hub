@@ -68,15 +68,7 @@
         .breakdown-row.grand-prime { border-bottom: none; padding-top: 15px; margin-top: 5px; }
         .total-banner { font-size: 28px; font-weight: 900; color: #16a34a; }
 
-        /* Signature Module Styles */
-        .signature-card { background: #f0fdf4; border: 2px solid #86efac; border-radius: 8px; padding: 20px; margin-top: 20px; text-align: left; }
-        .signature-pad-wrapper { background: white; border: 2px dashed #cbd5e1; border-radius: 6px; margin: 12px 0; position: relative; height: 160px; touch-action: none; }
-        canvas#sigCanvas { width: 100%; height: 100%; cursor: crosshair; display: block; }
-        .sig-actions { display: flex; gap: 10px; margin-top: 10px; }
-
         .btn-action { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
-        .btn-secondary { background: #64748b; color: white; padding: 10px 16px; border: none; border-radius: 4px; font-weight: bold; font-size: 11px; text-transform: uppercase; cursor: pointer; }
-        .btn-push { background: #2563eb; color: white; font-weight: bold; padding: 14px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 12px; cursor: pointer; width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(37,99,235,0.2); }
 
         .inline-breakdown-card { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.02); margin-top: -2px; }
         @media(max-width: 768px) { .inline-breakdown-card { grid-template-columns: 1fr; gap: 10px; } }
@@ -89,90 +81,6 @@
         
         .entity-warning-mode .app-header { background-color: #c2410c; }
         .entity-warning-mode .section-title { background-color: #c2410c; }
-
-        /* Universal Elastic Slider Navigation Bar Styles */
-        .fixed-bottom-nav-bar {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            background-color: #0f172a !important;
-            box-shadow: 0 -6px 20px rgba(0,0,0,0.25) !important;
-            height: 68px !important;
-            border-top: 1px solid #1e293b !important;
-            z-index: 99999 !important;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-        }
-        .nav-tabs-scroll {
-            display: flex !important;
-            width: 100% !important;
-            height: 100% !important;
-            justify-content: flex-start !important;
-            align-items: center !important;
-            margin: 0 !important;
-            padding: 0 16px !important;
-            overflow-x: auto !important;
-            white-space: nowrap !important;
-            -webkit-overflow-scrolling: touch !important;
-            scrollbar-width: none !important;
-        }
-        .nav-tabs-scroll::-webkit-scrollbar {
-            display: none !important;
-            width: 0 !important;
-            height: 0 !important;
-        }
-        a.nav-tab-btn, .nav-tab-btn {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center !important;
-            flex: 0 0 76px !important;
-            height: 100% !important;
-            background: transparent !important;
-            border: none !important;
-            color: #94a3b8 !important;
-            font-size: 9.5px !important;
-            font-weight: bold !important;
-            text-transform: uppercase !important;
-            cursor: pointer !important;
-            gap: 3px !important;
-            text-decoration: none !important;
-            outline: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            -webkit-tap-highlight-color: transparent !important;
-        }
-        a.nav-tab-btn:hover, a.nav-tab-btn:visited, a.nav-tab-btn:active, a.nav-tab-btn:focus {
-            text-decoration: none !important;
-            color: #94a3b8 !important;
-            outline: none !important;
-        }
-        .nav-tab-btn span {
-            font-size: 16px !important;
-            display: block !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        a.nav-tab-btn.active-tab {
-            color: #F28C28 !important;
-            background-color: rgba(255,255,255,0.02) !important;
-            text-decoration: none !important;
-        }
-        a.nav-tab-btn.active-tab:hover, a.nav-tab-btn.active-tab:visited {
-            color: #F28C28 !important;
-        }
-        @media (min-width: 850px) {
-            .nav-tabs-scroll {
-                justify-content: space-around !important;
-                overflow-x: visible !important;
-                max-width: 1200px !important;
-                margin: 0 auto !important;
-            }
-            a.nav-tab-btn, .nav-tab-btn {
-                flex: 1 1 auto !important;
-                max-width: 110px !important;
-            }
-        }
     </style>
 </head>
 <body>
@@ -523,6 +431,20 @@
                     <div id="lbl_cash_discount" style="font-weight:900; color:#dc2626;">-$0.00</div>
                 </div>
 
+                <!-- NEW: BOOKING DEPOSIT CREDIT ROW -->
+                <div class="breakdown-row" style="background: #fdf4ff; padding-top: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                    <div style="font-weight: bold; color: #7e22ce;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="depositCreditToggle" onchange="recalculateMasterLedger()" style="width: 18px; height: 18px; margin: 0; cursor: pointer;">
+                            Apply Booking Deposit Credit: $
+                        </label>
+                    </div>
+                    <div>
+                        <input type="number" id="depositCreditValue" value="95.00" step="1.00" oninput="recalculateMasterLedger()" style="width: 70px; padding: 4px; font-weight: bold; text-align: center; border: 1px solid #d8b4fe; border-radius: 4px; color: #7e22ce;">
+                    </div>
+                    <div id="lbl_deposit_credit" style="font-weight:900; color:#dc2626;">-$0.00</div>
+                </div>
+
                 <div class="breakdown-row" style="background: #faf5ff; padding-top: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
                     <div style="font-weight: bold; color: #7e22ce;">
                         <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="toggleNegotiationGuardrail()">
@@ -549,56 +471,20 @@
                 </div>                                        
             </div>
 
-            <!-- ELECTRONIC SIGNATURE & PUSH MODULE -->
-            <div class="signature-card">
-                <span style="font-size:12px; font-weight:800; text-transform:uppercase; color:#15803d; letter-spacing:0.5px; display:block; margin-bottom:4px;">✍️ Client On-Site Electronic Signature Acceptance</span>
-                <p style="font-size:11.5px; color:#166534; margin-bottom:10px;">By signing below, the property owner approves the scope of work and total valuation calculated above.</p>
-                
-                <div class="signature-pad-wrapper">
-                    <canvas id="sigCanvas"></canvas>
-                </div>
-
-                <div class="sig-actions">
-                    <button type="button" class="btn-secondary" onclick="clearSignatureCanvas()">Clear Signature</button>
-                    <button type="button" class="btn-push" onclick="pushElectronicEstimateToCustomer()">📲 Push Proposal Link to Customer (SMS / Email)</button>
-                </div>
-            </div>
-
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 25px;">
                 <button type="button" class="btn-action" id="compileBidBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Lock Bid & Compile Final Document ➔</button>
             </div>
         </div>
     </div>
 
-    <!-- UNIVERSAL SLIDER NAV BAR (Hardcoded to render instantly) -->
-    <nav class="fixed-bottom-nav-bar">
-        <div class="nav-tabs-scroll">
-            <a href="jobs.html" class="nav-tab-btn"><span>💼</span>Jobs</a>
-            <a href="inspection-l1.html" class="nav-tab-btn"><span>📑</span>L1 Map</a>
-            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
-            <a href="estimate.html" class="nav-tab-btn active-tab"><span>🧮</span>Estimate</a>
-            <a href="contract-wo.html" class="nav-tab-btn"><span>📜</span>Contract</a>
-            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
-            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
-            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
-            <a href="vault-upload.html" class="nav-tab-btn"><span>📷</span>Camera</a>
-        </div>
-    </nav>
+    <!-- UNIVERSAL SLIDER NAV HOOK (Target for nav-router.js) -->
+    <div class="fixed-bottom-nav-bar"></div>
+
+    <!-- ROUTER SCRIPT LINK -->
+    <script src="nav-router.js"></script>
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbwwsdxf7rKDYUC6CoWEOqGx54nYd4haqICup1jqKyN_TgaWUJuCSTkJ0GUSvEJKssa_tw/exec";
-
-        // Auto-center the active Estimate tab on mobile screens
-        window.addEventListener('DOMContentLoaded', function() {
-            if (window.innerWidth < 850) {
-                setTimeout(function() {
-                    var activeElement = document.querySelector('.fixed-bottom-nav-bar .active-tab');
-                    if (activeElement) {
-                        activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-                    }
-                }, 120);
-            }
-        });
 
         // --- 1. THE COMPLETE PRICE BOOK ---
         var COMPLETE_PRICE_BOOK = {
@@ -683,8 +569,6 @@
         // --- 2. JAVASCRIPT STATE LOGIC ---
         var ACTIVE_RUNNING_ESTIMATE = [];
         var GLOBAL_ITEMIZED_LIST = [];
-        var isDrawingSig = false;
-        var sigCanvas, sigCtx;
 
         // --- 3. CUSTOM EDITABLE TEXT AREA LOGIC ---
         function updateItemLabel(idx, val) {
@@ -869,111 +753,20 @@
             document.getElementById('lbl_calculated_tax').innerText = "+$" + taxAmt.toFixed(2);
             
             grandTotal += taxAmt;
+
+            // Apply Booking Deposit Credit
+            var depositCreditAmt = 0;
+            if (document.getElementById("depositCreditToggle").checked) {
+                depositCreditAmt = parseFloat(document.getElementById("depositCreditValue").value) || 0;
+                document.getElementById('lbl_deposit_credit').innerText = "-$" + depositCreditAmt.toFixed(2);
+                grandTotal -= depositCreditAmt;
+            } else {
+                document.getElementById('lbl_deposit_credit').innerText = "-$0.00";
+            }
             
             var finalCostStr = grandTotal.toFixed(2);
             document.getElementById('bidLiveTotalDisplay').innerText = "$" + finalCostStr;
             localStorage.setItem('current_wo_est_cost', finalCostStr);
-        }
-
-        // --- 4. SIGNATURE CANVAS LOGIC ---
-        function initSignatureCanvas() {
-            sigCanvas = document.getElementById("sigCanvas");
-            if (!sigCanvas) return;
-            sigCtx = sigCanvas.getContext("2d");
-            
-            sigCanvas.width = sigCanvas.offsetWidth;
-            sigCanvas.height = sigCanvas.offsetHeight;
-            
-            sigCtx.strokeStyle = "#0f172a";
-            sigCtx.lineWidth = 2.5;
-            sigCtx.lineCap = "round";
-
-            function getPos(e) {
-                var rect = sigCanvas.getBoundingClientRect();
-                var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                var clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                return { x: clientX - rect.left, y: clientY - rect.top };
-            }
-
-            function startDraw(e) {
-                isDrawingSig = true;
-                var pos = getPos(e);
-                sigCtx.beginPath();
-                sigCtx.moveTo(pos.x, pos.y);
-            }
-
-            function moveDraw(e) {
-                if (!isDrawingSig) return;
-                e.preventDefault();
-                var pos = getPos(e);
-                sigCtx.lineTo(pos.x, pos.y);
-                sigCtx.stroke();
-            }
-
-            function stopDraw() { isDrawingSig = false; }
-
-            sigCanvas.addEventListener("mousedown", startDraw);
-            sigCanvas.addEventListener("mousemove", moveDraw);
-            sigCanvas.addEventListener("mouseup", stopDraw);
-            
-            sigCanvas.addEventListener("touchstart", startDraw, { passive: false });
-            sigCanvas.addEventListener("touchmove", moveDraw, { passive: false });
-            sigCanvas.addEventListener("touchend", stopDraw);
-        }
-
-        function clearSignatureCanvas() {
-            if (sigCtx && sigCanvas) {
-                sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
-            }
-        }
-
-        // 🔗 DYNAMIC REMOTE DISPATCH (TRIPLE-PARSED PAYLOAD)
-        function pushElectronicEstimateToCustomer() {
-            if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
-                alert("Please add items to the estimate before pushing proposal link.");
-                return;
-            }
-
-            var custName = document.getElementById("wo_cust_view").value || "Valued Customer";
-            var custEmail = document.getElementById("wo_email_view").value || "";
-            var custPhone = document.getElementById("wo_phone_view").value || "";
-            var custAddr = document.getElementById("wo_addr_view").value || "On File";
-            var liveTotal = localStorage.getItem('current_wo_est_cost') || "0.00";
-            var techName = document.getElementById("wo_tech_view").value || "EverSafe Desk Operations";
-
-            // Compile scope text array into clean text format
-            var compiledScopeText = GLOBAL_ITEMIZED_LIST.map(function(item, idx) {
-                var wbsStr = (item.wbs && item.wbs.length > 0) ? "\n   • " + item.wbs.join("\n   • ") : "";
-                return (idx + 1) + ". " + item.label + " - $" + item.price + wbsStr;
-            }).join("\n\n");
-
-            // Store unified cache records for inter-app reliability
-            localStorage.setItem('current_wo_customer_name', custName);
-            localStorage.setItem('current_wo_customer_email', custEmail);
-            localStorage.setItem('current_wo_customer_phone', custPhone);
-            localStorage.setItem('current_wo_service_address', custAddr);
-            localStorage.setItem('current_wo_tech_name', techName);
-            localStorage.setItem('current_wo_work_scope', compiledScopeText);
-            localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
-
-            // Generate remote signature link for client portal
-            var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
-            var remoteLink = baseUrl + "signatures.html?" +
-                "name=" + encodeURIComponent(custName) +
-                "&email=" + encodeURIComponent(custEmail) +
-                "&address=" + encodeURIComponent(custAddr) +
-                "&cost=" + encodeURIComponent(liveTotal) +
-                "&scope=" + encodeURIComponent(compiledScopeText) +
-                "&tech=" + encodeURIComponent(techName);
-
-            // Copy link to clipboard for fast manual text/email forwarding
-            navigator.clipboard.writeText(remoteLink).then(function() {
-                alert(" Proposal link copied to clipboard & launching signature portal preview!\n\nTarget Client: " + custName + "\nTotal: $" + liveTotal);
-                window.open(remoteLink, "_blank");
-            }).catch(function() {
-                alert(" Proposal Link Generated:\n\n" + remoteLink);
-                window.open(remoteLink, "_blank");
-            });
         }
 
         // --- 5. UTILITY & NAVIGATION FUNCTIONS ---
@@ -1041,6 +834,13 @@
                 return (idx + 1) + ". " + item.label + " - $" + item.price;
             }).join("\n");
 
+            // Append deposit credit if active to scope text
+            var depositToggle = document.getElementById("depositCreditToggle");
+            if (depositToggle && depositToggle.checked) {
+                var depVal = parseFloat(document.getElementById("depositCreditValue").value) || 0;
+                compiledScopeText += "\n\n*** Dispatch / Booking Deposit Credit Applied: -$" + depVal.toFixed(2) + " ***";
+            }
+
             // Write verified unified payload to localStorage
             localStorage.setItem('current_wo_customer_name', custName);
             localStorage.setItem('current_wo_service_address', custAddr);
@@ -1076,7 +876,6 @@
 
             populateItemsFromCategoryDropdown();
             recalculateMasterLedger();
-            initSignatureCanvas();
         }
     </script>
 </body>
