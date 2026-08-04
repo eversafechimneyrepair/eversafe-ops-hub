@@ -23,17 +23,11 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); padding-top: 75px; padding-bottom: 110px; color: #0f172a; text-align: center; }
         
-        /* Fixed Header */
+        /* Top App Header */
         .app-header { background-color: var(--primary); position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 55px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: background-color 0.3s ease; }
         .brand-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; height: 100%; color: white; }
         .brand-text { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; }
         .logout-pill-btn { background: var(--danger); color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; border: 1px solid white; }
-
-        /* Bottom Navbar */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; background: var(--primary); display: flex; justify-content: space-around; align-items: center; height: 65px; border-top: 1px solid rgba(255,255,255,0.1); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); }
-        .nav-item { color: #94a3b8; text-decoration: none; font-size: 10px; font-weight: bold; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 4px; background: none; border: none; cursor: pointer; }
-        .nav-item.active, .nav-item:hover { color: var(--accent); }
-        .nav-icon { font-size: 18px; }
 
         .app-container { max-width: 1050px; margin: 0 auto; padding: 0 15px; text-align: left; }
         .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 25px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 20px; }
@@ -41,7 +35,7 @@
         p.subtitle { color: #64748b; font-size: 13px; margin-bottom: 20px; text-align: center; line-height: 1.45; }
 
         label.control-header { display: block; font-size: 11px; font-weight: bold; text-transform: uppercase; color: #475569; margin-top: 10px; letter-spacing: 0.5px; }
-        select, input[type="text"], input[type="number"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 4px; background: #fff; font-family: inherit; color: #0f172a; }
+        select, input[type="text"], input[type="number"], input[type="email"], input[type="tel"] { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; margin-top: 4px; background: #fff; font-family: inherit; color: #0f172a; }
         select { font-weight: bold; color: var(--primary); background: #f1f5f9; }
 
         .search-input-box { border: 2px solid var(--accent) !important; background: #fffaf5 !important; font-weight: bold; text-align: left !important; padding-left: 35px !important; }
@@ -49,6 +43,10 @@
         .search-icon { position: absolute; left: 12px; top: 15px; font-size: 14px; color: var(--accent-dark); z-index: 10; }
 
         .grid-3 { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 12px; margin-bottom: 15px; }
+        .grid-5 { display: grid; grid-template-columns: 1.2fr 1.2fr 1.5fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        @media(max-width: 900px) { .grid-5 { grid-template-columns: 1fr 1fr; } }
+        @media(max-width: 500px) { .grid-5 { grid-template-columns: 1fr; } }
+
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .grid-matrix { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-bottom: 0; }
         @media (max-width: 1200px) { .grid-matrix { grid-template-columns: repeat(4, 1fr); gap: 8px; } }
@@ -225,11 +223,13 @@
                 </div>
             </div>
 
-            <!-- UNLOCKED ACCOUNT / ADDRESS FIELDS -->
-            <div class="grid-3" style="margin-top:15px; margin-bottom: 0;">
+            <!-- UNLOCKED ACCOUNT / ADDRESS / EMAIL / PHONE / TECH FIELDS -->
+            <div class="grid-5" style="margin-top:15px; margin-bottom: 0;">
                 <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Account Name</span><input type="text" id="wo_cust_view" oninput="localStorage.setItem('current_wo_customer_name', this.value)" style="background:#fff; border:1px solid var(--accent); font-weight:bold; color:var(--primary);"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Mobile Phone</span><input type="tel" id="wo_phone_view" oninput="localStorage.setItem('current_wo_customer_phone', this.value)" style="background:#fff; border:1px solid var(--accent); font-weight:bold; color:var(--primary);"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Email Address</span><input type="email" id="wo_email_view" oninput="localStorage.setItem('current_wo_customer_email', this.value)" style="background:#fff; border:1px solid var(--accent); font-weight:bold; color:var(--primary);"></div>
                 <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Service Location</span><input type="text" id="wo_addr_view" onchange="localStorage.setItem('current_wo_service_address', this.value); updateHubMapping();" style="background:#fff; border:1px solid var(--accent); font-weight:bold; color:var(--primary);"></div>
-                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Date Traced</span><input type="text" id="wo_date_view" readonly style="background:#f1f5f9; border:1px solid #cbd5e1; font-weight:bold; color:var(--primary);"></div>
+                <div><span style="font-size:10px; font-weight:bold; color:#64748b; text-transform:uppercase;">Lead Tech</span><input type="text" id="wo_tech_view" value="EverSafe Desk Operations" oninput="localStorage.setItem('current_wo_tech_name', this.value)" style="background:#fff; border:1px solid #cbd5e1; font-weight:bold; color:var(--primary);"></div>
             </div>
 
             <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin: 15px 0; font-family: sans-serif;">
@@ -392,7 +392,7 @@
 
                 <div class="sig-actions">
                     <button type="button" class="btn-secondary" onclick="clearSignatureCanvas()">Clear Signature</button>
-                    <button type="button" class="btn-push" onclick="pushElectronicEstimateToCustomer()">📲 Push Proposal via SMS / Email Link</button>
+                    <button type="button" class="btn-push" onclick="pushElectronicEstimateToCustomer()">📲 Push Proposal Link to Customer (SMS / Email)</button>
                 </div>
             </div>
 
@@ -402,31 +402,15 @@
         </div>
     </div>
 
-    <!-- Bottom Navigation Bar -->
-    <nav class="bottom-nav">
-        <button type="button" class="nav-item" onclick="location.href='index.html'">
-            <span class="nav-icon">📊</span>
-            <span>Dashboard</span>
-        </button>
-        <button type="button" class="nav-item" onclick="location.href='inspection.html'">
-            <span class="nav-icon">🔍</span>
-            <span>Inspect</span>
-        </button>
-        <button type="button" class="nav-item active">
-            <span class="nav-icon">🧮</span>
-            <span>Estimate</span>
-        </button>
-        <button type="button" class="nav-item" onclick="location.href='workorder.html'">
-            <span class="nav-icon">📋</span>
-            <span>Work Order</span>
-        </button>
-        <button type="button" class="nav-item" onclick="location.href='schedule.html'">
-            <span class="nav-icon">📅</span>
-            <span>Schedule</span>
-        </button>
-    </nav>
+    <!-- UNIVERSAL SLIDER NAV HOOK (Target for nav-router.js) -->
+    <div class="fixed-bottom-nav-bar"></div>
+
+    <!-- ROUTER SCRIPT LINK -->
+    <script src="nav-router.js"></script>
 
     <script>
+        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbwwsdxf7rKDYUC6CoWEOqGx54nYd4haqICup1jqKyN_TgaWUJuCSTkJ0GUSvEJKssa_tw/exec";
+
         // --- 1. THE COMPLETE PRICE BOOK ---
         var COMPLETE_PRICE_BOOK = {
             "LOG_PERMIT_STD":        { cat: "LOGISTICS", label: "Standard Municipal Building / Mechanical Permit Acquisition", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 185.00, MI_MONROE_OUTER: 185.00, MI_WASHTENAW_MID: 225.00, MI_EXTENDED: 225.00, dynamic: false, matCost: 125.00, labRate: 55.00, labHours: 1.0, wbs: ["Compile engineering specifications and scope of work documents", "File permit application with local municipal building authority", "Coordinate and host on-site municipal safety inspection sign-offs"], mats: ["Municipal Permit Filing Fees"] },
@@ -657,7 +641,9 @@
             
             grandTotal += taxAmt;
             
-            document.getElementById('bidLiveTotalDisplay').innerText = "$" + grandTotal.toFixed(2);
+            var finalCostStr = grandTotal.toFixed(2);
+            document.getElementById('bidLiveTotalDisplay').innerText = "$" + finalCostStr;
+            localStorage.setItem('current_wo_est_cost', finalCostStr);
         }
 
         // --- 4. SIGNATURE CANVAS LOGIC ---
@@ -666,7 +652,6 @@
             if (!sigCanvas) return;
             sigCtx = sigCanvas.getContext("2d");
             
-            // Adjust internal canvas size
             sigCanvas.width = sigCanvas.offsetWidth;
             sigCanvas.height = sigCanvas.offsetHeight;
             
@@ -713,16 +698,56 @@
             }
         }
 
+        // 🔗 DYNAMIC REMOTE DISPATCH (TRIPLE-PARSED PAYLOAD)
         function pushElectronicEstimateToCustomer() {
-            var name = document.getElementById("wo_cust_view").value || "Customer";
             if (ACTIVE_RUNNING_ESTIMATE.length === 0) {
                 alert("Please add items to the estimate before pushing proposal link.");
                 return;
             }
-            alert(" Proposal link generated and dispatched to " + name + " via SMS/Email portal!");
+
+            var custName = document.getElementById("wo_cust_view").value || "Valued Customer";
+            var custEmail = document.getElementById("wo_email_view").value || "";
+            var custPhone = document.getElementById("wo_phone_view").value || "";
+            var custAddr = document.getElementById("wo_addr_view").value || "On File";
+            var liveTotal = localStorage.getItem('current_wo_est_cost') || "0.00";
+            var techName = document.getElementById("wo_tech_view").value || "EverSafe Desk Operations";
+
+            // Compile scope text array into clean text format
+            var compiledScopeText = GLOBAL_ITEMIZED_LIST.map(function(item, idx) {
+                var wbsStr = (item.wbs && item.wbs.length > 0) ? "\n   • " + item.wbs.join("\n   • ") : "";
+                return (idx + 1) + ". " + item.label + " - $" + item.price + wbsStr;
+            }).join("\n\n");
+
+            // Store unified cache records for inter-app reliability
+            localStorage.setItem('current_wo_customer_name', custName);
+            localStorage.setItem('current_wo_customer_email', custEmail);
+            localStorage.setItem('current_wo_customer_phone', custPhone);
+            localStorage.setItem('current_wo_service_address', custAddr);
+            localStorage.setItem('current_wo_tech_name', techName);
+            localStorage.setItem('current_wo_work_scope', compiledScopeText);
+            localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
+
+            // Generate remote signature link for client portal
+            var baseUrl = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+            var remoteLink = baseUrl + "signatures.html?" +
+                "name=" + encodeURIComponent(custName) +
+                "&email=" + encodeURIComponent(custEmail) +
+                "&address=" + encodeURIComponent(custAddr) +
+                "&cost=" + encodeURIComponent(liveTotal) +
+                "&scope=" + encodeURIComponent(compiledScopeText) +
+                "&tech=" + encodeURIComponent(techName);
+
+            // Copy link to clipboard for fast manual text/email forwarding
+            navigator.clipboard.writeText(remoteLink).then(function() {
+                alert(" Proposal link copied to clipboard & launching signature portal preview!\n\nTarget Client: " + custName + "\nTotal: $" + liveTotal);
+                window.open(remoteLink, "_blank");
+            }).catch(function() {
+                alert(" Proposal Link Generated:\n\n" + remoteLink);
+                window.open(remoteLink, "_blank");
+            });
         }
 
-        // --- 5. UTILITY FUNCTIONS ---
+        // --- 5. UTILITY & NAVIGATION FUNCTIONS ---
         function updateHubMapping() {
             var addr = document.getElementById("wo_addr_view").value;
             if (addr) {
@@ -737,7 +762,8 @@
         }
 
         function executeFieldCrewLogout() {
-            alert("Logging out of EverSafe Operations Hub.");
+            localStorage.clear();
+            window.location.replace("index.html");
         }
 
         function updateEntityContext() {
@@ -772,12 +798,52 @@
                 alert("Please add items to the estimate before compiling.");
                 return;
             }
-            alert("Bid Locked! Syncing " + GLOBAL_ITEMIZED_LIST.length + " custom-scoped items to the invoice payload.");
-            console.log(GLOBAL_ITEMIZED_LIST);
+
+            var custName = document.getElementById("wo_cust_view").value || "Valued Client";
+            var custAddr = document.getElementById("wo_addr_view").value || "On File";
+            var custEmail = document.getElementById("wo_email_view").value || "";
+            var custPhone = document.getElementById("wo_phone_view").value || "";
+            var techName = document.getElementById("wo_tech_view").value || "EverSafe Operations";
+            var liveTotal = localStorage.getItem('current_wo_est_cost') || "0.00";
+
+            // Format client-facing scope list text
+            var compiledScopeText = GLOBAL_ITEMIZED_LIST.map(function(item, idx) {
+                return (idx + 1) + ". " + item.label + " - $" + item.price;
+            }).join("\n");
+
+            // Write verified unified payload to localStorage
+            localStorage.setItem('current_wo_customer_name', custName);
+            localStorage.setItem('current_wo_service_address', custAddr);
+            localStorage.setItem('current_wo_customer_email', custEmail);
+            localStorage.setItem('current_wo_customer_phone', custPhone);
+            localStorage.setItem('current_wo_tech_name', techName);
+            localStorage.setItem('current_wo_est_cost', liveTotal);
+            localStorage.setItem('current_wo_work_scope', compiledScopeText);
+            localStorage.setItem('current_wo_itemized_json', JSON.stringify(GLOBAL_ITEMIZED_LIST));
+
+            alert("Bid Locked! Forwarding " + GLOBAL_ITEMIZED_LIST.length + " custom-scoped items to contract review.");
+            window.location.href = "contract-wo.html";
         }
 
-        // Initialize on load
+        // Initialize on load and restore saved values
         window.onload = function() {
+            if (localStorage.getItem('current_wo_customer_name')) {
+                document.getElementById("wo_cust_view").value = localStorage.getItem('current_wo_customer_name');
+            }
+            if (localStorage.getItem('current_wo_service_address')) {
+                document.getElementById("wo_addr_view").value = localStorage.getItem('current_wo_service_address');
+                updateHubMapping();
+            }
+            if (localStorage.getItem('current_wo_customer_email')) {
+                document.getElementById("wo_email_view").value = localStorage.getItem('current_wo_customer_email');
+            }
+            if (localStorage.getItem('current_wo_customer_phone')) {
+                document.getElementById("wo_phone_view").value = localStorage.getItem('current_wo_customer_phone');
+            }
+            if (localStorage.getItem('current_wo_tech_name')) {
+                document.getElementById("wo_tech_view").value = localStorage.getItem('current_wo_tech_name');
+            }
+
             populateItemsFromCategoryDropdown();
             recalculateMasterLedger();
             initSignatureCanvas();
