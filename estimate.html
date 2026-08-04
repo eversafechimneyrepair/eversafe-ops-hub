@@ -319,7 +319,7 @@
 
             <!-- REVENUE BREAKDOWN CARD -->
             <div class="revenue-breakdown-card" style="margin-top: 15px;">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                            
                 <div class="breakdown-row">                                            
                     <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
@@ -331,7 +331,7 @@
                 <div class="breakdown-row" id="row_expense">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                 <div class="breakdown-row" id="row_margin" style="background: #f0fdf4; margin-top: 4px;">                                            
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -352,17 +352,31 @@
                     <div id="lbl_cash_discount" style="font-weight:900; color:#dc2626;">-$0.00</div>
                 </div>
 
+                <!-- OPTIONAL NEGOTIATION GUARDRAIL MODULE -->
+                <div class="breakdown-row" style="background: #faf5ff; padding-top: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
+                    <div style="font-weight: bold; color: #7e22ce;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;" onclick="toggleNegotiationGuardrail()">
+                            ⚙️ Field Negotiation Guardrail Discount
+                        </label>
+                    </div>
+                    <div id="flex_discount_display" style="font-weight:900; color:#7e22ce;">-$0.00</div>
+                </div>
+                <div id="negotiation-module" style="display:none; background: #faf5ff; padding: 12px; border-radius: 6px; margin-top: 4px;">
+                    <span id="max_discount_label" style="font-size:10px; font-weight:bold; color:#6b21a8; text-transform:uppercase; display:block; margin-bottom:4px;">Max Authorized: $0.00</span>
+                    <input type="range" id="flex_discount_slider" min="0" max="0" value="0" step="5" oninput="applyGuardrailDiscount()" style="width:100%;">
+                </div>
+
                 <div class="breakdown-row" style="padding-top: 12px;">                                            
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                            
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                 <div class="breakdown-row grand-prime">                                            
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>
                     <div style="text-align: right;">
                         <div class="total-banner" id="bidLiveTotalDisplay">$0.00</div>                                
                         <div id="monthlyPaymentBadge" style="font-size: 11px; font-weight: 800; color: #2563eb; margin-top: 4px; background: #eff6ff; padding: 4px 8px; border-radius: 4px; display: inline-block; border: 1px solid #bfdbfe;">Financing available</div>
                     </div>
-                </div>                                       
+                </div>                                        
             </div>
             
             <button type="button" class="btn-action" id="compileBidBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Lock Bid & Compile Document ➔</button>
@@ -534,7 +548,7 @@
             
             var baseSubtotal = 0;
             var totalMats = 0;
-            var laborRate = 55.00; // Base global labor variable (can be adjusted)
+            var laborRate = 55.00; // Base global labor variable
             var zone = document.getElementById("regionalZoneSelector").value;
 
             ACTIVE_RUNNING_ESTIMATE.forEach(function(item, idx) {
@@ -549,7 +563,7 @@
                 var rowHours = spec.labHours * item.qty;
                 var rowTotalLaborPool = rowHours * laborRate;
                 
-                // We use the regional base price if available, else fallback to standard calculation
+                // Use regional base price if available, fallback to calculated expense
                 var basePrice = spec[zone] ? (spec[zone] * (spec.dynamic ? item.qty : 1)) : (rowMatCost + rowTotalLaborPool);
                 
                 baseSubtotal += basePrice;
@@ -636,16 +650,20 @@
             }
 
             // Negotiation Discount
-            var negDiscount = parseFloat(document.getElementById("flex_discount_slider").value) || 0;
+            var sliderEl = document.getElementById("flex_discount_slider");
+            var negDiscount = sliderEl ? (parseFloat(sliderEl.value) || 0) : 0;
             if (negDiscount > 0) {
                 document.getElementById('flex_discount_display').innerText = "-$" + negDiscount.toFixed(2);
                 grandTotal -= negDiscount;
             } else {
-                document.getElementById('flex_discount_display').innerText = "-$0.00";
+                if (document.getElementById('flex_discount_display')) {
+                    document.getElementById('flex_discount_display').innerText = "-$0.00";
+                }
             }
 
             // Taxes
-            var taxRate = parseFloat(document.getElementById("manualTaxOverride").value) / 100 || 0.0775; // Default Lucas OH
+            var manualTax = document.getElementById("manualTaxOverride").value;
+            var taxRate = (manualTax !== "" && !isNaN(manualTax)) ? (parseFloat(manualTax) / 100) : 0.0775; // Default Lucas OH (7.75%)
             var taxAmt = grandTotal * taxRate;
             document.getElementById('lbl_calculated_tax').innerText = "+$" + taxAmt.toFixed(2);
             
@@ -685,10 +703,14 @@
 
         function toggleNegotiationGuardrail() {
             var mod = document.getElementById("negotiation-module");
-            mod.style.display = (mod.style.display === "none") ? "block" : "none";
-            var maxAuth = ACTIVE_RUNNING_ESTIMATE.length * 100; // Fake arbitrary auth limit for demo
-            document.getElementById("flex_discount_slider").max = maxAuth;
-            document.getElementById("max_discount_label").innerText = "Max Authorized: $" + maxAuth;
+            if (!mod) return;
+            mod.style.display = (mod.style.display === "none" || mod.style.display === "") ? "block" : "none";
+            
+            var maxAuth = ACTIVE_RUNNING_ESTIMATE.length * 100; // Calculated auth limit
+            var slider = document.getElementById("flex_discount_slider");
+            if (slider) slider.max = maxAuth;
+            var label = document.getElementById("max_discount_label");
+            if (label) label.innerText = "Max Authorized: $" + maxAuth;
         }
 
         function applyGuardrailDiscount() {
