@@ -61,12 +61,13 @@
         .estimate-table td { padding: 10px; border: 1px solid var(--border); font-size: 13px; background: white; vertical-align: middle; }
         
         .dimension-input { width: 75px; padding: 6px; text-align: center; font-weight: bold; border: 1px solid var(--border); border-radius: 4px; }
-        .override-price-input { width: 90px; padding: 6px; text-align: center; font-weight: bold; border: 1px solid var(--accent); background: #fffbf7; color: #b45309; border-radius: 4px; }
+        .override-price-input { width: 90px; padding: 6px; text-align: center; font-weight: bold; border: 1px solid var(--accent); background: #fffbf7; color: #b45309; border-radius: 4px; transition: all 0.2s; }
+        .override-price-input:focus { outline: none; border-color: #dc2626; background: #fef2f2; }
         
         .revenue-breakdown-card { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px; padding: 20px; margin-top: 20px; }
         .breakdown-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 13px; color: #475569; }
         .breakdown-row.grand-prime { border-bottom: none; padding-top: 15px; margin-top: 5px; }
-        .total-banner { font-size: 28px; font-weight: 900; color: #16a34a; }
+        .total-banner { font-size: 28px; font-weight: 900; color: #16a34a; transition: color 0.3s ease; }
 
         .btn-action { width: 100%; background: var(--accent); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(242,140,40,0.2); }
 
@@ -515,7 +516,7 @@
                     <div id="lbl_cash_discount" style="font-weight:900; color:#dc2626;">-$0.00</div>
                 </div>
 
-                <!-- NEW: BOOKING DEPOSIT CREDIT ROW -->
+                <!-- BOOKING DEPOSIT CREDIT ROW -->
                 <div class="breakdown-row" style="background: #fdf4ff; padding-top: 12px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;">
                     <div style="font-weight: bold; color: #7e22ce;">
                         <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
@@ -545,7 +546,21 @@
                 <div class="breakdown-row" style="padding-top: 12px;">                                            
                     <div id="lbl_tax_title">Sales Tax Authority Sourcing Matrix:</div>                                            
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                </div> 
+
+                <!-- NEW: MANUAL GRAND TOTAL OVERRIDE -->
+                <div class="breakdown-row" style="background: #fff1f2; border-top: 1px dashed #f472b6; margin-top: 8px; padding-top: 12px; padding-bottom: 8px;">
+                    <div style="font-weight: bold; color: #be185d;">
+                        <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="grandTotalOverrideToggle" onchange="recalculateMasterLedger()" style="width: 18px; height: 18px; margin: 0; cursor: pointer;">
+                            Override Final Grand Total: $
+                        </label>
+                    </div>
+                    <div>
+                        <input type="number" id="grandTotalOverrideValue" placeholder="0.00" step="0.01" oninput="if(document.getElementById('grandTotalOverrideToggle').checked) recalculateMasterLedger()" style="width: 90px; padding: 6px; font-weight: bold; text-align: center; border: 1px solid #f472b6; border-radius: 4px; color: #be185d;">
+                    </div>
+                </div>
+
                 <div class="breakdown-row grand-prime">                                            
                     <div style="font-size:14px; font-weight:800; color:var(--primary);">Total Combined Project Valuation:</div>
                     <div style="text-align: right;">
@@ -561,7 +576,7 @@
         </div>
     </div>
 
-    <!-- UNIVERSAL SLIDER NAV BAR -->
+    <!-- UNIVERSAL SLIDER NAV BAR (Hardcoded inline to guarantee rendering without external files) -->
     <nav class="fixed-bottom-nav-bar">
         <div class="nav-tabs-scroll">
             <a href="jobs.html" class="nav-tab-btn"><span>💼</span>Jobs</a>
@@ -577,8 +592,6 @@
     </nav>
 
     <script>
-        var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbwwsdxf7rKDYUC6CoWEOqGx54nYd4haqICup1jqKyN_TgaWUJuCSTkJ0GUSvEJKssa_tw/exec";
-
         // Auto-center the active Estimate tab on mobile screens
         window.addEventListener('DOMContentLoaded', function() {
             if (window.innerWidth < 850) {
@@ -690,6 +703,16 @@
             ACTIVE_RUNNING_ESTIMATE[idx].qty = parseFloat(val) || 1;
             recalculateMasterLedger();
         }
+        
+        function updateItemPriceOverride(idx, val) {
+            var parsed = parseFloat(val);
+            if (!isNaN(parsed)) {
+                ACTIVE_RUNNING_ESTIMATE[idx].overridePrice = parsed;
+            } else {
+                ACTIVE_RUNNING_ESTIMATE[idx].overridePrice = undefined;
+            }
+            recalculateMasterLedger();
+        }
 
         function dropItemFromActiveLedger(idx) {
             ACTIVE_RUNNING_ESTIMATE.splice(idx, 1);
@@ -735,7 +758,8 @@
                 key: key,
                 qty: spec.defQty || 1,
                 customLabel: spec.label,
-                customWBS: spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed."
+                customWBS: spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed.",
+                overridePrice: undefined
             });
             recalculateMasterLedger();
         }
@@ -760,7 +784,8 @@
                 var rowHours = spec.labHours * item.qty;
                 var rowTotalLaborPool = rowHours * laborRate;
                 
-                var basePrice = spec[zone] ? (spec[zone] * (spec.dynamic ? item.qty : 1)) : (rowMatCost + rowTotalLaborPool);
+                var defaultBasePrice = spec[zone] ? (spec[zone] * (spec.dynamic ? item.qty : 1)) : (rowMatCost + rowTotalLaborPool);
+                var basePrice = item.overridePrice !== undefined ? item.overridePrice : defaultBasePrice;
                 
                 baseSubtotal += basePrice;
                 totalMats += rowMatCost;
@@ -781,7 +806,7 @@
                     '<td style="text-align: left; padding-left:15px; vertical-align: top; padding-top:10px; font-size:11px; font-weight:bold; color:#475569;">Standard Net Split</td>' +
                     '<td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$' + rowMatCost.toFixed(2) + '</td>' +
                     '<td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$' + (rowMatCost + rowTotalLaborPool).toFixed(2) + '</td>' +
-                    '<td style="text-align: right; vertical-align: top; padding-top:10px;"><input type="number" class="override-price-input" value="' + basePrice.toFixed(2) + '" readonly></td>' +
+                    '<td style="text-align: right; vertical-align: top; padding-top:10px;"><input type="number" class="override-price-input" value="' + basePrice.toFixed(2) + '" onchange="updateItemPriceOverride(' + idx + ', this.value)"></td>' +
                     '<td style="text-align: center; vertical-align: top; padding-top:12px;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(' + idx + ')">X</button></td>' +
                     '</tr>' +
                     '<tr>' +
@@ -868,8 +893,21 @@
             } else {
                 document.getElementById('lbl_deposit_credit').innerText = "-$0.00";
             }
+
+            // FINAL GRAND TOTAL OVERRIDE
+            var finalGrandTotal = grandTotal;
+            var totalOverrideToggle = document.getElementById("grandTotalOverrideToggle");
+            if (totalOverrideToggle && totalOverrideToggle.checked) {
+                var overVal = parseFloat(document.getElementById("grandTotalOverrideValue").value);
+                if (!isNaN(overVal)) {
+                    finalGrandTotal = overVal;
+                    document.getElementById('bidLiveTotalDisplay').style.color = "#be185d"; 
+                }
+            } else {
+                document.getElementById('bidLiveTotalDisplay').style.color = "#16a34a"; 
+            }
             
-            var finalCostStr = grandTotal.toFixed(2);
+            var finalCostStr = finalGrandTotal.toFixed(2);
             document.getElementById('bidLiveTotalDisplay').innerText = "$" + finalCostStr;
             localStorage.setItem('current_wo_est_cost', finalCostStr);
         }
