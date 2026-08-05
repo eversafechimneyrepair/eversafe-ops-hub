@@ -548,7 +548,7 @@
                     <div id="lbl_calculated_tax" style="font-weight:600; color:var(--primary);">+$0.00</div>                                
                 </div> 
 
-                <!-- NEW: MANUAL GRAND TOTAL OVERRIDE -->
+                <!-- MANUAL GRAND TOTAL OVERRIDE -->
                 <div class="breakdown-row" style="background: #fff1f2; border-top: 1px dashed #f472b6; margin-top: 8px; padding-top: 12px; padding-bottom: 8px;">
                     <div style="font-weight: bold; color: #be185d;">
                         <label style="cursor: pointer; display: flex; align-items: center; gap: 8px;">
@@ -910,6 +910,9 @@
             var finalCostStr = finalGrandTotal.toFixed(2);
             document.getElementById('bidLiveTotalDisplay').innerText = "$" + finalCostStr;
             localStorage.setItem('current_wo_est_cost', finalCostStr);
+            
+            // NEW: Auto-save the active items so they survive a refresh or tab switch
+            localStorage.setItem('current_wo_active_estimate', JSON.stringify(ACTIVE_RUNNING_ESTIMATE));
         }
 
         // --- 5. UTILITY & NAVIGATION FUNCTIONS ---
@@ -1015,6 +1018,16 @@
             }
             if (localStorage.getItem('current_wo_tech_name')) {
                 document.getElementById("wo_tech_view").value = localStorage.getItem('current_wo_tech_name');
+            }
+
+            // NEW: Pull the active draft back out of memory if it exists
+            var savedDraft = localStorage.getItem('current_wo_active_estimate');
+            if (savedDraft) {
+                try { 
+                    ACTIVE_RUNNING_ESTIMATE = JSON.parse(savedDraft); 
+                } catch(e) {
+                    ACTIVE_RUNNING_ESTIMATE = [];
+                }
             }
 
             populateItemsFromCategoryDropdown();
