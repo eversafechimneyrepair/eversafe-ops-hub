@@ -110,7 +110,7 @@
             </button>
         </div>
 
-        <!-- Quick Reference Code Matrix (UPDATED FOR CHIMNEY/MASONRY) -->
+        <!-- Quick Reference Code Matrix -->
         <div class="matrix-card">
             <div class="matrix-header">
                 <div class="matrix-title">📘 Compliance Matrix</div>
@@ -209,7 +209,8 @@
                     manifestDisplay.innerHTML = ""; 
                     result.records.forEach(function(job) {
                         var notes = `Time: ${job.arrivalTime} | Route: ${job.routeStatus} | Tech: ${job.techName}`;
-                        renderDispatchCard(job.customerName, job.siteAddress, job.customerPhone, "", notes, "0.00");
+                        // FIX: Pass job.customerEmail directly to the render function instead of an empty string
+                        renderDispatchCard(job.customerName, job.siteAddress, job.customerPhone, job.customerEmail, notes, "0.00");
                     });
                 } else {
                     manifestDisplay.innerHTML = `<div class="center-status-line" style="color:var(--danger)">❌ ${result.error}</div>`;
