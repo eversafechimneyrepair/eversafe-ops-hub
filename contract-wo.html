@@ -28,7 +28,7 @@
         .logout-pill-btn { background: #ef4444; color: white; font-size: 10px; font-weight: bold; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; text-transform: uppercase; }
 
         .app-container { max-width: 750px; margin: 0 auto; padding: 0 15px; }
-        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .app-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 30px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 30px; }
         
         .document-header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
         .document-header h2 { text-transform: uppercase; font-size: 20px; letter-spacing: 0.75px; color: var(--primary); }
@@ -41,9 +41,31 @@
         .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 25px; border-radius: 4px; letter-spacing: 0.5px; }
         
         /* Clean Client-Facing Scope Breakdown List */
-        .client-scope-list { list-style: none; margin: 12px 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-        .client-scope-list li { padding: 14px 16px; background: white; border-bottom: 1px solid #f1f5f9; font-size: 14px; font-weight: 600; color: #1e293b; display: flex; justify-content: space-between; align-items: center; }
+        .client-scope-list { list-style: none; margin: 12px 0; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: white; }
+        .client-scope-list li { padding: 10px 16px; border-bottom: 1px solid #f1f5f9; display: flex; align-items: flex-start; }
         .client-scope-list li:last-child { border-bottom: none; }
+
+        /* Editable Scope Text Area */
+        .scope-edit-box {
+            flex: 1;
+            border: 1px dashed transparent;
+            background: transparent;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+            font-family: inherit;
+            resize: vertical;
+            padding: 6px;
+            outline: none;
+            min-height: 44px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .scope-edit-box:hover { border-color: #e2e8f0; }
+        .scope-edit-box:focus {
+            border-color: var(--accent);
+            background: #fffaf5;
+        }
 
         .price-summary-banner { background: #f0fdf4; border: 2px dashed var(--success); border-radius: 6px; padding: 18px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
         .total-amount-txt { font-size: 28px; font-weight: 900; color: #166534; }
@@ -57,7 +79,90 @@
 
         .btn-action { width: 100%; max-width: 380px; background: var(--success); color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; margin: 30px auto 0 auto; display: block; text-align: center; text-decoration: none; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
         .btn-action:hover { background: #16a34a; }
-        .fixed-bottom-nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background-color: var(--primary); box-shadow: 0 -4px 12px rgba(0,0,0,0.15); height: 68px; border-top: 1px solid var(--primary-light); z-index: 100; }
+
+        /* Universal Elastic Slider Navigation Bar Styles */
+        .fixed-bottom-nav-bar {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            background-color: #0f172a !important;
+            box-shadow: 0 -6px 20px rgba(0,0,0,0.25) !important;
+            height: 68px !important;
+            border-top: 1px solid #1e293b !important;
+            z-index: 99999 !important;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+        }
+        .nav-tabs-scroll {
+            display: flex !important;
+            width: 100% !important;
+            height: 100% !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
+            margin: 0 !important;
+            padding: 0 16px !important;
+            overflow-x: auto !important;
+            white-space: nowrap !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+        }
+        .nav-tabs-scroll::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        a.nav-tab-btn, .nav-tab-btn {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            flex: 0 0 76px !important;
+            height: 100% !important;
+            background: transparent !important;
+            border: none !important;
+            color: #94a3b8 !important;
+            font-size: 9.5px !important;
+            font-weight: bold !important;
+            text-transform: uppercase !important;
+            cursor: pointer !important;
+            gap: 3px !important;
+            text-decoration: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            -webkit-tap-highlight-color: transparent !important;
+        }
+        a.nav-tab-btn:hover, a.nav-tab-btn:visited, a.nav-tab-btn:active, a.nav-tab-btn:focus {
+            text-decoration: none !important;
+            color: #94a3b8 !important;
+            outline: none !important;
+        }
+        .nav-tab-btn span {
+            font-size: 16px !important;
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        a.nav-tab-btn.active-tab {
+            color: #F28C28 !important;
+            background-color: rgba(255,255,255,0.02) !important;
+            text-decoration: none !important;
+        }
+        a.nav-tab-btn.active-tab:hover, a.nav-tab-btn.active-tab:visited {
+            color: #F28C28 !important;
+        }
+        @media (min-width: 850px) {
+            .nav-tabs-scroll {
+                justify-content: space-around !important;
+                overflow-x: visible !important;
+                max-width: 1200px !important;
+                margin: 0 auto !important;
+            }
+            a.nav-tab-btn, .nav-tab-btn {
+                flex: 1 1 auto !important;
+                max-width: 110px !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -90,6 +195,7 @@
             </div>
 
             <div class="section-title">Itemized Scope of Operations</div>
+            <p style="font-size: 11px; color: #64748b; margin-top: 8px; margin-bottom: -4px;">*Tap any line below to edit the visible text before client presentation.</p>
             <ul class="client-scope-list" id="clientScopeContainer">
             </ul>
 
@@ -160,12 +266,36 @@
         </div>
     </div>
 
-    <div class="fixed-bottom-nav-bar"></div>
-    <script src="navbar.js"></script>
+    <!-- UNIVERSAL SLIDER NAV BAR (Hardcoded inline to guarantee rendering without external files) -->
+    <nav class="fixed-bottom-nav-bar">
+        <div class="nav-tabs-scroll">
+            <a href="jobs.html" class="nav-tab-btn"><span>💼</span>Jobs</a>
+            <a href="inspection-l1.html" class="nav-tab-btn"><span>📑</span>L1 Map</a>
+            <a href="inspection-l2.html" class="nav-tab-btn"><span>📋</span>L2 Map</a>
+            <a href="estimate.html" class="nav-tab-btn"><span>🧮</span>Estimate</a>
+            <a href="contract-wo.html" class="nav-tab-btn active-tab"><span>📜</span>Contract</a>
+            <a href="signatures.html" class="nav-tab-btn"><span>✍️</span>Sign</a>
+            <a href="billing-invoice.html" class="nav-tab-btn"><span>🧾</span>Billing</a>
+            <a href="dispatches.html" class="nav-tab-btn"><span>📁</span>Vault</a>
+            <a href="vault-upload.html" class="nav-tab-btn"><span>📷</span>Camera</a>
+        </div>
+    </nav>
 
     <script>
         var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbwwsdxf7rKDYUC6CoWEOqGx54nYd4haqICup1jqKyN_TgaWUJuCSTkJ0GUSvEJKssa_tw/exec";
         var DRIVER_NAME = localStorage.getItem('eversafe_authenticated_user') || "Field Tech";
+
+        // Auto-center the active Contract tab on mobile screens
+        window.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth < 850) {
+                setTimeout(function() {
+                    var activeElement = document.querySelector('.fixed-bottom-nav-bar .active-tab');
+                    if (activeElement) {
+                        activeElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }
+                }, 120);
+            }
+        });
 
         window.addEventListener('DOMContentLoaded', function() {
             var name = localStorage.getItem('current_wo_customer_name') || "Customer Profile Bypassed";
@@ -206,7 +336,8 @@
                     itemsArray.forEach(function(item) {
                         container.innerHTML += `
                             <li>
-                                <span>🔹 ${item.label}</span>
+                                <span style="margin-top: 6px; margin-right: 10px;">🔹</span>
+                                <textarea class="scope-edit-box" oninput="updateScopeCache()">${item.label}</textarea>
                             </li>
                         `;
                     });
@@ -219,10 +350,12 @@
             simpleLines.forEach(function(line) {
                 if(line.trim()) {
                     var cleanLine = line.replace('- ', '').split('$')[0].trim();
+                    cleanLine = cleanLine.replace(/^•\s*/, ''); // strip out existing bullets
                     if (cleanLine) {
                         container.innerHTML += `
                             <li>
-                                <span>🔹 ${cleanLine}</span>
+                                <span style="margin-top: 6px; margin-right: 10px;">🔹</span>
+                                <textarea class="scope-edit-box" oninput="updateScopeCache()">${cleanLine}</textarea>
                             </li>
                         `;
                     }
@@ -230,15 +363,15 @@
             });
         }
 
+        // Dynamically scrape and compile the modified text areas for passing to the webhook
         function getCompiledScopeText() {
             var compiledScopeText = "";
-            var container = document.getElementById('clientScopeContainer');
-            var listItems = container.getElementsByTagName('li');
+            var textareas = document.querySelectorAll('.scope-edit-box');
 
-            if (listItems.length > 0) {
+            if (textareas.length > 0) {
                 var itemsList = [];
-                for (var i = 0; i < listItems.length; i++) {
-                    var cleanLineText = listItems[i].innerText.replace('🔹', '').trim();
+                for (var i = 0; i < textareas.length; i++) {
+                    var cleanLineText = textareas[i].value.trim();
                     if (cleanLineText) {
                         itemsList.push("• " + cleanLineText);
                     }
@@ -248,6 +381,26 @@
                 compiledScopeText = "Standard Sweeping & Stabilization Maintenance Package.";
             }
             return compiledScopeText;
+        }
+
+        // Live updater to ensure edited text survives navigation
+        function updateScopeCache() {
+            var compiledText = getCompiledScopeText();
+            localStorage.setItem('current_wo_work_scope', compiledText);
+
+            var rawJsonString = localStorage.getItem('current_wo_itemized_json');
+            if (rawJsonString) {
+                try {
+                    var itemsArray = JSON.parse(rawJsonString);
+                    var textareas = document.querySelectorAll('.scope-edit-box');
+                    if(itemsArray.length === textareas.length) {
+                        for(var i = 0; i < textareas.length; i++) {
+                            itemsArray[i].label = textareas[i].value.trim();
+                        }
+                        localStorage.setItem('current_wo_itemized_json', JSON.stringify(itemsArray));
+                    }
+                } catch(e) { }
+            }
         }
 
         function advanceToClientSignatureCanvas() {
@@ -285,7 +438,7 @@
                 localStorage.setItem('current_wo_customer_email', email);
             }
 
-            // 📱 FAIL-SAFE PHONE CHECK (VITAL FIX)
+            // 📱 FAIL-SAFE PHONE CHECK
             var phone = localStorage.getItem('current_wo_customer_phone') || localStorage.getItem('current_wo_phone') || "";
             if (!phone || phone.trim() === "") {
                 var manualPhoneInput = prompt("A mobile phone number is required to text the secure signing portal link. Please input customer mobile number:", "4195171888");
@@ -311,7 +464,7 @@
                         route: "sendEstimateEmail",
                         customerName: name,
                         customerEmail: email,
-                        customerPhone: phone, // 🔥 Fully protected phone payload
+                        customerPhone: phone, 
                         serviceAddress: addr,
                         estimatedCost: cost,
                         workScope: compiledScope,
