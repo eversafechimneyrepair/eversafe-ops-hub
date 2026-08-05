@@ -209,7 +209,6 @@
                     manifestDisplay.innerHTML = ""; 
                     result.records.forEach(function(job) {
                         var notes = `Time: ${job.arrivalTime} | Route: ${job.routeStatus} | Tech: ${job.techName}`;
-                        // FIX: Pass job.customerEmail directly to the render function instead of an empty string
                         renderDispatchCard(job.customerName, job.siteAddress, job.customerPhone, job.customerEmail, notes, "0.00");
                     });
                 } else {
@@ -383,8 +382,14 @@
             var scope = document.getElementById('scope_' + idSuffix).innerText;
             var cost = document.getElementById('cost_' + idSuffix).innerText;
 
-            localStorage.removeItem('current_wo_price_book_items');
-            localStorage.removeItem('current_wo_itemized_json');
+            var previousName = localStorage.getItem('current_wo_customer_name');
+
+            // NEW: ONLY wipe the estimate cache if we are opening a DIFFERENT customer
+            if (previousName !== name) {
+                localStorage.removeItem('current_wo_active_estimate');
+                localStorage.removeItem('current_wo_price_book_items');
+                localStorage.removeItem('current_wo_itemized_json');
+            }
 
             localStorage.setItem('current_wo_customer_name', name);
             localStorage.setItem('current_wo_customer_phone', phone); 
@@ -410,7 +415,8 @@
                 'current_wo_price_book_items', 'current_wo_itemized_json', 'current_wo_slideshow_data',
                 'cached_wo_cust', 'cached_wo_email', 'cached_wo_phone', 'cached_wo_addr', 'cached_inv_scope', 'cached_inv_subtotal',
                 'current_l2_n1', 'current_l2_n2', 'current_l2_n3', 'current_l2_n4', 'current_l2_n5', 
-                'current_l2_n6', 'current_l2_n7', 'current_l2_n8', 'current_l2_summary', 'current_l2_client_initials'
+                'current_l2_n6', 'current_l2_n7', 'current_l2_n8', 'current_l2_summary', 'current_l2_client_initials',
+                'current_wo_active_estimate' // Ensure the estimate draft gets cleared too
             ];
             
             trackingKeys.forEach(function(key) { localStorage.removeItem(key); });
