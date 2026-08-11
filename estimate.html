@@ -350,22 +350,28 @@
                 </div>
 
                 <div class="grid-2" style="margin-bottom:0;">
-                    <div>
-                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option B: Filter By Trade Category Group</span>
-                        <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
-                            <option value="" disabled selected hidden>-- Step 1: Choose Category (Optional) --</option>
-                            <option value="ALL">-- Show All Trade Categories Combined --</option>
-                            <option value="MAINTENANCE">Maintenance & Diagnostics</option>
-                            <option value="MASONRY">Masonry Structural Repairs</option>
-                            <option value="RELINING">Venting & Reline Frameworks</option>
-                            <option value="WATERPROOFING">Waterproofing & Flashing Mitigation</option>
-                            <option value="PREFAB_CHASE">Pre-Fab Chase & Factory Systems</option>
-                            <option value="COMPONENTS">Caps, Dampers & Custom Trim</option>
-                            <option value="REMOVALS">Demolition & System Extractions</option>
-                            <option value="LOGISTICS">Logistics & General Conditions</option>
-                        </select>
-                    </div>
-                    <div>
+            <div>
+                <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option B: Filter By Technician Workflow</span>
+                <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
+                    <option value="" disabled selected hidden>-- Choose Category --</option>
+                    <option value="ALL">-- Show All Categories Combined --</option>
+                    <option value="MAINTENANCE">1. Diagnostics, Sweeps & Inspections</option>
+                    <option value="COMPONENTS">2. Caps, Dampers & Appliance Trim</option>
+                    <option value="WATERPROOFING">3. Waterproofing, Crowns & Flashing</option>
+                    <option value="RELINING">4. Venting & Relining Systems</option>
+                    <option value="PREFAB_CHASE">5. Pre-Fab Chase & Factory Systems</option>
+                    <option value="MASONRY">6. Masonry & Firebox Structural Repairs</option>
+                    <option value="REMOVALS">7. Demolition & Flue Extractions</option>
+                    <option value="LOGISTICS">8. Permits, Equipment & Logistics</option>
+                </select>
+            </div>
+            <div>
+        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option C: Catalog Item Selector</span>
+        <select id="catalogItemSelector">
+            <option value="" disabled selected hidden>-- Choose Line Item --</option>
+        </select>
+    </div>
+</div>
                         <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option C: Traditional Catalog Item Selector</span>
                         <select id="catalogItemSelector">
                             <option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>
