@@ -728,50 +728,98 @@
             recalculateMasterLedger();
         }
 
+        // --- FIXED SEARCH & DROPDOWN ENGINE ---
+
         function filterCatalogItems() {
-            var filter = document.getElementById("itemSearchFilter").value.toUpperCase();
-            var selector = document.getElementById("catalogItemSelector");
-            selector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
-            
-            for(var key in COMPLETE_PRICE_BOOK) {
-                var spec = COMPLETE_PRICE_BOOK[key];
-                if(spec.label.toUpperCase().indexOf(filter) > -1 || spec.cat.toUpperCase().indexOf(filter) > -1) {
-                    var opt = document.createElement("option");
-                    opt.value = key;
-                    opt.innerText = spec.label;
-                    selector.appendChild(opt);
-                }
-            }
+        var filterInput = document.getElementById("itemSearchFilter");
+        var filter = filterInput.value.trim().toUpperCase();
+        var itemSelector = document.getElementById("catalogItemSelector");
+        var catSelector = document.getElementById("catalogCategorySelector");
+
+        // Reset Category dropdown to "ALL" so it doesn't conflict with search results
+        if (catSelector) catSelector.value = "ALL";
+
+        itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Select Search Result --</option>';
+
+        if (!filter) {
+        populateItemsFromCategoryDropdown();
+        return;
         }
 
-        function populateItemsFromCategoryDropdown() {
-            var cat = document.getElementById("catalogCategorySelector").value;
-            var selector = document.getElementById("catalogItemSelector");
-            selector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>';
-            for(var key in COMPLETE_PRICE_BOOK) {
-                if(cat === "ALL" || COMPLETE_PRICE_BOOK[key].cat === cat) {
-                    var opt = document.createElement("option");
-                    opt.value = key;
-                    opt.innerText = COMPLETE_PRICE_BOOK[key].label;
-                    selector.appendChild(opt);
-                }
+        var matchCount = 0;
+        for (var key in COMPLETE_PRICE_BOOK) {
+        var spec = COMPLETE_PRICE_BOOK[key];
+        
+        // Search across Label, Category Key, WBS descriptions, and Material lists
+        var labelText = (spec.label || "").toUpperCase();
+        var catText = (spec.cat || "").toUpperCase();
+        var wbsText = spec.wbs ? spec.wbs.join(" ").toUpperCase() : "";
+        var matText = spec.mats ? spec.mats.join(" ").toUpperCase() : "";
+
+        if (labelText.includes(filter) || catText.includes(filter) || wbsText.includes(filter) || matText.includes(filter)) {
+            var opt = document.createElement("option");
+            opt.value = key;
+            opt.innerText = "[" + spec.cat + "] " + spec.label;
+            itemSelector.appendChild(opt);
+            matchCount++;
+        }
+    }
+
+    if (matchCount === 0) {
+        itemSelector.innerHTML = '<option value="" disabled selected>⚠️ No matching items found</option>';
+    }
+}
+
+function populateItemsFromCategoryDropdown() {
+    var catSelector = document.getElementById("catalogCategorySelector");
+    var searchInput = document.getElementById("itemSearchFilter");
+    var itemSelector = document.getElementById("catalogItemSelector");
+
+    if (!catSelector || !itemSelector) return;
+    
+    var selectedCat = catSelector.value;
+    
+    // Clear search box when selecting a category to avoid UI confusion
+    if (searchInput && selectedCat !== "ALL") {
+        searchInput.value = "";
+    }
+
+    itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Line Item --</option>';
+
+    for (var key in COMPLETE_PRICE_BOOK) {
+        var spec = COMPLETE_PRICE_BOOK[key];
+        if (selectedCat === "ALL" || spec.cat === selectedCat) {
+            var opt = document.createElement("option");
+            opt.value = key;
+            opt.innerText = spec.label;
+            itemSelector.appendChild(opt);
             }
         }
+    }
 
         function injectItemFromCatalogSelection() {
-            var key = document.getElementById("catalogItemSelector").value;
-            if(!key) return;
-            var spec = COMPLETE_PRICE_BOOK[key];
-            
-            ACTIVE_RUNNING_ESTIMATE.push({
-                key: key,
-                qty: spec.defQty || 1,
-                customLabel: spec.label,
-                customWBS: spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed.",
-                overridePrice: undefined
-            });
-            recalculateMasterLedger();
+        var selector = document.getElementById("catalogItemSelector");
+        var key = selector.value;
+    
+        if (!key || !COMPLETE_PRICE_BOOK[key]) {
+            alert("Please select a valid item from the catalog list first.");
+            return;
         }
+    
+        var spec = COMPLETE_PRICE_BOOK[key];
+    
+        ACTIVE_RUNNING_ESTIMATE.push({
+            key: key,
+            qty: spec.defQty || 1,
+            customLabel: spec.label,
+            customWBS: spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed.",
+            overridePrice: undefined
+        });
+
+        // Reset selectors after injecting
+        selector.selectedIndex = 0;
+        recalculateMasterLedger();
+    }
 
         function recalculateMasterLedger() {
             var tbody = document.getElementById('bidTableBody');
