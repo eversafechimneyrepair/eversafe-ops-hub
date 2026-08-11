@@ -350,114 +350,25 @@
                 </div>
 
                 <div class="grid-2" style="margin-bottom:0;">
-            <div>
-                <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option B: Filter By Technician Workflow</span>
-                <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
-                    <option value="" disabled selected hidden>-- Choose Category --</option>
-                    <option value="ALL">-- Show All Categories Combined --</option>
-                    <option value="MAINTENANCE">1. Diagnostics, Sweeps & Inspections</option>
-                    <option value="COMPONENTS">2. Caps, Dampers & Appliance Trim</option>
-                    <option value="WATERPROOFING">3. Waterproofing, Crowns & Flashing</option>
-                    <option value="RELINING">4. Venting & Relining Systems</option>
-                    <option value="PREFAB_CHASE">5. Pre-Fab Chase & Factory Systems</option>
-                    <option value="MASONRY">6. Masonry & Firebox Structural Repairs</option>
-                    <option value="REMOVALS">7. Demolition & Flue Extractions</option>
-                    <option value="LOGISTICS">8. Permits, Equipment & Logistics</option>
-                </select>
-            </div>
-            <div>
-        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option C: Catalog Item Selector</span>
-        <select id="catalogItemSelector">
-            <option value="" disabled selected hidden>-- Choose Line Item --</option>
-        </select>
-    </div>
-</div>
-                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option C: Traditional Catalog Item Selector</span>
+                    <div>
+                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option B: Filter By Technician Workflow</span>
+                        <select id="catalogCategorySelector" onchange="populateItemsFromCategoryDropdown()">
+                            <option value="" disabled selected hidden>-- Choose Category --</option>
+                            <option value="ALL">-- Show All Categories Combined --</option>
+                            <option value="MAINTENANCE">1. Diagnostics, Sweeps & Inspections</option>
+                            <option value="COMPONENTS">2. Caps, Dampers & Appliance Trim</option>
+                            <option value="WATERPROOFING">3. Waterproofing, Crowns & Flashing</option>
+                            <option value="RELINING">4. Venting & Relining Systems</option>
+                            <option value="PREFAB_CHASE">5. Pre-Fab Chase & Factory Systems</option>
+                            <option value="MASONRY">6. Masonry & Firebox Structural Repairs</option>
+                            <option value="REMOVALS">7. Demolition & Flue Extractions</option>
+                            <option value="LOGISTICS">8. Permits, Equipment & Logistics</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span style="font-size:10px; font-weight:800; color:#475569; text-transform:uppercase; display:block; margin-bottom:4px;">Option C: Catalog Item Selector</span>
                         <select id="catalogItemSelector">
-                            <option value="" disabled selected hidden>-- Step 2: Choose Isolated Scope Item --</option>
-                            
-                            <!-- LOGISTICS & GENERAL CONDITIONS -->
-                            <option value="LOG_PERMIT_STD">Standard Municipal Building / Mechanical Permit Acquisition</option>
-                            <option value="LOG_DUMPSTER_10YD">10-Yard Commercial Roll-Off Dumpster Rental & Tipping Fee</option>
-                            <option value="LOG_SCAFFOLD_MOB">Multi-Tier Scaffolding Mobilization & Erection (per tier)</option>
-                            <option value="LOG_LIFT_RENTAL">Towable Boom / Aerial Man-Lift Equipment Rental (Daily)</option>
-                            <option value="LOG_DISPATCH">Standard Technician Dispatch & Service Call Fee</option>
-                            <option value="LOG_DISPATCH_CREDIT">Diagnostic Fee Refund (Credited Toward Repair)</option>
-
-                            <!-- MAINTENANCE & DIAGNOSTICS -->
-                            <option value="INSP_NFPA_LEVEL_1">NFPA 211 Level 1 Visual Inspection & Clearance Evaluation</option>
-                            <option value="INSP_NFPA_LEVEL_2">NFPA 211 Level 2 Comprehensive Safety Inspection (Real Estate/Transfer)</option>
-                            <option value="DIAG_VIDEO_L2">Targeted Internal Flue Axis Video Camera Scan Diagnostic</option>
-                            <option value="SWEEP_WOOD_FLUE">Physical Cleaning Sweep - Open Masonry Woodburning Flue</option>
-                            <option value="SWEEP_WOOD_INSERT">Physical Cleaning Sweep - Wood Insert Pull & Extraction Clean</option>
-                            <option value="SWEEP_PELLET">Physical Cleaning Sweep - Pellet/Corn Venting Mechanical Service</option>
-                            <option value="SWEEP_GAS_OIL">Physical Cleaning Sweep - Utility Furnace Gas/Oil Flue Pathway</option>
-                            <option value="DRYER_VENT_CLEAN">Dryer Vent Line Air-Jet Cleaning Sequence (up to 20ft)</option>
-
-                            <!-- MASONRY STRUCTURAL REPAIRS -->
-                            <option value="MAS_TUCKPOINT">Tuckpointing Face Joint Masonry Repair (per sq ft)</option>
-                            <option value="MAS_BRICK_SWAP">Spalling Freeze-Thaw Structural Face Brick Replacement (per brick)</option>
-                            <option value="MAS_CLAY_TILE_REPLACE">Terra Cotta Clay Flue Tile Top-Course Replacement (per tile)</option>
-                            <option value="MAS_REBUILD_ROOF">Partial Masonry Rebuild From Roofline Up (per vertical ft)</option>
-                            <option value="MAS_REBUILD_TOTAL">Complete Structural Demolition & Ground-Up Rebuild Flat Package (Up to 4ft)</option>
-                            <option value="MAS_FIREBOX_REBUILD">Firebox Firebrick Refit Floor/Walls (per brick)</option>
-                            <option value="MAS_SMOKE_CHAMBER">Smoke Chamber Refractory Pargeting Smooth Seal (per sq ft)</option>
-                            <option value="MAS_CMU_CORE">Internal CMU Block Core Rebuild (per vertical ft)</option>
-                            <option value="MAS_WALL_TIES">Structural Veneer Wall Tie Anchoring System</option>
-
-                            <!-- VENTING & RELINE FRAMEWORKS -->
-                            <option value="LINE_STAINLESS_STD_25">Standard 304/316 Stainless Steel Liner Kit - 25 Foot</option>
-                            <option value="LINE_STAINLESS_STD_35">Standard 304/316 Stainless Steel Liner Kit - 35 Foot</option>
-                            <option value="LINE_TITANIUM_25">Titanium AL29-4C Stainless Steel Liner Kit - 25 Foot</option>
-                            <option value="LINE_TITANIUM_35">Titanium AL29-4C Stainless Steel Liner Kit - 35 Foot</option>
-                            <option value="LINE_SMOOTH_25">Premium Smooth-Wall Stainless Liner Kit - 25 Foot (Wood/Coal)</option>
-                            <option value="LINE_SMOOTH_35">Premium Smooth-Wall Stainless Liner Kit - 35 Foot (Wood/Coal)</option>
-                            <option value="LINE_PELLET_3_25">3-Inch Stainless Pellet Stove Liner Kit - 25 Foot</option>
-                            <option value="LINE_PELLET_3_35">3-Inch Stainless Pellet Stove Liner Kit - 35 Foot</option>
-                            <option value="LINE_ALUM_4_25">4-Inch Double-Wall Aluminum Liner Kit - 25 Foot (Gas Utility)</option>
-                            <option value="LINE_ALUM_4_35">4-Inch Double-Wall Aluminum Liner Kit - 35 Foot (Gas Utility)</option>
-                            <option value="LINE_ALUM_5_25">5-Inch Double-Wall Aluminum Liner Kit - 25 Foot (Gas Utility)</option>
-                            <option value="LINE_ALUM_5_35">5-Inch Double-Wall Aluminum Liner Kit - 35 Foot (Gas Utility)</option>
-                            <option value="LINE_RIGID_SS_3FT">Rigid Stainless Steel Pipe Section (per 3ft section)</option>
-                            <option value="LINE_RIGID_SQUARE">Custom Rectangular/Square Rigid Stainless Drop (per linear ft)</option>
-                            <option value="LINE_INSUL_4">4-Inch Dual-Wall Insulated Stainless Liner Kit (Pellet/Gas)</option>
-                            <option value="LINE_OVAL_6">Custom Ovalized Stainless Steel Liner Profile Modification (per linear ft)</option>
-                            <option value="LINE_INSUL_BLANKET">Ceramic Flue Reline Insulation Blanket Wrap Kit (1/2-Inch Outer)</option>
-                            <option value="LINE_INSUL_POUR">Thermix Lightweight Insulating Masonry Pour Shield (per cubic foot)</option>
-
-                            <!-- WATERPROOFING & FLASHING MITIGATION -->
-                            <option value="WATER_CROWN_SEAL">Elastomeric Crown Seal Membrane Coat (A La Carte / Standalone)</option>
-                            <option value="WATER_FLASH_SEAL">Flash Seal Protective Barrier Membrane (Chimney Roof Intersection Base)</option>
-                            <option value="WATER_REPELLENT_SEAL">ChimneySaver Silane-Siloxane Breathable Repellent Application (Brick Surface Coat)</option>
-                            <option value="WATER_TOTAL_SYSTEM_SEAL">Total System Seal Protection Package Deal (Crown + Flash + Water Combo Pack)</option>
-                            <option value="WATER_CROWN_POUR">Full Concrete Masonry Crown Form Pour Rebuild (per sq ft)</option>
-                            <option value="WATER_PRECAST_CROWN">Precast Concrete Chimney Top / Mortar Dome Replacement</option>
-                            <option value="WATER_SAVER_SPRAY">Bulk Commercial Masonry Water Repellent Treatment Block Run</option>
-
-                            <!-- PRE-FAB CHASE & FACTORY SYSTEMS -->
-                            <option value="PREFAB_CHASE_REPAIR">Pre-Fab Siding Chase Box Exterior Repair (per sq ft)</option>
-                            <option value="CHASE_CLASS_A_3FT">Class-A Solid Pack / Double-Wall Chimney Pipe (per 3ft section)</option>
-                            <option value="CHASE_CLASS_A_SUPPORT">Class-A Base Support & Roof Flashing Component Kit</option>
-                            <option value="CHASE_B_VENT_3FT">Type B-Vent Gas Utility Pipe Swap (per 3ft section)</option>
-                            <option value="CHASE_B_VENT_COUPLING">Type B-Vent Pipe Draft Connection & Coupling Assembly</option>
-                            <option value="CHASE_DIRECT_VENT">Direct Vent Coaxial Gas Pipe (per 3ft section)</option>
-
-                            <!-- Custom Chase Covers & Multi-Penetrations -->
-                            <option value="CHASE_PAN_4HOLE_SURCHARGE">Multi-Port Chase Pan Surcharge (4+ Pipe Penetrations)</option>
-                            <option value="CHASE_COLLAR_STORM_SEAL">Storm Collar & High-Temp Penetration Gasket Seal (Per Pipe)</option>
-                            <option value="CHASE_B_VENT_COUPLING">Type B-Vent Pipe Draft Connection & Coupling Assembly</option>
-                            <option value="COMP_CHASE_PAN">Custom Stainless Steel Chase Cover Pan (per sq ft)</option>
-
-                            <!-- CAPS, DAMPERS & CUSTOM TRIM -->
-                            <option value="COMP_CAP_SINGLE">Stainless Steel Single Flue Cap (Standard)</option>
-                            <option value="COMP_CAP_MULTI">Custom Multi-Flue Crown Mount Cap (per sq ft)</option>
-                            <option value="COMP_DAMPER_TOP">Lock-Top Sealing Damper System</option>
-                            <option value="APP_WOOD">Wood-Burning Stove/Insert Appliance Installation</option>
-                            <option value="APP_GAS">Gas Log Set / Burner Assembly Installation</option>
-
-                            <!-- DEMOLITION & SYSTEM EXTRACTIONS -->
-                            <option value="RMV_STACK_DOWN">Masonry Core Knockdown & Demolition (per vertical ft)</option>
-                            <option value="LINE_TILE_REMOVAL">Clay Flue Tile Breaker Knockout & Extraction (per ft)</option>
+                            <option value="" disabled selected hidden>-- Choose Line Item --</option>
                         </select>
                     </div>
                 </div>
@@ -495,7 +406,7 @@
 
             <!-- REVENUE BREAKDOWN CARD -->
             <div class="revenue-breakdown-card" style="margin-top: 15px;">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
                 <div class="breakdown-row">                                            
                     <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
@@ -507,7 +418,7 @@
                 <div class="breakdown-row" id="row_expense">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
                 <div class="breakdown-row" id="row_margin" style="background: #f0fdf4; margin-top: 4px;">                                            
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
