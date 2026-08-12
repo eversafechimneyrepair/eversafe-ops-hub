@@ -248,19 +248,24 @@
                         <input type="number" id="flueQuantityInput" value="1" min="1" max="5" oninput="recalculateMasterLedger()" style="font-weight:bold; margin-top:4px;">
                     </div>
                     <div>
-                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Internal Dimensions</span>
-                        <select id="flueSizeSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
-                            <option value="4_ROUND">4-Inch Round (Pellet/High-Efficiency Gas)</option>
-                            <option value="5_ROUND">5-Inch Round (Gas Utility/Furnace)</option>
-                            <option value="6_ROUND" selected>6-Inch Round (Liner/Wood Vent)</option>
-                            <option value="8_ROUND">8-Inch Round (Liner/Prefab System)</option>
-                            <option value="10_ROUND">10-Inch Round (Liner/Prefab System)</option>
-                            <option value="8_8_SQUARE">8x8 Square (Terracotta Core)</option>
-                            <option value="9_13_RECT">9x13 Rectangular (Terracotta Core)</option>
-                            <option value="13_13_SQUARE">13x13 Square (Terracotta Core)</option>
-                        </select>
-                    </div>
-                    <div>
+    <span style="font-size:10px; font-weight:bold; color:#475569; height:100%; text-transform:uppercase;">Flue Quantity</span>
+    <input type="number" id="flueQuantityInput" value="1" min="1" max="5" oninput="updateFlueSizeDropdowns(); recalculateMasterLedger()" style="font-weight:bold; margin-top:4px;">
+</div>
+<div>
+    <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Internal Dimensions</span>
+    <div id="flueSizeContainer">
+        <select class="flueSizeSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
+            <option value="4_ROUND">4-Inch Round (Pellet/High-Efficiency Gas)</option>
+            <option value="5_ROUND">5-Inch Round (Gas Utility/Furnace)</option>
+            <option value="6_ROUND" selected>6-Inch Round (Liner/Wood Vent)</option>
+            <option value="8_ROUND">8-Inch Round (Liner/Prefab System)</option>
+            <option value="10_ROUND">10-Inch Round (Liner/Prefab System)</option>
+            <option value="8_8_SQUARE">8x8 Square (Terracotta Core)</option>
+            <option value="9_13_RECT">9x13 Rectangular (Terracotta Core)</option>
+            <option value="13_13_SQUARE">13x13 Square (Terracotta Core)</option>
+        </select>
+    </div>
+</div>
                         <span style="font-size:10px; font-weight:bold; color:#0369a1; text-transform:uppercase;">Placement Exposure</span>
                         <select id="chimneyExposureSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
                             <option value="INTERIOR" selected>Interior Wall (Insulated)</option>
