@@ -245,27 +245,24 @@
                 <div class="grid-matrix">
                     <div>
                         <span style="font-size:10px; font-weight:bold; color:#475569; height:100%; text-transform:uppercase;">Flue Quantity</span>
-                        <input type="number" id="flueQuantityInput" value="1" min="1" max="5" oninput="recalculateMasterLedger()" style="font-weight:bold; margin-top:4px;">
+                        <input type="number" id="flueQuantityInput" value="1" min="1" max="5" oninput="updateFlueSizeDropdowns(); recalculateMasterLedger()" style="font-weight:bold; margin-top:4px;">
                     </div>
                     <div>
-    <span style="font-size:10px; font-weight:bold; color:#475569; height:100%; text-transform:uppercase;">Flue Quantity</span>
-    <input type="number" id="flueQuantityInput" value="1" min="1" max="5" oninput="updateFlueSizeDropdowns(); recalculateMasterLedger()" style="font-weight:bold; margin-top:4px;">
-</div>
-<div>
-    <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Internal Dimensions</span>
-    <div id="flueSizeContainer">
-        <select class="flueSizeSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
-            <option value="4_ROUND">4-Inch Round (Pellet/High-Efficiency Gas)</option>
-            <option value="5_ROUND">5-Inch Round (Gas Utility/Furnace)</option>
-            <option value="6_ROUND" selected>6-Inch Round (Liner/Wood Vent)</option>
-            <option value="8_ROUND">8-Inch Round (Liner/Prefab System)</option>
-            <option value="10_ROUND">10-Inch Round (Liner/Prefab System)</option>
-            <option value="8_8_SQUARE">8x8 Square (Terracotta Core)</option>
-            <option value="9_13_RECT">9x13 Rectangular (Terracotta Core)</option>
-            <option value="13_13_SQUARE">13x13 Square (Terracotta Core)</option>
-        </select>
-    </div>
-</div>
+                        <span style="font-size:10px; font-weight:bold; color:#475569; text-transform:uppercase;">Internal Dimensions</span>
+                        <div id="flueSizeContainer">
+                            <select class="flueSizeSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
+                                <option value="4_ROUND">4-Inch Round (Pellet/High-Efficiency Gas)</option>
+                                <option value="5_ROUND">5-Inch Round (Gas Utility/Furnace)</option>
+                                <option value="6_ROUND" selected>6-Inch Round (Liner/Wood Vent)</option>
+                                <option value="8_ROUND">8-Inch Round (Liner/Prefab System)</option>
+                                <option value="10_ROUND">10-Inch Round (Liner/Prefab System)</option>
+                                <option value="8_8_SQUARE">8x8 Square (Terracotta Core)</option>
+                                <option value="9_13_RECT">9x13 Rectangular (Terracotta Core)</option>
+                                <option value="13_13_SQUARE">13x13 Square (Terracotta Core)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
                         <span style="font-size:10px; font-weight:bold; color:#0369a1; text-transform:uppercase;">Placement Exposure</span>
                         <select id="chimneyExposureSelector" onchange="recalculateMasterLedger()" style="margin-top:4px;">
                             <option value="INTERIOR" selected>Interior Wall (Insulated)</option>
@@ -1079,58 +1076,58 @@
             window.location.href = "contract-wo.html";
         }
 
-// --- DYNAMIC FLUE STACKING GENERATOR ---
-function updateFlueSizeDropdowns() {
-    var qty = parseInt(document.getElementById("flueQuantityInput").value) || 1;
-    if (qty < 1) qty = 1;
-    if (qty > 5) qty = 5; // Limits to 5 dropdowns to prevent UI blowouts
-    
-    var container = document.getElementById("flueSizeContainer");
-    var currentSelects = container.getElementsByClassName("flueSizeSelector");
-    
-    // Save current selections so we don't wipe what the tech already picked
-    var savedValues = [];
-    for (var i = 0; i < currentSelects.length; i++) {
-        savedValues.push(currentSelects[i].value);
-    }
-    
-    // The master list of dimension options
-    var optionsHTML = `
-        <option value="4_ROUND">4-Inch Round (Pellet/High-Efficiency Gas)</option>
-        <option value="5_ROUND">5-Inch Round (Gas Utility/Furnace)</option>
-        <option value="6_ROUND">6-Inch Round (Liner/Wood Vent)</option>
-        <option value="8_ROUND">8-Inch Round (Liner/Prefab System)</option>
-        <option value="10_ROUND">10-Inch Round (Liner/Prefab System)</option>
-        <option value="8_8_SQUARE">8x8 Square (Terracotta Core)</option>
-        <option value="9_13_RECT">9x13 Rectangular (Terracotta Core)</option>
-        <option value="13_13_SQUARE">13x13 Square (Terracotta Core)</option>
-    `;
+        // --- DYNAMIC FLUE STACKING GENERATOR ---
+        function updateFlueSizeDropdowns() {
+            var qty = parseInt(document.getElementById("flueQuantityInput").value) || 1;
+            if (qty < 1) qty = 1;
+            if (qty > 5) qty = 5; // Limits to 5 dropdowns to prevent UI blowouts
+            
+            var container = document.getElementById("flueSizeContainer");
+            var currentSelects = container.getElementsByClassName("flueSizeSelector");
+            
+            // Save current selections so we don't wipe what the tech already picked
+            var savedValues = [];
+            for (var i = 0; i < currentSelects.length; i++) {
+                savedValues.push(currentSelects[i].value);
+            }
+            
+            // The master list of dimension options
+            var optionsHTML = `
+                <option value="4_ROUND">4-Inch Round (Pellet/High-Efficiency Gas)</option>
+                <option value="5_ROUND">5-Inch Round (Gas Utility/Furnace)</option>
+                <option value="6_ROUND">6-Inch Round (Liner/Wood Vent)</option>
+                <option value="8_ROUND">8-Inch Round (Liner/Prefab System)</option>
+                <option value="10_ROUND">10-Inch Round (Liner/Prefab System)</option>
+                <option value="8_8_SQUARE">8x8 Square (Terracotta Core)</option>
+                <option value="9_13_RECT">9x13 Rectangular (Terracotta Core)</option>
+                <option value="13_13_SQUARE">13x13 Square (Terracotta Core)</option>
+            `;
 
-    container.innerHTML = ""; // Clear existing stack
-    
-    for (var i = 0; i < qty; i++) {
-        var select = document.createElement("select");
-        select.className = "flueSizeSelector";
-        select.onchange = recalculateMasterLedger;
-        
-        // Add visual spacing if there are multiple dropdowns
-        select.style.marginTop = i === 0 ? "4px" : "8px"; 
-        if (i > 0) {
-            select.style.borderTop = "2px solid var(--accent)";
+            container.innerHTML = ""; // Clear existing stack
+            
+            for (var i = 0; i < qty; i++) {
+                var select = document.createElement("select");
+                select.className = "flueSizeSelector";
+                select.onchange = recalculateMasterLedger;
+                
+                // Add visual spacing if there are multiple dropdowns
+                select.style.marginTop = i === 0 ? "4px" : "8px"; 
+                if (i > 0) {
+                    select.style.borderTop = "2px solid var(--accent)";
+                }
+                
+                select.innerHTML = optionsHTML;
+                
+                // Restore previous value, or default to 6_ROUND if it's a new row
+                if (savedValues[i]) {
+                    select.value = savedValues[i];
+                } else {
+                    select.value = "6_ROUND"; 
+                }
+                
+                container.appendChild(select);
+            }
         }
-        
-        select.innerHTML = optionsHTML;
-        
-        // Restore previous value, or default to 6_ROUND if it's a new row
-        if (savedValues[i]) {
-            select.value = savedValues[i];
-        } else {
-            select.value = "6_ROUND"; 
-        }
-        
-        container.appendChild(select);
-    }
-}
         
         // Initialize on load and restore saved values
         window.onload = function() {
@@ -1163,6 +1160,8 @@ function updateFlueSizeDropdowns() {
 
             populateItemsFromCategoryDropdown();
             recalculateMasterLedger();
+            // Automatically initialize the dropdowns in case the user has multiple saved
+            updateFlueSizeDropdowns();
         }
     </script>
 </body>
