@@ -53,7 +53,7 @@
         @media (max-width: 768px) { .grid-matrix { grid-template-columns: 1fr 1fr; gap: 8px; } }
         @media (max-width: 480px) { .grid-matrix { grid-template-columns: 1fr; gap: 8px; } }
 
-        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 8px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; transition: background-color 0.3s ease; }
+        .section-title { font-size: 12px; background: var(--primary); color: white; padding: 10px 12px; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 6px 6px 0 0; text-align: center; letter-spacing: 0.5px; transition: background-color 0.3s ease; }
         
         .estimate-table-wrapper { width: 100%; overflow-x: auto; margin-bottom: 15px; border: 1px solid var(--border); border-radius: 0 0 6px 6px; }
         .estimate-table { width: 100%; border-collapse: collapse; min-width: 850px; }
@@ -372,22 +372,30 @@
                         </select>
                     </div>
                 </div>
-
-                <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="background:var(--primary); color:white; margin-top:14px; padding:14px; font-size:11px; cursor:pointer; width: 100%; font-weight: bold; border-radius: 4px; border: none;">Inject Selected Line Item into Bid Matrix ➔</button>
+                
+                <div style="display: flex; gap: 10px; margin-top:14px;">
+                    <button type="button" class="btn-add-item" onclick="injectItemFromCatalogSelection()" style="flex: 2; background:var(--primary); color:white; padding:14px; font-size:11px; cursor:pointer; font-weight: bold; border-radius: 4px; border: none;">Inject Selected Line Item into Bid Matrix ➔</button>
+                    <button type="button" onclick="injectCustomBlankItem()" style="flex: 1; background:#047857; color:white; padding:14px; font-size:11px; cursor:pointer; font-weight: bold; border-radius: 4px; border: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">➕ Add Custom Blank Item</button>
+                </div>
             </div>
 
-            <div class="section-title" id="dynamicTableTitle">Compiled Project Cost Matrix & Construction Takeoff Drawer</div>            
+            <!-- Header + Clear Board Button -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 20px;">
+                <div class="section-title" id="dynamicTableTitle" style="margin-top: 0; flex-grow: 1; text-align: left; border-radius: 6px 0 0 0;">Compiled Project Cost Matrix & Construction Takeoff Drawer</div>
+                <button type="button" onclick="clearEstimateBoard()" style="background:#dc2626; color:white; border:none; padding: 10px 14px; font-size: 11px; font-weight:bold; cursor:pointer; border-radius: 0 6px 0 0; text-transform: uppercase;">🗑️ Clear Estimate</button>
+            </div>
+            
             <div class="estimate-table-wrapper">                
                 <table class="estimate-table">                    
                     <thead>                        
                         <tr>                            
-                            <th style="width: 35%;">Task Scope / Production Parameter</th>                            
+                            <th style="width: 31%;">Task Scope / Production Parameter</th>                            
                             <th style="width: 13%; text-align: center;">Takeoff Qty</th>                            
                             <th style="width: 15%; text-align: left; padding-left:15px;">Labor Routing / Payout</th>                            
                             <th style="width: 11%; text-align: center;">Mat Cost</th>                            
                             <th style="width: 11%; text-align: center;">True Expense</th>                            
                             <th style="width: 11%; text-align: right;">UnitPrice [Ovr]</th>                            
-                            <th style="width: 4%; text-align: center;">Drop</th>                        
+                            <th style="width: 8%; text-align: center;">Actions</th>                        
                         </tr>                    
                     </thead>                    
                     <tbody id="bidTableBody">                    
@@ -406,7 +414,7 @@
 
             <!-- REVENUE BREAKDOWN CARD -->
             <div class="revenue-breakdown-card" style="margin-top: 15px;">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
                 <div class="breakdown-row">                                            
                     <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
@@ -418,7 +426,7 @@
                 <div class="breakdown-row" id="row_expense">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                 <div class="breakdown-row" id="row_margin" style="background: #f0fdf4; margin-top: 4px;">                                            
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -493,8 +501,10 @@
                 </div>                                        
             </div>
 
-            <div style="margin-top: 25px;">
-                <button type="button" class="btn-action" id="compileBidBtn" onclick="lockBidAndAdvanceToWorkOrderReview()">Lock Bid & Compile Final Document ➔</button>
+            <!-- ACTION BUTTONS: Copy & Submit -->
+            <div style="display: flex; gap: 10px; margin-top: 25px;">
+                <button type="button" onclick="copyScopeToClipboard()" style="flex: 1; background: #475569; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">📋 Copy Scope Details</button>
+                <button type="button" class="btn-action" id="compileBidBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="flex: 2;">Lock Bid & Compile Final Document ➔</button>
             </div>
         </div>
     </div>
@@ -527,8 +537,23 @@
             }
         });
 
+    // --- Dynamic Zone Tax Rate Lookup Map ---
+    var ZONE_TAX_RATES = {
+        "OH_LUCAS": 0.0775,
+        "OH_WOOD": 0.0675,
+        "MI_MONROE_CORE": 0.0600,
+        "OH_MID_DIST": 0.0725,
+        "MI_MONROE_OUTER": 0.0600,
+        "MI_WASHTENAW_MID": 0.0600,
+        "OH_EXTENDED": 0.0725,
+        "MI_EXTENDED": 0.0600
+    };
+
     // --- 1. THE COMPLETE PRICE BOOK ---
     var COMPLETE_PRICE_BOOK = {
+    // Custom Ad-Hoc block configured for base-rate evaluation
+    "CUSTOM_AD_HOC": { cat: "CUSTOM", label: "Custom Ad-Hoc Line Item", OH_LUCAS: 0, OH_WOOD: 0, OH_MID_DIST: 0, OH_EXTENDED: 0, MI_MONROE_CORE: 0, MI_MONROE_OUTER: 0, MI_WASHTENAW_MID: 0, MI_EXTENDED: 0, dynamic: true, defQty: 1, unit: "units", matCost: 0.00, labRate: 55.00, labHours: 0.0, wbs: ["Custom scope details here."], mats: ["Materials defined in notes"] },
+    
     "LOG_PERMIT_STD":        { cat: "LOGISTICS", label: "Standard Municipal Building / Mechanical Permit Acquisition", OH_LUCAS: 185.00, OH_WOOD: 185.00, OH_MID_DIST: 185.00, OH_EXTENDED: 185.00, MI_MONROE_CORE: 185.00, MI_MONROE_OUTER: 185.00, MI_WASHTENAW_MID: 225.00, MI_EXTENDED: 225.00, dynamic: false, matCost: 125.00, labRate: 55.00, labHours: 1.0, wbs: ["Compile engineering specifications and scope of work documents", "File permit application with local municipal building authority", "Coordinate and host on-site municipal safety inspection sign-offs"], mats: ["Municipal Permit Filing Fees"] },
     "LOG_DUMPSTER_10YD":    { cat: "LOGISTICS", label: "10-Yard Commercial Roll-Off Dumpster Rental & Tipping Fee", OH_LUCAS: 450.00, OH_WOOD: 450.00, OH_MID_DIST: 450.00, OH_EXTENDED: 450.00, MI_MONROE_CORE: 450.00, MI_MONROE_OUTER: 450.00, MI_WASHTENAW_MID: 495.00, MI_EXTENDED: 495.00, dynamic: false, matCost: 350.00, labRate: 55.00, labHours: 0.5, wbs: ["Coordinate delivery and placement of heavy-debris roll-off container", "Protect homeowner driveway with heavy timber cribbing during drop", "Manage extraction dispatch and municipal landfill tonnage tipping weights"], mats: ["10-Cubic Yard Dumpster Rental", "Heavy Masonry Tonnage Disposal Fees"] },
     "LOG_SCAFFOLD_MOB":     { cat: "LOGISTICS", label: "Multi-Tier Scaffolding Mobilization & Erection (per tier)", OH_LUCAS: 250.00, OH_WOOD: 250.00, OH_MID_DIST: 250.00, OH_EXTENDED: 250.00, MI_MONROE_CORE: 250.00, MI_MONROE_OUTER: 250.00, MI_WASHTENAW_MID: 250.00, MI_EXTENDED: 250.00, dynamic: true, defQty: 2, unit: "tiers", matCost: 25.00, labRate: 55.00, labHours: 2.0, wbs: ["Transport heavy tubular steel scaffolding frames to jobsite", "Erect leveled base plates and stack framing to OSHA height standards", "Secure safety cross-bracing, walk boards, and perimeter fall-protection rails", "Dismantle and extract staging upon project completion"], mats: ["Equipment transport fuel / staging wear & tear"] },
@@ -646,98 +671,137 @@
             recalculateMasterLedger();
         }
 
-        // --- FIXED SEARCH & DROPDOWN ENGINE ---
-
-        function filterCatalogItems() {
-        var filterInput = document.getElementById("itemSearchFilter");
-        var filter = filterInput.value.trim().toUpperCase();
-        var itemSelector = document.getElementById("catalogItemSelector");
-        var catSelector = document.getElementById("catalogCategorySelector");
-
-        // Reset Category dropdown to "ALL" so it doesn't conflict with search results
-        if (catSelector) catSelector.value = "ALL";
-
-        itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Select Search Result --</option>';
-
-        if (!filter) {
-        populateItemsFromCategoryDropdown();
-        return;
+        // Reorder items (Up / Down)
+        function moveItemUp(idx) {
+            if (idx === 0) return;
+            var temp = ACTIVE_RUNNING_ESTIMATE[idx - 1];
+            ACTIVE_RUNNING_ESTIMATE[idx - 1] = ACTIVE_RUNNING_ESTIMATE[idx];
+            ACTIVE_RUNNING_ESTIMATE[idx] = temp;
+            recalculateMasterLedger();
         }
 
-        var matchCount = 0;
-        for (var key in COMPLETE_PRICE_BOOK) {
-        var spec = COMPLETE_PRICE_BOOK[key];
-        
-        // Search across Label, Category Key, WBS descriptions, and Material lists
-        var labelText = (spec.label || "").toUpperCase();
-        var catText = (spec.cat || "").toUpperCase();
-        var wbsText = spec.wbs ? spec.wbs.join(" ").toUpperCase() : "";
-        var matText = spec.mats ? spec.mats.join(" ").toUpperCase() : "";
-
-        if (labelText.includes(filter) || catText.includes(filter) || wbsText.includes(filter) || matText.includes(filter)) {
-            var opt = document.createElement("option");
-            opt.value = key;
-            opt.innerText = "[" + spec.cat + "] " + spec.label;
-            itemSelector.appendChild(opt);
-            matchCount++;
+        function moveItemDown(idx) {
+            if (idx === ACTIVE_RUNNING_ESTIMATE.length - 1) return;
+            var temp = ACTIVE_RUNNING_ESTIMATE[idx + 1];
+            ACTIVE_RUNNING_ESTIMATE[idx + 1] = ACTIVE_RUNNING_ESTIMATE[idx];
+            ACTIVE_RUNNING_ESTIMATE[idx] = temp;
+            recalculateMasterLedger();
         }
-    }
 
-    if (matchCount === 0) {
-        itemSelector.innerHTML = '<option value="" disabled selected>⚠️ No matching items found</option>';
-    }
-}
-
-function populateItemsFromCategoryDropdown() {
-    var catSelector = document.getElementById("catalogCategorySelector");
-    var searchInput = document.getElementById("itemSearchFilter");
-    var itemSelector = document.getElementById("catalogItemSelector");
-
-    if (!catSelector || !itemSelector) return;
-    
-    var selectedCat = catSelector.value;
-    
-    // Clear search box when selecting a category to avoid UI confusion
-    if (searchInput && selectedCat !== "ALL") {
-        searchInput.value = "";
-    }
-
-    itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Line Item --</option>';
-
-    for (var key in COMPLETE_PRICE_BOOK) {
-        var spec = COMPLETE_PRICE_BOOK[key];
-        if (selectedCat === "ALL" || spec.cat === selectedCat) {
-            var opt = document.createElement("option");
-            opt.value = key;
-            opt.innerText = spec.label;
-            itemSelector.appendChild(opt);
+        // Clear Estimate Board
+        function clearEstimateBoard() {
+            if(confirm("Are you sure you want to clear the entire estimate? This cannot be undone.")) {
+                ACTIVE_RUNNING_ESTIMATE = [];
+                localStorage.removeItem('current_wo_active_estimate');
+                recalculateMasterLedger();
             }
         }
-    }
+
+        // --- SEARCH & DROPDOWN ENGINE ---
+        function filterCatalogItems() {
+            var filterInput = document.getElementById("itemSearchFilter");
+            var filter = filterInput.value.trim().toUpperCase();
+            var itemSelector = document.getElementById("catalogItemSelector");
+            var catSelector = document.getElementById("catalogCategorySelector");
+
+            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Select Search Result --</option>';
+
+            if (!filter) {
+                populateItemsFromCategoryDropdown();
+                return;
+            }
+
+            // Sync category dropdown safely without event loop issues
+            if (catSelector && catSelector.value !== "ALL") {
+                catSelector.value = "ALL";
+            }
+
+            var matchCount = 0;
+            for (var key in COMPLETE_PRICE_BOOK) {
+                if (key === "CUSTOM_AD_HOC") continue;
+
+                var spec = COMPLETE_PRICE_BOOK[key];
+                var labelText = (spec.label || "").toUpperCase();
+                var catText = (spec.cat || "").toUpperCase();
+                var wbsText = spec.wbs ? spec.wbs.join(" ").toUpperCase() : "";
+                var matText = spec.mats ? spec.mats.join(" ").toUpperCase() : "";
+
+                if (labelText.includes(filter) || catText.includes(filter) || wbsText.includes(filter) || matText.includes(filter)) {
+                    var opt = document.createElement("option");
+                    opt.value = key;
+                    opt.innerText = "[" + spec.cat + "] " + spec.label;
+                    itemSelector.appendChild(opt);
+                    matchCount++;
+                }
+            }
+
+            if (matchCount === 0) {
+                itemSelector.innerHTML = '<option value="" disabled selected>⚠️ No matching items found</option>';
+            }
+        }
+
+        function populateItemsFromCategoryDropdown() {
+            var catSelector = document.getElementById("catalogCategorySelector");
+            var searchInput = document.getElementById("itemSearchFilter");
+            var itemSelector = document.getElementById("catalogItemSelector");
+
+            if (!catSelector || !itemSelector) return;
+            
+            var selectedCat = catSelector.value;
+            
+            if (searchInput && selectedCat !== "ALL") {
+                searchInput.value = "";
+            }
+
+            itemSelector.innerHTML = '<option value="" disabled selected hidden>-- Step 2: Choose Line Item --</option>';
+
+            for (var key in COMPLETE_PRICE_BOOK) {
+                if (key === "CUSTOM_AD_HOC") continue;
+
+                var spec = COMPLETE_PRICE_BOOK[key];
+                if (selectedCat === "ALL" || spec.cat === selectedCat) {
+                    var opt = document.createElement("option");
+                    opt.value = key;
+                    opt.innerText = spec.label;
+                    itemSelector.appendChild(opt);
+                }
+            }
+        }
 
         function injectItemFromCatalogSelection() {
-        var selector = document.getElementById("catalogItemSelector");
-        var key = selector.value;
-    
-        if (!key || !COMPLETE_PRICE_BOOK[key]) {
-            alert("Please select a valid item from the catalog list first.");
-            return;
-        }
-    
-        var spec = COMPLETE_PRICE_BOOK[key];
-    
-        ACTIVE_RUNNING_ESTIMATE.push({
-            key: key,
-            qty: spec.defQty || 1,
-            customLabel: spec.label,
-            customWBS: spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed.",
-            overridePrice: undefined
-        });
+            var selector = document.getElementById("catalogItemSelector");
+            var key = selector.value;
+        
+            if (!key || !COMPLETE_PRICE_BOOK[key]) {
+                alert("Please select a valid item from the catalog list first.");
+                return;
+            }
+        
+            var spec = COMPLETE_PRICE_BOOK[key];
+        
+            ACTIVE_RUNNING_ESTIMATE.push({
+                key: key,
+                qty: spec.defQty || 1,
+                customLabel: spec.label,
+                customWBS: spec.wbs ? spec.wbs.join("\n") : "Standard execution protocol followed.",
+                overridePrice: undefined
+            });
 
-        // Reset selectors after injecting
-        selector.selectedIndex = 0;
-        recalculateMasterLedger();
-    }
+            selector.selectedIndex = 0;
+            recalculateMasterLedger();
+        }
+
+        // Quick add blank custom line item
+        function injectCustomBlankItem() {
+            ACTIVE_RUNNING_ESTIMATE.push({
+                key: "CUSTOM_AD_HOC",
+                qty: 1,
+                customLabel: "Custom Line Item (Edit Me)",
+                customWBS: "Enter custom scope of work here.",
+                overridePrice: 0.00
+            });
+            recalculateMasterLedger();
+        }
 
         function recalculateMasterLedger() {
             var tbody = document.getElementById('bidTableBody');
@@ -759,7 +823,8 @@ function populateItemsFromCategoryDropdown() {
                 var rowHours = spec.labHours * item.qty;
                 var rowTotalLaborPool = rowHours * laborRate;
                 
-                var defaultBasePrice = spec[zone] ? (spec[zone] * (spec.dynamic ? item.qty : 1)) : (rowMatCost + rowTotalLaborPool);
+                // Patched logic for $0.00 rate handling
+                var defaultBasePrice = (spec[zone] !== undefined) ? (spec[zone] * (spec.dynamic ? item.qty : 1)) : (rowMatCost + rowTotalLaborPool);
                 var basePrice = item.overridePrice !== undefined ? item.overridePrice : defaultBasePrice;
                 
                 baseSubtotal += basePrice;
@@ -782,7 +847,13 @@ function populateItemsFromCategoryDropdown() {
                     '<td style="text-align: center; font-weight:600; color:#047857; vertical-align: top; padding-top:14px;">$' + rowMatCost.toFixed(2) + '</td>' +
                     '<td style="text-align: center; font-weight:800; color:#b45309; vertical-align: top; padding-top:14px;">$' + (rowMatCost + rowTotalLaborPool).toFixed(2) + '</td>' +
                     '<td style="text-align: right; vertical-align: top; padding-top:10px;"><input type="number" class="override-price-input" value="' + basePrice.toFixed(2) + '" onchange="updateItemPriceOverride(' + idx + ', this.value)"></td>' +
-                    '<td style="text-align: center; vertical-align: top; padding-top:12px;"><button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(' + idx + ')">X</button></td>' +
+                    
+                    '<td style="text-align: center; vertical-align: top; padding-top:12px; white-space: nowrap;">' +
+                        '<button type="button" style="background:#e2e8f0; color:#475569; border:none; border-radius:4px; padding:3px 6px; font-size:10px; cursor:pointer; margin-right:3px;" onclick="moveItemUp(' + idx + ')" title="Move Up">↑</button>' +
+                        '<button type="button" style="background:#e2e8f0; color:#475569; border:none; border-radius:4px; padding:3px 6px; font-size:10px; cursor:pointer; margin-right:5px;" onclick="moveItemDown(' + idx + ')" title="Move Down">↓</button>' +
+                        '<button type="button" class="btn-delete" style="background:var(--danger); color:white; border:none; border-radius:4px; padding:3px 8px; font-size:10px; cursor:pointer;" onclick="dropItemFromActiveLedger(' + idx + ')" title="Delete Item">X</button>' +
+                    '</td>' +
+                    
                     '</tr>' +
                     '<tr>' +
                     '<td colspan="7" style="padding: 0 10px 14px 10px; border-top:none; background:#ffffff;">' +
@@ -852,8 +923,10 @@ function populateItemsFromCategoryDropdown() {
                 }
             }
 
+            // Dynamic Zone Tax Calculation Logic
             var manualTax = document.getElementById("manualTaxOverride").value;
-            var taxRate = (manualTax !== "" && !isNaN(manualTax)) ? (parseFloat(manualTax) / 100) : 0.0775;
+            var defaultTaxRate = ZONE_TAX_RATES[zone] !== undefined ? ZONE_TAX_RATES[zone] : 0.0775;
+            var taxRate = (manualTax !== "" && !isNaN(manualTax)) ? (parseFloat(manualTax) / 100) : defaultTaxRate;
             var taxAmt = grandTotal * taxRate;
             document.getElementById('lbl_calculated_tax').innerText = "+$" + taxAmt.toFixed(2);
             
@@ -886,11 +959,10 @@ function populateItemsFromCategoryDropdown() {
             document.getElementById('bidLiveTotalDisplay').innerText = "$" + finalCostStr;
             localStorage.setItem('current_wo_est_cost', finalCostStr);
             
-            // NEW: Auto-save the active items so they survive a refresh or tab switch
             localStorage.setItem('current_wo_active_estimate', JSON.stringify(ACTIVE_RUNNING_ESTIMATE));
         }
 
-        // --- 5. UTILITY & NAVIGATION FUNCTIONS ---
+        // UTILITY & NAVIGATION FUNCTIONS
         function updateHubMapping() {
             var addr = document.getElementById("wo_addr_view").value;
             if (addr) {
@@ -937,6 +1009,35 @@ function populateItemsFromCategoryDropdown() {
             recalculateMasterLedger();
         }
 
+        // Clipboard Exporter
+        function copyScopeToClipboard() {
+            if(GLOBAL_ITEMIZED_LIST.length === 0) {
+                alert("No items in the estimate to copy.");
+                return;
+            }
+            
+            var textToCopy = "EverSafe Chimney Repair - Proposed Scope of Work\n\n";
+            
+            textToCopy += GLOBAL_ITEMIZED_LIST.map(function(item, idx) {
+                return (idx + 1) + ". " + item.label + " - $" + item.price;
+            }).join("\n");
+            
+            var depositToggle = document.getElementById("depositCreditToggle");
+            if (depositToggle && depositToggle.checked) {
+                var depVal = parseFloat(document.getElementById("depositCreditValue").value) || 0;
+                textToCopy += "\n\nDeposit Credit: -$" + depVal.toFixed(2);
+            }
+            
+            var finalTotal = document.getElementById('bidLiveTotalDisplay').innerText;
+            textToCopy += "\n\nEstimated Grand Total: " + finalTotal;
+
+            navigator.clipboard.writeText(textToCopy).then(function() {
+                alert("Scope copied to clipboard!");
+            }).catch(function(err) {
+                alert("Failed to copy to clipboard: " + err);
+            });
+        }
+
         function lockBidAndAdvanceToWorkOrderReview() {
             if(ACTIVE_RUNNING_ESTIMATE.length === 0) {
                 alert("Please add items to the estimate before compiling.");
@@ -950,19 +1051,16 @@ function populateItemsFromCategoryDropdown() {
             var techName = document.getElementById("wo_tech_view").value || "EverSafe Operations";
             var liveTotal = localStorage.getItem('current_wo_est_cost') || "0.00";
 
-            // Format client-facing scope list text
             var compiledScopeText = GLOBAL_ITEMIZED_LIST.map(function(item, idx) {
                 return (idx + 1) + ". " + item.label + " - $" + item.price;
             }).join("\n");
 
-            // Append deposit credit if active to scope text
             var depositToggle = document.getElementById("depositCreditToggle");
             if (depositToggle && depositToggle.checked) {
                 var depVal = parseFloat(document.getElementById("depositCreditValue").value) || 0;
                 compiledScopeText += "\n\n*** Dispatch / Booking Deposit Credit Applied: -$" + depVal.toFixed(2) + " ***";
             }
 
-            // Write verified unified payload to localStorage
             localStorage.setItem('current_wo_customer_name', custName);
             localStorage.setItem('current_wo_service_address', custAddr);
             localStorage.setItem('current_wo_customer_email', custEmail);
@@ -995,11 +1093,11 @@ function populateItemsFromCategoryDropdown() {
                 document.getElementById("wo_tech_view").value = localStorage.getItem('current_wo_tech_name');
             }
 
-            // NEW: Pull the active draft back out of memory if it exists
             var savedDraft = localStorage.getItem('current_wo_active_estimate');
             if (savedDraft) {
                 try { 
-                    ACTIVE_RUNNING_ESTIMATE = JSON.parse(savedDraft); 
+                    var parsed = JSON.parse(savedDraft);
+                    ACTIVE_RUNNING_ESTIMATE = Array.isArray(parsed) ? parsed : [];
                 } catch(e) {
                     ACTIVE_RUNNING_ESTIMATE = [];
                 }
