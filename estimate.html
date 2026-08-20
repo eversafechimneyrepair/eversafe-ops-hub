@@ -416,7 +416,7 @@
 
             <!-- REVENUE BREAKDOWN CARD -->
             <div class="revenue-breakdown-card" style="margin-top: 15px;">                
-                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+                <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#64748b; letter-spacing:0.5px; display:block; margin-bottom:10px;">📋 Project Financial Breakdown</span>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                 <div class="breakdown-row">                                            
                     <div>Gross Catalog Line Items Subtotal:</div>                                            
                     <div id="lbl_base_subtotal" style="font-weight:bold; color:var(--primary);">$0.00</div>                                
@@ -428,7 +428,7 @@
                 <div class="breakdown-row" id="row_expense">                                            
                     <div>Regulatory Logistics & Consumables Expense (5.0%):</div>                    
                     <div id="lbl_business_expense" style="font-weight:600; color:var(--accent-dark);">+$0.00</div>                                
-                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                </div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                 <div class="breakdown-row" id="row_margin" style="background: #f0fdf4; margin-top: 4px;">                                            
                     <div id="lbl_margin_title" style="font-weight:bold; color:#16a34a;">Target Margin Earnings Buffer:</div>                                            
                     <div id="lbl_margin_buffer" style="font-weight:bold; color:#14532d;">+$0.00</div>                                
@@ -507,6 +507,12 @@
             <div style="display: flex; gap: 10px; margin-top: 25px;">
                 <button type="button" onclick="copyScopeToClipboard()" style="flex: 1; background: #475569; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">📋 Copy Scope Details</button>
                 <button type="button" class="btn-action" id="compileBidBtn" onclick="lockBidAndAdvanceToWorkOrderReview()" style="flex: 2;">Lock Bid & Compile Final Document ➔</button>
+            </div>
+            
+            <!-- NEW: SEND ESTIMATE BUTTON -->
+            <div style="margin-top: 15px;">
+                <button type="button" id="sendEstimateBtn" onclick="dispatchEstimateToClient()" style="width: 100%; background: #2563eb; color: white; font-weight: bold; padding: 16px; border: none; border-radius: 6px; text-transform: uppercase; font-size: 13px; cursor: pointer; text-align: center; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);">✉️ Dispatch Estimate to Client Portal</button>
+                <div id="estimateStatusMsg" style="text-align: center; font-weight: bold; font-size: 13px; margin-top: 10px; min-height: 20px;"></div>
             </div>
         </div>
     </div>
@@ -1172,6 +1178,78 @@ var COMPLETE_PRICE_BOOK = {
             recalculateMasterLedger();
             // Automatically initialize the dropdowns in case the user has multiple saved
             updateFlueSizeDropdowns();
+        }
+
+        async function dispatchEstimateToClient() {
+            if(ACTIVE_RUNNING_ESTIMATE.length === 0) {
+                alert("Please add items to the estimate before sending.");
+                return;
+            }
+
+            var custName = document.getElementById("wo_cust_view").value;
+            var custEmail = document.getElementById("wo_email_view").value;
+            
+            if (!custEmail || !custEmail.includes("@")) {
+                alert("A valid email address is required to dispatch the estimate.");
+                return;
+            }
+
+            var btn = document.getElementById('sendEstimateBtn');
+            var statusDiv = document.getElementById('estimateStatusMsg');
+            
+            btn.disabled = true;
+            btn.style.background = "#94a3b8";
+            statusDiv.innerHTML = "⏳ Generating proposal PDF and dispatching to CRM...";
+            statusDiv.style.color = "var(--primary)";
+
+            var compiledScopeText = GLOBAL_ITEMIZED_LIST.map(function(item, idx) {
+                return (idx + 1) + ". " + item.label + " - $" + item.price;
+            }).join("\n");
+
+            var depositToggle = document.getElementById("depositCreditToggle");
+            if (depositToggle && depositToggle.checked) {
+                var depVal = parseFloat(document.getElementById("depositCreditValue").value) || 0;
+                compiledScopeText += "\n\n*** Booking Deposit Credit Applied: -$" + depVal.toFixed(2) + " ***";
+            }
+
+            // Ensure you are using the SAME Google Apps Script URL as signatures.html!
+            var GOOGLE_API_GATEWAY_URL = "https://script.google.com/macros/s/AKfycbwwsdxf7rKDYUC6CoWEOqGx54nYd4haqICup1jqKyN_TgaWUJuCSTkJ0GUSvEJKssa_tw/exec";
+
+            var payload = {
+                route: "sendEstimateEmail",
+                customerName: custName || "Valued Client",
+                customerEmail: custEmail,
+                customerPhone: document.getElementById("wo_phone_view").value || "",
+                serviceAddress: document.getElementById("wo_addr_view").value || "On File",
+                estimatedCost: localStorage.getItem('current_wo_est_cost') || "0.00",
+                workScope: compiledScopeText,
+                leadTechnician: document.getElementById("wo_tech_view").value || "EverSafe Operations"
+            };
+
+            try {
+                let response = await fetch(GOOGLE_API_GATEWAY_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain" },
+                    body: JSON.stringify(payload)
+                });
+                
+                let result = await response.json();
+
+                if (result.success) {
+                    statusDiv.innerHTML = "✅ Estimate successfully dispatched to " + custEmail + "!";
+                    statusDiv.style.color = "var(--success)";
+                } else {
+                    statusDiv.innerHTML = "❌ Failed to send: " + result.error;
+                    statusDiv.style.color = "var(--danger)";
+                    btn.disabled = false;
+                    btn.style.background = "#2563eb";
+                }
+            } catch(e) {
+                statusDiv.innerHTML = "❌ Network connection error. Please try again.";
+                statusDiv.style.color = "var(--danger)";
+                btn.disabled = false;
+                btn.style.background = "#2563eb";
+            }
         }
     </script>
 </body>
